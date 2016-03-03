@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Colour.h"
 #include "Texture.h"
 #include "TextureArray.h"
 

@@ -1,14 +1,15 @@
 #pragma once
 
+#include "Camera.h"
+#include "Constants.h"
 #include "DirectXManager.h"
 #include "DirectSound.h"
-#include "Constants.h"
+#include "Light.h"
+#include "MainScene.h"
 #include "PerformanceManager.h"
 #include "Scene3D.h"
-#include "MainScene.h"
 #include "SceneLoadingScreen.h"
 #include "ShaderManager.h"
-#include "DataStructs.h"
 
 enum SceneState
 {
@@ -24,7 +25,7 @@ public:
 	~ApplicationManager();
 
 	// Initialising
-	bool Initialise(HWND hwnd, ScreenResolution WindowResolution);
+	bool Initialise(HWND hwnd, Rect2D WindowResolution);
 
 	// Shutdown
 	void Shutdown();
@@ -52,6 +53,10 @@ private:
 	// Scenes
 	MainScene* MainScene_;
 	SceneLoadingScreen* SceneLoading_;
+
+	// Global Objects
+	Camera* Camera_;
+	Light* Light_;
 
 	// Scene Switching
 	Scene3D* CurrentScene_;

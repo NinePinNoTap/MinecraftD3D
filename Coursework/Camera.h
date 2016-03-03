@@ -6,10 +6,10 @@
 #include "GameObject.h"
 #include "InputManager.h"
 #include "Constants.h"
-#include "Singleton.h" // ToDo
+#include "Singleton.h"
 #include "Utilities.h"
 
-class Camera : public GameObject
+class Camera : public GameObject, public Singleton<Camera>
 {
 public:
 	Camera();

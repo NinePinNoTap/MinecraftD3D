@@ -5,7 +5,7 @@
 
 #include "GameObject.h"
 #include "Texture.h"
-#include "DataStructs.h"
+
 
 class ParticleSystem : public GameObject
 {

@@ -6,7 +6,7 @@
 #include "Singleton.h"
 #include "Font.h"
 #include "ModelMesh.h"
-#include "Sound3D.h"
+#include "AudioClip.h"
 #include "Texture.h"
 
 class AssetManager

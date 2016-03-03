@@ -13,7 +13,7 @@ Terrain::~Terrain()
 {
 }
 
-bool Terrain::Initialise(ObjSize Size, WCHAR* textureFilename, WCHAR* normalTextureFilename, Vector2 TextureRepeat, float Scale)
+bool Terrain::Initialise(Rect3D Size, WCHAR* textureFilename, WCHAR* normalTextureFilename, Vector2 TextureRepeat, float Scale)
 {
 	// Create the mesh
 	Mesh_ = new TerrainMesh;

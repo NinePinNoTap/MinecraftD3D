@@ -17,7 +17,7 @@ Text::~Text()
 }
 
 // Initialising
-bool Text::Initialise(HWND hwnd, ScreenResolution WindowResolution)
+bool Text::Initialise(HWND hwnd, Rect2D WindowResolution)
 {
 	// Store the resolution of the screen
 	WindowResolution_ = WindowResolution;

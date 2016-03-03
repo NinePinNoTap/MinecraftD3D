@@ -18,7 +18,7 @@ Water::~Water()
 }
 
 // Initialising
-bool Water::Initialise(WCHAR* textureFilename, ObjSize WaterResolution)
+bool Water::Initialise(WCHAR* textureFilename, Rect3D WaterResolution)
 {
 	// Initialise water variables
 	WaterHeight_ = WaterResolution.depth;
@@ -38,7 +38,7 @@ bool Water::Initialise(WCHAR* textureFilename, ObjSize WaterResolution)
 	{
 		return false;
 	}
-	Result_ = Mesh_->CreatePlane(WaterResolution, ObjSize(1, 1), 1);
+	Result_ = Mesh_->CreatePlane(WaterResolution, Rect3D(1, 1), 1);
 	if (!Result_)
 	{
 		return false;

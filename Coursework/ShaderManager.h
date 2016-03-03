@@ -31,10 +31,6 @@ public:
 	// Shutdown
 	void Shutdown();
 
-	// Object Setters
-	void SetCamera(Camera* camera);
-	void SetLight(Light* light);
-
 	// Matrix Setters
 	void SetWorldMatrix(D3DXMATRIX world);
 	void SetViewMatrix(D3DXMATRIX view);
@@ -74,10 +70,6 @@ public:
 
 private:
 	bool Result_;
-
-	// Game Objects
-	Camera* Camera_;
-	Light* Light_;
 
 	// Matrices
 	MatrixCBuffer MatrixBuffer_;

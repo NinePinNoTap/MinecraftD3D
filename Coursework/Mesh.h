@@ -10,8 +10,9 @@
 #include <iterator>
 #include <vector>
 
+#include "BoundingBox.h"
 #include "Material.h"
-#include "DataStructs.h"
+#include "VertexData.h"
 
 class Mesh
 {
@@ -63,7 +64,7 @@ protected:
 	unsigned long* Indices_;
 
 	// Terrain
-	ObjSize Terrain_;
+	Rect3D Terrain_;
 
 	// Buffers
 	ID3D11Buffer* IndexBuffer_;

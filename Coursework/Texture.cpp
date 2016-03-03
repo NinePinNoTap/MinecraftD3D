@@ -31,7 +31,7 @@ bool Texture::Initialise(WCHAR* filename)
 	return true;
 }
 
-bool Texture::Initialise(ScreenResolution textureResolution)
+bool Texture::Initialise(Rect2D textureResolution)
 {
 	D3D11_TEXTURE2D_DESC textureDesc;
 	HRESULT Result;

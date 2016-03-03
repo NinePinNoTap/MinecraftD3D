@@ -6,7 +6,7 @@
 
 #include "GameObject.h"
 #include "Texture.h"
-#include "DataStructs.h"
+
 #include "TerrainMesh.h"
 
 class Terrain : public GameObject
@@ -17,7 +17,7 @@ public:
 	~Terrain();
 
 	// Initialise
-	bool Initialise(ObjSize Size, WCHAR* textureFilename, WCHAR* normalTextureFilename, Vector2 TextureRepeat, float scale = 1.0f);
+	bool Initialise(Rect3D Size, WCHAR* textureFilename, WCHAR* normalTextureFilename, Vector2 TextureRepeat, float scale = 1.0f);
 	void Shutdown();
 
 	TerrainMesh* GetMesh();

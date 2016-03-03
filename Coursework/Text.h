@@ -5,7 +5,7 @@
 #include "Constants.h"
 #include "Font.h"
 #include "Utilities.h"
-#include "DataStructs.h"
+
 
 using namespace std;
 
@@ -39,7 +39,7 @@ public:
 	~Text();
 
 	// Initialising
-	bool Initialise(HWND hwnd, ScreenResolution WindowResolution);
+	bool Initialise(HWND hwnd, Rect2D WindowResolution);
 
 	// Shutdown
 	void Shutdown();
@@ -63,7 +63,7 @@ private:
 	bool RenderSentence(SentenceType* sentence);
 
 	// Window Size
-	ScreenResolution WindowResolution_;
+	Rect2D WindowResolution_;
 
 	// Font Data
 	Font* Font_;

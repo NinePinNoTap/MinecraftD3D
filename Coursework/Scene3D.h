@@ -8,7 +8,7 @@
 #include "Utilities.h"
 #include "Texture.h"
 #include "ShaderManager.h"
-#include "Sound3D.h"
+#include "AudioClip.h"
 #include "Text.h"
 
 class Scene3D
@@ -29,7 +29,7 @@ public:
 	void SetDirectory(string directory);
 
 	// Sound Loading
-	Sound3D* CreateSound(char* filename, float Volume = 1.0f, bool is3D = false, D3DXVECTOR3 position = DEFAULT);
+	AudioClip* CreateSound(char* filename, float Volume = 1.0f, bool is3D = false, D3DXVECTOR3 position = ZERO);
 	
 protected:
 	virtual void GenerateMatrices() = 0;
@@ -45,8 +45,6 @@ protected:
 	D3DXMATRIX ReflectionViewMatrix_;
 
 	// Objects
-	Camera* Camera_;
-	Light* Light_;
 	Texture* SceneTexture_;
 	Text* Text_;
 

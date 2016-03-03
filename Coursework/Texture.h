@@ -3,7 +3,8 @@
 #include <d3d11.h>
 #include <d3dx10math.h>
 
-#include "DataStructs.h"
+#include "Colour.h"
+#include "Rect.h"
 
 class Texture
 {
@@ -13,8 +14,8 @@ public:
 	~Texture();
 
 	// Initialising and shutdown
-	bool Initialise(WCHAR*);
-	bool Initialise(ScreenResolution textureResolution);
+	bool Initialise(WCHAR* filename);
+	bool Initialise(Rect2D textureResolution);
 	void Shutdown();
 
 	// Render to Texture

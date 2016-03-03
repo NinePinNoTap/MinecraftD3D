@@ -29,7 +29,7 @@ DirectXManager::~DirectXManager()
 {
 }
 
-bool DirectXManager::Initialise(ScreenResolution WindowResolution, HWND hwnd)
+bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 {
 	HRESULT Result;
 	IDXGIFactory* factory;
@@ -489,9 +489,14 @@ void DirectXManager::Shutdown()
 	return;
 }
 
-void DirectXManager::BeginScene(float red, float green, float blue, float alpha)
+void DirectXManager::BeginScene(Colour SceneColour)
 {
-	float color[4] = { red, green, blue, alpha };
+	float color[4] = {
+		SceneColour.r,
+		SceneColour.g,
+		SceneColour.b,
+		SceneColour.a
+	};
 
 	// Clear the back buffer.
 	DeviceContext_ -> ClearRenderTargetView(RenderTargetView_, color);

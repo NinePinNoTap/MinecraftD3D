@@ -3,8 +3,6 @@
 ShaderManager::ShaderManager()
 {
 	// Initialise pointers to 0
-	Camera_ = 0;
-	Light_ = 0;
 	CloudShader_ = 0;
 	FireShader_ = 0;
 	LightShader_ = 0;
@@ -228,17 +226,6 @@ void ShaderManager::Shutdown()
 	}
 }
 
-// Object Setters
-void ShaderManager::SetCamera(Camera* camera)
-{
-	Camera_ = camera;
-}
-
-void ShaderManager::SetLight(Light* light)
-{
-	Light_ = light;
-}
-
 // Matrix Setters
 void ShaderManager::SetWorldMatrix(D3DXMATRIX world)
 {
@@ -425,21 +412,21 @@ bool ShaderManager::LightRender(GameObject* Obj, float specularPower)
 
 	// Create camera buffer
 	CameraCBuffer Camera;
-	Camera.cameraPosition = Camera_->GetTransform()->GetPosition();
+	Camera.cameraPosition = Camera::Instance()->GetTransform()->GetPosition();
 	Camera.normalMapTiling = D3DXVECTOR2(0.0f, 0.0f);
 	Camera.padding = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	// Create the light buffer
 	LightCBuffer Light;
-	Light.lightDirection = Light_->GetDirection();
-	Light.ambientColor = Light_->GetAmbientColor();
-	Light.diffuseColor = Light_->GetDiffuseColor();
-	Light.specularColor = Light_->GetSpecularColor();
+	Light.lightDirection = Light::Instance()->GetDirection();
+	Light.ambientColor = Light::Instance()->GetAmbientColor();
+	Light.diffuseColor = Light::Instance()->GetDiffuseColor();
+	Light.specularColor = Light::Instance()->GetSpecularColor();
 	Light.specularPower = specularPower;
 
 	// Create light position buffer
 	LightPositionCBuffer LightPosition;
-	LightPosition.lightPosition = D3DXVECTOR4(Light_->GetTransform()->GetPosition(), 1.0f);
+	LightPosition.lightPosition = D3DXVECTOR4(Light::Instance()->GetTransform()->GetPosition(), 1.0f);
 
 	// Create matrix buffer
 	MatrixCBuffer Matrix = MatrixBuffer_;
@@ -490,7 +477,7 @@ bool ShaderManager::WaterRender(Water* Obj, Texture* refraction, Texture* reflec
 
 	// Create camera buffer
 	CameraCBuffer Camera;
-	Camera.cameraPosition = Camera_->GetTransform()->GetPosition();
+	Camera.cameraPosition = Camera::Instance()->GetTransform()->GetPosition();
 	Camera.normalMapTiling = Obj -> GetNormalMapTiling();
 	Camera.padding = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
@@ -499,7 +486,7 @@ bool ShaderManager::WaterRender(Water* Obj, Texture* refraction, Texture* reflec
 	Ocean.waterTranslation = Obj->GetFrame();
 	Ocean.reflectRefractScale = Obj->GetReflectRefractScale();
 	Ocean.refractionTint = Obj->GetRefractionTint();
-	Ocean.lightDirection = Light_ -> GetDirection();
+	Ocean.lightDirection = Light::Instance() -> GetDirection();
 	Ocean.specularShininess = Obj->GetSpecularShininess();
 	Ocean.padding = D3DXVECTOR2(0.0f, 0.0f);
 
@@ -635,13 +622,13 @@ bool ShaderManager::TerrainRender(Terrain* Obj)
 
 	// Create the light buffer
 	LightCBuffer Light;
-	Light.ambientColor = Light_->GetAmbientColor();
-	Light.diffuseColor = Light_->GetDiffuseColor();
-	Light.lightDirection = Light_->GetDirection();
+	Light.ambientColor = Light::Instance()->GetAmbientColor();
+	Light.diffuseColor = Light::Instance()->GetDiffuseColor();
+	Light.lightDirection = Light::Instance()->GetDirection();
 
 	// Create the light position buffer
 	LightPositionCBuffer LightPosition;
-	LightPosition.lightPosition = D3DXVECTOR4(Light_->GetTransform()->GetPosition(), 1.0f);
+	LightPosition.lightPosition = D3DXVECTOR4(Light::Instance()->GetTransform()->GetPosition(), 1.0f);
 
 	// Create matrix buffer
 	MatrixCBuffer Matrix = MatrixBuffer_;
@@ -691,13 +678,13 @@ bool ShaderManager::TerrainRender(Terrain* Obj, D3DXVECTOR4 clipPlane)
 
 	// Create the light buffer
 	LightCBuffer Light;
-	Light.ambientColor = Light_->GetAmbientColor();
-	Light.diffuseColor = Light_->GetDiffuseColor();
-	Light.lightDirection = Light_->GetDirection();
+	Light.ambientColor = Light::Instance()->GetAmbientColor();
+	Light.diffuseColor = Light::Instance()->GetDiffuseColor();
+	Light.lightDirection = Light::Instance()->GetDirection();
 
 	// Create the light position buffer
 	LightPositionCBuffer LightPosition;
-	LightPosition.lightPosition = D3DXVECTOR4(Light_->GetTransform()->GetPosition(), 1.0f);
+	LightPosition.lightPosition = D3DXVECTOR4(Light::Instance()->GetTransform()->GetPosition(), 1.0f);
 
 	// Create the clip plane buffer
 	ClipPlaneCBuffer ClipPlane;

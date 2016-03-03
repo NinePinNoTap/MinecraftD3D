@@ -12,7 +12,7 @@
 #include "Texture.h"
 #include "ShaderManager.h"
 #include "Scene3D.h"
-#include "Sound3D.h"
+#include "AudioClip.h"
 #include "Sprite.h"
 #include "SkySphere.h"
 #include "Terrain.h"
@@ -26,7 +26,7 @@ public:
 	MainScene();
 	~MainScene();
 
-	bool Initialise(HWND hwnd, ScreenResolution WindowResolution);
+	bool Initialise(HWND hwnd, Rect2D WindowResolution);
 	void Shutdown();
 
 	bool Frame();
@@ -65,7 +65,7 @@ private:
 	SkySphere* SkySphere_;
 	Terrain* Terrain_;
 	Water* Ocean_;
-	Sound3D* AmbientSound_;
+	AudioClip* AmbientSound_;
 
 	// Flags
 	bool IsUnderwater_;

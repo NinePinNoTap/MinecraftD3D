@@ -10,7 +10,7 @@ PrimitiveMesh::~PrimitiveMesh()
 
 
 // Procedurally Generating Mesh
-bool PrimitiveMesh::CreateSphere(ObjSize LongLat, float Radius)
+bool PrimitiveMesh::CreateSphere(Rect3D LongLat, float Radius)
 {
 	vector<D3DXVECTOR3> VertexPositions;
 	vector<D3DXVECTOR3> TextureCoordinates;
@@ -124,7 +124,7 @@ bool PrimitiveMesh::CreateSphere(ObjSize LongLat, float Radius)
 	return true;
 }
 
-bool PrimitiveMesh::CreatePlane(ObjSize PlaneSize, ObjSize NoOfTiles, float TextureRepeat)
+bool PrimitiveMesh::CreatePlane(Rect3D PlaneSize, Rect3D NoOfTiles, float TextureRepeat)
 {
 	vector<D3DXVECTOR3> VertexPositions;
 	vector<D3DXVECTOR3> TextureCoordinates;
@@ -232,7 +232,7 @@ bool PrimitiveMesh::CreatePlane(ObjSize PlaneSize, ObjSize NoOfTiles, float Text
 	return true;
 }
 
-bool PrimitiveMesh::Create2DBox(ObjSize Plane)
+bool PrimitiveMesh::Create2DBox(Rect3D Plane)
 {
 	// Set the number of vertices in the vertex array.
 	VertexCount_ = 6;
@@ -293,7 +293,7 @@ bool PrimitiveMesh::Create2DBox(ObjSize Plane)
 	return true;
 }
 
-bool PrimitiveMesh::Create3DBox(ObjSize BoxSize, float TextureRepeat)
+bool PrimitiveMesh::Create3DBox(Rect3D BoxSize, float TextureRepeat)
 {
 	vector<D3DXVECTOR3> VertexPositions;
 	vector<D3DXVECTOR3> TextureCoords;

@@ -3,8 +3,6 @@
 Scene3D::Scene3D()
 {
 	// Initialise pointers
-	Camera_ = 0;
-	Light_ = 0;
 	SceneTexture_ = 0;
 	Text_ = 0;
 }
@@ -36,10 +34,10 @@ void Scene3D::SetDirectory(string FileDirectory)
 }
 
 // GameObject Creation
-Sound3D* Scene3D::CreateSound(char* filename, float Volume, bool is3D, D3DXVECTOR3 position)
+AudioClip* Scene3D::CreateSound(char* filename, float Volume, bool is3D, D3DXVECTOR3 position)
 {
 	// Create a sound
-	Sound3D* Sound = new Sound3D;
+	AudioClip* Sound = new AudioClip;
 	if (!Sound)
 	{
 		OutputErrorMessage("Could not create sound", " - Scene3D");

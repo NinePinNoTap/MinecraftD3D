@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "Singleton.h"
 
-class Light : public GameObject
+class Light : public GameObject, public Singleton<Light>
 {
 public:
 	Light();

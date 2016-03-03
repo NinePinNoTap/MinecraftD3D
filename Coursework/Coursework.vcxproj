@@ -115,7 +115,7 @@
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="SkySphere.cpp" />
     <ClCompile Include="WindowManager.cpp" />
-    <ClCompile Include="Sound3D.cpp" />
+    <ClCompile Include="AudioClip.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextureArray.cpp" />
@@ -124,9 +124,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="WaveHeader.h" />
     <ClInclude Include="AudioTrigger.h" />
+    <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Clouds.h" />
+    <ClInclude Include="Colour.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="DirectSound.h" />
@@ -141,6 +144,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelMesh.h" />
+    <ClInclude Include="VertexData.h" />
     <ClInclude Include="PerformanceManager.h" />
     <ClInclude Include="PerlinNoiseGenerator.h" />
     <ClInclude Include="Primitive.h" />
@@ -159,13 +163,15 @@
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SkySphere.h" />
+    <ClInclude Include="Vector2.h" />
+    <ClInclude Include="Vector3.h" />
     <ClInclude Include="WindowManager.h" />
-    <ClInclude Include="Sound3D.h" />
+    <ClInclude Include="AudioClip.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextureArray.h" />
     <ClInclude Include="Transform.h" />
-    <ClInclude Include="DataStructs.h" />
+    <ClInclude Include="Rect.h" />
     <ClInclude Include="Water.h" />
   </ItemGroup>
   <ItemGroup>

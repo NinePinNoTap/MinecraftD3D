@@ -149,7 +149,7 @@ bool CheckCollision(BoundingBox box, D3DXVECTOR3 position)
 	return insideX && insideY && insideZ;
 }
 
-D3DXVECTOR2 ConvertToScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ScreenResolution WindowSize)
+D3DXVECTOR2 ConvertToScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, Rect2D WindowSize)
 {
 	// Transform the coordinates using the view and projection matrix
 	D3DXVec3TransformCoord(&pos, &pos, &viewMatrix);
@@ -162,7 +162,7 @@ D3DXVECTOR2 ConvertToScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMAT
 	return D3DXVECTOR2(pos.x, pos.y);
 }
 
-bool CheckScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ScreenResolution windowSize)
+bool CheckScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, Rect2D windowSize)
 {
 	// Convert the 3D position to screen space
 	D3DXVECTOR2 ConvertedPos = ConvertToScreenSpace(pos, viewMatrix, projectionMatrix, windowSize);
@@ -190,7 +190,7 @@ bool CheckScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMATRIX project
 	return xCheck && yCheck && D3DXPlaneDotCoord(&viewPlane, &pos) >= 0.0f;
 }
 
-bool CheckScreenSpace(D3DXVECTOR3 position, BoundingBox box, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ScreenResolution windowSize)
+bool CheckScreenSpace(D3DXVECTOR3 position, BoundingBox box, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, Rect2D windowSize)
 {
 	// Create the positions in world space
 	D3DXVECTOR3 leftPos = position + D3DXVECTOR3(box.left, 0, 0);

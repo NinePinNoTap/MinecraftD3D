@@ -8,8 +8,10 @@
 #include <string>
 #include <math.h>
 
+#include "BoundingBox.h"
+#include "Rect.h"
+#include "Vector2.h"
 #include "ShaderBuffers.h"
-#include "DataStructs.h"
 
 using namespace std;
 
@@ -57,15 +59,13 @@ bool RangeCheck(float value, float min, float max);
 bool CheckCollision(BoundingBox box, D3DXVECTOR3 position);
 
 // Converts a 3D position to 2D screen space
-D3DXVECTOR2 ConvertToScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ScreenResolution WindowSize);
+D3DXVECTOR2 ConvertToScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, Rect2D WindowSize);
 
 // Checks if the position is inside screen space
-bool CheckScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ScreenResolution WindowSize);
+bool CheckScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, Rect2D WindowSize);
 
 // Checks if the entire object is inside screen space
-bool CheckScreenSpace(D3DXVECTOR3 position, BoundingBox box, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ScreenResolution WindowSize);
+bool CheckScreenSpace(D3DXVECTOR3 position, BoundingBox box, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, Rect2D WindowSize);
 
 // Transposes each matrix in the matrix buffer
 void TransposeMatrix(MatrixCBuffer& matrix);
-
-

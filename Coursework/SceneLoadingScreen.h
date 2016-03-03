@@ -12,7 +12,7 @@ public:
 	~SceneLoadingScreen();
 
 	// Initialising
-	bool Initialise(ScreenResolution WindowResolution);
+	bool Initialise(Rect2D WindowResolution);
 
 	void Reset();
 

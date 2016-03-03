@@ -21,20 +21,17 @@ MainScene::~MainScene()
 {
 }
 
-bool MainScene::Initialise(HWND hwnd, ScreenResolution WindowResolution)
+bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 {
 	//=======================
 	// Initialise the Camera
 	//=======================
 
-	Camera_ = new Camera;
-	if (!Camera_) { return false; }
-	Camera_ -> Initialise();
-	Camera_ -> Get2DViewMatrix(BaseViewMatrix_);
-	Camera_->SetStartPosition(447, 24, 163);
-	Camera_->SetStartRotation(6, 28, 0);
-	Camera_ -> AllowFlying(true);
-	Camera_->SetSpeed(0.5f);
+	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
+	Camera::Instance()->SetStartPosition(447, 24, 163);
+	Camera::Instance()->SetStartRotation(6, 28, 0);
+	Camera::Instance()->AllowFlying(true);
+	Camera::Instance()->SetSpeed(0.5f);
 
 	//=======================
 	// Initialise the Clouds
@@ -49,61 +46,16 @@ bool MainScene::Initialise(HWND hwnd, ScreenResolution WindowResolution)
 		return false;
 	}
 
-	//=====================
-	// Initialise the Fire
-	//=====================
-
-	/*Fire_ = new Fire;
-	if (!Fire_) { return false; }
-	Result_ = Fire_ -> Initialise("Data/Inside/Fire/fire.txt", L"Data/Inside/Fire/fire01.dds", L"Data/Inside/Fire/noise01.dds", L"Data/Inside/Fire/alpha01.dds");
-	if (!Result_)
-	{
-		MessageBox(hwnd, L"Could not initialise the fire object.", L"Error", MB_OK);
-		return false;
-	}
-	Fire_->GetTransform()->SetPosition(439.75, 23, 160.0f);
-	Fire_->GetTransform()->SetScale(1, 1, 1);*/
-
 	//======================
 	// Initialise the Light
 	//======================
 
-	Light_ = new Light;
-	if (!Light_) { return false; }
-	Light_ -> Initialise();
-	Light_->GetTransform()->SetPosition(-3500.0f, 9900.0f, 2100.0f);
-	Light_->SetAmbientColor(0.5f, 0.5f, 0.5f, 1.0f);
-	Light_->SetDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
-	Light_->SetDirection(0.5f, -0.75f, 0.25f);
-	Light_->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	Light_->SetSpecularPower(32.0f);
-
-	//========================
-	// Initialise Game Models
-	//========================
-	
-	// Camp Fire
-	/*CampFire_ = new Model;
-	if (!CampFire_) { return false; }
-	Result_ = CampFire_->GetMesh()->LoadModel("Data/Inside/CampFire/", "fire.obj");
-	if (!Result_)
-	{
-		MessageBox(hwnd, L"Could not initialise the camp fire object.", L"Error", MB_OK);
-		return false;
-	}
-	CampFire_->GetTransform()->SetPosition(440, 22, 160.0f);
-	CampFire_->GetTransform()->SetScale(1, 1, 1);
-	CampFire_->SetActive(false);*/
-
-	// Models
-	SetDirectory("Data/Inside/Characters/");
-	//AddObject("pirate.obj", D3DXVECTOR3(450, 22.6, 168.5));
-
-	SetDirectory("Data/Inside/Chest/");
-	//AddObject("chest.obj", D3DXVECTOR3(449.5, 21.5, 167.5), D3DXVECTOR3(0,45,0));
-
-	SetDirectory("Data/Inside/Boat/");
-	//AddObject("boat.obj", D3DXVECTOR3(440, 19, 135), D3DXVECTOR3(15,-180,0), D3DXVECTOR3(1,1,1), true);
+	Light::Instance()->GetTransform()->SetPosition(-3500.0f, 9900.0f, 2100.0f);
+	Light::Instance()->SetAmbientColor(0.5f, 0.5f, 0.5f, 1.0f);
+	Light::Instance()->SetDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
+	Light::Instance()->SetDirection(0.5f, -0.75f, 0.25f);
+	Light::Instance()->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	Light::Instance()->SetSpecularPower(32.0f);
 
 	//======================
 	// Initialise the Ocean 
@@ -111,7 +63,7 @@ bool MainScene::Initialise(HWND hwnd, ScreenResolution WindowResolution)
 
 	Ocean_ = new Water;
 	if (!Ocean_) { return false; }
-	Result_ = Ocean_->Initialise(L"Data/Textures/WaterNormal.dds", ObjSize(512.0f, 512.0f, 17.5f));
+	Result_ = Ocean_->Initialise(L"Data/Textures/WaterNormal.dds", Rect3D(512.0f, 512.0f, 17.5f));
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the ocean object.", L"Error", MB_OK);
@@ -120,7 +72,7 @@ bool MainScene::Initialise(HWND hwnd, ScreenResolution WindowResolution)
 	Ocean_->GetTransform()->SetPosition(256, Ocean_->GetWaterHeight(), 256);
 
 	//================================
-	// Initialise the Particle WindowManager
+	// Initialise the Particle System
 	//================================
 
 	ParticleSystem_ = new ParticleSystem;
@@ -173,7 +125,7 @@ bool MainScene::Initialise(HWND hwnd, ScreenResolution WindowResolution)
 
 	Sprite_ = new Sprite;
 	if (!Sprite_) { return false; }
-	Result_ = Sprite_->Initialise(ObjSize(WindowResolution.width, WindowResolution.height));
+	Result_ = Sprite_->Initialise(Rect3D(WindowResolution.width, WindowResolution.height));
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the screen window object.", L"Error", MB_OK);
@@ -198,7 +150,7 @@ bool MainScene::Initialise(HWND hwnd, ScreenResolution WindowResolution)
 	// Initialise Sounds
 	//===================
 
-	AmbientSound_ = new Sound3D;
+	AmbientSound_ = new AudioClip;
 	AmbientSound_->LoadFile("Data/Sounds/water.wav", false);
 
 	//========================
@@ -207,7 +159,7 @@ bool MainScene::Initialise(HWND hwnd, ScreenResolution WindowResolution)
 
 	Terrain_ = new Terrain;
 	if (!Terrain_) { return false; }
-	Result_ = Terrain_->Initialise(ObjSize(256, 256), L"Data/Textures/sand.dds", L"Data/Textures/sand_normal.dds", Vector2(50, 50), 1.0f);
+	Result_ = Terrain_->Initialise(Rect3D(256, 256), L"Data/Textures/sand.dds", L"Data/Textures/sand_normal.dds", Vector2(50, 50), 1.0f);
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the terrain object.", L"Error", MB_OK);
@@ -261,12 +213,6 @@ void MainScene::Shutdown()
 
 	ShutdownGameObjects();
 
-	if (Camera_)
-	{
-		delete Camera_;
-		Camera_ = 0;
-	}
-
 	if (Clouds_)
 	{
 		Clouds_ -> Shutdown();
@@ -279,12 +225,6 @@ void MainScene::Shutdown()
 		Fire_ -> Shutdown();
 		delete Fire_;
 		Fire_ = 0;
-	}
-
-	if (Light_)
-	{
-		delete Light_;
-		Light_ = 0;
 	}
 
 	if (ParticleSystem_)
@@ -359,16 +299,21 @@ void MainScene::Reset()
 	// Reset objects back to their start state
 	//=========================================
 
-	Camera_ -> Reset();
+	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
+	Camera::Instance()->SetStartPosition(447, 24, 163);
+	Camera::Instance()->SetStartRotation(6, 28, 0);
+	Camera::Instance()->AllowFlying(true);
+	Camera::Instance()->SetSpeed(0.5f);
+
+	Light::Instance()->GetTransform()->SetPosition(-3500.0f, 9900.0f, 2100.0f);
+	Light::Instance()->SetAmbientColor(0.5f, 0.5f, 0.5f, 1.0f);
+	Light::Instance()->SetDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
+	Light::Instance()->SetDirection(0.5f, -0.75f, 0.25f);
+	Light::Instance()->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	Light::Instance()->SetSpecularPower(32.0f);
+
 	InputManager::Instance()->Initialise();
 	LockMouseToCenter();
-
-	//======================================
-	// Set Object Pointers to Shader Engine
-	//======================================
-
-	ShaderManager::Instance()->SetCamera(Camera_);
-	ShaderManager::Instance()->SetLight(Light_);
 
 	//============
 	// Play Sound
@@ -400,21 +345,20 @@ bool MainScene::UpdateObjects()
 	// Set Camera Position
 	//=====================
 	
-	//Fire_ -> SetCameraPosition(Camera_ -> GetTransform()->GetPosition());
-	ParticleSystem_->GetTransform()->SetPosition(Camera_->GetTransform()->GetPosition() + (Camera_->GetTransform()->GetForwardVector() * 1.25));
+	ParticleSystem_->GetTransform()->SetPosition(Camera::Instance()->GetTransform()->GetPosition() + (Camera::Instance()->GetTransform()->GetForwardVector() * 1.25));
 
 	//================
 	// Update Objects
 	//================
 
-	Camera_ -> Frame();
+	Camera::Instance() -> Frame();
 	Clouds_ -> Frame();
-	//Fire_ -> Frame();
 	Ocean_ -> Frame();
 
+	// TEMP -------------------------
 	if (InputManager::Instance()->GetKeyDown('P'))
 	{
-		Terrain_->GetMesh()->CreateTerrainWithPerlinNoise(ObjSize(256, 256), Vector2(50, 50), 1.0f, 40);
+		Terrain_->GetMesh()->CreateTerrainWithPerlinNoise(Rect3D(256, 256), Vector2(50, 50), 1.0f, 40);
 	}
 
 	Result_ = ParticleSystem_ -> Frame(PerformanceManager::Instance()->GetTime());
@@ -431,7 +375,7 @@ bool MainScene::UpdateObjects()
 	// Check Underwater Status
 	//=========================
 
-	if (Camera_->GetTransform()->GetY() < Ocean_->GetWaterHeight())
+	if (Camera::Instance()->GetTransform()->GetY() < Ocean_->GetWaterHeight())
 	{
 		IsUnderwater_ = true;
 	}
@@ -453,17 +397,17 @@ bool MainScene::UpdateText()
 	if (!Result_) { return false; }
 	Result_ = Text_->SetText(1, "CPU : ", PerformanceManager::Instance()->GetUsage());
 	if (!Result_) { return false; }
-	Result_ = Text_->SetText(2, "Camera X : ", (int)Camera_->GetTransform()->GetX());
+	Result_ = Text_->SetText(2, "Camera X : ", (int)Camera::Instance()->GetTransform()->GetX());
 	if (!Result_) { return false; }
-	Result_ = Text_->SetText(3, "Camera Y : ", (int)Camera_->GetTransform()->GetY());
+	Result_ = Text_->SetText(3, "Camera Y : ", (int)Camera::Instance()->GetTransform()->GetY());
 	if (!Result_) { return false; }
-	Result_ = Text_->SetText(4, "Camera Z : ", (int)Camera_->GetTransform()->GetZ());
+	Result_ = Text_->SetText(4, "Camera Z : ", (int)Camera::Instance()->GetTransform()->GetZ());
 	if (!Result_) { return false; }
-	Result_ = Text_->SetText(5, "Rotation X : ", (int)Camera_->GetTransform()->GetPitch());
+	Result_ = Text_->SetText(5, "Rotation X : ", (int)Camera::Instance()->GetTransform()->GetPitch());
 	if (!Result_) { return false; }
-	Result_ = Text_->SetText(6, "Rotation Y : ", (int)Camera_->GetTransform()->GetYaw());
+	Result_ = Text_->SetText(6, "Rotation Y : ", (int)Camera::Instance()->GetTransform()->GetYaw());
 	if (!Result_) { return false; }
-	Result_ = Text_->SetText(7, "Rotation Z : ", (int)Camera_->GetTransform()->GetRoll());
+	Result_ = Text_->SetText(7, "Rotation Z : ", (int)Camera::Instance()->GetTransform()->GetRoll());
 	if (!Result_) { return false; }
 
 	return true;
@@ -497,7 +441,7 @@ bool MainScene::UserInputManager()
 
 	if (InputManager::Instance() -> GetKeyDown(VK_BACK))
 	{
-		Camera_ -> Reset();
+		Camera::Instance() -> Reset();
 	}
 
 	//=======================
@@ -520,11 +464,10 @@ bool MainScene::UserInputManager()
 		NightTimeMode_ = !NightTimeMode_;
 
 		// Toggle objects
-		Light_ -> ToggleTime(NightTimeMode_);
+		Light::Instance() -> ToggleTime(NightTimeMode_);
 		SkySphere_ -> ToggleTime(NightTimeMode_);
 		Ocean_ -> ToggleTime(NightTimeMode_);
 		Fire_ -> SetActive(NightTimeMode_);
-		//CampFire_->SetActive(NightTimeMode_);
 	}
 
 	return true;
@@ -585,8 +528,8 @@ bool MainScene::RenderScene(bool ShowText)
 	//================
 
 	// Set the position of the sky and clouds to the camera
-	Clouds_->GetTransform()->SetPosition(Camera_->GetTransform()->GetPosition());
-	SkySphere_->GetTransform()->SetPosition(Camera_->GetTransform()->GetPosition());
+	Clouds_->GetTransform()->SetPosition(Camera::Instance()->GetTransform()->GetPosition());
+	SkySphere_->GetTransform()->SetPosition(Camera::Instance()->GetTransform()->GetPosition());
 
 	// Disable culling and the z buffer
 	DirectXManager::Instance() -> ToggleCulling(false);
@@ -648,27 +591,6 @@ bool MainScene::RenderScene(bool ShowText)
 			}
 		}
 	}
-
-	// Render the camp fire
-	/*if (CampFire_->IsActive())
-	{
-		Result_ = ShaderManager::Instance()->LightRender(CampFire_, MODEL_SPECULAR);
-		if (!Result_) { return false; }
-	}*/
-
-	//=================
-	// Render the Fire
-	//=================
-
-	//if (Fire_ -> IsActive())
-	//{
-	//	// Set our alpha blending
-	//	DirectXManager::Instance() -> EnableFireBlendState();
-
-	//	// Render the fire
-	//	Result_ = ShaderManager::Instance()->FireRender(Fire_);
-	//	if (!Result_) { return false; }
-	//}
 
 	//==============================================
 	// Generate Matrices and Send To Shader Manager
@@ -741,10 +663,6 @@ bool MainScene::RenderWithPostProcessing()
 		DirectXManager::Instance() -> ToggleWireframe(false);
 	}
 
-	// Render with post processing effect
-//	Result_ = ShaderManager::Instance()->PostProcessingRender(Sprite_, SceneTexture_, WaterEffect_);
-	//if (!Result_) { return false; }
-
 	// Reset wireframe status back to previous setting
 	DirectXManager::Instance() -> ToggleWireframe(WireframeStatus);
 
@@ -810,8 +728,8 @@ bool MainScene::RenderReflection()
 	//================
 
 	// Create a camera reflected in the Y axis
-	ReflectedCameraPosition = Camera_->GetTransform()->GetPosition();
-	ReflectedCameraPosition.y = -Camera_->GetTransform()->GetY() + (Ocean_->GetWaterHeight() * 2.0f);
+	ReflectedCameraPosition = Camera::Instance()->GetTransform()->GetPosition();
+	ReflectedCameraPosition.y = -Camera::Instance()->GetTransform()->GetY() + (Ocean_->GetWaterHeight() * 2.0f);
 
 	// Update Camera Position
 	SkySphere_->GetTransform()->SetPosition(ReflectedCameraPosition);
@@ -939,11 +857,11 @@ void MainScene::GenerateMatrices()
 	// Generate World/Ortho/Projection/View Matrices
 	//===============================================
 
-	Camera_ -> Render();
-	Camera_ -> RenderReflection(Ocean_ -> GetWaterHeight());
-	Camera_ -> GetViewMatrix(ViewMatrix_);
-	Camera_ -> Get2DViewMatrix(BaseViewMatrix_);
-	Camera_ -> GetReflectionMatrix(ReflectionViewMatrix_);
+	Camera::Instance() -> Render();
+	Camera::Instance() -> RenderReflection(Ocean_ -> GetWaterHeight());
+	Camera::Instance() -> GetViewMatrix(ViewMatrix_);
+	Camera::Instance() -> Get2DViewMatrix(BaseViewMatrix_);
+	Camera::Instance() -> GetReflectionMatrix(ReflectionViewMatrix_);
 
 	DirectXManager::Instance() -> GetWorldMatrix(WorldMatrix_);
 	DirectXManager::Instance() -> GetProjectionMatrix(ProjectionMatrix_);

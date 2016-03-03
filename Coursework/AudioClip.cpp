@@ -1,19 +1,20 @@
-#include "Sound3D.h"
+#include "AudioClip.h"
 
-Sound3D::Sound3D()
+AudioClip::AudioClip()
 {
 	SoundBuffer_ = 0;
 	SoundBuffer3D_ = 0;
 	Position_ = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
-Sound3D::~Sound3D()
+AudioClip::~AudioClip()
 {
 	if (SoundBuffer_)
 	{
 		SoundBuffer_->Release();
 		SoundBuffer_ = 0;
 	}
+
 	if (SoundBuffer3D_)
 	{
 		SoundBuffer3D_->Release();
@@ -22,7 +23,7 @@ Sound3D::~Sound3D()
 }
 
 // Initialising
-bool Sound3D::LoadFile(char* filename, bool Is3D)
+bool AudioClip::LoadFile(char* filename, bool Is3D)
 {
 	int error;
 	FILE* filePtr;
@@ -161,7 +162,7 @@ bool Sound3D::LoadFile(char* filename, bool Is3D)
 }
 
 // Controls
-bool Sound3D::Play(bool Loop)
+bool AudioClip::Play(bool Loop)
 {
 	if (!SoundBuffer_)
 	{
@@ -185,7 +186,7 @@ bool Sound3D::Play(bool Loop)
 	return true;
 }
 
-bool Sound3D::Stop()
+bool AudioClip::Stop()
 {
 	Result_ = SoundBuffer_->Stop();
 	if (FAILED(Result_)) { return false; }
@@ -193,7 +194,7 @@ bool Sound3D::Stop()
 	return true;
 }
 
-bool Sound3D::SetVolume(float Vol)
+bool AudioClip::SetVolume(float Vol)
 {
 	// Convert from a percentage of normal volume to a percentage of reduction
 	Vol = 1.0f - Vol;
@@ -212,13 +213,13 @@ bool Sound3D::SetVolume(float Vol)
 }
 
 // Setters
-void Sound3D::SetPosition(D3DXVECTOR3 Position)
+void AudioClip::SetPosition(D3DXVECTOR3 Position)
 {
 	Position_ = Position;
 }
 
 // Getters
-bool Sound3D::IsPlaying()
+bool AudioClip::IsPlaying()
 {
 	DWORD dwStatus = 0;
 	SoundBuffer_->GetStatus(&dwStatus);

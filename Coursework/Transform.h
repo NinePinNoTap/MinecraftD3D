@@ -4,7 +4,7 @@
 #include <d3dx10math.h>
 
 #include "Constants.h"
-#include "DataStructs.h"
+
 #include "Utilities.h"
 
 class Transform

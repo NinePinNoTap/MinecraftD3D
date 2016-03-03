@@ -9,16 +9,13 @@ SceneLoadingScreen::~SceneLoadingScreen()
 
 }
 
-bool SceneLoadingScreen::Initialise(ScreenResolution WindowResolution)
+bool SceneLoadingScreen::Initialise(Rect2D WindowResolution)
 {
 	//=======================
 	// Initialise the Camera
 	//=======================
 
-	Camera_ = new Camera;
-	if (!Camera_) { return false; }
-	Camera_->Initialise();
-	Camera_->Get2DViewMatrix(BaseViewMatrix_);
+	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
 	
 	//===============================
 	// Initialise the Loading Screen
@@ -27,7 +24,7 @@ bool SceneLoadingScreen::Initialise(ScreenResolution WindowResolution)
 	// Loading Screen BG
 	Background_ = new Sprite;
 	if (!Background_) { return false; }
-	Result_ = Background_->Initialise(ObjSize(WindowResolution.width, WindowResolution.height));
+	Result_ = Background_->Initialise(Rect3D(WindowResolution.width, WindowResolution.height));
 	if (!Result_)
 	{
 		return false;
@@ -103,9 +100,9 @@ void SceneLoadingScreen::GenerateMatrices()
 	// Generate World/Ortho/Projection/View Matrices
 	//===============================================
 
-	Camera_->Render();
-	Camera_->GetViewMatrix(ViewMatrix_);
-	Camera_->Get2DViewMatrix(BaseViewMatrix_);
+	Camera::Instance()->Render();
+	Camera::Instance()->GetViewMatrix(ViewMatrix_);
+	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
 
 	DirectXManager::Instance()->GetWorldMatrix(WorldMatrix_);
 	DirectXManager::Instance()->GetProjectionMatrix(ProjectionMatrix_);

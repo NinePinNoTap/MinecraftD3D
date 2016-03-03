@@ -9,7 +9,7 @@ TerrainMesh::~TerrainMesh()
 {
 }
 
-bool TerrainMesh::CreateTerrain(ObjSize TerrainSize, Vector2 TextureRepeat, int Scale)
+bool TerrainMesh::CreateTerrain(Rect3D TerrainSize, Vector2 TextureRepeat, int Scale)
 {
 	// Store terrain size
 	Terrain_ = TerrainSize;
@@ -45,7 +45,7 @@ bool TerrainMesh::CreateTerrain(ObjSize TerrainSize, Vector2 TextureRepeat, int 
 	}
 }
 
-void TerrainMesh::CreateTerrainWithPerlinNoise(ObjSize TerrainSize, Vector2 TextureRepeat, int Scale, float Smoothing, int Seed)
+void TerrainMesh::CreateTerrainWithPerlinNoise(Rect3D TerrainSize, Vector2 TextureRepeat, int Scale, float Smoothing, int Seed)
 {
 	int index;
 	float noise;

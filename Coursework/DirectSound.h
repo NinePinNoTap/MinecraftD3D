@@ -13,7 +13,7 @@
 #include <d3dx10math.h>
 
 #include "Singleton.h"
-#include "DataStructs.h"
+#include "WaveHeader.h"
 
 using namespace std;
 

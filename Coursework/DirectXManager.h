@@ -10,9 +10,10 @@
 #include <d3d11.h>
 #include <d3dx10math.h>
 
+#include "Colour.h"
 #include "Constants.h"
+#include "Rect.h"
 #include "Singleton.h"
-#include "DataStructs.h"
 
 class DirectXManager : public Singleton<DirectXManager>
 {
@@ -22,13 +23,13 @@ public:
 	~DirectXManager();
 
 	// Initialising
-	bool Initialise(ScreenResolution WindowDimension, HWND hwnd);
+	bool Initialise(Rect2D WindowDimension, HWND hwnd);
 
 	// Shutdown
 	void Shutdown();
 	
 	// Rendering
-	void BeginScene(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f);
+	void BeginScene(Colour SceneColour = BLACK);
 	void EndScene();
 
 	// Rendering Toggles

@@ -13,7 +13,7 @@ Sprite::~Sprite()
 {
 }
 
-bool Sprite::Initialise(ObjSize Dimensions)
+bool Sprite::Initialise(Rect3D Dimensions)
 {
 	// Create the mesh
 	Mesh_ = new PrimitiveMesh;

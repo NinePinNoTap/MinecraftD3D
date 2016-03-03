@@ -2,7 +2,7 @@
 
 AudioTrigger::AudioTrigger()
 {
-	Sound_ = 0;
+	Clip_ = 0;
 }
 
 AudioTrigger::~AudioTrigger()
@@ -10,13 +10,13 @@ AudioTrigger::~AudioTrigger()
 
 }
 
-void AudioTrigger::Initialise(char* filename, float volume, D3DXVECTOR3 Position, ObjSize box)
+void AudioTrigger::Initialise(char* filename, float volume, D3DXVECTOR3 Position, Rect3D box)
 {
 	// Initialise the sound
-	Sound_ = new Sound3D;
-	Sound_->LoadFile(filename, true);
-	Sound_->SetPosition(Position);
-	Sound_->SetVolume(volume);
+	Clip_ = new AudioClip;
+	Clip_->LoadFile(filename, true);
+	Clip_->SetPosition(Position);
+	Clip_->SetVolume(volume);
 
 	// Store the bounding box
 	BoundingBox_ = BoundingBox(box, Position);
@@ -35,6 +35,6 @@ void AudioTrigger::Frame(D3DXVECTOR3 CameraPosition)
 	{
 		// Play the sound
 		Activated_ = true;
-		Sound_->Play(false);
+		Clip_->Play(false);
 	}
 }

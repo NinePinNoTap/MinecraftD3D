@@ -3,8 +3,16 @@
 ApplicationManager::ApplicationManager()
 {
 	// Initialise pointers to null
-	MainScene_ = 0;
+	Camera_ = 0;
 	CurrentScene_ = 0;
+	DirectXManager_ = 0;
+	DirectSound_ = 0;
+	InputManager_ = 0;
+	Light_ = 0;
+	MainScene_ = 0;
+	ShaderManager_ = 0;
+	PerformanceManager_ = 0;
+	SceneLoading_ = 0;
 }
 
 ApplicationManager::ApplicationManager(const ApplicationManager& other)
@@ -15,8 +23,16 @@ ApplicationManager::~ApplicationManager()
 {
 }
 
-bool ApplicationManager::Initialise(HWND hwnd, ScreenResolution WindowResolution)
+bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 {
+	//===================
+	// Initialise Camera
+	//===================
+
+	Camera_ = new Camera;
+	if (!Camera_) { return false; }
+	Camera_->Initialise();
+
 	//====================
 	// Initialise DirectX
 	//====================
@@ -64,6 +80,20 @@ bool ApplicationManager::Initialise(HWND hwnd, ScreenResolution WindowResolution
 		return false;
 	}
 	InputManager_->Initialise();
+
+	//==================
+	// Initialise Light
+	//==================
+
+	Light_ = new Light;
+	if (!Light_) { return false; }
+	Light_->Initialise();
+	Light_->GetTransform()->SetPosition(-3500.0f, 9900.0f, 2100.0f);
+	Light_->SetAmbientColor(0.5f, 0.5f, 0.5f, 1.0f);
+	Light_->SetDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
+	Light_->SetDirection(0.5f, -0.75f, 0.25f);
+	Light_->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	Light_->SetSpecularPower(32.0f);
 
 	//==========================
 	// Initialise ShaderManager
@@ -151,6 +181,12 @@ void ApplicationManager::Shutdown()
 	// Shutdown Singletons
 	//=====================
 
+	if (Camera_)
+	{
+		Camera_->Shutdown();
+		delete Camera_;
+		Camera_ = 0;
+	}
 	if (DirectXManager_)
 	{
 		DirectXManager_->Shutdown();
@@ -167,6 +203,12 @@ void ApplicationManager::Shutdown()
 	{
 		delete InputManager_;
 		InputManager_ = 0;
+	}
+	if (Light_)
+	{
+		Light_->Shutdown();
+		delete Light_;
+		Light_ = 0;
 	}
 	if (ShaderManager_)
 	{

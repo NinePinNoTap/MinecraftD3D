@@ -17,7 +17,7 @@ bool WindowManager::Initialise()
 	bool Result;
 
 	// Initialise the width and height of the screen to zero before sending the variables into the function.
-	ScreenResolution WindowResolution;
+	Rect2D WindowResolution;
 
 	// Initialise the windows api.
 	InitialiseWindows(WindowResolution.width, WindowResolution.height);

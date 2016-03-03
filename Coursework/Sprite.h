@@ -5,7 +5,7 @@
 
 #include "Constants.h"
 #include "Model.h"
-#include "DataStructs.h"
+#include "Rect.h"
 #include "Primitive.h"
 
 class Sprite : public Primitive
@@ -15,7 +15,7 @@ public:
 	Sprite(const Sprite&);
 	~Sprite();
 
-	bool Initialise(ObjSize Dimensions);
+	bool Initialise(Rect3D Dimensions);
 	bool SetTexture(WCHAR* filename);
 };
 

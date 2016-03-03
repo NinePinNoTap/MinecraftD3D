@@ -7,9 +7,10 @@
 using namespace std;
 
 #include "Primitive.h"
+#include "PrimitiveMesh.h"
 #include "TextureArray.h"
 #include "Texture.h"
-#include "DataStructs.h"
+
 
 class Clouds : public Primitive
 {

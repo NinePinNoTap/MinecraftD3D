@@ -5,15 +5,15 @@
 #include <dsound.h>
 #include <string>
 
-#include "DataStructs.h"
 #include "DirectSound.h"
 #include "Utilities.h"
+#include "WaveHeader.h"
 
-class Sound3D
+class AudioClip
 {
 public:
-	Sound3D();
-	~Sound3D();
+	AudioClip();
+	~AudioClip();
 
 	// Initialising
 	bool LoadFile(char* filename, bool Is3D);

@@ -3,7 +3,7 @@
 #include <d3dx11.h>
 #include <d3dx10math.h>
 
-#include "DataStructs.h"
+#include "Colour.h"
 
 //==========
 // Graphics
@@ -33,14 +33,14 @@ const Colour GREEN = Colour(0, 1, 0, 1);
 const Colour BLUE = Colour(0, 0, 1, 1);
 const Colour YELLOW = Colour(1, 1, 0, 1);
 
-//======
-// Misc
-//======
+//===================
+// Direction Vectors
+//===================
 
 const D3DXVECTOR3 FORWARD_VECTOR = D3DXVECTOR3(0, 0, 1);
 const D3DXVECTOR3 RIGHT_VECTOR = D3DXVECTOR3(1, 0, 0);
 const D3DXVECTOR3 UP_VECTOR = D3DXVECTOR3(0, 1, 0);
-const D3DXVECTOR3 DEFAULT = D3DXVECTOR3(0, 0, 0);
+const D3DXVECTOR3 ZERO = D3DXVECTOR3(0, 0, 0);
 
 //==========
 // Lighting

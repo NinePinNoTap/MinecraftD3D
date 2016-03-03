@@ -6,7 +6,7 @@
 
 #include "ApplicationManager.h"
 #include "Constants.h"
-#include "DataStructs.h"
+
 #include "Singleton.h"
 
 class WindowManager : public Singleton<WindowManager>

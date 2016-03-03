@@ -22,7 +22,7 @@ bool DirectSound::Initialise(HWND hwnd)
 	WAVEFORMATEX waveFormat;
 
 	//==========================
-	// Initialise DirectSound3D
+	// Initialise DirectAudioClip
 	//==========================
 
 	// Initialise the direct sound interface pointer for the default sound device.

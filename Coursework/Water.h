@@ -18,7 +18,7 @@ public:
 	~Water();
 
 	// Initialising
-	bool Initialise(WCHAR* textureFilename, ObjSize WaterResolution);
+	bool Initialise(WCHAR* textureFilename, Rect3D WaterResolution);
 
 	// Shutdown
 	void Shutdown();

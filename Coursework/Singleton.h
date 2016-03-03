@@ -35,6 +35,8 @@ public:
 
 	static T* Instance()
 	{
+		assert(Instance_);
+
 		// Returns the only instance of this object
 		return Instance_;
 	}

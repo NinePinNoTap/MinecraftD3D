@@ -16,8 +16,6 @@ Clouds::~Clouds()
 {
 }
 
-#include "PrimitiveMesh.h"
-
 // Set up
 bool Clouds::Initialise(WCHAR* cloudTextureFilename, WCHAR* perturbTextureFilename)
 {
