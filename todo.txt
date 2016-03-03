@@ -1,0 +1,26 @@
+System Manager
+- AssetManager
+- CameraManager
+- DirectXManager
+- InputManager
+- PerformanceManager
+- ShaderManager
+- SoundManager
+
+AssetManager
+- Uses a map to store textures, sounds, models etc
+
+ShaderManager
+- Nothing to do here? Unless we make it rendering better?
+
+SoundManager
+- One sound audio source
+- Links upto AssetManager by specifying a sound
+
+Terrain
+- Hooks up with TerrainMesh, can use perlin noise
+
+Obj Loader
+- Make it better
+-- Use mtl linker names as ID
+-- Load MTL seperate

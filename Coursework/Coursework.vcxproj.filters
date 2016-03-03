@@ -1,0 +1,400 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Game">
+      <UniqueIdentifier>{7b0b06dd-47a9-4a39-bbc6-9664b78548a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scenes">
+      <UniqueIdentifier>{317ff001-83f9-478c-92f7-d8ba91138583}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine">
+      <UniqueIdentifier>{8db269b7-bf5b-433a-ae81-73caa024ba8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\System">
+      <UniqueIdentifier>{af1eec32-71dc-471b-b73d-c64e7df33ff1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Manager">
+      <UniqueIdentifier>{903c8605-4bff-46f2-b051-1e9246a9128e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics">
+      <UniqueIdentifier>{06046781-5474-492b-b273-08acc55670db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Shader">
+      <UniqueIdentifier>{a9a22140-7aac-4a52-a893-c31f04d47177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Shader\HLSL Shader Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Shader\HLSL Shader Files\Cloud">
+      <UniqueIdentifier>{571c4953-68a7-4a27-8cb7-da5fdf97ce5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Shader\HLSL Shader Files\Fire">
+      <UniqueIdentifier>{c946d1b6-2954-4ac0-915e-e2ffb7e70f15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Shader\HLSL Shader Files\Font">
+      <UniqueIdentifier>{1a3d32f0-17ca-4156-9288-bdb317b26306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Shader\HLSL Shader Files\Light">
+      <UniqueIdentifier>{160915ec-78a6-4f91-85e6-365207a81b29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Shader\HLSL Shader Files\Ocean">
+      <UniqueIdentifier>{f27a9d56-b371-4938-a0ad-e7fe4b1233e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Shader\HLSL Shader Files\Particle">
+      <UniqueIdentifier>{3218d805-80d4-4ed5-9b7a-184e318846ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Shader\HLSL Shader Files\SkySphere">
+      <UniqueIdentifier>{61c12df0-450d-4309-96d3-6d568ad2cf5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Shader\HLSL Shader Files\Terrain">
+      <UniqueIdentifier>{f76930ad-863a-47eb-a550-4fb5f954032f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Shader\HLSL Shader Files\Texture">
+      <UniqueIdentifier>{d43ebb08-4d43-4448-9566-da3ad7425ede}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Texture">
+      <UniqueIdentifier>{0cbc688c-2f74-404c-9e56-f94e6f22d447}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Model">
+      <UniqueIdentifier>{34dd59de-2b40-483d-87b8-427ecc0226bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Text">
+      <UniqueIdentifier>{34bba1f5-1418-4264-8aad-823015d0ddfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Audio">
+      <UniqueIdentifier>{6c53b146-7741-40f9-824b-ee81026ffb3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\GameObjects">
+      <UniqueIdentifier>{1722001a-f49f-43b3-be35-71e5b4d6f8b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X11Engine\Graphics\Objects">
+      <UniqueIdentifier>{9fdd3434-3daa-4325-a9ae-4cedefd4b3d3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="TextureArray.cpp">
+      <Filter>X11Engine\Graphics\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="MainScene.cpp">
+      <Filter>Game\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene3D.cpp">
+      <Filter>Game\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneLoadingScreen.cpp">
+      <Filter>Game\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioTrigger.cpp">
+      <Filter>X11Engine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectSound.cpp">
+      <Filter>X11Engine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound3D.cpp">
+      <Filter>X11Engine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>X11Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>X11Engine\Graphics\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>X11Engine\Graphics\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="GameShader.cpp">
+      <Filter>X11Engine\Graphics\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolator.cpp">
+      <Filter>X11Engine\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities.cpp">
+      <Filter>X11Engine\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Game\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Clouds.cpp">
+      <Filter>Game\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Fire.cpp">
+      <Filter>Game\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Game\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Game\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="SkySphere.cpp">
+      <Filter>Game\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Game\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Water.cpp">
+      <Filter>Game\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>X11Engine\Graphics\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>X11Engine\Graphics\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="PerformanceManager.cpp">
+      <Filter>X11Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>X11Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXManager.cpp">
+      <Filter>X11Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowManager.cpp">
+      <Filter>X11Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationManager.cpp">
+      <Filter>X11Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>X11Engine\Graphics\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>X11Engine\Graphics\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager.cpp">
+      <Filter>X11Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>X11Engine\Graphics\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelMesh.cpp">
+      <Filter>X11Engine\Graphics\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveMesh.cpp">
+      <Filter>X11Engine\Graphics\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainMesh.cpp">
+      <Filter>X11Engine\Graphics\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>X11Engine\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>X11Engine\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive.cpp">
+      <Filter>X11Engine\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>X11Engine\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="PerlinNoiseGenerator.cpp">
+      <Filter>X11Engine\System</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Constants.h">
+      <Filter>X11Engine\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>X11Engine\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolator.h">
+      <Filter>X11Engine\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene3D.h">
+      <Filter>Game\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectSound.h">
+      <Filter>X11Engine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound3D.h">
+      <Filter>X11Engine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructs.h">
+      <Filter>X11Engine\System</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioTrigger.h">
+      <Filter>X11Engine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneLoadingScreen.h">
+      <Filter>Game\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities.h">
+      <Filter>X11Engine\System</Filter>
+    </ClInclude>
+    <ClInclude Include="MainScene.h">
+      <Filter>Game\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>X11Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>X11Engine\Graphics\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>X11Engine\Graphics\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>X11Engine\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="GameShader.h">
+      <Filter>X11Engine\Graphics\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureArray.h">
+      <Filter>X11Engine\Graphics\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>X11Engine\Graphics\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderBuffers.h">
+      <Filter>X11Engine\Graphics\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Clouds.h">
+      <Filter>Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Fire.h">
+      <Filter>Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="SkySphere.h">
+      <Filter>Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>X11Engine\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="PerformanceManager.h">
+      <Filter>X11Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>X11Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXManager.h">
+      <Filter>X11Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowManager.h">
+      <Filter>X11Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationManager.h">
+      <Filter>X11Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager.h">
+      <Filter>X11Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>X11Engine\Graphics\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>X11Engine\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelMesh.h">
+      <Filter>X11Engine\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveMesh.h">
+      <Filter>X11Engine\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainMesh.h">
+      <Filter>X11Engine\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>X11Engine\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>X11Engine\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive.h">
+      <Filter>X11Engine\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>X11Engine\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="PerlinNoiseGenerator.h">
+      <Filter>X11Engine\System</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Shaders\cloud.ps">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Cloud</Filter>
+    </None>
+    <None Include="Data\Shaders\cloud.vs">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Cloud</Filter>
+    </None>
+    <None Include="Data\Shaders\fire.ps">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Fire</Filter>
+    </None>
+    <None Include="Data\Shaders\fire.vs">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Fire</Filter>
+    </None>
+    <None Include="Data\Shaders\font.ps">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Font</Filter>
+    </None>
+    <None Include="Data\Shaders\font.vs">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Font</Filter>
+    </None>
+    <None Include="Data\Shaders\light.ps">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Light</Filter>
+    </None>
+    <None Include="Data\Shaders\light.vs">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Light</Filter>
+    </None>
+    <None Include="Data\Shaders\ocean.ds">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Ocean</Filter>
+    </None>
+    <None Include="Data\Shaders\ocean.hs">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Ocean</Filter>
+    </None>
+    <None Include="Data\Shaders\ocean.ps">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Ocean</Filter>
+    </None>
+    <None Include="Data\Shaders\ocean.vs">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Ocean</Filter>
+    </None>
+    <None Include="Data\Shaders\particle.ps">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Particle</Filter>
+    </None>
+    <None Include="Data\Shaders\particle.vs">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Particle</Filter>
+    </None>
+    <None Include="Data\Shaders\skysphere.ps">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\SkySphere</Filter>
+    </None>
+    <None Include="Data\Shaders\skysphere.vs">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\SkySphere</Filter>
+    </None>
+    <None Include="Data\Shaders\terrain.ps">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Terrain</Filter>
+    </None>
+    <None Include="Data\Shaders\terrain.vs">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Terrain</Filter>
+    </None>
+    <None Include="Data\Shaders\terrainreflection.ps">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Terrain</Filter>
+    </None>
+    <None Include="Data\Shaders\terrainreflection.vs">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Terrain</Filter>
+    </None>
+    <None Include="Data\Shaders\texture.ps">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Texture</Filter>
+    </None>
+    <None Include="Data\Shaders\texture.vs">
+      <Filter>X11Engine\Graphics\Shader\HLSL Shader Files\Texture</Filter>
+    </None>
+  </ItemGroup>
+</Project>

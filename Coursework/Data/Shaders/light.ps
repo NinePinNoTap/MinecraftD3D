@@ -1,0 +1,71 @@
+// Globals
+Texture2DArray shaderTextures;
+SamplerState SampleType;
+
+cbuffer LightBuffer
+{
+    float4 ambientColor;
+    float4 diffuseColor;
+    float3 lightDirection;
+    float specularPower;
+    float4 specularColor;
+};
+
+// Typedefs
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float3 tex : TEXCOORD0;
+    float3 normal : NORMAL;
+    float3 viewDirection : TEXCOORD1;
+    float3 lightPos : TEXCOORD2;
+};
+
+// Pixel Shader
+float4 PixelShaderMain(PixelInputType input) : SV_TARGET
+{
+    float4 textureColor;
+    float3 lightDir;
+    float lightIntensity;
+    float4 color;
+    float3 reflection;
+    float4 specular;
+	float4 lighting;
+
+	// Sample the texture
+    textureColor = shaderTextures.Sample(SampleType, input.tex);
+
+    // Create default lighting using the ambient color
+    lighting = ambientColor;
+
+    // Initialise the specular color
+    specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+    // Calculate the light intensity
+    lightDir = -lightDirection;
+    lightIntensity = saturate(dot(input.normal, input.lightPos));
+
+
+    if(lightIntensity > 0.0f)
+    {
+        // Apply diffuse to the lighting
+        lighting += (diffuseColor * lightIntensity);
+
+        // Saturate the lighting
+        lighting = saturate(lighting);
+
+        // Calculate the reflection vector
+        reflection = normalize(2 * lightIntensity * input.normal - lightDir); 
+
+        // Calculate the amount of specular
+        specular = pow(saturate(dot(reflection, input.viewDirection)), specularPower);
+    }
+
+    // Apply lighting to the texture
+    color = lighting * textureColor;
+
+    // Add specular to the color
+    color = saturate(color + specular);
+
+    return color;
+}

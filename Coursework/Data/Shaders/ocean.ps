@@ -1,0 +1,99 @@
+// Globals
+Texture2D refractionTexture : register(t0);
+Texture2D reflectionTexture : register(t1);
+Texture2D normalTexture : register(t2);
+SamplerState SampleType;
+
+cbuffer WaterBuffer
+{
+	float4 refractionTint;
+	float3 lightDirection;
+	float waterTranslation;
+	float reflectRefractScale;
+	float specularShininess;
+	float2 padding;
+};
+
+// Typedefs
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+	float4 reflectionPosition : TEXCOORD0;
+    float4 refractionPosition : TEXCOORD1;
+	float3 viewDirection : TEXCOORD2;
+    float2 tex1 : TEXCOORD3;
+    float2 tex2 : TEXCOORD4;
+};
+
+// Pixel Shader
+float4 PixelShaderMain(PixelInputType input) : SV_TARGET
+{
+    float4 normalMap1;
+	float4 normalMap2;
+	float3 normal1;
+	float3 normal2;
+	float3 normal;
+	float2 refractTexCoord;
+	float2 reflectTexCoord;
+	float4 reflectionColor;
+	float4 refractionColor;
+	float4 Colour;
+	float3 reflection;
+	float specular;
+
+	// Translate the texture
+	input.tex1.y += waterTranslation;
+	input.tex2.y += waterTranslation;
+
+	// Sample the normal texture using the new texture positions
+	normalMap1 = normalTexture.Sample(SampleType, input.tex1);
+	normalMap2 = normalTexture.Sample(SampleType, input.tex2);
+	
+	// Expand to -1/+1
+	normal1 = (normalMap1.rgb * 2.0f) - 1.0f;
+	normal2 = (normalMap2.rgb * 2.0f) - 1.0f;
+
+	// Combine the normals and normalise
+	normal = normalize(normal1 + normal2);
+		
+	// Calculate the projected refraction texture coordinates
+    refractTexCoord.x = input.refractionPosition.x / input.refractionPosition.w / 2.0f + 0.5f;
+    refractTexCoord.y = -input.refractionPosition.y / input.refractionPosition.w / 2.0f + 0.5f;
+	
+	// Calculate the projected reflection texture coordinates
+    reflectTexCoord.x = input.reflectionPosition.x / input.reflectionPosition.w / 2.0f + 0.5f;
+    reflectTexCoord.y = -input.reflectionPosition.y / input.reflectionPosition.w / 2.0f + 0.5f;
+		
+	// Re-position the texture coordinate sampling position by the scaled normal map value to simulate the rippling wave effect.
+	// Apply the normal mapping and reflect/refract scale to the tex coords
+	reflectTexCoord = reflectTexCoord + (normal.xy * reflectRefractScale);
+	refractTexCoord = refractTexCoord + (normal.xy * reflectRefractScale);
+	
+	// Sample the textures using the above coordinates
+    reflectionColor = reflectionTexture.Sample(SampleType, reflectTexCoord);
+    refractionColor = refractionTexture.Sample(SampleType, refractTexCoord);
+
+	// Apply the water Ocean
+	refractionColor = saturate(refractionColor * refractionTint);
+
+	// Combine the reflection and refraction
+	Colour = lerp(reflectionColor, refractionColor, 0.5f);
+
+	// Calculate the reflection vector
+	reflection = -reflect(normalize(lightDirection), normal);
+	
+	// Calculate the specular light
+	specular = dot(normalize(reflection), normalize(input.viewDirection));
+
+	// Only add specular if theres specular to add
+	if(specular > 0.0f)
+	{
+		// Multiply specular amount by the specular shininess
+		specular = pow(specular, specularShininess);
+
+		// Add the specular to the Ocean
+		Colour = saturate(Colour + specular);
+	}
+
+	return Colour;
+}

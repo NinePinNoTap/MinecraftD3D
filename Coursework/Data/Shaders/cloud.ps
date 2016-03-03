@@ -1,0 +1,45 @@
+Texture2DArray shaderTextures;
+SamplerState SampleType;
+
+// Globals
+cbuffer SkyBuffer
+{
+	float translation;
+	float scale;
+	float brightness;
+	float padding;
+};
+
+// Typedefs
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
+};
+
+// Pixel Shader
+float4 PixelShaderMain(PixelInputType input) : SV_TARGET
+{
+	float4 perturbValue;
+	float4 cloudColor;
+
+	// Move the position of the texture
+	input.tex.x += translation;
+
+	// Sample the perturb texture
+	perturbValue = shaderTextures.Sample(SampleType, float3(input.tex, 1));
+
+	// Scale the sample
+	perturbValue *= scale;
+
+	// Calculate the new pertub value
+	perturbValue.xy += input.tex.xy + translation;
+
+	// Sample the texture using the perturb value
+    cloudColor = shaderTextures.Sample(SampleType, float3(perturbValue.xy, 0));
+
+	// Apply the brightness
+	cloudColor *= brightness;
+
+    return cloudColor;
+}

@@ -1,0 +1,14 @@
+Texture2D shaderTexture;
+SamplerState SampleType;
+
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
+};
+
+float4 PixelShaderMain(PixelInputType input) : SV_TARGET
+{
+    // Sample the texture
+    return shaderTexture.Sample(SampleType, input.tex);;
+}

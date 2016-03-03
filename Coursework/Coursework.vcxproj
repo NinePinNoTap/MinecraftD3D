@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{AA234A0F-1BDC-4990-BBA0-89D9C9D2D806}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>DirectXCoursework</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK %28June 2010%29\Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Microsoft DirectX SDK %28June 2010%29; </AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="AudioTrigger.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Clouds.cpp" />
+    <ClCompile Include="ConstantBuffer.cpp" />
+    <ClCompile Include="DirectSound.cpp" />
+    <ClCompile Include="DirectXManager.cpp" />
+    <ClCompile Include="Fire.cpp" />
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameShader.cpp" />
+    <ClCompile Include="Interpolator.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelMesh.cpp" />
+    <ClCompile Include="PerformanceManager.cpp" />
+    <ClCompile Include="PerlinNoiseGenerator.cpp" />
+    <ClCompile Include="Primitive.cpp" />
+    <ClCompile Include="PrimitiveMesh.cpp" />
+    <ClCompile Include="Scene3D.cpp" />
+    <ClCompile Include="SceneLoadingScreen.cpp" />
+    <ClCompile Include="ApplicationManager.cpp" />
+    <ClCompile Include="TerrainMesh.cpp" />
+    <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="MainScene.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="SkySphere.cpp" />
+    <ClCompile Include="WindowManager.cpp" />
+    <ClCompile Include="Sound3D.cpp" />
+    <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TextureArray.cpp" />
+    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Water.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="AudioTrigger.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Clouds.h" />
+    <ClInclude Include="ConstantBuffer.h" />
+    <ClInclude Include="Constants.h" />
+    <ClInclude Include="DirectSound.h" />
+    <ClInclude Include="DirectXManager.h" />
+    <ClInclude Include="Fire.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameShader.h" />
+    <ClInclude Include="Interpolator.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelMesh.h" />
+    <ClInclude Include="PerformanceManager.h" />
+    <ClInclude Include="PerlinNoiseGenerator.h" />
+    <ClInclude Include="Primitive.h" />
+    <ClInclude Include="PrimitiveMesh.h" />
+    <ClInclude Include="SceneLoadingScreen.h" />
+    <ClInclude Include="ApplicationManager.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="TerrainMesh.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="Scene3D.h" />
+    <ClInclude Include="MainScene.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="ShaderBuffers.h" />
+    <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="Utilities.h" />
+    <ClInclude Include="Singleton.h" />
+    <ClInclude Include="SkySphere.h" />
+    <ClInclude Include="WindowManager.h" />
+    <ClInclude Include="Sound3D.h" />
+    <ClInclude Include="Terrain.h" />
+    <ClInclude Include="Text.h" />
+    <ClInclude Include="TextureArray.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="DataStructs.h" />
+    <ClInclude Include="Water.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Shaders\cloud.ps" />
+    <None Include="Data\Shaders\cloud.vs" />
+    <None Include="Data\Shaders\fire.ps" />
+    <None Include="Data\Shaders\fire.vs" />
+    <None Include="Data\Shaders\font.ps" />
+    <None Include="Data\Shaders\font.vs" />
+    <None Include="Data\Shaders\light.ps" />
+    <None Include="Data\Shaders\light.vs" />
+    <None Include="Data\Shaders\ocean.ds" />
+    <None Include="Data\Shaders\ocean.hs" />
+    <None Include="Data\Shaders\ocean.ps" />
+    <None Include="Data\Shaders\ocean.vs" />
+    <None Include="Data\Shaders\particle.ps" />
+    <None Include="Data\Shaders\particle.vs" />
+    <None Include="Data\Shaders\skysphere.ps" />
+    <None Include="Data\Shaders\skysphere.vs" />
+    <None Include="Data\Shaders\terrain.ps" />
+    <None Include="Data\Shaders\terrain.vs" />
+    <None Include="Data\Shaders\terrainreflection.ps" />
+    <None Include="Data\Shaders\terrainreflection.vs" />
+    <None Include="Data\Shaders\texture.ps" />
+    <None Include="Data\Shaders\texture.vs" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

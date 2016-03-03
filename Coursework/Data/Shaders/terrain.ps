@@ -1,0 +1,66 @@
+Texture2D colorTexture : register(t0);
+Texture2D normalTexture : register(t1);
+SamplerState SampleType;
+
+// Globals
+cbuffer LightBuffer
+{
+	float4 lightAmbientColor;
+	float4 lightDiffuseColor;
+	float3 lightDirection;
+	float specularPower;
+	float4 specularColor;
+};
+
+// Typedefs
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float3 tex : TEXCOORD0;
+   	float3 normal : NORMAL;
+	float3 tangent : TANGENT;
+	float3 binormal : BINORMAL;
+    float3 lightPos : TEXCOORD1;
+};
+
+// Pixel Shader
+float4 PixelShaderMain(PixelInputType input) : SV_TARGET
+{
+    float4 color;
+	float4 textureColor;
+	float4 bumpMap;
+    float3 bumpNormal;
+	float lightIntensity1;
+    float lightIntensity2;
+	float3 lightDir;
+	float4 lightColor;
+	float diffuseColor;
+
+	// Create lighting
+	lightColor = lightAmbientColor;
+	lightIntensity1 = saturate(dot(input.normal, input.lightPos));
+	lightColor += (lightDiffuseColor * lightIntensity1);
+
+	// Sample the color texture
+    textureColor = colorTexture.Sample(SampleType, input.tex.xy);
+
+	// Sample normal texture
+	bumpMap = normalTexture.Sample(SampleType, input.tex.xy);
+
+	// Expand to -1/+1
+	bumpMap = (bumpMap * 2.0f) - 1.0f;
+
+	// Calculate normals and normalise
+	bumpNormal = input.normal + bumpMap.x * input.tangent + bumpMap.y * input.binormal;
+	bumpNormal = normalize(bumpNormal);
+	
+	// Calculate lighting based on the normal
+    lightDir = -lightDirection;
+    lightIntensity2 = saturate(dot(bumpNormal, lightDir));
+    
+	// Combine lighting and apply to the texture
+	color = saturate(lightColor * lightIntensity1 * lightIntensity2);
+    color = color * textureColor;
+	
+	return color;
+}

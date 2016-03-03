@@ -1,0 +1,34 @@
+// Globals
+cbuffer GradientBuffer
+{
+	float4 topColor;
+	float4 centerColor;
+};
+
+// Typedefs
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+	float4 domePosition : TEXCOORD0;
+};
+
+// Pixel Shader
+float4 PixelShaderMain(PixelInputType input) : SV_TARGET
+{
+	float height;
+	float4 outputColor;
+
+	// Determine the position on the sky dome where this pixel is located.
+	height = input.domePosition.y;
+
+	// The value ranges from -1.0f to +1.0f so change it to only positive values.
+	if(height < 0.0)
+	{
+		height = 0.0f;
+	}
+
+	// Determine the blend amount based on the height of the pixel
+	outputColor = lerp(centerColor, topColor, height);
+
+    return outputColor;
+}

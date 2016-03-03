@@ -1,0 +1,70 @@
+// Globals
+SamplerState SampleType;
+Texture2D colorTexture : register(t0);
+Texture2D normalTexture : register(t1);
+Texture2D refractionTexture : register(t2);
+
+cbuffer WaterEffectBuffer
+{
+    float refractionScale;
+	float effectTime;
+    float2 padding;
+};
+
+// Typedefs
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
+    float4 refractionPosition : TEXCOORD1;
+};
+
+// Pixel Shader
+float4 PixelShaderMain(PixelInputType input) : SV_TARGET
+{
+	float4 color;
+	float2 normTex1;
+	float2 normTex2;
+	float3 normal;
+	float3 normal1;
+	float3 normal2;
+	float4 normalMap1;
+	float4 normalMap2;
+	float2 refractTexCoord;
+	float4 refractionColor;
+	float4 textureColor;
+	
+	// Sample the texture
+	textureColor = colorTexture.Sample(SampleType, input.tex);
+
+	// Create copies of input.tex and set scaling to tile 10 tiles over the quad
+	normTex1 = normTex2 = input.tex * 0.1;
+
+	// Adjust texture coord location using passed in time
+	normTex1.x += effectTime;
+	normTex2.y += effectTime;
+	
+	// Sample the normal map using the new tex coords
+	normalMap1 = normalTexture.Sample(SampleType, normTex1);
+	normalMap2 = normalTexture.Sample(SampleType, normTex2);
+	
+	// Adjust normals to be between -1 and +1
+	normal1 = (normalMap1.xyz * 2.0f) - 1.0f;
+	normal2 = (normalMap2.xyz * 2.0f) - 1.0f;
+
+	// Combine the normals and normalise
+	normal = normalize(normal1 + normal2);
+	  
+	// Calculate refraction coord using refractionPosition passed in from vertex shader
+	refractTexCoord.x = input.refractionPosition.x / input.refractionPosition.w / 2.0f + 0.5f;
+    refractTexCoord.y = -input.refractionPosition.y / input.refractionPosition.w / 2.0f + 0.5f;
+	refractTexCoord += (normal.xy * refractionScale);
+
+	// Sample the refraction texture using the refract tex coor
+	refractionColor = refractionTexture.Sample(SampleType, refractTexCoord);
+	
+	// Apply a blue overlay to the refraction
+	color = lerp(refractionColor, float4(0,0,1,1), 0.25);
+
+    return color;
+}
