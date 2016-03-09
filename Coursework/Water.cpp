@@ -1,8 +1,6 @@
 #include "Water.h"
-#include "DirectXManager.h"
-#include "PrimitiveMesh.h"
 
-Water::Water() : Primitive()
+Water::Water() : GameObject()
 {
 	// Initialise the pointers to null
 	VertexBuffer_ = 0;
@@ -18,10 +16,12 @@ Water::~Water()
 }
 
 // Initialising
-bool Water::Initialise(WCHAR* textureFilename, Rect3D WaterResolution)
+bool Water::Initialise(WCHAR* textureFilename, Rect3D waterResolution)
 {
+	PrimitiveFactory primitiveFactory;
+
 	// Initialise water variables
-	WaterHeight_ = WaterResolution.depth;
+	WaterHeight_ = waterResolution.depth;
 	NormalMapTiling_ = D3DXVECTOR2(0.01f, 0.02f);
 	Frame_ = 0.0f;
 	WaterTimer_ = 0.0f;
@@ -31,34 +31,57 @@ bool Water::Initialise(WCHAR* textureFilename, Rect3D WaterResolution)
 	WaveHeight_ = 1.5f;
 	WaveSpeed_ = 0.025f;
 	Tessellation_ = 58.0f;
+	
+	//==============
+	// Create Model
+	//==============
 
-	// Create the water plane
-	Mesh_ = new PrimitiveMesh;
-	if (!Mesh_)
+	Model_ = new Model;
+	if (!Model_)
 	{
 		return false;
 	}
-	Result_ = Mesh_->CreatePlane(WaterResolution, Rect3D(1, 1), 1);
+
+	Result_ = Model_->Initialise();
 	if (!Result_)
 	{
 		return false;
 	}
-	Result_ = Mesh_->CreateMaterial(NULL, textureFilename);
+
+	// Load Model
+	Result_ = primitiveFactory.CreatePlane(waterResolution, Rect3D(1, 1), 1.0f, *Model_);
 	if (!Result_)
 	{
 		return false;
 	}
 
-	// Return the buffers as we use a different render method
-	VertexBuffer_ = Mesh_->GetVertexBuffer();
-	IndexBuffer_ = Mesh_->GetIndexBuffer();
+	Result_ = Model_->GetMaterial()->SetNormalTexture(textureFilename);
+	if (!Result_)
+	{
+		return false;
+	}
 
-	// Create the transform
+	//==================
+	// Create Transform
+	//==================
+
 	Transform_ = new Transform;
 	if (!Transform_)
 	{
 		return false;
 	}
+
+	//=================
+	// Initialise Vars
+	//=================
+
+	Frame_ = 0;
+	IsReflectable_ = false;
+	IsActive_ = true;
+
+	// Return the buffers as we use a different render method
+	VertexBuffer_ = Model_->GetMesh()->GetVertexBuffer();
+	IndexBuffer_ = Model_->GetMesh()->GetIndexBuffer();
 
 	return true;
 }
@@ -67,11 +90,11 @@ bool Water::Initialise(WCHAR* textureFilename, Rect3D WaterResolution)
 void Water::Shutdown()
 {
 	// Release the texture object
-	if (Mesh_)
+	if (Model_)
 	{
-		Mesh_->Shutdown();
-		delete Mesh_;
-		Mesh_ = 0;
+		Model_->Shutdown();
+		delete Model_;
+		Model_ = 0;
 	}
 
 	if (Transform_)
@@ -92,6 +115,33 @@ bool Water::Frame()
 
 	// Update the waater time to simulate waves
 	WaterTimer_ += WaveSpeed_;
+
+	return true;
+}
+
+bool Water::Render()
+{
+	unsigned int stride;
+	unsigned int offset;
+	ID3D11Buffer* vertexBuffer;
+	ID3D11Buffer* indexBuffer;
+
+	// Set vertex buffer stride and offset
+	stride = sizeof(VertexData);
+	offset = 0;
+
+	// Get Mesh Buffers
+	vertexBuffer = Model_->GetMesh()->GetVertexBuffer();
+	indexBuffer = Model_->GetMesh()->GetIndexBuffer();
+
+	// Set the vertex buffer to active in the InputManager assembler so it can be rendered
+	DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+
+	// Set the index buffer to active in the InputManager assembler so it can be rendered
+	DirectXManager::Instance()->GetDeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	// Set the type of primitive that should be rendered from this vertex buffer
+	DirectXManager::Instance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 
 	return true;
 }

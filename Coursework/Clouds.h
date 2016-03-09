@@ -6,13 +6,13 @@
 
 using namespace std;
 
-#include "Primitive.h"
-#include "PrimitiveMesh.h"
+#include "GameObject.h"
+#include "PrimitiveFactory.h"
 #include "TextureArray.h"
 #include "Texture.h"
 
 
-class Clouds : public Primitive
+class Clouds : public GameObject
 {
 public:
 	Clouds();
@@ -21,9 +21,6 @@ public:
 
 	// Initialising
 	bool Initialise(WCHAR* cloudTextureFilename, WCHAR* perturbTextureFilename);
-
-	// Shutdown
-	void Shutdown();
 
 	// Frame
 	bool Frame();

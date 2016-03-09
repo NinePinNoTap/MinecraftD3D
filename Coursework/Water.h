@@ -4,13 +4,15 @@
 #include <d3dx10math.h>
 #include <vector>
 
-#include "Primitive.h"
+#include "DirectXManager.h"
+#include "GameObject.h"
 #include "Material.h"
+#include "PrimitiveFactory.h"
 #include "Texture.h"
 
 using namespace std;
 
-class Water : public Primitive
+class Water : public GameObject
 {
 public:
 	Water();
@@ -25,6 +27,7 @@ public:
 
 	// Frame
 	bool Frame();
+	bool Render();
 
 	// Setter
 	void ToggleTime(bool);

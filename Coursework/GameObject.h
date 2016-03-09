@@ -4,7 +4,8 @@
 #include <d3dx10math.h>
 
 #include "Constants.h"
-#include "Mesh.h"
+#include "Model.h"
+#include "OBJLoader.h"
 #include "Transform.h"
 #include "Utilities.h"
 
@@ -14,19 +15,22 @@ public:
 	GameObject();
 	~GameObject();
 
+	// Initialising
+	bool Initialise(const char* filename);
+
 	// Shutdown
 	virtual void Shutdown();
 
 	// Frames
 	virtual bool Frame();
+	virtual bool Render();
 
 	// Rendering
 	void SetReflectable(bool Flag);
 	void SetActive(bool Flag);
 
 	// Getters
-	virtual Mesh* GetMesh();
-	virtual Material* GetMaterial();
+	Model* GetModel();
 	Transform* GetTransform();
 
 	bool IsReflectable();
@@ -35,7 +39,7 @@ public:
 
 protected:
 	// Model
-	Mesh* Mesh_;
+	Model* Model_;
 
 	// Transform
 	Transform* Transform_;

@@ -12,6 +12,7 @@
 #include "Rect.h"
 #include "Vector2.h"
 #include "ShaderBuffers.h"
+#include "VertexData.h"
 
 using namespace std;
 
@@ -69,3 +70,9 @@ bool CheckScreenSpace(D3DXVECTOR3 position, BoundingBox box, D3DXMATRIX viewMatr
 
 // Transposes each matrix in the matrix buffer
 void TransposeMatrix(MatrixCBuffer& matrix);
+
+// Calculates the tangent, binormal for a face
+void CalculateTangentBinormal(VertexData vertex1, VertexData vertex2, VertexData vertex3, D3DXVECTOR3& tangent, D3DXVECTOR3& binormal);
+
+// Calculates a hard normal for a face
+void CalculateHardNormal(D3DXVECTOR3 tangent, D3DXVECTOR3 binormal, D3DXVECTOR3& normal);

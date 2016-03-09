@@ -176,9 +176,14 @@ bool GameShader::CompileShader(HWND hwnd, WCHAR* filename, LPCSTR EntryPoint, LP
 {
 	HRESULT Result;
 	ID3D10Blob* errorMessage;
+	std::wstring output;
+	
+	// Add the shader directory to the filename
+	output = std::wstring(SHADER_DIR.begin(), SHADER_DIR.end());
+	output += filename;
 
 	// Compile the Shader
-	Result = D3DX11CompileFromFile(filename, NULL, NULL, EntryPoint, Version, D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, Buffer, &errorMessage, NULL);
+	Result = D3DX11CompileFromFile(output.c_str(), NULL, NULL, EntryPoint, Version, D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, Buffer, &errorMessage, NULL);
 
 	// Check if it failed
 	if (FAILED(Result))

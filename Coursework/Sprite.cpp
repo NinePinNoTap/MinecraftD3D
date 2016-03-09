@@ -1,7 +1,6 @@
 #include "Sprite.h"
-#include "DirectXManager.h"
 
-Sprite::Sprite() : Primitive()
+Sprite::Sprite() : GameObject()
 {
 }
 
@@ -15,18 +14,34 @@ Sprite::~Sprite()
 
 bool Sprite::Initialise(Rect3D Dimensions)
 {
-	// Create the mesh
-	Mesh_ = new PrimitiveMesh;
-	if (!Mesh_)
+	PrimitiveFactory primitiveFactory;
+
+	//==============
+	// Create Model
+	//==============
+
+	Model_ = new Model;
+	if (!Model_)
 	{
 		return false;
 	}
 
-	Result_ = Mesh_->Create2DBox(Dimensions);
+	Result_ = Model_->Initialise();
 	if (!Result_)
 	{
 		return false;
 	}
+
+	// Load Model
+	Result_ = primitiveFactory.Create2DBox(Dimensions, *Model_);
+	if (!Result_)
+	{
+		return false;
+	}
+
+	//==================
+	// Create Transform
+	//==================
 
 	Transform_ = new Transform;
 	if (!Transform_)
@@ -34,13 +49,21 @@ bool Sprite::Initialise(Rect3D Dimensions)
 		return false;
 	}
 
+	//=================
+	// Initialise Vars
+	//=================
+
+	Frame_ = 0;
+	IsReflectable_ = false;
+	IsActive_ = true;
+
 	return true;
 }
 
 bool Sprite::SetTexture(WCHAR* filename)
 {
 	// Create a texture
-	Result_ = Mesh_->CreateMaterial(vector<wstring>(1, filename));
+	Result_ = Model_->GetMaterial()->SetTextureArray(vector<wstring>(1, filename));
 	if (!Result_)
 	{
 		return false;

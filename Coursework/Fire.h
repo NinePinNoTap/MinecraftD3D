@@ -3,9 +3,11 @@
 #include <d3dx11.h>
 #include <d3dx10math.h>
 
-#include "Model.h"
+#include "Camera.h"
+#include "GameObject.h"
+#include "TXTLoader.h"
 
-class Fire : public Model
+class Fire : public GameObject
 {
 public:
 	Fire();
@@ -14,14 +16,8 @@ public:
 	// Initialising
 	bool Initialise(char* modelFilename, WCHAR* textureFilename, WCHAR* noiseFilename, WCHAR* alphaFilename);
 
-	// Shutdown
-	void Shutdown();
-
 	// Frame
 	bool Frame();
-
-	// Camera
-	void SetCameraPosition(D3DXVECTOR3 CameraPosition);
 
 	// Property Getters
 	D3DXVECTOR3 GetTiling();
@@ -31,9 +27,6 @@ public:
 	void GetDistortion(D3DXVECTOR2& DistortionA, D3DXVECTOR2& DistortionB, D3DXVECTOR2& DistortionC);
 	
 private:
-	// Billboarding
-	D3DXVECTOR3 CameraPosition_;
-
 	// Properties
 	D3DXVECTOR3 TranslationSpeed_;
 	D3DXVECTOR3 Tiling_;

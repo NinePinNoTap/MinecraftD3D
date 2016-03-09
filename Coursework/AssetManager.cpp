@@ -71,19 +71,20 @@ void AssetManager::LoadModel(std::string filename)
 	}
 
 	// Construct filename path to dds
-	std::wstring ddsPath = L"Data/Models/";
+	/*std::wstring ddsPath = L"Data/Models/";
 	ddsPath += std::wstring(filename.begin(), filename.end());
 	ddsPath += L".obj";
 	WCHAR* objFilePath = (WCHAR*)ddsPath.c_str();
 
 	// Create the mesh and load in the file
-	ModelMesh* mesh = new ModelMesh;
+	Mesh3D* mesh = new Mesh3D;
 	mesh->LoadModel("Data/Models/", filename.c_str());
+	mesh->
 	Texture* texture = new Texture;
-	texture->Initialise(objFilePath);
+	texture->Initialise(objFilePath);*/
 
 	// Add to the map
-	ModelDB_[filename] = mesh;
+	//ModelDB_[filename] = mesh;
 }
 
 void AssetManager::LoadTexture(std::string filename)

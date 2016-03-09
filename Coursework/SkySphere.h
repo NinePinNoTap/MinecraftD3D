@@ -4,12 +4,13 @@
 #include <d3dx10math.h>
 #include <fstream>
 
-#include "Model.h"
+#include "GameObject.h"
+#include "TXTLoader.h"
 
 
 using namespace std;
 
-class SkySphere : public Model
+class SkySphere : public GameObject
 {
 public:
 	SkySphere();
@@ -17,7 +18,7 @@ public:
 	~SkySphere();
 
 	// Initialising
-	bool Initialise();
+	bool Initialise(const char* filename);
 
 	// Setters
 	void ToggleTime(bool);

@@ -220,3 +220,72 @@ void TransposeMatrix(MatrixCBuffer& matrix)
 	D3DXMatrixTranspose(&matrix.projection, &matrix.projection);
 	D3DXMatrixTranspose(&matrix.reflection, &matrix.reflection);
 }
+
+void CalculateHardNormal(D3DXVECTOR3 tangent, D3DXVECTOR3 binormal, D3DXVECTOR3& normal)
+{
+	float length;
+
+	// Calculate the cross product of the tangent and binormal which will give the normal vector.
+	normal.x = (tangent.y * binormal.z) - (tangent.z * binormal.y);
+	normal.y = (tangent.z * binormal.x) - (tangent.x * binormal.z);
+	normal.z = (tangent.x * binormal.y) - (tangent.y * binormal.x);
+
+	// Calculate the length of the normal.
+	length = sqrt((normal.x * normal.x) + (normal.y * normal.y) + (normal.z * normal.z));
+
+	// Normalize the normal.
+	normal.x = normal.x / length;
+	normal.y = normal.y / length;
+	normal.z = normal.z / length;
+
+	return;
+}
+
+void CalculateTangentBinormal(VertexData vertex1, VertexData vertex2, VertexData vertex3, D3DXVECTOR3& tangent, D3DXVECTOR3& binormal)
+{
+	D3DXVECTOR3 vector[2];
+	D3DXVECTOR2 texture[2];
+	float den;
+	float length;
+
+	// Calculate the two vectors for this face
+	vector[0] = vertex2.position - vertex1.position;
+	vector[1] = vertex3.position - vertex1.position;
+
+	// Calculate the tu and tv texture vectors
+	texture[0].x = vertex2.texture.x - vertex1.texture.x;
+	texture[0].y = vertex2.texture.y - vertex1.texture.y;
+
+	texture[1].x = vertex3.texture.x - vertex1.texture.x;
+	texture[1].y = vertex3.texture.y - vertex1.texture.y;
+
+	// Calculate the denominator of the tangent/binormal equation
+	den = 1.0f / (texture[0].x * texture[1].y - texture[1].x * texture[0].y);
+
+	// Calculate the cross products and multiply by the coefficient to get the tangent and binormal
+	tangent.x = (texture[1].y * vector[0].x - texture[0].y * vector[1].x) * den;
+	tangent.y = (texture[1].y * vector[0].y - texture[0].y * vector[1].y) * den;
+	tangent.z = (texture[1].y * vector[0].z - texture[0].y * vector[1].z) * den;
+
+	binormal.x = (texture[0].x * vector[1].x - texture[1].x * vector[0].x) * den;
+	binormal.y = (texture[0].x * vector[1].y - texture[1].x * vector[0].y) * den;
+	binormal.z = (texture[0].x * vector[1].z - texture[1].x * vector[0].z) * den;
+
+	// Calculate the length of this normal
+	length = sqrt((tangent.x * tangent.x) + (tangent.y * tangent.y) + (tangent.z * tangent.z));
+
+	// Normalize the tangent and then store it
+	tangent.x = tangent.x / length;
+	tangent.y = tangent.y / length;
+	tangent.z = tangent.z / length;
+
+	// Calculate the length of this normal
+	length = sqrt((binormal.x * binormal.x) + (binormal.y * binormal.y) + (binormal.z * binormal.z));
+
+	// Normalize the binormal and then store it
+	binormal.x = binormal.x / length;
+	binormal.y = binormal.y / length;
+	binormal.z = binormal.z / length;
+
+	return;
+}

@@ -6,8 +6,13 @@
 
 #include "GameObject.h"
 #include "Texture.h"
+#include "TerrainFactory.h"
 
-#include "TerrainMesh.h"
+enum TerrainType
+{
+	FLAT,
+	PERLIN
+};
 
 class Terrain : public GameObject
 {
@@ -17,17 +22,7 @@ public:
 	~Terrain();
 
 	// Initialise
-	bool Initialise(Rect3D Size, WCHAR* textureFilename, WCHAR* normalTextureFilename, Vector2 TextureRepeat, float scale = 1.0f);
-	void Shutdown();
-
-	TerrainMesh* GetMesh();
-
-private:
-	// Terrain Information
-	int TerrainWidth_;
-	int TerrainHeight_;
-
-	TerrainMesh* Mesh_;
+	bool Initialise(Rect3D terrainSize, TerrainType type, WCHAR* textureFilename, WCHAR* normalTextureFilename, Vector2 textureRepeat, float terrainScale = 1.0f, float terrainSmoothing = 1.0f);
 };
 
 

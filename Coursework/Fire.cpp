@@ -1,6 +1,6 @@
 #include "Fire.h"
 
-Fire::Fire() : Model()
+Fire::Fire() : GameObject()
 {
 }
 
@@ -11,6 +11,8 @@ Fire::~Fire()
 // Initialising
 bool Fire::Initialise(char* modelFilename, WCHAR* textureFilename, WCHAR* noiseFilename, WCHAR* alphaFilename)
 {
+	TXTLoader txtLoader;
+
 	//========================
 	// Set up Fire Properties
 	//========================
@@ -32,55 +34,79 @@ bool Fire::Initialise(char* modelFilename, WCHAR* textureFilename, WCHAR* noiseF
 	// Define where the fire needs to be more solid
 	DistortionBias_ = 0.5f;
 
-	//=================
-	// Set up the Fire
-	//=================
+	//==============
+	// Create Model
+	//==============
 
-	Mesh_ = new ModelMesh;
-	Result_ = Mesh_->LoadModel(modelFilename);
+	Model_ = new Model;
+	if (!Model_)
+	{
+		return false;
+	}
+
+	Result_ = Model_->Initialise();
 	if (!Result_)
 	{
 		return false;
 	}
 
-	// Create fire textures
-	Result_ = Mesh_->CreateMaterial(textureFilename, 0, alphaFilename, noiseFilename);
+	// Load Model
+	Result_ = txtLoader.LoadModel(modelFilename, *Model_);
 	if (!Result_)
 	{
 		return false;
 	}
 
-	// Initialise the animation frame counter
-	Frame_ = 0;
+	//=================
+	// Create Material
+	//=================
 
-	// Create the transform
+	Model_->GetMaterial()->SetColour(WHITE);
+
+	Result_ = Model_->GetMaterial()->SetBaseTexture(textureFilename);
+	if (!Result_)
+	{
+		return false;
+	}
+
+	Result_ = Model_->GetMaterial()->SetAlphaTexture(alphaFilename);
+	if (!Result_)
+	{
+		return false;
+	}
+
+	Result_ = Model_->GetMaterial()->SetNoiseTexture(noiseFilename);
+	if (!Result_)
+	{
+		return false;
+	}
+
+	//==================
+	// Create Transform
+	//==================
+
 	Transform_ = new Transform;
 	if (!Transform_)
 	{
 		return false;
 	}
 
-	// Initialise flags
-	IsActive_ = false;
+	//=================
+	// Initialise Vars
+	//=================
+
+	Frame_ = 0;
+	IsReflectable_ = false;
+	IsActive_ = true;
 	
 	return true;
-}
-
-// Shutdown
-void Fire::Shutdown()
-{
-	// Shutdown Model
-	if ( Mesh_ )
-	{
-		Mesh_ -> Shutdown();
-		delete Mesh_;
-		Mesh_ = 0;
-	}
 }
 
 // Frame
 bool Fire::Frame()
 {
+	float angle;
+
 	//==============
 	// Animate Fire
 	//==============
@@ -93,19 +119,16 @@ bool Fire::Frame()
 	//===========
 
 	// Calculate the angle between the model and the camera
-	float angle = atan2(Transform_->GetX() - CameraPosition_.x, Transform_->GetZ() - CameraPosition_.z);
+	angle = atan2(Transform_->GetX() - Camera::Instance()->GetTransform()->GetPosition().x,
+				  Transform_->GetZ() - Camera::Instance()->GetTransform()->GetPosition().z);
+
+	// Convert to Degrees
 	angle = D3DXToDegree(angle);
 
 	// Apply the rotation to the model
 	Transform_->SetRotationY(angle);
 
 	return true;
-}
-
-// Billboarding
-void Fire::SetCameraPosition(D3DXVECTOR3 CameraPosition)
-{
-	CameraPosition_ = CameraPosition;
 }
 
 // Property Getters

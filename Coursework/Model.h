@@ -1,18 +1,22 @@
 #pragma once
 
-#include "GameObject.h"
-#include "ModelMesh.h"
+#include "Mesh3D.h"
+#include "Material.h"
 
-class Model : public GameObject
+class Model
 {
 public:
 	Model();
 	~Model();
 
-	void SetMesh(ModelMesh* mesh);
-	ModelMesh* GetMesh();
+	bool Initialise();
+	void Shutdown();
+
+	Mesh3D* GetMesh();
+	Material* GetMaterial();
 
 protected:
-	ModelMesh* Mesh_;
+	Mesh3D* Mesh_;
+	Material* Material_;
 };
 

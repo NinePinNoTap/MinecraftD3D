@@ -13,13 +13,50 @@ SkySphere::~SkySphere()
 {
 }
 
-bool SkySphere::Initialise()
+bool SkySphere::Initialise(const char* filename)
 {
+	TXTLoader txtLoader;
+
+	//==============
+	// Create Model
+	//==============
+
+	Model_ = new Model;
+	if (!Model_)
+	{
+		return false;
+	}
+
+	Result_ = Model_->Initialise();
+	if (!Result_)
+	{
+		return false;
+	}
+
+	// Load Model
+	Result_ = txtLoader.LoadModel(filename, *Model_);
+	if (!Result_)
+	{
+		return false;
+	}
+
+	//==================
+	// Create Transform
+	//==================
+
 	Transform_ = new Transform;
 	if (!Transform_)
 	{
 		return false;
 	}
+
+	//=================
+	// Initialise Vars
+	//=================
+
+	Frame_ = 0;
+	IsReflectable_ = false;
+	IsActive_ = true;
 
 	// Initialise sky color for daytime
 	Colors_[0][1] = D3DXVECTOR4(0.65f, 0.77f, 0.85f, 1.0f); //Top

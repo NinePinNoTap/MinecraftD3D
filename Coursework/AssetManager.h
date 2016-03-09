@@ -5,8 +5,8 @@
 
 #include "Singleton.h"
 #include "Font.h"
-#include "ModelMesh.h"
 #include "AudioClip.h"
+#include "Mesh3D.h"
 #include "Texture.h"
 
 class AssetManager
@@ -30,5 +30,5 @@ public:
 private:
 	std::map<std::string, Font*> FontDB_;
 	std::map<std::string, Texture*> TextureDB_;
-	std::map<std::string, ModelMesh*> ModelDB_;
+	std::map<std::string, Mesh3D*> ModelDB_;
 };

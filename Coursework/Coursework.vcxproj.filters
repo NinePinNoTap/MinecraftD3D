@@ -53,9 +53,6 @@
     <Filter Include="Framework\Graphics\Texture">
       <UniqueIdentifier>{0cbc688c-2f74-404c-9e56-f94e6f22d447}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Graphics\Model">
-      <UniqueIdentifier>{34dd59de-2b40-483d-87b8-427ecc0226bd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework\Graphics\Text">
       <UniqueIdentifier>{34bba1f5-1418-4264-8aad-823015d0ddfd}</UniqueIdentifier>
     </Filter>
@@ -73,6 +70,9 @@
     </Filter>
     <Filter Include="Scene\GameObjects">
       <UniqueIdentifier>{1722001a-f49f-43b3-be35-71e5b4d6f8b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Assets">
+      <UniqueIdentifier>{92810a1f-d223-430c-aa79-43a1c9435178}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -125,12 +125,6 @@
     <ClCompile Include="Water.cpp">
       <Filter>Scene\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Framework\Graphics\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Framework\Graphics\Model</Filter>
-    </ClCompile>
     <ClCompile Include="PerformanceManager.cpp">
       <Filter>Framework\Manager</Filter>
     </ClCompile>
@@ -155,30 +149,6 @@
     <ClCompile Include="AssetManager.cpp">
       <Filter>Framework\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Framework\Graphics\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelMesh.cpp">
-      <Filter>Framework\Graphics\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="PrimitiveMesh.cpp">
-      <Filter>Framework\Graphics\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="TerrainMesh.cpp">
-      <Filter>Framework\Graphics\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Framework\Graphics\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Framework\Graphics\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Primitive.cpp">
-      <Filter>Framework\Graphics\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>Framework\Graphics\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="PerlinNoiseGenerator.cpp">
       <Filter>Framework\System</Filter>
     </ClCompile>
@@ -196,6 +166,36 @@
     </ClCompile>
     <ClCompile Include="SkySphere.cpp">
       <Filter>Scene\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="OBJLoader.cpp">
+      <Filter>Framework\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="TXTLoader.cpp">
+      <Filter>Framework\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainFactory.cpp">
+      <Filter>Framework\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveFactory.cpp">
+      <Filter>Framework\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Framework\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Framework\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh3D.cpp">
+      <Filter>Framework\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Framework\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Framework\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Framework\Graphics\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,9 +235,6 @@
     <ClInclude Include="Font.h">
       <Filter>Framework\Graphics\Text</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Framework\Graphics\Model</Filter>
-    </ClInclude>
     <ClInclude Include="GameShader.h">
       <Filter>Framework\Graphics\Shader</Filter>
     </ClInclude>
@@ -252,9 +249,6 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Scene\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Framework\Graphics\Model</Filter>
     </ClInclude>
     <ClInclude Include="Water.h">
       <Filter>Scene\GameObjects</Filter>
@@ -285,30 +279,6 @@
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Framework\Graphics\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Framework\Graphics\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelMesh.h">
-      <Filter>Framework\Graphics\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="PrimitiveMesh.h">
-      <Filter>Framework\Graphics\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="TerrainMesh.h">
-      <Filter>Framework\Graphics\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Framework\Graphics\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Framework\Graphics\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Primitive.h">
-      <Filter>Framework\Graphics\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>Framework\Graphics\Objects</Filter>
     </ClInclude>
     <ClInclude Include="PerlinNoiseGenerator.h">
       <Filter>Framework\System</Filter>
@@ -348,6 +318,36 @@
     </ClInclude>
     <ClInclude Include="SkySphere.h">
       <Filter>Scene\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="OBJLoader.h">
+      <Filter>Framework\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="TXTLoader.h">
+      <Filter>Framework\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainFactory.h">
+      <Filter>Framework\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveFactory.h">
+      <Filter>Framework\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Framework\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Framework\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh3D.h">
+      <Filter>Framework\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Framework\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Framework\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Framework\Graphics\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

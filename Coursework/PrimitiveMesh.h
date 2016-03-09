@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Mesh.h"
+#include <vector>
+
+#include "Mesh3D.h"
 #include "Rect.h"
 #include "Vector3.h"
 
-class PrimitiveMesh : public Mesh
+class PrimitiveMesh : public Mesh3D
 {
 public:
 	PrimitiveMesh();

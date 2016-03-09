@@ -31,7 +31,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	CloudShader_ = new GameShader;
 	if (!CloudShader_) { return false; }
-	Result_ = CloudShader_ -> InitialiseShader(hwnd, L"Data/Shaders/cloud.vs", L"Data/Shaders/cloud.ps");
+	Result_ = CloudShader_ -> InitialiseShader(hwnd, L"cloud.vs", L"cloud.ps");
 	if (!Result_) { return false; }
 	CloudShader_->AddBuffer<MatrixCBuffer>(VertexShader);
 	CloudShader_->AddBuffer<SkyCBuffer>(PixelShader);
@@ -43,7 +43,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	FireShader_ = new GameShader;
 	if (!FireShader_) { return false; }
-	Result_ = FireShader_->InitialiseShader(hwnd, L"Data/Shaders/fire.vs", L"Data/Shaders/fire.ps");
+	Result_ = FireShader_->InitialiseShader(hwnd, L"fire.vs", L"fire.ps");
 	if (!Result_) { return false; }
 	FireShader_->AddBuffer<MatrixCBuffer>(VertexShader);
 	FireShader_->AddBuffer<NoiseCBuffer>(VertexShader);
@@ -57,7 +57,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	FontShader_ = new GameShader;
 	if (!FontShader_) { return false; }
-	Result_ = FontShader_->InitialiseShader(hwnd, L"Data/Shaders/font.vs", L"Data/Shaders/font.ps");
+	Result_ = FontShader_->InitialiseShader(hwnd, L"font.vs", L"font.ps");
 	if (!Result_) { return false; }
 	FontShader_->AddBuffer<MatrixCBuffer>(VertexShader);
 	FontShader_->AddBuffer<PixelCBuffer>(PixelShader);
@@ -69,7 +69,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	LightShader_ = new GameShader;
 	if(!LightShader_) { return false; }
-	Result_ = LightShader_->InitialiseShader(hwnd, L"Data/Shaders/light.vs", L"Data/Shaders/light.ps");
+	Result_ = LightShader_->InitialiseShader(hwnd, L"light.vs", L"light.ps");
 	if(!Result_) { return false; }
 	LightShader_->AddBuffer<MatrixCBuffer>(VertexShader);
 	LightShader_->AddBuffer<CameraCBuffer>(VertexShader);
@@ -83,7 +83,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	OceanShader_ = new GameShader;
 	if(!OceanShader_) { return false; }
-	Result_ = OceanShader_->InitialiseShader(hwnd, L"Data/Shaders/ocean.vs", L"Data/Shaders/ocean.ps", L"Data/Shaders/ocean.hs", L"Data/Shaders/ocean.ds");
+	Result_ = OceanShader_->InitialiseShader(hwnd, L"ocean.vs", L"ocean.ps", L"ocean.hs", L"ocean.ds");
 	if(!Result_) { return false; }
 	OceanShader_->AddBuffer<MatrixCBuffer>(DomainShader);
 	OceanShader_->AddBuffer<CameraCBuffer>(DomainShader);
@@ -98,7 +98,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	ParticleShader_ = new GameShader;
 	if(!ParticleShader_) { return false; }
-	Result_ = ParticleShader_->InitialiseShader(hwnd, L"Data/Shaders/particle.vs", L"Data/Shaders/particle.ps");
+	Result_ = ParticleShader_->InitialiseShader(hwnd, L"particle.vs", L"particle.ps");
 	if(!Result_) { return false; }
 	ParticleShader_->AddBuffer<MatrixCBuffer>(VertexShader);
 	ParticleShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
@@ -109,7 +109,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	SkySphereShader_ = new GameShader;
 	if(!SkySphereShader_) { return false; }
-	Result_ = SkySphereShader_->InitialiseShader(hwnd, L"Data/Shaders/skysphere.vs", L"Data/Shaders/skysphere.ps");
+	Result_ = SkySphereShader_->InitialiseShader(hwnd, L"skysphere.vs", L"skysphere.ps");
 	if(!Result_) { return false; }
 	SkySphereShader_->AddBuffer<MatrixCBuffer>(VertexShader);
 	SkySphereShader_->AddBuffer<GradientCBuffer>(PixelShader);
@@ -121,7 +121,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	TerrainShader_ = new GameShader;
 	if(!TerrainShader_) { return false; }
-	Result_ = TerrainShader_->InitialiseShader(hwnd, L"Data/Shaders/terrain.vs", L"Data/Shaders/terrain.ps");
+	Result_ = TerrainShader_->InitialiseShader(hwnd, L"terrain.vs", L"terrain.ps");
 	if(!Result_) { return false; }
 	TerrainShader_->AddBuffer<MatrixCBuffer>(VertexShader);
 	TerrainShader_->AddBuffer<LightPositionCBuffer>(VertexShader);
@@ -134,7 +134,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	TerrainReflectionShader_ = new GameShader;
 	if(!TerrainReflectionShader_) { return false; }
-	Result_ = TerrainReflectionShader_->InitialiseShader(hwnd, L"Data/Shaders/terrainreflection.vs", L"Data/Shaders/terrainreflection.ps");
+	Result_ = TerrainReflectionShader_->InitialiseShader(hwnd, L"terrainreflection.vs", L"terrainreflection.ps");
 	if(!Result_) { return false; }
 	TerrainReflectionShader_->AddBuffer<MatrixCBuffer>(VertexShader);
 	TerrainReflectionShader_->AddBuffer<ClipPlaneCBuffer>(VertexShader);
@@ -147,7 +147,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	TextureShader_ = new GameShader;
 	if(!TextureShader_) { return false; }
-	Result_ = TextureShader_->InitialiseShader(hwnd, L"Data/Shaders/texture.vs", L"Data/Shaders/texture.ps");
+	Result_ = TextureShader_->InitialiseShader(hwnd, L"texture.vs", L"texture.ps");
 	if(!Result_) { return false; }
 	TextureShader_->AddBuffer<MatrixCBuffer>(VertexShader);
 	TextureShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
@@ -250,17 +250,17 @@ void ShaderManager::SetReflectionViewMatrix(D3DXMATRIX reflection)
 // Rendering
 bool ShaderManager::CloudRender(Clouds* Obj)
 {
-	Mesh* ObjMesh;
+	Mesh3D* ObjMesh;
 	Material* ObjMat;
 
 	// Model Properties
-	ObjMesh = Obj->GetMesh();
+	ObjMesh = Obj->GetModel()->GetMesh();
 	if (!ObjMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Clouds", L"Error", MB_OK);
 		return false;
 	}
-	ObjMat = ObjMesh->GetMaterial();
+	ObjMat = Obj->GetModel()->GetMaterial();
 	if (!ObjMat)
 	{
 		MessageBox(NULL, L"No Material Attached - Clouds", L"Error", MB_OK);
@@ -292,7 +292,7 @@ bool ShaderManager::CloudRender(Clouds* Obj)
 	CloudShader_->SendTextureToShader(0, textureArray);
 
 	// Render using shader
-	ObjMesh -> Render();
+	Obj->Render();
 	CloudShader_ -> Render(indexCount);
 	
 	return true;
@@ -300,17 +300,18 @@ bool ShaderManager::CloudRender(Clouds* Obj)
 
 bool ShaderManager::FireRender(Fire* Obj)
 {
-	Mesh* ObjMesh;
+	Mesh3D* ObjMesh;
 	Material* ObjMat;
 
 	// Model Properties
-	ObjMesh = Obj -> GetMesh();
+	ObjMesh = Obj->GetModel()->GetMesh();
 	if (!ObjMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - DrawFire", L"Error", MB_OK);
 		return false;
 	}
-	ObjMat = ObjMesh->GetMaterial();
+
+	ObjMat = Obj->GetModel()->GetMaterial();
 	if (!ObjMat)
 	{
 		MessageBox(NULL, L"No Material Attached - DrawFire", L"Error", MB_OK);
@@ -352,7 +353,7 @@ bool ShaderManager::FireRender(Fire* Obj)
 	FireShader_->SendTextureToShader(2, alphaTexture);
 
 	// Render using shader
-	ObjMesh->Render();
+	Obj->Render();
 	FireShader_ -> Render(indexCount);
 
 	return true;
@@ -390,17 +391,17 @@ bool ShaderManager::FontRender(Text::SentenceType* sentence, ID3D11ShaderResourc
 
 bool ShaderManager::LightRender(GameObject* Obj, float specularPower)
 {
-	Mesh* ObjMesh;
+	Mesh3D* ObjMesh;
 	Material* ObjMat;
 
 	// Model Properties
-	ObjMesh = Obj->GetMesh();
+	ObjMesh = Obj->GetModel()->GetMesh();
 	if (!ObjMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Light", L"Error", MB_OK);
 		return false;
 	}
-	ObjMat = ObjMesh->GetMaterial();
+	ObjMat = Obj->GetModel()->GetMaterial();
 	if (!ObjMat)
 	{
 		MessageBox(NULL, L"No Material Attached - Light", L"Error", MB_OK);
@@ -444,7 +445,7 @@ bool ShaderManager::LightRender(GameObject* Obj, float specularPower)
 	LightShader_->SendBuffersToShader();
 
 	// Render using shader
-	ObjMesh->Render();
+	Obj->Render();
 	LightShader_ -> Render(indexCount);
 
 	return true;
@@ -452,17 +453,17 @@ bool ShaderManager::LightRender(GameObject* Obj, float specularPower)
 
 bool ShaderManager::WaterRender(Water* Obj, Texture* refraction, Texture* reflection)
 {
-	Mesh* ObjMesh;
+	Mesh3D* ObjMesh;
 	Material* ObjMat;
 
 	// Model Properties
-	ObjMesh = Obj->GetMesh();
+	ObjMesh = Obj->GetModel()->GetMesh();
 	if (!ObjMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Water", L"Error", MB_OK);
 		return false;
 	}
-	ObjMat = ObjMesh->GetMaterial();
+	ObjMat = Obj->GetModel()->GetMaterial();
 	if (!ObjMat)
 	{
 		MessageBox(NULL, L"No Material Attached - Water", L"Error", MB_OK);
@@ -520,7 +521,7 @@ bool ShaderManager::WaterRender(Water* Obj, Texture* refraction, Texture* reflec
 	OceanShader_->SendBuffersToShader();
 
 	// Render using shader
-	ObjMesh->Render(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
+	Obj->Render();
 	OceanShader_ -> Render(indexCount);
 	
 	return true;
@@ -530,7 +531,7 @@ bool ShaderManager::ParticleRender(ParticleSystem* Obj)
 {
 	Material* ObjMat;
 	
-	ObjMat = Obj->GetMaterial();
+	ObjMat = Obj->GetModel()->GetMaterial();
 	if (!ObjMat)
 	{
 		MessageBox(NULL, L"No Material Attached - Particle", L"Error", MB_OK);
@@ -562,9 +563,9 @@ bool ShaderManager::ParticleRender(ParticleSystem* Obj)
 
 bool ShaderManager::SkyRender(SkySphere* Obj)
 {
-	Mesh* ObjMesh;
+	Mesh3D* ObjMesh;
 	
-	ObjMesh = Obj->GetMesh();
+	ObjMesh = Obj->GetModel()->GetMesh();
 	if (!ObjMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - SkySphere", L"Error", MB_OK);
@@ -590,7 +591,7 @@ bool ShaderManager::SkyRender(SkySphere* Obj)
 	SkySphereShader_->SendBuffersToShader();
 
 	// Render using shader
-	ObjMesh->Render();
+	Obj->Render();
 	SkySphereShader_ -> Render(indexCount);
 	
 	return true;
@@ -598,17 +599,17 @@ bool ShaderManager::SkyRender(SkySphere* Obj)
 
 bool ShaderManager::TerrainRender(Terrain* Obj)
 {
-	Mesh* ObjMesh;
+	Mesh3D* ObjMesh;
 	Material* ObjMat;
 
 	// Model Properties
-	ObjMesh = Obj->GetMesh();
+	ObjMesh = Obj->GetModel()->GetMesh();
 	if (!ObjMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Terrain", L"Error", MB_OK);
 		return false;
 	}
-	ObjMat = ObjMesh->GetMaterial();
+	ObjMat = Obj->GetModel()->GetMaterial();
 	if (!ObjMat)
 	{
 		MessageBox(NULL, L"No Material Attached - Terrain", L"Error", MB_OK);
@@ -646,7 +647,7 @@ bool ShaderManager::TerrainRender(Terrain* Obj)
 	TerrainShader_->SendBuffersToShader();
 
 	// Render using shader
-	ObjMesh -> Render();
+	Obj->Render();
 	TerrainShader_ -> Render(indexCount);
 	
 	return true;
@@ -654,17 +655,17 @@ bool ShaderManager::TerrainRender(Terrain* Obj)
 
 bool ShaderManager::TerrainRender(Terrain* Obj, D3DXVECTOR4 clipPlane)
 {
-	Mesh* ObjMesh;
+	Mesh3D* ObjMesh;
 	Material* ObjMat;
 
 	// Model Properties
-	ObjMesh = Obj->GetMesh();
+	ObjMesh = Obj->GetModel()->GetMesh();
 	if (!ObjMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Terrain", L"Error", MB_OK);
 		return false;
 	}
-	ObjMat = ObjMesh->GetMaterial();
+	ObjMat = Obj->GetModel()->GetMaterial();
 	if (!ObjMat)
 	{
 		MessageBox(NULL, L"No Material Attached - Terrain", L"Error", MB_OK);
@@ -706,7 +707,7 @@ bool ShaderManager::TerrainRender(Terrain* Obj, D3DXVECTOR4 clipPlane)
 	TerrainReflectionShader_->SendBuffersToShader();
 
 	// Render using shader
-	ObjMesh -> Render();
+	Obj->Render();
 	TerrainReflectionShader_ -> Render(indexCount);
 	
 	return true;
@@ -714,17 +715,17 @@ bool ShaderManager::TerrainRender(Terrain* Obj, D3DXVECTOR4 clipPlane)
 
 bool ShaderManager::TextureRender(GameObject* Obj)
 {
-	Mesh* ObjMesh;
+	Mesh3D* ObjMesh;
 	Material* ObjMat;
 
 	// Model Properties
-	ObjMesh = Obj->GetMesh();
+	ObjMesh = Obj->GetModel()->GetMesh();
 	if (!ObjMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Texture", L"Error", MB_OK);
 		return false;
 	}
-	ObjMat = ObjMesh->GetMaterial();
+	ObjMat = Obj->GetModel()->GetMaterial();
 	if (!ObjMat)
 	{
 		MessageBox(NULL, L"No Material Attached - Texture", L"Error", MB_OK);
@@ -747,7 +748,7 @@ bool ShaderManager::TextureRender(GameObject* Obj)
 	TextureShader_->SendTextureToShader(0, texture);
 
 	// Render using shader
-	ObjMesh->Render();
+	Obj->Render();
 	TextureShader_ -> Render(indexCount);
 	
 	return true;
@@ -755,11 +756,11 @@ bool ShaderManager::TextureRender(GameObject* Obj)
 
 bool ShaderManager::TextureRender(Sprite* Obj, Texture* render)
 {
-	Mesh* ObjMesh;
+	Mesh3D* ObjMesh;
 	Material* ObjMat;
 
 	// Model Properties
-	ObjMesh = Obj->GetMesh();
+	ObjMesh = Obj->GetModel()->GetMesh();
 	if (!ObjMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Texture", L"Error", MB_OK);
@@ -783,7 +784,7 @@ bool ShaderManager::TextureRender(Sprite* Obj, Texture* render)
 	TextureShader_->SendTextureToShader(0, texture);
 
 	// Render using shader
-	ObjMesh->Render();
+	Obj->Render();
 	TextureShader_->Render(indexCount);
 	
 	return true;

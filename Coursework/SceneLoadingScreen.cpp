@@ -34,6 +34,7 @@ bool SceneLoadingScreen::Initialise(Rect2D WindowResolution)
 	{
 		return false;
 	}
+	Background_->GetTransform()->MoveZ(-5.0f);
 
 	//================
 	// Initialise GUI

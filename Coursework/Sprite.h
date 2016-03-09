@@ -3,12 +3,14 @@
 #include <d3d11.h>
 #include <d3dx10math.h>
 
+#include "DirectXManager.h"
 #include "Constants.h"
+#include "GameObject.h"
 #include "Model.h"
 #include "Rect.h"
-#include "Primitive.h"
+#include "PrimitiveFactory.h"
 
-class Sprite : public Primitive
+class Sprite : public GameObject
 {
 public:
 	Sprite();
@@ -18,5 +20,3 @@ public:
 	bool Initialise(Rect3D Dimensions);
 	bool SetTexture(WCHAR* filename);
 };
-
-

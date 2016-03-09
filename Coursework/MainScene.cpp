@@ -138,8 +138,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	SkySphere_ = new SkySphere;
 	if (!SkySphere_) { return false; }
-	SkySphere_ -> Initialise();
-	Result_ = SkySphere_->GetMesh()->LoadModel("Data/Models/Sphere.txt", L"Data/Textures/Pixel.dds");
+	SkySphere_ -> Initialise("Data/Models/Sphere.txt");
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the sky sphere object.", L"Error", MB_OK);
@@ -159,7 +158,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	Terrain_ = new Terrain;
 	if (!Terrain_) { return false; }
-	Result_ = Terrain_->Initialise(Rect3D(256, 256), L"Data/Textures/sand.dds", L"Data/Textures/sand_normal.dds", Vector2(50, 50), 1.0f);
+	Result_ = Terrain_->Initialise(Rect3D(256, 256), TerrainType::PERLIN, L"Data/Textures/sand.dds", L"Data/Textures/sand_normal.dds", Vector2(50, 50), 1.0f);
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the terrain object.", L"Error", MB_OK);
@@ -345,7 +344,7 @@ bool MainScene::UpdateObjects()
 	// Set Camera Position
 	//=====================
 	
-	ParticleSystem_->GetTransform()->SetPosition(Camera::Instance()->GetTransform()->GetPosition() + (Camera::Instance()->GetTransform()->GetForwardVector() * 1.25));
+	//ParticleSystem_->GetTransform()->SetPosition(Camera::Instance()->GetTransform()->GetPosition() + (Camera::Instance()->GetTransform()->GetForwardVector() * 1.25));
 
 	//================
 	// Update Objects
@@ -355,14 +354,8 @@ bool MainScene::UpdateObjects()
 	Clouds_ -> Frame();
 	Ocean_ -> Frame();
 
-	// TEMP -------------------------
-	if (InputManager::Instance()->GetKeyDown('P'))
-	{
-		Terrain_->GetMesh()->CreateTerrainWithPerlinNoise(Rect3D(256, 256), Vector2(50, 50), 1.0f, 40);
-	}
-
-	Result_ = ParticleSystem_ -> Frame(PerformanceManager::Instance()->GetTime());
-	if (!Result_) { return false; }
+	//Result_ = ParticleSystem_ -> Frame(PerformanceManager::Instance()->GetTime());
+	//if (!Result_) { return false; }
 
 	//===========================
 	// Update WindowManager Information
@@ -375,14 +368,14 @@ bool MainScene::UpdateObjects()
 	// Check Underwater Status
 	//=========================
 
-	if (Camera::Instance()->GetTransform()->GetY() < Ocean_->GetWaterHeight())
+/*	if (Camera::Instance()->GetTransform()->GetY() < Ocean_->GetWaterHeight())
 	{
 		IsUnderwater_ = true;
 	}
 	else
 	{
 		IsUnderwater_ = false;
-	}
+	}*/
 
 	return true;
 }
@@ -698,7 +691,7 @@ bool MainScene::RenderRefraction()
 	ClipPlane_ = D3DXVECTOR4(0.0f, -1.0f, 0.0f, Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
 
 	// Render the terrain using reflection shader
-	Result_ = ShaderManager::Instance()->TerrainRender(Terrain_, ClipPlane_);
+	//Result_ = ShaderManager::Instance()->TerrainRender(Terrain_, ClipPlane_);
 	if (!Result_) { return false; }
 
 	// Reset rendering back to normal
@@ -792,7 +785,7 @@ bool MainScene::RenderReflection()
 	// We use max wave height here otherwise the refraction renders incorrectly
 	ClipPlane_ = D3DXVECTOR4(0.0f, 1.0f, 0.0f, -Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
 
-	Result_ = ShaderManager::Instance()->TerrainRender(Terrain_, ClipPlane_);
+	//Result_ = ShaderManager::Instance()->TerrainRender(Terrain_, ClipPlane_);
 	if (!Result_) { return false; }
 
 	// Re-enable culling

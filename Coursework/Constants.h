@@ -2,6 +2,7 @@
 
 #include <d3dx11.h>
 #include <d3dx10math.h>
+#include <string>
 
 #include "Colour.h"
 
@@ -47,6 +48,16 @@ const D3DXVECTOR3 ZERO = D3DXVECTOR3(0, 0, 0);
 //==========
 
 const float MODEL_SPECULAR = 255.0f;
+
+//=============
+// Directories
+//=============
+
+const std::string AUDIO_DIR = "data/audio/";
+const std::string FONT_DIR = "data/font/";
+const std::string MODEL_DIR = "data/models/";
+const std::string SHADER_DIR = "data/shaders/";
+const std::string TEXTURE_DIR = "data/textures/";
 
 //==============
 // Virtual Keys
