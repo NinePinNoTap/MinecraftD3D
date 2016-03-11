@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DirectXManager.h"
-
+#include "AssetManager.h"
 #include "Camera.h"
 #include "Clouds.h"
 #include "Fire.h"
@@ -66,6 +66,7 @@ private:
 	Terrain* Terrain_;
 	Water* Ocean_;
 	AudioClip* AmbientSound_;
+	AudioClip* AmbientSound2_;
 
 	// Flags
 	bool IsUnderwater_;

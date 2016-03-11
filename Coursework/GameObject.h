@@ -3,6 +3,7 @@
 #include <d3dx11.h>
 #include <d3dx10math.h>
 
+#include "AssetManager.h"
 #include "Constants.h"
 #include "Model.h"
 #include "OBJLoader.h"

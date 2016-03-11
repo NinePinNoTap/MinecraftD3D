@@ -145,12 +145,15 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 		return false;
 	}
 
+	AssetManager* assetManager = new AssetManager;
+	assetManager->Initialise();
+
 	//===================
 	// Initialise Sounds
 	//===================
 
-	AmbientSound_ = new AudioClip;
-	AmbientSound_->LoadFile("Data/Sounds/water.wav", false);
+	AssetManager::Instance()->LoadAudio(&AmbientSound_, "water", false);
+	AssetManager::Instance()->LoadAudio(&AmbientSound2_, "water", false);
 
 	//========================
 	// Initialise the Terrain
@@ -460,7 +463,7 @@ bool MainScene::UserInputManager()
 		Light::Instance() -> ToggleTime(NightTimeMode_);
 		SkySphere_ -> ToggleTime(NightTimeMode_);
 		Ocean_ -> ToggleTime(NightTimeMode_);
-		Fire_ -> SetActive(NightTimeMode_);
+		//Fire_ -> SetActive(NightTimeMode_);
 	}
 
 	return true;
@@ -604,8 +607,8 @@ bool MainScene::RenderScene(bool ShowText)
 		DirectXManager::Instance() -> ToggleAlphaBlending(true);
 
 		// Render the particle WindowManager
-		Result_ = ShaderManager::Instance()->ParticleRender(ParticleSystem_);
-		if (!Result_) { return false; }
+		//Result_ = ShaderManager::Instance()->ParticleRender(ParticleSystem_);
+		//if (!Result_) { return false; }
 
 		// Turn off alpha blending.
 		DirectXManager::Instance() -> ToggleAlphaBlending(false);

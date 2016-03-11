@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include "Camera.h"
 #include "AudioClip.h"
 #include "Utilities.h"
 
@@ -12,7 +12,7 @@ public:
 
 	void Initialise(char* filename, float volume, D3DXVECTOR3 Position, Rect3D box);
 
-	void Frame(D3DXVECTOR3 CameraPosition);
+	void Frame();
 
 private:
 	AudioClip* Clip_;

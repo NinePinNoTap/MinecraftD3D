@@ -4,12 +4,13 @@
 #include <map>
 
 #include "Singleton.h"
-#include "Font.h"
 #include "AudioClip.h"
-#include "Mesh3D.h"
+#include "Font.h"
+#include "Model.h"
 #include "Texture.h"
+#include "OBJLoader.h"
 
-class AssetManager
+class AssetManager : public Singleton<AssetManager>
 {
 public:
 	AssetManager();
@@ -19,16 +20,16 @@ public:
 	void Initialise();
 	void Shutdown();
 
-	void LoadAudio(std::string filename);
-	void LoadFont(std::string filename);
-	void LoadModel(std::string filename);
-	void LoadTexture(std::string filename);
-
-	Font* GetFont(std::string filename);
-	Texture* GetTexture(std::string filename);
+	void LoadAudio(AudioClip** clip, std::string filename, bool is3D = false);
+	void LoadFont(Font** font, std::string filename);
+	void LoadModel(Model** model, std::string filename);
+	void LoadTexture(Texture** texture, std::string filename);
 
 private:
-	std::map<std::string, Font*> FontDB_;
-	std::map<std::string, Texture*> TextureDB_;
-	std::map<std::string, Mesh3D*> ModelDB_;
+	std::map<std::string, AudioClip*> AudioDatabase_;
+	std::map<std::string, Font*> FontDatabase_;
+	std::map<std::string, Model*> ModelDatabase_;
+	std::map<std::string, Texture*> TextureDatabase_;
+
+	bool Result_;
 };

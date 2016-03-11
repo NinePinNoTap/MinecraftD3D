@@ -23,7 +23,7 @@ AudioClip::~AudioClip()
 }
 
 // Initialising
-bool AudioClip::LoadFile(char* filename, bool Is3D)
+bool AudioClip::LoadFile(const char* filename, bool Is3D)
 {
 	int error;
 	FILE* filePtr;

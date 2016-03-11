@@ -25,13 +25,13 @@ void AudioTrigger::Initialise(char* filename, float volume, D3DXVECTOR3 Position
 	Activated_ = false;
 }
 
-void AudioTrigger::Frame(D3DXVECTOR3 CameraPosition)
+void AudioTrigger::Frame()
 {
 	if (Activated_)
 		return;
 
 	// Check if the camera is inside the bounds of the box
-	if (CheckCollision(BoundingBox_, CameraPosition))
+	if (CheckCollision(BoundingBox_, Camera::Instance()->GetTransform()->GetPosition()))
 	{
 		// Play the sound
 		Activated_ = true;

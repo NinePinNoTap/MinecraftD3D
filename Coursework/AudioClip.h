@@ -16,7 +16,7 @@ public:
 	~AudioClip();
 
 	// Initialising
-	bool LoadFile(char* filename, bool Is3D);
+	bool LoadFile(const char* filename, bool Is3D);
 
 	// Controls
 	bool Play(bool Loop);

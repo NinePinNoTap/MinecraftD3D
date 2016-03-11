@@ -27,6 +27,7 @@ bool SkySphere::Initialise(const char* filename)
 		return false;
 	}
 
+
 	Result_ = Model_->Initialise();
 	if (!Result_)
 	{
