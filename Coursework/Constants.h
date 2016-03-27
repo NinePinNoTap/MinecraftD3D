@@ -23,6 +23,14 @@ const float SCREEN_NEAR  = 0.1f;
 const float SCREEN_DEPTH = 10000.0f;
 const float CAMERA_SENSITIVITY  = 10.0f;
 
+//===============
+// Voxel Terrain
+//===============
+
+const int BLOCK_SIZE = 3; // How big a block is in world space
+const int BLOCKS_IN_CHUNK = 16; // How many blocks in a chunk
+const int NO_OF_CHUNKS = 2; // How many chunks in the terrain
+
 //=========
 // Colours
 //=========

@@ -76,7 +76,6 @@ bool TextureArray::Initialise(vector<wstring> TextureFilenames)
 		return false;
 
 	// Insert textures into the texture array
-
 	for(UINT texElement = 0; texElement < TextureCount; texElement++)
 	{
 		for(UINT mipLevel = 0; mipLevel < texElementDesc.MipLevels; ++mipLevel)

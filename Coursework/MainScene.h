@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DirectXManager.h"
-#include "AssetManager.h"
+
 #include "Camera.h"
 #include "Clouds.h"
 #include "Fire.h"
@@ -19,6 +19,7 @@
 #include "Text.h"
 #include "Water.h"
 #include "Model.h"
+#include "VoxelTerrain.h"
 
 class MainScene : public Scene3D
 {
@@ -66,11 +67,9 @@ private:
 	Terrain* Terrain_;
 	Water* Ocean_;
 	AudioClip* AmbientSound_;
-	AudioClip* AmbientSound2_;
+	VoxelTerrain* Chunk_;
 
 	// Flags
 	bool IsUnderwater_;
 	bool NightTimeMode_;
 };
-
-

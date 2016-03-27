@@ -24,9 +24,9 @@ void AssetManager::Shutdown()
 	// De-allocate all audio clips
 	/*for (std::map<string, AudioClip*>::iterator it = AudioDatabase_.begin(); it != AudioDatabase_.end(); ++it)
 	{
-		it->second->Shutdown();
-		delete it->second;
-		it->second = 0;
+	it->second->Shutdown();
+	delete it->second;
+	it->second = 0;
 	}*/
 
 	// De-allocate all fonts
@@ -127,8 +127,6 @@ void AssetManager::LoadFont(Font** font, std::string filename)
 
 void AssetManager::LoadModel(Model** model, std::string filename)
 {
-	OBJLoader objLoader;
-
 	// Check if the font already exists
 	if (ModelDatabase_.count(filename))
 	{
@@ -137,6 +135,8 @@ void AssetManager::LoadModel(Model** model, std::string filename)
 
 		return;
 	}
+
+	OBJLoader objLoader;
 
 	// Create the Model
 	Model* loadedModel = new Model;
@@ -149,16 +149,64 @@ void AssetManager::LoadModel(Model** model, std::string filename)
 
 	// Load the Model
 	Result_ = objLoader.LoadModel(filename.c_str(), *loadedModel);
+
+	// Check if we loaded the model properly
+	if (Result_)
+	{
+		*model = loadedModel;
+
+		// Add to the map
+		ModelDatabase_[filename] = loadedModel;
+	}
+	else
+	{
+		*model = 0;
+	}
+
+	return;
+}
+
+void AssetManager::LoadModel(Model** model, std::string filename, wstring textureFilename)
+{
+	// Check if the font already exists
+	if (ModelDatabase_.count(filename))
+	{
+		// Don't continue
+		*model = ModelDatabase_[filename];
+
+		return;
+	}
+
+	TXTLoader txtLoader;
+	Model* loadedModel;
+
+	// Create the Model
+	loadedModel = new Model;
+	Result_ = loadedModel->Initialise();
 	if (!Result_)
 	{
 		*model = 0;
 		return;
 	}
 
+	// Load the Model
+	Result_ = txtLoader.LoadModel(filename.c_str(), *loadedModel);
+
+	// Check if we loaded the model properly
+	if (!Result_)
+	{
+		*model = 0;
+		return;
+	}
+
+	// Load the Texture
+	loadedModel->GetMaterial()->SetTextureArray(std::vector<wstring>(1, textureFilename));
+
+	// Return loaded model
+	*model = loadedModel;
+
 	// Add to the map
 	ModelDatabase_[filename] = loadedModel;
-
-	*model = loadedModel;
 
 	return;
 }

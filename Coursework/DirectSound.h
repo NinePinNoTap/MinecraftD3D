@@ -12,7 +12,6 @@
 #include <d3d11.h>
 #include <d3dx10math.h>
 
-#include "Camera.h"
 #include "Singleton.h"
 #include "WaveHeader.h"
 
@@ -28,7 +27,7 @@ public:
 	bool Initialise(HWND);
 	void Shutdown();
 
-	void Frame();
+	void SetListenerPosition(D3DXVECTOR3 Position);
 
 	IDirectSound8* GetDirectSound();
 

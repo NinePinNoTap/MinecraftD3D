@@ -16,6 +16,27 @@ GameObject::~GameObject()
 {
 }
 
+bool GameObject::Initialise()
+{
+	//==================
+	// Create Transform
+	//==================
+
+	Transform_ = new Transform;
+	if (!Transform_)
+	{
+		return false;
+	}
+
+	//=================
+	// Initialise Vars
+	//=================
+
+	Frame_ = 0;
+	IsReflectable_ = false;
+	IsActive_ = true;
+}
+
 bool GameObject::Initialise(const char* filename)
 {
 	OBJLoader objLoader;
@@ -125,6 +146,12 @@ void GameObject::SetReflectable(bool Flag)
 void GameObject::SetActive(bool Flag)
 {
 	IsActive_ = Flag;
+}
+
+// Setters
+void GameObject::SetModel(Model* model)
+{
+	Model_ = model;
 }
 
 // Model Getters

@@ -15,6 +15,7 @@ MainScene::MainScene() : Scene3D()
 	SkySphere_ = 0;
 	Terrain_ = 0;
 	Ocean_ = 0;
+	Chunk_ = 0;
 }
 
 MainScene::~MainScene()
@@ -145,15 +146,12 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 		return false;
 	}
 
-	AssetManager* assetManager = new AssetManager;
-	assetManager->Initialise();
-
 	//===================
 	// Initialise Sounds
 	//===================
 
-	AssetManager::Instance()->LoadAudio(&AmbientSound_, "water", false);
-	AssetManager::Instance()->LoadAudio(&AmbientSound2_, "water", false);
+	AmbientSound_ = new AudioClip;
+	AmbientSound_->LoadFile("Data/Sounds/water.wav", false);
 
 	//========================
 	// Initialise the Terrain
@@ -195,6 +193,9 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 	Text_->CreateText("[2] - Toggle Time", Vector2(WindowResolution.width - 10, 50), WHITE, RIGHT);
 	Text_->CreateText("[BACKSPACE] - Reset Camera", Vector2(WindowResolution.width - 10, 70), WHITE, RIGHT);
 	Text_->CreateText("[ESC] - Quit", Vector2(WindowResolution.width - 10, 110), WHITE, RIGHT);
+
+	Chunk_ = new VoxelTerrain;
+	Chunk_->Initialise();
 
 	//==================
 	// Initialise flags
@@ -302,8 +303,8 @@ void MainScene::Reset()
 	//=========================================
 
 	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
-	Camera::Instance()->SetStartPosition(447, 24, 163);
-	Camera::Instance()->SetStartRotation(6, 28, 0);
+	Camera::Instance()->SetStartPosition(0, 3, 0);
+	Camera::Instance()->SetStartRotation(0, 0, 0);
 	Camera::Instance()->AllowFlying(true);
 	Camera::Instance()->SetSpeed(0.5f);
 
@@ -463,7 +464,7 @@ bool MainScene::UserInputManager()
 		Light::Instance() -> ToggleTime(NightTimeMode_);
 		SkySphere_ -> ToggleTime(NightTimeMode_);
 		Ocean_ -> ToggleTime(NightTimeMode_);
-		//Fire_ -> SetActive(NightTimeMode_);
+		Fire_ -> SetActive(NightTimeMode_);
 	}
 
 	return true;
@@ -588,6 +589,8 @@ bool MainScene::RenderScene(bool ShowText)
 		}
 	}
 
+	Chunk_->Render();
+
 	//==============================================
 	// Generate Matrices and Send To Shader Manager
 	//==============================================
@@ -607,8 +610,8 @@ bool MainScene::RenderScene(bool ShowText)
 		DirectXManager::Instance() -> ToggleAlphaBlending(true);
 
 		// Render the particle WindowManager
-		//Result_ = ShaderManager::Instance()->ParticleRender(ParticleSystem_);
-		//if (!Result_) { return false; }
+		Result_ = ShaderManager::Instance()->ParticleRender(ParticleSystem_);
+		if (!Result_) { return false; }
 
 		// Turn off alpha blending.
 		DirectXManager::Instance() -> ToggleAlphaBlending(false);

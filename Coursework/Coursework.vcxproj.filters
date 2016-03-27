@@ -74,6 +74,9 @@
     <Filter Include="Framework\Assets">
       <UniqueIdentifier>{92810a1f-d223-430c-aa79-43a1c9435178}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\VoxelTerrain">
+      <UniqueIdentifier>{de71abc2-a071-4e45-89b1-bcce2d10c559}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -348,6 +351,18 @@
     </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Framework\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="VoxelTerrain.h">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Chunk.h">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockManager.h">
+      <Filter>Framework\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

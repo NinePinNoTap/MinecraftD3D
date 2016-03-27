@@ -16,11 +16,4 @@ public:
 	~OBJLoader();
 
 	bool LoadModel(const char* ModelFilename, Model& model);
-
-private:
-
-	bool LoadMaterials(vector<wstring> TextureFilenames)
-	{
-		// TODO
-	}
 };

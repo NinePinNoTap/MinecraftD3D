@@ -3,7 +3,6 @@
 #include <d3dx11.h>
 #include <d3dx10math.h>
 
-#include "AssetManager.h"
 #include "Constants.h"
 #include "Model.h"
 #include "OBJLoader.h"
@@ -17,6 +16,7 @@ public:
 	~GameObject();
 
 	// Initialising
+	bool Initialise();
 	bool Initialise(const char* filename);
 
 	// Shutdown
@@ -29,6 +29,9 @@ public:
 	// Rendering
 	void SetReflectable(bool Flag);
 	void SetActive(bool Flag);
+
+	// Setters
+	void SetModel(Model* model);
 
 	// Getters
 	Model* GetModel();
@@ -53,5 +56,3 @@ protected:
 	bool IsReflectable_;
 	bool IsActive_;
 };
-
-

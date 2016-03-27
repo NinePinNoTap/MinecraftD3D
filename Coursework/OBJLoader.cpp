@@ -13,18 +13,18 @@ bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
 {
 	ifstream fin;
 	char linebuffer[256];
-	vector<D3DXVECTOR3> vertexPositions;
-	vector<D3DXVECTOR2> vertexTextureCoords;
-	vector<D3DXVECTOR3> faceNormals;
-	vector<D3DXVECTOR3> faceIndices;
-	vector<wstring> textureFilenames;
-	vector<int> textureIDs;
-	D3DXVECTOR3 tempVertex;
-	D3DXVECTOR2 tempTexCoord;
+	vector<D3DXVECTOR3> Vertices;
+	vector<D3DXVECTOR2> TextureCoords;
+	vector<D3DXVECTOR3> FaceNormals;
+	vector<D3DXVECTOR3> Faces;
+	vector<wstring> TextureFilenames;
+	vector<int> TextureIDs;
+	D3DXVECTOR3 TempVertex;
+	D3DXVECTOR2 TempTexCoord;
 	D3DXVECTOR3 TempFace[3];
-	float vertexID, textureID, normalID;
+	float VertexID, TextureID, NormalID;
 	int indexCount, vertexCount;
-	VertexData* objMesh;
+	VertexData* ObjMesh;
 	unsigned long* Indices;
 	bool Result;
 
@@ -44,25 +44,25 @@ bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
 		// Get the current line
 		fin.getline(linebuffer, 256);
 
-		if (string(linebuffer).find("v ") == 0) // Line defines a tempVertex position
+		if (string(linebuffer).find("v ") == 0) // Line defines a TempVertex position
 		{
-			//Read the tempVertex line and push the data into the vector
-			sscanf_s(string(linebuffer).c_str(), "v %f %f %f", &tempVertex.x, &tempVertex.y, &tempVertex.z);
-			vertexPositions.push_back(tempVertex);
+			//Read the TempVertex line and push the data into the vector
+			sscanf_s(string(linebuffer).c_str(), "v %f %f %f", &TempVertex.x, &TempVertex.y, &TempVertex.z);
+			Vertices.push_back(TempVertex);
 		}
-		else if (string(linebuffer).find("vt ") == 0) // Line defines a tempVertex texture
+		else if (string(linebuffer).find("vt ") == 0) // Line defines a TempVertex texture
 		{
 			//Read the texture coord line and push the data into the vector
-			sscanf_s(string(linebuffer).c_str(), "vt %f %f", &tempTexCoord.x, &tempTexCoord.y);
-			vertexTextureCoords.push_back(tempTexCoord);
+			sscanf_s(string(linebuffer).c_str(), "vt %f %f", &TempTexCoord.x, &TempTexCoord.y);
+			TextureCoords.push_back(TempTexCoord);
 		}
-		else if (string(linebuffer).find("vn ") == 0) // Line defines a tempVertex normal
+		else if (string(linebuffer).find("vn ") == 0) // Line defines a TempVertex normal
 		{
 			//Read the normal line and push the data into the vector
-			sscanf_s(string(linebuffer).c_str(), "vn %f %f %f", &tempVertex.x, &tempVertex.y, &tempVertex.z);
-			faceNormals.push_back(tempVertex);
+			sscanf_s(string(linebuffer).c_str(), "vn %f %f %f", &TempVertex.x, &TempVertex.y, &TempVertex.z);
+			FaceNormals.push_back(TempVertex);
 		}
-		else if (string(linebuffer).find("f ") == 0) // Line defines a triangle (faceIndices)
+		else if (string(linebuffer).find("f ") == 0) // Line defines a triangle (Faces)
 		{
 			//Read the face line
 			sscanf_s(string(linebuffer).c_str(), "f %f/%f/%f %f/%f/%f %f/%f/%f",
@@ -70,15 +70,15 @@ bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
 				&TempFace[1].x, &TempFace[1].y, &TempFace[1].z,
 				&TempFace[2].x, &TempFace[2].y, &TempFace[2].z);
 
-			// Add the faceIndices into the vector
-			faceIndices.push_back(TempFace[0]);
-			faceIndices.push_back(TempFace[1]);
-			faceIndices.push_back(TempFace[2]);
+			// Add the Faces into the vector
+			Faces.push_back(TempFace[0]);
+			Faces.push_back(TempFace[1]);
+			Faces.push_back(TempFace[2]);
 
-			// Add the texture IDs for the three faceIndices
-			textureIDs.push_back(textureFilenames.size() - 1);
-			textureIDs.push_back(textureFilenames.size() - 1);
-			textureIDs.push_back(textureFilenames.size() - 1);
+			// Add the texture IDs for the three Faces
+			TextureIDs.push_back(TextureFilenames.size() - 1);
+			TextureIDs.push_back(TextureFilenames.size() - 1);
+			TextureIDs.push_back(TextureFilenames.size() - 1);
 		}
 		else if (string(linebuffer).find("usemtl ") == 0) // Line is a texture filename 
 		{
@@ -91,10 +91,10 @@ bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
 			string filename = TEXTURE_DIR + stringParts[1] + ".dds";
 
 			// Check if the file is already on the list
-			if (std::find(textureFilenames.begin(), textureFilenames.end(), wstring(filename.begin(), filename.end())) == textureFilenames.end())
+			if (std::find(TextureFilenames.begin(), TextureFilenames.end(), wstring(filename.begin(), filename.end())) == TextureFilenames.end())
 			{
 				// Add the filename to the vector
-				textureFilenames.push_back(wstring(filename.begin(), filename.end()));
+				TextureFilenames.push_back(wstring(filename.begin(), filename.end()));
 			}
 		}
 	}
@@ -107,32 +107,32 @@ bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
 	//====================
 
 	// Create the model using the vertex count that was read in
-	indexCount = vertexCount = faceIndices.size();
-	objMesh = new VertexData[vertexCount];
-	if (!objMesh) { return false; }
+	indexCount = vertexCount = Faces.size();
+	ObjMesh = new VertexData[vertexCount];
+	if (!ObjMesh) { return false; }
 
 	Indices = new unsigned long[indexCount];
 	if (!Indices) { return false; }
 
-	for (unsigned int Index = 0; Index < faceIndices.size(); Index++)
+	for (unsigned int Index = 0; Index < Faces.size(); Index++)
 	{
 		// Read in Face Data
-		vertexID = faceIndices[Index].x - 1;
-		textureID = faceIndices[Index].y - 1;
-		normalID = faceIndices[Index].z - 1;
+		VertexID = Faces[Index].x - 1;
+		TextureID = Faces[Index].y - 1;
+		NormalID = Faces[Index].z - 1;
 
 		// Grab data from the vectors and apply them to the model
-		objMesh[Index].position.x = vertexPositions[vertexID].x;
-		objMesh[Index].position.y = vertexPositions[vertexID].y;
-		objMesh[Index].position.z = vertexPositions[vertexID].z * -1; //Flip for RH WindowManager
+		ObjMesh[Index].position.x = Vertices[VertexID].x;
+		ObjMesh[Index].position.y = Vertices[VertexID].y;
+		ObjMesh[Index].position.z = Vertices[VertexID].z * -1; //Flip for RH WindowManager
 
-		objMesh[Index].texture.x = vertexTextureCoords[textureID].x;
-		objMesh[Index].texture.y = 1 - vertexTextureCoords[textureID].y; //Flip for RH WindowManager
-		objMesh[Index].texture.z = textureIDs[Index];
+		ObjMesh[Index].texture.x = TextureCoords[TextureID].x;
+		ObjMesh[Index].texture.y = 1 - TextureCoords[TextureID].y; //Flip for RH WindowManager
+		ObjMesh[Index].texture.z = TextureIDs[Index];
 
-		objMesh[Index].normal.x = faceNormals[normalID].x;
-		objMesh[Index].normal.y = faceNormals[normalID].y;
-		objMesh[Index].normal.z = faceNormals[normalID].z * -1; //Flip for RH WindowManager
+		ObjMesh[Index].normal.x = FaceNormals[NormalID].x;
+		ObjMesh[Index].normal.y = FaceNormals[NormalID].y;
+		ObjMesh[Index].normal.z = FaceNormals[NormalID].z * -1; //Flip for RH WindowManager
 
 		Indices[Index] = Index;
 	}
@@ -141,21 +141,31 @@ bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
 	// Finalise Model
 	//================
 
-	model.GetMesh()->SetMesh(objMesh, Indices);
 	model.GetMesh()->SetIndexCount(indexCount);
 	model.GetMesh()->SetVertexCount(vertexCount);
-	model.GetMaterial()->SetTextureArray(textureFilenames);
+	model.GetMesh()->SetMesh(ObjMesh, Indices);
+	model.GetMaterial()->SetTextureArray(TextureFilenames);
 
 	//==========
 	// Clean up
 	//==========
 
-	vertexPositions.clear();
-	vertexTextureCoords.clear();
-	faceNormals.clear();
-	faceIndices.clear();
-	textureFilenames.clear();
-	textureIDs.clear();
+	Vertices.clear();
+	TextureCoords.clear();
+	FaceNormals.clear();
+	Faces.clear();
+	TextureFilenames.clear();
+	TextureIDs.clear();
 
-	return model.GetMesh()->Build();
+	//================
+	// Build the mesh
+	//================
+
+	Result = model.GetMesh()->Build();
+	if (!Result)
+	{
+		return false;
+	}
+
+	return true;
 }

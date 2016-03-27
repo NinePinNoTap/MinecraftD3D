@@ -82,6 +82,9 @@ bool DirectSound::Initialise(HWND hwnd)
 		return false;
 	}
 
+	// Set the position of the listener
+	SetListenerPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
 	return true;
 }
 
@@ -111,11 +114,9 @@ void DirectSound::Shutdown()
 	return;
 }
 
-void DirectSound::Frame()
+void DirectSound::SetListenerPosition(D3DXVECTOR3 Position)
 {
-	D3DXVECTOR3 cameraPos = Camera::Instance()->GetTransform()->GetPosition();
-
-	Listener_->SetPosition(cameraPos.x, cameraPos.y, cameraPos.z, DS3D_IMMEDIATE);
+	Listener_->SetPosition(Position.x, Position.y, Position.z, DS3D_IMMEDIATE);
 }
 
 IDirectSound8* DirectSound::GetDirectSound()
