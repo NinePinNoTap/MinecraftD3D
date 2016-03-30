@@ -47,6 +47,30 @@ void Model::AddMaterial(Material* material)
 	Materials_.push_back(material);
 }
 
+void Model::UpdateMesh(int index, Mesh3D* mesh)
+{
+	// Check if we can access the element
+	if (index >= Meshes_.size())
+	{
+		Meshes_.push_back(mesh);
+		return;
+	}
+
+	Meshes_[index] = mesh;
+}
+
+void Model::UpdateMaterial(int index, Material* material)
+{
+	// Check if we can access the element
+	if (index >= Materials_.size())
+	{
+		Materials_.push_back(material);
+		return;
+	}
+
+	Materials_[index] = material;
+}
+
 Mesh3D* Model::GetMesh(int index)
 {
 	return Meshes_[index];

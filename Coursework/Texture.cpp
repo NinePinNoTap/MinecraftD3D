@@ -27,7 +27,6 @@ bool Texture::Initialise(string filename)
 	// Convert to correct format
 	std::wstring textureFilename = std::wstring(filename.begin(), filename.end());
 
-
 	// Load the texture in
 	Result = D3DX11CreateShaderResourceViewFromFile(DirectXManager::Instance()->GetDevice(), textureFilename.c_str(), NULL, NULL, &Texture_, NULL);
 	if (FAILED(Result)) { return false; }

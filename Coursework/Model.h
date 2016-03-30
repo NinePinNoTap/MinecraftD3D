@@ -16,6 +16,9 @@ public:
 	void AddMesh(Mesh3D* mesh);
 	void AddMaterial(Material* material);
 
+	void UpdateMesh(int index, Mesh3D* mesh);
+	void UpdateMaterial(int index, Material* material);
+
 	Mesh3D* GetMesh(int index);
 	Material* GetMaterial(int index);
 

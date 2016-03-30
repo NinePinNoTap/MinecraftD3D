@@ -25,13 +25,8 @@ public:
 
 	GameObject* GetBlock(string blockName)
 	{
-		if (BlockDatabase_.count(blockName))
-		{
-			return BlockDatabase_[blockName];
-		}
-
 		GameObject* loadedObj = 0;
-		Model* loadedModel = 0;
+		Model* loadedModel;
 
 		// Create the base gameobject
 		loadedObj = new GameObject;
@@ -39,24 +34,15 @@ public:
 
 		// Load the model
 		AssetManager::Instance()->LoadModel(&loadedModel, "cube.txt");
-		if (!loadedModel)
-		{
-			return 0;
-		}
 
 		// Load the texture
 		Material* newMaterial = new Material;
 		newMaterial->SetBaseTexture(blockName + ".dds");
-		loadedModel->AddMaterial(newMaterial);
+		loadedModel->UpdateMaterial(0, newMaterial);
 
 		// Set the model on the gameobject
 		loadedObj->SetModel(loadedModel);
 
-		BlockDatabase_[blockName] = loadedObj;
-
 		return loadedObj;
 	}
-
-private:
-	std::map<string, GameObject*> BlockDatabase_;
 };

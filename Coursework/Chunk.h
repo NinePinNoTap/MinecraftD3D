@@ -117,6 +117,11 @@ public:
 			}
 		}
 
+		int n = (BLOCKS_IN_CHUNK - 2);
+		if (n < 0)
+			n = 0;
+		int total = n * n * n;
+
 		OutputToDebug("Blocks Not Rendered : ");
 		OutputToDebug(to_string(activeBlocks));
 		OutputToDebug(" in ");
@@ -125,6 +130,8 @@ public:
 		OutputToDebug(to_string(BLOCKS_IN_CHUNK));
 		OutputToDebug(" x ");
 		OutputToDebug(to_string(BLOCKS_IN_CHUNK));
+		OutputToDebug(" | Expected : ");
+		OutputToDebug(to_string(total));
 		OutputToDebug("\n");
 	}
 
@@ -172,6 +179,7 @@ public:
 		if (!IsVisible_)
 			return;
 
+		GameObject* block;
 		// Loop through x dimension
 		for (int i = 0; i < BLOCKS_IN_CHUNK; i++)
 		{
@@ -184,27 +192,17 @@ public:
 					if (Chunk_[i][j][k].GetActive())
 					{
 						string name = Chunk_[i][j][k].GetInfo().name;
-						GameObject* block = BlockManager::Instance()->GetBlock(name);
+						block = BlockManager::Instance()->GetBlock(name);
 
 						// Get position of block 
 						D3DXVECTOR3 position = Transform_->GetPosition();
-						position += D3DXVECTOR3(i, j, k) * BLOCK_SIZE * 2;
+						position += D3DXVECTOR3(i, j, k) * BLOCK_SIZE * 1.1;
 
 						// Update block position
 						block->GetTransform()->SetPosition(position);
 
 						// Render
 						ShaderManager::Instance()->TextureRender(block);
-
-						OutputToDebug("Rendered at :");
-						OutputToDebug(to_string(i));
-						OutputToDebug(", ");
-						OutputToDebug(to_string(k));
-						OutputToDebug(", ");
-						OutputToDebug(to_string(k));
-						OutputToDebug(" | Type : ");
-						OutputToDebug(name);
-						OutputToDebug("\n");
 					}
 				}
 			}

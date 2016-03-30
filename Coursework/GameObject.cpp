@@ -120,11 +120,11 @@ bool GameObject::Render()
 	meshCount = Model_->GetMeshCount();
 
 	// Loop through and render the mesh parts
-	for (int i = 0; i < meshCount; i++)
-	{
+	//for (int i = 0; i < meshCount; i++)
+	//{
 		// Get Mesh Buffers
-		vertexBuffer = Model_->GetMesh(i)->GetVertexBuffer();
-		indexBuffer = Model_->GetMesh(i)->GetIndexBuffer();
+		vertexBuffer = Model_->GetMesh(0)->GetVertexBuffer();
+		indexBuffer = Model_->GetMesh(0)->GetIndexBuffer();
 
 		// Set the vertex buffer to active in the InputManager assembler so it can be rendered
 		DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
@@ -134,7 +134,7 @@ bool GameObject::Render()
 
 		// Set the type of primitive that should be rendered from this vertex buffer
 		DirectXManager::Instance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	}
+	//}
 
 	return true;
 }
