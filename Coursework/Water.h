@@ -20,7 +20,7 @@ public:
 	~Water();
 
 	// Initialising
-	bool Initialise(WCHAR* textureFilename, Rect3D WaterResolution);
+	bool Initialise(string textureFilename, Rect3D WaterResolution);
 
 	// Shutdown
 	void Shutdown();
@@ -54,10 +54,6 @@ private:
 	float WaterTimer_;
 	float WaveSpeed_;
 	float WaveHeight_;
-
-	// Buffers
-	ID3D11Buffer* VertexBuffer_;
-	ID3D11Buffer* IndexBuffer_;
 };
 
 

@@ -6,6 +6,7 @@
 #include "AssetManager.h"
 #include "GameObject.h"
 #include "Mesh3D.h"
+#include "Model.h"
 #include "Material.h"
 #include "Singleton.h"
 #include "TXTLoader.h"
@@ -22,27 +23,36 @@ public:
 
 	}
 
-	GameObject* GetBlock(string blockname)
+	GameObject* GetBlock(string blockName)
 	{
-		// Check if the font already exists
-		if (BlockDatabase_.count(blockname))
+		if (BlockDatabase_.count(blockName))
 		{
-			// Don't continue
-			return BlockDatabase_[blockname];
+			return BlockDatabase_[blockName];
 		}
 
-		GameObject* loadedObj;
-		Model* loadedModel;
+		GameObject* loadedObj = 0;
+		Model* loadedModel = 0;
 
-		bool Result;
-		Result = AssetManager::Instance()->LoadModel(*loadedModel, "cube.txt", "Sand.dds");
-		if (!Result)
+		// Create the base gameobject
+		loadedObj = new GameObject;
+		loadedObj->Initialise();
+
+		// Load the model
+		AssetManager::Instance()->LoadModel(&loadedModel, "cube.txt");
+		if (!loadedModel)
 		{
 			return 0;
 		}
 
-		loadedObj->Initialise();
+		// Load the texture
+		Material* newMaterial = new Material;
+		newMaterial->SetBaseTexture(blockName + ".dds");
+		loadedModel->AddMaterial(newMaterial);
+
+		// Set the model on the gameobject
 		loadedObj->SetModel(loadedModel);
+
+		BlockDatabase_[blockName] = loadedObj;
 
 		return loadedObj;
 	}

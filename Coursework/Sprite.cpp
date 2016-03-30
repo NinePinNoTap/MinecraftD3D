@@ -26,12 +26,6 @@ bool Sprite::Initialise(Rect3D Dimensions)
 		return false;
 	}
 
-	Result_ = Model_->Initialise();
-	if (!Result_)
-	{
-		return false;
-	}
-
 	// Load Model
 	Result_ = primitiveFactory.Create2DBox(Dimensions, *Model_);
 	if (!Result_)
@@ -60,14 +54,12 @@ bool Sprite::Initialise(Rect3D Dimensions)
 	return true;
 }
 
-bool Sprite::SetTexture(WCHAR* filename)
+bool Sprite::SetTexture(string textureFilename)
 {
-	// Create a texture
-	Result_ = Model_->GetMaterial()->SetTextureArray(vector<wstring>(1, filename));
-	if (!Result_)
-	{
-		return false;
-	}
+	Material* newMaterial = new Material;
+	newMaterial->SetBaseTexture(textureFilename);
+
+	Model_->AddMaterial(newMaterial);
 
 	return true;
 }

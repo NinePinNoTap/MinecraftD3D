@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="BlockInfo.h" />
     <ClInclude Include="BlockManager.h" />
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="Mesh3D.h" />

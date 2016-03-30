@@ -40,7 +40,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	Clouds_ = new Clouds;
 	if (!Clouds_) { return false; }
-	Result_ = Clouds_ -> Initialise(L"Data/Textures/Cloud.dds", L"Data/Textures/CloudPerturb.dds");
+	Result_ = Clouds_ -> Initialise("cloud.dds", "cloudperturb.dds");
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the sky plane object.", L"Error", MB_OK);
@@ -64,7 +64,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	Ocean_ = new Water;
 	if (!Ocean_) { return false; }
-	Result_ = Ocean_->Initialise(L"Data/Textures/WaterNormal.dds", Rect3D(512.0f, 512.0f, 17.5f));
+	Result_ = Ocean_->Initialise("water_normal.dds", Rect3D(512.0f, 512.0f, 17.5f));
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the ocean object.", L"Error", MB_OK);
@@ -78,7 +78,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	ParticleSystem_ = new ParticleSystem;
 	if (!ParticleSystem_) { return false; }
-	Result_ = ParticleSystem_ -> Initialise(L"Data/Textures/rain.dds");
+	Result_ = ParticleSystem_ -> Initialise("rain.dds");
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the particle WindowManager.", L"Error", MB_OK);
@@ -139,7 +139,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	SkySphere_ = new SkySphere;
 	if (!SkySphere_) { return false; }
-	SkySphere_ -> Initialise("Data/Models/Sphere.txt");
+	SkySphere_ -> Initialise("sphere.txt");
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the sky sphere object.", L"Error", MB_OK);
@@ -150,8 +150,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 	// Initialise Sounds
 	//===================
 
-	AmbientSound_ = new AudioClip;
-	AmbientSound_->LoadFile("Data/Sounds/water.wav", false);
+	AssetManager::Instance()->LoadAudio(&AmbientSound_, "water");
 
 	//========================
 	// Initialise the Terrain
@@ -159,7 +158,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	Terrain_ = new Terrain;
 	if (!Terrain_) { return false; }
-	Result_ = Terrain_->Initialise(Rect3D(256, 256), TerrainType::PERLIN, L"Data/Textures/sand.dds", L"Data/Textures/sand_normal.dds", Vector2(50, 50), 1.0f);
+	Result_ = Terrain_->Initialise(Rect3D(256, 256), TerrainType::PERLIN, "sand_real.dds", "sand_real_normal.dds", Vector2(50, 50), 1.0f);
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the terrain object.", L"Error", MB_OK);

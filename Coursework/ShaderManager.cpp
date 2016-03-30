@@ -250,26 +250,27 @@ void ShaderManager::SetReflectionViewMatrix(D3DXMATRIX reflection)
 // Rendering
 bool ShaderManager::CloudRender(Clouds* Obj)
 {
-	Mesh3D* ObjMesh;
-	Material* ObjMat;
+	Mesh3D* objMesh;
+	Material* objMaterial;
 
 	// Model Properties
-	ObjMesh = Obj->GetModel()->GetMesh();
-	if (!ObjMesh)
+	objMesh = Obj->GetModel()->GetMesh(0);
+	if (!objMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Clouds", L"Error", MB_OK);
 		return false;
 	}
-	ObjMat = Obj->GetModel()->GetMaterial();
-	if (!ObjMat)
+	objMaterial = Obj->GetModel()->GetMaterial(0);
+	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Clouds", L"Error", MB_OK);
 		return false;
 	}
 
 	// Model Properties
-	int indexCount = ObjMesh->GetIndexCount();
-	ID3D11ShaderResourceView* textureArray = ObjMat -> GetTextureArray();
+	int indexCount = objMesh->GetIndexCount();
+	ID3D11ShaderResourceView* cloudTexture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* perturbTexture = objMaterial->GetPerturbTexture();
 
 	// Create matrix buffer
 	MatrixCBuffer Matrix = MatrixBuffer_;
@@ -289,7 +290,8 @@ bool ShaderManager::CloudRender(Clouds* Obj)
 	CloudShader_->SendBuffersToShader();
 
 	// Send Textures
-	CloudShader_->SendTextureToShader(0, textureArray);
+	CloudShader_->SendTextureToShader(0, cloudTexture);
+	CloudShader_->SendTextureToShader(1, perturbTexture);
 
 	// Render using shader
 	Obj->Render();
@@ -300,28 +302,28 @@ bool ShaderManager::CloudRender(Clouds* Obj)
 
 bool ShaderManager::FireRender(Fire* Obj)
 {
-	Mesh3D* ObjMesh;
-	Material* ObjMat;
+	Mesh3D* objMesh;
+	Material* objMaterial;
 
 	// Model Properties
-	ObjMesh = Obj->GetModel()->GetMesh();
-	if (!ObjMesh)
+	objMesh = Obj->GetModel()->GetMesh(0);
+	if (!objMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - DrawFire", L"Error", MB_OK);
 		return false;
 	}
 
-	ObjMat = Obj->GetModel()->GetMaterial();
-	if (!ObjMat)
+	objMaterial = Obj->GetModel()->GetMaterial(0);
+	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - DrawFire", L"Error", MB_OK);
 		return false;
 	}
 
-	int indexCount = ObjMesh->GetIndexCount();
-	ID3D11ShaderResourceView* fireTexture = ObjMat->GetBaseTexture();
-	ID3D11ShaderResourceView* noiseTexture = ObjMat->GetNoiseTexture();
-	ID3D11ShaderResourceView* alphaTexture = ObjMat->GetAlphaTexture();
+	int indexCount = objMesh->GetIndexCount();
+	ID3D11ShaderResourceView* fireTexture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* noiseTexture = objMaterial->GetNoiseTexture();
+	ID3D11ShaderResourceView* alphaTexture = objMaterial->GetAlphaTexture();
 
 	// Create noise buffer
 	NoiseCBuffer Noise;
@@ -391,25 +393,25 @@ bool ShaderManager::FontRender(Text::SentenceType* sentence, ID3D11ShaderResourc
 
 bool ShaderManager::LightRender(GameObject* Obj, float specularPower)
 {
-	Mesh3D* ObjMesh;
-	Material* ObjMat;
+	Mesh3D* objMesh;
+	Material* objMaterial;
 
 	// Model Properties
-	ObjMesh = Obj->GetModel()->GetMesh();
-	if (!ObjMesh)
+	objMesh = Obj->GetModel()->GetMesh(0);
+	if (!objMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Light", L"Error", MB_OK);
 		return false;
 	}
-	ObjMat = Obj->GetModel()->GetMaterial();
-	if (!ObjMat)
+	objMaterial = Obj->GetModel()->GetMaterial(0);
+	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Light", L"Error", MB_OK);
 		return false;
 	}
 
-	int indexCount = ObjMesh -> GetIndexCount();
-	ID3D11ShaderResourceView* texture = ObjMat -> GetTextureArray();
+	int indexCount = objMesh -> GetIndexCount();
+	ID3D11ShaderResourceView* texture = objMaterial -> GetBaseTexture();
 
 	// Create camera buffer
 	CameraCBuffer Camera;
@@ -423,7 +425,7 @@ bool ShaderManager::LightRender(GameObject* Obj, float specularPower)
 	Light.ambientColor = Light::Instance()->GetAmbientColor();
 	Light.diffuseColor = Light::Instance()->GetDiffuseColor();
 	Light.specularColor = Light::Instance()->GetSpecularColor();
-	Light.specularPower = specularPower;
+	Light.specularPower = objMaterial->GetSpecular();
 
 	// Create light position buffer
 	LightPositionCBuffer LightPosition;
@@ -453,28 +455,28 @@ bool ShaderManager::LightRender(GameObject* Obj, float specularPower)
 
 bool ShaderManager::WaterRender(Water* Obj, Texture* refraction, Texture* reflection)
 {
-	Mesh3D* ObjMesh;
-	Material* ObjMat;
+	Mesh3D* objMesh;
+	Material* objMaterial;
 
 	// Model Properties
-	ObjMesh = Obj->GetModel()->GetMesh();
-	if (!ObjMesh)
+	objMesh = Obj->GetModel()->GetMesh(0);
+	if (!objMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Water", L"Error", MB_OK);
 		return false;
 	}
-	ObjMat = Obj->GetModel()->GetMaterial();
-	if (!ObjMat)
+	objMaterial = Obj->GetModel()->GetMaterial(0);
+	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Water", L"Error", MB_OK);
 		return false;
 	}
 
 	// Retrieve variables for rendering
-	int indexCount = ObjMesh -> GetIndexCount();
+	int indexCount = objMesh -> GetIndexCount();
 	ID3D11ShaderResourceView* refractionTexture = refraction -> GetTexture();
 	ID3D11ShaderResourceView* reflectionTexture = reflection -> GetTexture();
-	ID3D11ShaderResourceView* normalTexture = ObjMat->GetNormalTexture();
+	ID3D11ShaderResourceView* normalTexture = objMaterial->GetNormalTexture();
 
 	// Create camera buffer
 	CameraCBuffer Camera;
@@ -529,10 +531,10 @@ bool ShaderManager::WaterRender(Water* Obj, Texture* refraction, Texture* reflec
 
 bool ShaderManager::ParticleRender(ParticleSystem* Obj)
 {
-	Material* ObjMat;
+	Material* objMaterial;
 	
-	ObjMat = Obj->GetModel()->GetMaterial();
-	if (!ObjMat)
+	objMaterial = Obj->GetModel()->GetMaterial(0);
+	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Particle", L"Error", MB_OK);
 		return false;
@@ -540,7 +542,7 @@ bool ShaderManager::ParticleRender(ParticleSystem* Obj)
 
 	// Model Properties
 	int indexCount = Obj->GetIndexCount();
-	ID3D11ShaderResourceView* texture = ObjMat->GetBaseTexture();
+	ID3D11ShaderResourceView* texture = objMaterial->GetBaseTexture();
 
 	// Create matrix buffer
 	MatrixCBuffer Matrix = MatrixBuffer_;
@@ -563,17 +565,17 @@ bool ShaderManager::ParticleRender(ParticleSystem* Obj)
 
 bool ShaderManager::SkyRender(SkySphere* Obj)
 {
-	Mesh3D* ObjMesh;
+	Mesh3D* objMesh;
 	
-	ObjMesh = Obj->GetModel()->GetMesh();
-	if (!ObjMesh)
+	objMesh = Obj->GetModel()->GetMesh(0);
+	if (!objMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - SkySphere", L"Error", MB_OK);
 		return false;
 	}
 
 	// Model Properties
-	int indexCount = ObjMesh->GetIndexCount();
+	int indexCount = objMesh->GetIndexCount();
 
 	// Create Matrix Buffer
 	MatrixCBuffer Matrix = MatrixBuffer_;
@@ -599,27 +601,27 @@ bool ShaderManager::SkyRender(SkySphere* Obj)
 
 bool ShaderManager::TerrainRender(Terrain* Obj)
 {
-	Mesh3D* ObjMesh;
-	Material* ObjMat;
+	Mesh3D* objMesh;
+	Material* objMaterial;
 
 	// Model Properties
-	ObjMesh = Obj->GetModel()->GetMesh();
-	if (!ObjMesh)
+	objMesh = Obj->GetModel()->GetMesh(0);
+	if (!objMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Terrain", L"Error", MB_OK);
 		return false;
 	}
-	ObjMat = Obj->GetModel()->GetMaterial();
-	if (!ObjMat)
+	objMaterial = Obj->GetModel()->GetMaterial(0);
+	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Terrain", L"Error", MB_OK);
 		return false;
 	}
 
 	// Retrieve variables for rendering
-	int indexCount = ObjMesh -> GetIndexCount();
-	ID3D11ShaderResourceView* colorTexture = ObjMat->GetBaseTexture();
-	ID3D11ShaderResourceView* normalTexture = ObjMat->GetNormalTexture();
+	int indexCount = objMesh -> GetIndexCount();
+	ID3D11ShaderResourceView* colorTexture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* normalTexture = objMaterial->GetNormalTexture();
 
 	// Create the light buffer
 	LightCBuffer Light;
@@ -655,27 +657,27 @@ bool ShaderManager::TerrainRender(Terrain* Obj)
 
 bool ShaderManager::TerrainRender(Terrain* Obj, D3DXVECTOR4 clipPlane)
 {
-	Mesh3D* ObjMesh;
-	Material* ObjMat;
+	Mesh3D* objMesh;
+	Material* objMaterial;
 
 	// Model Properties
-	ObjMesh = Obj->GetModel()->GetMesh();
-	if (!ObjMesh)
+	objMesh = Obj->GetModel()->GetMesh(0);
+	if (!objMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Terrain", L"Error", MB_OK);
 		return false;
 	}
-	ObjMat = Obj->GetModel()->GetMaterial();
-	if (!ObjMat)
+	objMaterial = Obj->GetModel()->GetMaterial(0);
+	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Terrain", L"Error", MB_OK);
 		return false;
 	}
 
 	// Model Properties
-	int indexCount = ObjMesh -> GetIndexCount();
-	ID3D11ShaderResourceView* colorTexture = ObjMat->GetBaseTexture();
-	ID3D11ShaderResourceView* normalTexture = ObjMat->GetNormalTexture();
+	int indexCount = objMesh -> GetIndexCount();
+	ID3D11ShaderResourceView* colorTexture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* normalTexture = objMaterial->GetNormalTexture();
 
 	// Create the light buffer
 	LightCBuffer Light;
@@ -715,25 +717,25 @@ bool ShaderManager::TerrainRender(Terrain* Obj, D3DXVECTOR4 clipPlane)
 
 bool ShaderManager::TextureRender(GameObject* Obj)
 {
-	Mesh3D* ObjMesh;
-	Material* ObjMat;
+	Mesh3D* objMesh;
+	Material* objMaterial;
 
 	// Model Properties
-	ObjMesh = Obj->GetModel()->GetMesh();
-	if (!ObjMesh)
+	objMesh = Obj->GetModel()->GetMesh(0);
+	if (!objMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Texture", L"Error", MB_OK);
 		return false;
 	}
-	ObjMat = Obj->GetModel()->GetMaterial();
-	if (!ObjMat)
+	objMaterial = Obj->GetModel()->GetMaterial(0);
+	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Texture", L"Error", MB_OK);
 		return false;
 	}
 
-	int indexCount = ObjMesh -> GetIndexCount();
-	ID3D11ShaderResourceView* texture = ObjMat->GetTextureArray();
+	int indexCount = objMesh -> GetIndexCount();
+	ID3D11ShaderResourceView* texture = objMaterial->GetBaseTexture();
 
 	// Create the world matrix for the model
 	MatrixCBuffer Matrix = MatrixBuffer_;
@@ -756,19 +758,19 @@ bool ShaderManager::TextureRender(GameObject* Obj)
 
 bool ShaderManager::TextureRender(Sprite* Obj, Texture* render)
 {
-	Mesh3D* ObjMesh;
-	Material* ObjMat;
+	Mesh3D* objMesh;
+	Material* objMaterial;
 
 	// Model Properties
-	ObjMesh = Obj->GetModel()->GetMesh();
-	if (!ObjMesh)
+	objMesh = Obj->GetModel()->GetMesh(0);
+	if (!objMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - Texture", L"Error", MB_OK);
 		return false;
 	}
 
 	// Retrieve variables for rendering
-	int indexCount = ObjMesh->GetIndexCount();
+	int indexCount = objMesh->GetIndexCount();
 	ID3D11ShaderResourceView* texture = render -> GetTexture();
 
 	// Create Matrix Buffer

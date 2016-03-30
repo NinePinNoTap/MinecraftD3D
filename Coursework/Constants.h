@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Colour.h"
+#include "BlockInfo.h"
 
 //==========
 // Graphics
@@ -27,9 +28,10 @@ const float CAMERA_SENSITIVITY  = 10.0f;
 // Voxel Terrain
 //===============
 
-const int BLOCK_SIZE = 3; // How big a block is in world space
-const int BLOCKS_IN_CHUNK = 16; // How many blocks in a chunk
-const int NO_OF_CHUNKS = 2; // How many chunks in the terrain
+const int BLOCK_SIZE = 2; // How big a block is in world space
+const int BLOCKS_IN_CHUNK = 3; // How many blocks in a chunk
+const int NO_OF_CHUNKS = 1; // How many chunks in the terrain
+const int CHUNK_SIZE = BLOCKS_IN_CHUNK * BLOCK_SIZE;
 
 //=========
 // Colours
@@ -41,6 +43,15 @@ const Colour RED = Colour(1, 0, 0, 1);
 const Colour GREEN = Colour(0, 1, 0, 1);
 const Colour BLUE = Colour(0, 0, 1, 1);
 const Colour YELLOW = Colour(1, 1, 0, 1);
+
+//========
+// Blocks
+//========
+const BlockInfo AIR = BlockInfo();
+const BlockInfo DIRT = BlockInfo("dirt", BlockType::Dirt, true);
+const BlockInfo SAND = BlockInfo("sand", BlockType::Sand, true);
+const BlockInfo COBBLESTONE = BlockInfo("cobblestone", BlockType::Cobblestone, true);
+const BlockInfo GOLD = BlockInfo("gold", BlockType::Gold, true);
 
 //===================
 // Direction Vectors

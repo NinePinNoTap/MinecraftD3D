@@ -16,7 +16,7 @@ Font::~Font()
 }
 
 // Initialising
-bool Font::Initialise(const char* fontFilename, WCHAR* textureFilename)
+bool Font::Initialise(const char* fontFilename, string textureFilename)
 {
 	bool Result;
 
@@ -92,7 +92,7 @@ bool Font::LoadFontData(const char* filename)
 	return true;
 }
 
-bool Font::LoadTexture(WCHAR* filename)
+bool Font::LoadTexture(string filename)
 {
 	bool Result;
 

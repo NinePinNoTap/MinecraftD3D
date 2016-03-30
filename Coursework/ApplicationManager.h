@@ -44,6 +44,7 @@ private:
 	bool Result_; 
 
 	// Manager
+	AssetManager* AssetManager_;
 	DirectXManager* DirectXManager_;
 	DirectSound* DirectSound_;
 	InputManager* InputManager_;

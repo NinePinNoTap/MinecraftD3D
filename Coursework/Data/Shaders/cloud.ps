@@ -1,4 +1,5 @@
-Texture2DArray shaderTextures;
+Texture2D cloudTexture : register(t0);
+Texture2D perturbTexture : register(t1);
 SamplerState SampleType;
 
 // Globals
@@ -27,7 +28,7 @@ float4 PixelShaderMain(PixelInputType input) : SV_TARGET
 	input.tex.x += translation;
 
 	// Sample the perturb texture
-	perturbValue = shaderTextures.Sample(SampleType, float3(input.tex, 1));
+	perturbValue = cloudTexture.Sample(SampleType, input.tex);
 
 	// Scale the sample
 	perturbValue *= scale;
@@ -36,7 +37,7 @@ float4 PixelShaderMain(PixelInputType input) : SV_TARGET
 	perturbValue.xy += input.tex.xy + translation;
 
 	// Sample the texture using the perturb value
-    cloudColor = shaderTextures.Sample(SampleType, float3(perturbValue.xy, 0));
+    cloudColor = perturbTexture.Sample(SampleType, perturbValue);
 
 	// Apply the brightness
 	cloudColor *= brightness;

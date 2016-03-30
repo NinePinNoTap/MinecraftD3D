@@ -27,7 +27,7 @@ bool Text::Initialise(HWND hwnd, Rect2D WindowResolution)
 	if(!Font_) { return false; }
 
 	// Initialise the font object.
-	Result_ = Font_ -> Initialise("Data/Font/shruti.txt", L"Data/Font/shruti.dds");
+	Result_ = Font_ -> Initialise("Data/Font/shruti.txt", "Data/Font/shruti.dds");
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the font object.", L"Error", MB_OK);

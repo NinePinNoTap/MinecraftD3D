@@ -24,5 +24,6 @@ public:
 
 private:
 	void CalculateHardNormals(int vertexCount, VertexData* mesh);
+	bool Result_;
 };
 

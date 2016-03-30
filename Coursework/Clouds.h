@@ -20,7 +20,7 @@ public:
 	~Clouds();
 
 	// Initialising
-	bool Initialise(WCHAR* cloudTextureFilename, WCHAR* perturbTextureFilename);
+	bool Initialise(string cloudTextureFilename, string perturbTextureFilename);
 
 	// Frame
 	bool Frame();
@@ -32,7 +32,7 @@ public:
 
 private:
 	// Textures
-	bool LoadTextures(WCHAR* textureFilename1, WCHAR* textureFilename2);
+	bool LoadTextures(string textureFilename1, string textureFilename2);
 
 	// Properties
 	float ScaleFactor_;

@@ -29,7 +29,7 @@ public:
 	~Font();
 
 	// Initialising
-	bool Initialise(const char* fontFilename, WCHAR* textureFilename);
+	bool Initialise(const char* fontFilename, string textureFilename);
 
 	// Shutdown
 	void Shutdown();
@@ -44,7 +44,7 @@ public:
 private:
 	// Loading
 	bool LoadFontData(const char* filename);
-	bool LoadTexture(WCHAR* filename);
+	bool LoadTexture(string filename);
 
 	// Font Data
 	FontType* Font_;

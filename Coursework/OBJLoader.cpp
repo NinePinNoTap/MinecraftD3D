@@ -13,20 +13,22 @@ bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
 {
 	ifstream fin;
 	char linebuffer[256];
-	vector<D3DXVECTOR3> Vertices;
-	vector<D3DXVECTOR2> TextureCoords;
-	vector<D3DXVECTOR3> FaceNormals;
-	vector<D3DXVECTOR3> Faces;
-	vector<wstring> TextureFilenames;
-	vector<int> TextureIDs;
-	D3DXVECTOR3 TempVertex;
-	D3DXVECTOR2 TempTexCoord;
-	D3DXVECTOR3 TempFace[3];
-	float VertexID, TextureID, NormalID;
-	int indexCount, vertexCount;
-	VertexData* ObjMesh;
-	unsigned long* Indices;
+
+	// Current Model Data
+	vector<D3DXVECTOR3> vertexData;
+	vector<D3DXVECTOR2> textureData;
+	vector<D3DXVECTOR3> normalData;
+	vector<D3DXVECTOR3> faceData;
+
+	// Temporary file reading
+	D3DXVECTOR3 tempVertex;
+	D3DXVECTOR2 tempTextureUV;
+	D3DXVECTOR3 tempFace[3];
+	std::string textureFilename;
 	bool Result;
+
+	float vertexID, textureID, normalID;
+	int indexCount, vertexCount;
 
 	//===================
 	// Load the OBJ File
@@ -44,128 +46,126 @@ bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
 		// Get the current line
 		fin.getline(linebuffer, 256);
 
-		if (string(linebuffer).find("v ") == 0) // Line defines a TempVertex position
+		if (string(linebuffer).find("v ") == 0) 
 		{
-			//Read the TempVertex line and push the data into the vector
-			sscanf_s(string(linebuffer).c_str(), "v %f %f %f", &TempVertex.x, &TempVertex.y, &TempVertex.z);
-			Vertices.push_back(TempVertex);
+			//Read the tempVertex line and push the data into the vector
+			sscanf_s(string(linebuffer).c_str(), "v %f %f %f", &tempVertex.x, &tempVertex.y, &tempVertex.z);
+			vertexData.push_back(tempVertex);
 		}
-		else if (string(linebuffer).find("vt ") == 0) // Line defines a TempVertex texture
+		else if (string(linebuffer).find("vt ") == 0) 
 		{
 			//Read the texture coord line and push the data into the vector
-			sscanf_s(string(linebuffer).c_str(), "vt %f %f", &TempTexCoord.x, &TempTexCoord.y);
-			TextureCoords.push_back(TempTexCoord);
+			sscanf_s(string(linebuffer).c_str(), "vt %f %f", &tempTextureUV.x, &tempTextureUV.y);
+			textureData.push_back(tempTextureUV);
 		}
-		else if (string(linebuffer).find("vn ") == 0) // Line defines a TempVertex normal
+		else if (string(linebuffer).find("vn ") == 0) 
 		{
 			//Read the normal line and push the data into the vector
-			sscanf_s(string(linebuffer).c_str(), "vn %f %f %f", &TempVertex.x, &TempVertex.y, &TempVertex.z);
-			FaceNormals.push_back(TempVertex);
+			sscanf_s(string(linebuffer).c_str(), "vn %f %f %f", &tempVertex.x, &tempVertex.y, &tempVertex.z);
+			normalData.push_back(tempVertex);
 		}
-		else if (string(linebuffer).find("f ") == 0) // Line defines a triangle (Faces)
+		else if (string(linebuffer).find("f ") == 0) 
 		{
 			//Read the face line
 			sscanf_s(string(linebuffer).c_str(), "f %f/%f/%f %f/%f/%f %f/%f/%f",
-				&TempFace[0].x, &TempFace[0].y, &TempFace[0].z,
-				&TempFace[1].x, &TempFace[1].y, &TempFace[1].z,
-				&TempFace[2].x, &TempFace[2].y, &TempFace[2].z);
+				&tempFace[0].x, &tempFace[0].y, &tempFace[0].z,
+				&tempFace[1].x, &tempFace[1].y, &tempFace[1].z,
+				&tempFace[2].x, &tempFace[2].y, &tempFace[2].z);
 
-			// Add the Faces into the vector
-			Faces.push_back(TempFace[0]);
-			Faces.push_back(TempFace[1]);
-			Faces.push_back(TempFace[2]);
-
-			// Add the texture IDs for the three Faces
-			TextureIDs.push_back(TextureFilenames.size() - 1);
-			TextureIDs.push_back(TextureFilenames.size() - 1);
-			TextureIDs.push_back(TextureFilenames.size() - 1);
+			// Add the faceData into the vector
+			faceData.push_back(tempFace[0]);
+			faceData.push_back(tempFace[1]);
+			faceData.push_back(tempFace[2]);
 		}
-		else if (string(linebuffer).find("usemtl ") == 0) // Line is a texture filename 
+		else if (string(linebuffer).find("usemtl ") == 0) 
 		{
-			// Split the string up as we only need the second part (actual file name)
-			istringstream ss(linebuffer);
-			istream_iterator<string> begin(ss), end;
-			vector<string> stringParts(begin, end);
-
-			// Compile the full filename
-			string filename = TEXTURE_DIR + stringParts[1] + ".dds";
-
-			// Check if the file is already on the list
-			if (std::find(TextureFilenames.begin(), TextureFilenames.end(), wstring(filename.begin(), filename.end())) == TextureFilenames.end())
+			// Check if we have face data to process
+			if (faceData.size() > 0)
 			{
-				// Add the filename to the vector
-				TextureFilenames.push_back(wstring(filename.begin(), filename.end()));
-			}
+				//====================
+				// Construct the Mesh
+				//====================
+
+				VertexData* ObjMesh;
+				unsigned long* Indices;
+
+				// Store how many indices and vertices we will have
+				indexCount = vertexCount = faceData.size();
+
+				// Construct data storage
+				ObjMesh = new VertexData[vertexCount];
+				if (!ObjMesh) { return false; }
+
+				Indices = new unsigned long[indexCount];
+				if (!Indices) { return false; }
+
+				// Loop through face data
+				for (unsigned int Index = 0; Index < faceData.size(); Index++)
+				{
+					// Read in Face Data
+					vertexID = faceData[Index].x - 1;
+					textureID = faceData[Index].y - 1;
+					normalID = faceData[Index].z - 1;
+
+					// Grab data from the vectors and apply them to the model
+					ObjMesh[Index].position.x = vertexData[vertexID].x;
+					ObjMesh[Index].position.y = vertexData[vertexID].y;
+					ObjMesh[Index].position.z = vertexData[vertexID].z * -1; //Flip for RH WindowManager
+
+					ObjMesh[Index].texture.x = textureData[textureID].x;
+					ObjMesh[Index].texture.y = 1 - textureData[textureID].y; //Flip for RH WindowManager
+
+					ObjMesh[Index].normal.x = normalData[normalID].x;
+					ObjMesh[Index].normal.y = normalData[normalID].y;
+					ObjMesh[Index].normal.z = normalData[normalID].z * -1; //Flip for RH WindowManager
+
+					Indices[Index] = Index;
+				}
+
+				//==============
+				// Create Final
+				//==============
+
+				// Create Mesh
+				Mesh3D* newMesh = new Mesh3D;
+				newMesh->SetIndexCount(indexCount);
+				newMesh->SetVertexCount(vertexCount);
+				newMesh->SetMesh(ObjMesh, Indices);
+				Result = newMesh->Build();
+				if (!Result)
+				{
+					return false;
+				}
+
+				// Create Material
+				Material* newMaterial = new Material;
+				Result = newMaterial->SetBaseTexture(textureFilename);
+				if (!Result)
+				{
+					return false;
+				}
+
+				// Pass to model
+				model.AddMesh(newMesh);
+				model.AddMaterial(newMaterial);
+
+				// Clear Data
+				vertexData.clear();
+				textureData.clear();
+				normalData.clear();
+				faceData.clear();
+			}	
+
+			// Read in the texture name
+			sscanf_s(string(linebuffer).c_str(), "usemtl %s", &textureFilename);
+
+			// Compile and store new texture for faces
+			textureFilename = TEXTURE_DIR + textureFilename + ".dds";
 		}
 	}
 
 	// Close the file
 	fin.close();
-
-	//====================
-	// Construct the Mesh3D
-	//====================
-
-	// Create the model using the vertex count that was read in
-	indexCount = vertexCount = Faces.size();
-	ObjMesh = new VertexData[vertexCount];
-	if (!ObjMesh) { return false; }
-
-	Indices = new unsigned long[indexCount];
-	if (!Indices) { return false; }
-
-	for (unsigned int Index = 0; Index < Faces.size(); Index++)
-	{
-		// Read in Face Data
-		VertexID = Faces[Index].x - 1;
-		TextureID = Faces[Index].y - 1;
-		NormalID = Faces[Index].z - 1;
-
-		// Grab data from the vectors and apply them to the model
-		ObjMesh[Index].position.x = Vertices[VertexID].x;
-		ObjMesh[Index].position.y = Vertices[VertexID].y;
-		ObjMesh[Index].position.z = Vertices[VertexID].z * -1; //Flip for RH WindowManager
-
-		ObjMesh[Index].texture.x = TextureCoords[TextureID].x;
-		ObjMesh[Index].texture.y = 1 - TextureCoords[TextureID].y; //Flip for RH WindowManager
-		ObjMesh[Index].texture.z = TextureIDs[Index];
-
-		ObjMesh[Index].normal.x = FaceNormals[NormalID].x;
-		ObjMesh[Index].normal.y = FaceNormals[NormalID].y;
-		ObjMesh[Index].normal.z = FaceNormals[NormalID].z * -1; //Flip for RH WindowManager
-
-		Indices[Index] = Index;
-	}
-
-	//================
-	// Finalise Model
-	//================
-
-	model.GetMesh()->SetIndexCount(indexCount);
-	model.GetMesh()->SetVertexCount(vertexCount);
-	model.GetMesh()->SetMesh(ObjMesh, Indices);
-	model.GetMaterial()->SetTextureArray(TextureFilenames);
-
-	//==========
-	// Clean up
-	//==========
-
-	Vertices.clear();
-	TextureCoords.clear();
-	FaceNormals.clear();
-	Faces.clear();
-	TextureFilenames.clear();
-	TextureIDs.clear();
-
-	//================
-	// Build the mesh
-	//================
-
-	Result = model.GetMesh()->Build();
-	if (!Result)
-	{
-		return false;
-	}
 
 	return true;
 }

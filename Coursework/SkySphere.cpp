@@ -21,24 +21,7 @@ bool SkySphere::Initialise(const char* filename)
 	// Create Model
 	//==============
 
-	Model_ = new Model;
-	if (!Model_)
-	{
-		return false;
-	}
-
-	Result_ = Model_->Initialise();
-	if (!Result_)
-	{
-		return false;
-	}
-
-	// Load Model
-	Result_ = txtLoader.LoadModel(filename, *Model_);
-	if (!Result_)
-	{
-		return false;
-	}
+	AssetManager::Instance()->LoadModel(&Model_, filename);
 
 	//==================
 	// Create Transform

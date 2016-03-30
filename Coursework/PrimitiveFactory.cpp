@@ -13,7 +13,7 @@ PrimitiveFactory::~PrimitiveFactory()
 bool PrimitiveFactory::CreateSphere(Rect3D sphereSections, float sphereRadius, Model& model)
 {
 	vector<D3DXVECTOR3> vertexPositions;
-	vector<D3DXVECTOR3> textureCoordinates;
+	vector<D3DXVECTOR2> textureCoordinates;
 	vector<D3DXVECTOR3> vertexNormals;
 	vector<int> vertexIndices;
 
@@ -56,7 +56,7 @@ bool PrimitiveFactory::CreateSphere(Rect3D sphereSections, float sphereRadius, M
 			float length = sqrt((x * x) + (y*y) + (z*z));
 
 			vertexPositions.push_back(D3DXVECTOR3(x * sphereRadius, y * sphereRadius, z*sphereRadius));
-			textureCoordinates.push_back(D3DXVECTOR3(sect*U, ring*V, 0.0f));
+			textureCoordinates.push_back(D3DXVECTOR2(sect*U, ring*V));
 			vertexNormals.push_back(D3DXVECTOR3(x / length, y / length, z / length));
 		}
 	}
@@ -109,19 +109,28 @@ bool PrimitiveFactory::CreateSphere(Rect3D sphereSections, float sphereRadius, M
 		Indices[i] = curIndex;
 	}
 
-	//===============
-	// Send to Model
-	//===============
-
-	model.GetMesh()->SetMesh(primitiveMesh, Indices);
-	model.GetMesh()->SetIndexCount(indexCount);
-	model.GetMesh()->SetVertexCount(vertexCount);
-
 	// Clean Up
 	vertexPositions.clear();
 	textureCoordinates.clear();
 	vertexNormals.clear();
 	vertexIndices.clear();
+
+	//=============
+	// Create Mesh
+	//=============
+
+	Mesh3D* newMesh = new Mesh3D;
+	newMesh->SetMesh(primitiveMesh, Indices);
+	newMesh->SetIndexCount(indexCount);
+	newMesh->SetVertexCount(vertexCount);
+	Result_ = newMesh->Build();
+	if (!Result_)
+	{
+		return false;
+	}
+
+	// Add mesh to model
+	model.AddMesh(newMesh);
 
 	return true;
 }
@@ -129,7 +138,7 @@ bool PrimitiveFactory::CreateSphere(Rect3D sphereSections, float sphereRadius, M
 bool PrimitiveFactory::CreatePlane(Rect3D planeSize, Rect3D tileCount, float textureRepeat, Model& model)
 {
 	vector<D3DXVECTOR3> vertexPositions;
-	vector<D3DXVECTOR3> textureCoordinates;
+	vector<D3DXVECTOR2> textureCoordinates;
 	vector<D3DXVECTOR3> vertexNormals;
 	vector<int> vertexIndices;
 	int curIndex, rowOffset;
@@ -167,7 +176,7 @@ bool PrimitiveFactory::CreatePlane(Rect3D planeSize, Rect3D tileCount, float tex
 		{
 			// Calculate the vertex position
 			vertexPositions.push_back(D3DXVECTOR3((x * tileWidth) - halfW, 0, (z * tileDepth) - halfD));
-			textureCoordinates.push_back(D3DXVECTOR3(x * textureWidth, z * textureDepth, 0.0f));
+			textureCoordinates.push_back(D3DXVECTOR2(x * textureWidth, z * textureDepth));
 			vertexNormals.push_back(D3DXVECTOR3(0, 1, 0));
 		}
 	}
@@ -225,15 +234,24 @@ bool PrimitiveFactory::CreatePlane(Rect3D planeSize, Rect3D tileCount, float tex
 	vertexNormals.clear();
 	vertexIndices.clear();
 
-	//===============
-	// Send to Model
-	//===============
+	//=============
+	// Create Mesh
+	//=============
 
-	model.GetMesh()->SetMesh(primitiveMesh, Indices);
-	model.GetMesh()->SetIndexCount(indexCount);
-	model.GetMesh()->SetVertexCount(vertexCount);
-	
-	return model.GetMesh()->Build();
+	Mesh3D* newMesh = new Mesh3D;
+	newMesh->SetMesh(primitiveMesh, Indices);
+	newMesh->SetIndexCount(indexCount);
+	newMesh->SetVertexCount(vertexCount);
+	Result_ = newMesh->Build();
+	if (!Result_)
+	{
+		return false;
+	}
+
+	// Add mesh to model
+	model.AddMesh(newMesh);
+
+	return true;
 }
 
 bool PrimitiveFactory::Create2DBox(Rect3D planeSize, Model& model)
@@ -274,12 +292,12 @@ bool PrimitiveFactory::Create2DBox(Rect3D planeSize, Model& model)
 	primitiveMesh[4].position = D3DXVECTOR3(-halfW, halfH, 0.0f);  // Top left
 	primitiveMesh[5].position = D3DXVECTOR3(halfW, -halfH, 0.0f);  // Bottom right
 
-	primitiveMesh[0].texture = D3DXVECTOR3(0.0f, 0.0f, 0.0f); // Top left
-	primitiveMesh[1].texture = D3DXVECTOR3(1.0f, 0.0f, 0.0f); // Top right
-	primitiveMesh[2].texture = D3DXVECTOR3(1.0f, 1.0f, 0.0f); // Bottom right
-	primitiveMesh[3].texture = D3DXVECTOR3(0.0f, 1.0f, 0.0f); // Bottom left
-	primitiveMesh[4].texture = D3DXVECTOR3(0.0f, 0.0f, 0.0f); // Top left
-	primitiveMesh[5].texture = D3DXVECTOR3(1.0f, 1.0f, 0.0f); // Bottom right
+	primitiveMesh[0].texture = D3DXVECTOR2(0.0f, 0.0f); // Top left
+	primitiveMesh[1].texture = D3DXVECTOR2(1.0f, 0.0f); // Top right
+	primitiveMesh[2].texture = D3DXVECTOR2(1.0f, 1.0f); // Bottom right
+	primitiveMesh[3].texture = D3DXVECTOR2(0.0f, 1.0f); // Bottom left
+	primitiveMesh[4].texture = D3DXVECTOR2(0.0f, 0.0f); // Top left
+	primitiveMesh[5].texture = D3DXVECTOR2(1.0f, 1.0f); // Bottom right
 
 	// Load the index array with data.
 	Indices[0] = 0;  // Top left
@@ -289,15 +307,24 @@ bool PrimitiveFactory::Create2DBox(Rect3D planeSize, Model& model)
 	Indices[4] = 4;  // Top left
 	Indices[5] = 5;  // Bottom right
 
-	//===============
-	// Send to Model
-	//===============
+	//=============
+	// Create Mesh
+	//=============
 
-	model.GetMesh()->SetMesh(primitiveMesh, Indices);
-	model.GetMesh()->SetIndexCount(indexCount);
-	model.GetMesh()->SetVertexCount(vertexCount);
+	Mesh3D* newMesh = new Mesh3D;
+	newMesh->SetMesh(primitiveMesh, Indices);
+	newMesh->SetIndexCount(indexCount);
+	newMesh->SetVertexCount(vertexCount);
+	Result_ = newMesh->Build();
+	if (!Result_)
+	{
+		return false;
+	}
 
-	return model.GetMesh()->Build();
+	// Add mesh to model
+	model.AddMesh(newMesh);
+
+	return true;
 }
 
 bool PrimitiveFactory::Create3DBox(Rect3D BoxSize, float tileFactor, Model& model)
@@ -342,10 +369,10 @@ bool PrimitiveFactory::Create3DBox(Rect3D BoxSize, float tileFactor, Model& mode
 	primitiveMesh[2].position = D3DXVECTOR3(-halfW, -halfH, -halfD);
 	primitiveMesh[3].position = D3DXVECTOR3(halfW, -halfH, -halfD);
 
-	primitiveMesh[0].texture = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	primitiveMesh[1].texture = D3DXVECTOR3(textureRepeat.x, 0.0f, 0.0f);
-	primitiveMesh[2].texture = D3DXVECTOR3(0.0f, textureRepeat.y, 0.0f);
-	primitiveMesh[3].texture = D3DXVECTOR3(textureRepeat.x, textureRepeat.y, 0.0f);
+	primitiveMesh[0].texture = D3DXVECTOR2(0.0f, 0.0f);
+	primitiveMesh[1].texture = D3DXVECTOR2(textureRepeat.x, 0.0f);
+	primitiveMesh[2].texture = D3DXVECTOR2(0.0f, textureRepeat.y);
+	primitiveMesh[3].texture = D3DXVECTOR2(textureRepeat.x, textureRepeat.y);
 
 	// Right
 	primitiveMesh[4].position = D3DXVECTOR3(halfW, halfH, -halfD);
@@ -353,10 +380,10 @@ bool PrimitiveFactory::Create3DBox(Rect3D BoxSize, float tileFactor, Model& mode
 	primitiveMesh[6].position = D3DXVECTOR3(halfW, -halfH, -halfD);
 	primitiveMesh[7].position = D3DXVECTOR3(halfW, -halfH, halfD);
 
-	primitiveMesh[4].texture = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	primitiveMesh[5].texture = D3DXVECTOR3(textureRepeat.z, 0.0f, 0.0f);
-	primitiveMesh[6].texture = D3DXVECTOR3(0.0f, textureRepeat.y, 0.0f);
-	primitiveMesh[7].texture = D3DXVECTOR3(textureRepeat.z, textureRepeat.y, 0.0f);
+	primitiveMesh[4].texture = D3DXVECTOR2(0.0f, 0.0f);
+	primitiveMesh[5].texture = D3DXVECTOR2(textureRepeat.z, 0.0f);
+	primitiveMesh[6].texture = D3DXVECTOR2(0.0f, textureRepeat.y);
+	primitiveMesh[7].texture = D3DXVECTOR2(textureRepeat.z, textureRepeat.y);
 
 	// Top
 	primitiveMesh[8].position = D3DXVECTOR3(-halfW, halfH, halfD);
@@ -364,10 +391,10 @@ bool PrimitiveFactory::Create3DBox(Rect3D BoxSize, float tileFactor, Model& mode
 	primitiveMesh[10].position = D3DXVECTOR3(-halfW, halfH, -halfD);
 	primitiveMesh[11].position = D3DXVECTOR3(halfW, halfH, -halfD);
 
-	primitiveMesh[8].texture = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	primitiveMesh[9].texture = D3DXVECTOR3(textureRepeat.x, 0.0f, 0.0f);
-	primitiveMesh[10].texture = D3DXVECTOR3(0.0f, textureRepeat.z, 0.0f);
-	primitiveMesh[11].texture = D3DXVECTOR3(textureRepeat.x, textureRepeat.z, 0.0f);
+	primitiveMesh[8].texture = D3DXVECTOR2(0.0f, 0.0f);
+	primitiveMesh[9].texture = D3DXVECTOR2(textureRepeat.x, 0.0f);
+	primitiveMesh[10].texture = D3DXVECTOR2(0.0f, textureRepeat.z);
+	primitiveMesh[11].texture = D3DXVECTOR2(textureRepeat.x, textureRepeat.z);
 
 	// Back
 	primitiveMesh[12].position = D3DXVECTOR3(halfW, halfH, halfD);
@@ -375,10 +402,10 @@ bool PrimitiveFactory::Create3DBox(Rect3D BoxSize, float tileFactor, Model& mode
 	primitiveMesh[14].position = D3DXVECTOR3(halfW, -halfH, halfD);
 	primitiveMesh[15].position = D3DXVECTOR3(-halfW, -halfH, halfD);
 
-	primitiveMesh[12].texture = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	primitiveMesh[13].texture = D3DXVECTOR3(textureRepeat.x, 0.0f, 0.0f);
-	primitiveMesh[14].texture = D3DXVECTOR3(0.0f, textureRepeat.y, 0.0f);
-	primitiveMesh[15].texture = D3DXVECTOR3(textureRepeat.x, textureRepeat.y, 0.0f);
+	primitiveMesh[12].texture = D3DXVECTOR2(0.0f, 0.0f);
+	primitiveMesh[13].texture = D3DXVECTOR2(textureRepeat.x, 0.0f);
+	primitiveMesh[14].texture = D3DXVECTOR2(0.0f, textureRepeat.y);
+	primitiveMesh[15].texture = D3DXVECTOR2(textureRepeat.x, textureRepeat.y);
 
 	// Left
 	primitiveMesh[16].position = D3DXVECTOR3(-halfW, halfH, halfD);
@@ -386,10 +413,10 @@ bool PrimitiveFactory::Create3DBox(Rect3D BoxSize, float tileFactor, Model& mode
 	primitiveMesh[18].position = D3DXVECTOR3(-halfW, -halfH, halfD);
 	primitiveMesh[19].position = D3DXVECTOR3(-halfW, -halfH, -halfD);
 
-	primitiveMesh[16].texture = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	primitiveMesh[17].texture = D3DXVECTOR3(textureRepeat.z, 0.0f, 0.0f);
-	primitiveMesh[18].texture = D3DXVECTOR3(0.0f, textureRepeat.y, 0.0f);
-	primitiveMesh[19].texture = D3DXVECTOR3(textureRepeat.z, textureRepeat.y, 0.0f);
+	primitiveMesh[16].texture = D3DXVECTOR2(0.0f, 0.0f);
+	primitiveMesh[17].texture = D3DXVECTOR2(textureRepeat.z, 0.0f);
+	primitiveMesh[18].texture = D3DXVECTOR2(0.0f, textureRepeat.y);
+	primitiveMesh[19].texture = D3DXVECTOR2(textureRepeat.z, textureRepeat.y);
 
 	// Bottom
 	primitiveMesh[20].position = D3DXVECTOR3(-halfW, -halfH, -halfD);
@@ -397,41 +424,50 @@ bool PrimitiveFactory::Create3DBox(Rect3D BoxSize, float tileFactor, Model& mode
 	primitiveMesh[22].position = D3DXVECTOR3(-halfW, -halfH, halfD);
 	primitiveMesh[23].position = D3DXVECTOR3(halfW, -halfH, halfD);
 
-	primitiveMesh[20].texture = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	primitiveMesh[21].texture = D3DXVECTOR3(textureRepeat.x, 0.0f, 0.0f);
-	primitiveMesh[22].texture = D3DXVECTOR3(0.0f, textureRepeat.z, 0.0f);
-	primitiveMesh[23].texture = D3DXVECTOR3(textureRepeat.x, textureRepeat.z, 0.0f);
+	primitiveMesh[20].texture = D3DXVECTOR2(0.0f, 0.0f);
+	primitiveMesh[21].texture = D3DXVECTOR2(textureRepeat.x, 0.0f);
+	primitiveMesh[22].texture = D3DXVECTOR2(0.0f, textureRepeat.z);
+	primitiveMesh[23].texture = D3DXVECTOR2(textureRepeat.x, textureRepeat.z);
 
 	// Create the index array.
 	Indices = new unsigned long[indexCount]
 	{
 		0, 1, 3, 2, 0, 3, // Front
-			4, 5, 7, 6, 4, 7, // Right
-			12, 13, 15, 14, 12, 15, // Back
-			16, 17, 19, 18, 16, 19, // Left
-			8, 9, 11, 10, 8, 11, // Top
-			20, 21, 23, 22, 20, 23, // Bottom
+		4, 5, 7, 6, 4, 7, // Right
+		12, 13, 15, 14, 12, 15, // Back
+		16, 17, 19, 18, 16, 19, // Left
+		8, 9, 11, 10, 8, 11, // Top
+		20, 21, 23, 22, 20, 23, // Bottom
 	};
 
 	// Calculate normals, tangent and binormals
 	CalculateHardNormals(vertexCount, primitiveMesh);
 
-	//===============
-	// Send to Model
-	//===============
+	//=============
+	// Create Mesh
+	//=============
 
-	model.GetMesh()->SetMesh(primitiveMesh, Indices);
-	model.GetMesh()->SetIndexCount(indexCount);
-	model.GetMesh()->SetVertexCount(vertexCount);
+	Mesh3D* newMesh = new Mesh3D;
+	newMesh->SetMesh(primitiveMesh, Indices);
+	newMesh->SetIndexCount(indexCount);
+	newMesh->SetVertexCount(vertexCount);
+	Result_ = newMesh->Build();
+	if (!Result_)
+	{
+		return false;
+	}
 
-	return model.GetMesh()->Build();
+	// Add mesh to model
+	model.AddMesh(newMesh);
+
+	return true;
 }
 
 bool PrimitiveFactory::CreateSkyPlane(float quadCount, float planeWidth, float maxHeight, float textureRepeat, Model& model)
 {
 	float quadSize, radius, constant, textureDelta;
 	D3DXVECTOR3 position;
-	D3DXVECTOR3 texture;
+	D3DXVECTOR2 texture;
 	int index, index1, index2, index3, index4;
 
 	int vertexCount, indexCount;
@@ -472,7 +508,6 @@ bool PrimitiveFactory::CreateSkyPlane(float quadCount, float planeWidth, float m
 			// Calculate the texture coordinates.
 			texture.x = (float)i * textureDelta;
 			texture.y = (float)j * textureDelta;
-			texture.z = 0.0f;
 
 			// Calculate the index into the sky plane array to add this coordinate.
 			index = j * (quadCount + 1) + i;
@@ -552,15 +587,24 @@ bool PrimitiveFactory::CreateSkyPlane(float quadCount, float planeWidth, float m
 		}
 	}
 
-	//===============
-	// Send to Model
-	//===============
+	//=============
+	// Create Mesh
+	//=============
 
-	model.GetMesh()->SetMesh(primitiveMesh, Indices);
-	model.GetMesh()->SetIndexCount(indexCount);
-	model.GetMesh()->SetVertexCount(vertexCount);
+	Mesh3D* newMesh = new Mesh3D;
+	newMesh->SetMesh(primitiveMesh, Indices);
+	newMesh->SetIndexCount(indexCount);
+	newMesh->SetVertexCount(vertexCount);
+	Result_ = newMesh->Build();
+	if (!Result_)
+	{
+		return false;
+	}
 
-	return model.GetMesh()->Build();
+	// Add mesh to model
+	model.AddMesh(newMesh);
+
+	return true;
 }
 
 void PrimitiveFactory::CalculateHardNormals(int vertexCount, VertexData* mesh)

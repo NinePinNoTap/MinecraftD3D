@@ -33,6 +33,18 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	if (!Camera_) { return false; }
 	Camera_->Initialise();
 
+	//
+	//
+	//
+
+	AssetManager_ = new AssetManager;
+	if (!AssetManager_)
+	{
+		MessageBox(hwnd, L"Could not create the Asset Manager.", L"Error", MB_OK);
+		return false;
+	}
+	AssetManager_->Initialise();
+
 	//====================
 	// Initialise DirectX
 	//====================
@@ -40,14 +52,14 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	DirectXManager_ = new DirectXManager;
 	if (!DirectXManager_)
 	{
-		MessageBox(hwnd, L"Could not create the DirectXManager.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not create the DirectX Manager.", L"Error", MB_OK);
 		return false;
 	}
 
 	Result_ = DirectXManager_->Initialise(WindowResolution, hwnd);
 	if (!Result_)
 	{
-		MessageBox(hwnd, L"Could not initialise DirectXManager.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialise DirectX Manager.", L"Error", MB_OK);
 		return false;
 	}
 	

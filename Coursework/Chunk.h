@@ -34,7 +34,16 @@ public:
 				// Loop through z dimension
 				for (int k = 0; k < BLOCKS_IN_CHUNK; k++)
 				{
-					Chunk_[i][j][k] = Block();
+					int r = rand() % 5;
+
+					BlockInfo info;
+
+					if (r <= 1) info = DIRT;
+					else if (r == 2) info = SAND;
+					else if (r == 3) info = COBBLESTONE;
+					else if (r == 4) info = GOLD;
+
+					Chunk_[i][j][k] = Block(info);
 				}
 			}
 		}
@@ -75,7 +84,7 @@ public:
 
 	void Refresh()
 	{
-		int NoOfBlocks = 0;
+		int activeBlocks = 0;
 
 		// Loop through x dimension
 		for (int i = 0; i < BLOCKS_IN_CHUNK; i++)
@@ -86,40 +95,68 @@ public:
 				// Loop through z dimension
 				for (int k = 0; k < BLOCKS_IN_CHUNK; k++)
 				{
-					bool xPos, xNeg;
-					bool yPos, yNeg;
-					bool zPos, zNeg;
+					bool xPositive, xNegative;
+					bool yPositive, yNegative;
+					bool zPositive, zNegative;
 
-					xPos = CheckBlock(i + 1, j, k);
-					xNeg = CheckBlock(i - 1, j, k);
-					yPos = CheckBlock(i, j + 1, k);
-					yNeg = CheckBlock(i, j - 1, k);
-					zPos = CheckBlock(i, j, k + 1);
-					zNeg = CheckBlock(i, j, k - 1);
+					// Check if theres block in that particle position
+					xPositive = CheckBlock(i + 1, j, k);
+					xNegative = CheckBlock(i - 1, j, k);
+					yPositive = CheckBlock(i, j + 1, k);
+					yNegative = CheckBlock(i, j - 1, k);
+					zPositive = CheckBlock(i, j, k + 1);
+					zNegative = CheckBlock(i, j, k - 1);
 
-					bool result = xPos && xNeg && yPos && yNeg && zPos && zNeg;
+					bool result = !(xPositive && xNegative && yPositive && yNegative && zPositive && zNegative);
 					
 					Chunk_[i][j][k].SetActive(result);
 
-					if (result)
-						NoOfBlocks++;
+					if (!result)
+						activeBlocks++;
 				}
 			}
 		}
 
-		OutputToDebug(to_string(NoOfBlocks));
+		OutputToDebug("Blocks Not Rendered : ");
+		OutputToDebug(to_string(activeBlocks));
+		OutputToDebug(" in ");
+		OutputToDebug(to_string(BLOCKS_IN_CHUNK));
+		OutputToDebug(" x ");
+		OutputToDebug(to_string(BLOCKS_IN_CHUNK));
+		OutputToDebug(" x ");
+		OutputToDebug(to_string(BLOCKS_IN_CHUNK));
 		OutputToDebug("\n");
 	}
 
 	bool CheckBlock(int x, int y, int z)
 	{
+		// Check if the block is out of range
 		if (x < 0 || x >= BLOCKS_IN_CHUNK)
+		{
 			return false;
+		}
 		if (y < 0 || y >= BLOCKS_IN_CHUNK)
+		{
 			return false;
+		}
 		if (z < 0 || z >= BLOCKS_IN_CHUNK)
+		{
 			return false;
+		}
 
+		// Check the type of block
+		switch (Chunk_[x][y][z].GetInfo().type)
+		{
+			// AIR - Simulates no block
+			case BlockType::Air:
+				return false;
+				break;
+
+			default:
+				return true;
+				break;
+		}
+		
 		return true;
 	}
 
@@ -146,14 +183,28 @@ public:
 				{
 					if (Chunk_[i][j][k].GetActive())
 					{
-						GameObject* block = BlockManager::Instance()->GetBlock("Sand");
+						string name = Chunk_[i][j][k].GetInfo().name;
+						GameObject* block = BlockManager::Instance()->GetBlock(name);
 
+						// Get position of block 
 						D3DXVECTOR3 position = Transform_->GetPosition();
-						position += D3DXVECTOR3(i, j, k);
+						position += D3DXVECTOR3(i, j, k) * BLOCK_SIZE * 2;
 
+						// Update block position
 						block->GetTransform()->SetPosition(position);
+
 						// Render
 						ShaderManager::Instance()->TextureRender(block);
+
+						OutputToDebug("Rendered at :");
+						OutputToDebug(to_string(i));
+						OutputToDebug(", ");
+						OutputToDebug(to_string(k));
+						OutputToDebug(", ");
+						OutputToDebug(to_string(k));
+						OutputToDebug(" | Type : ");
+						OutputToDebug(name);
+						OutputToDebug("\n");
 					}
 				}
 			}

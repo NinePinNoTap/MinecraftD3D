@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "Mesh3D.h"
 #include "Material.h"
 
@@ -9,14 +11,18 @@ public:
 	Model();
 	~Model();
 
-	bool Initialise();
 	void Shutdown();
 
-	Mesh3D* GetMesh();
-	Material* GetMaterial();
+	void AddMesh(Mesh3D* mesh);
+	void AddMaterial(Material* material);
+
+	Mesh3D* GetMesh(int index);
+	Material* GetMaterial(int index);
+
+	int GetMeshCount();
 
 protected:
-	Mesh3D* Mesh_;
-	Material* Material_;
+	std::vector<Mesh3D*> Meshes_;
+	std::vector<Material*> Materials_;
 };
 

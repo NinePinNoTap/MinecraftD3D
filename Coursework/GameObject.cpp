@@ -51,12 +51,6 @@ bool GameObject::Initialise(const char* filename)
 		return false;
 	}
 
-	Result_ = Model_->Initialise();
-	if (!Result_)
-	{
-		return false;
-	}
-
 	// Load Model
 	Result_ = objLoader.LoadModel(filename, *Model_);
 	if (!Result_)
@@ -116,23 +110,31 @@ bool GameObject::Render()
 	unsigned int offset;
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
+	int meshCount;
 
 	// Set vertex buffer stride and offset
 	stride = sizeof(VertexData);
 	offset = 0;
 
-	// Get Mesh Buffers
-	vertexBuffer = Model_->GetMesh()->GetVertexBuffer();
-	indexBuffer = Model_->GetMesh()->GetIndexBuffer();
+	// Get number of meshes
+	meshCount = Model_->GetMeshCount();
 
-	// Set the vertex buffer to active in the InputManager assembler so it can be rendered
-	DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	// Loop through and render the mesh parts
+	for (int i = 0; i < meshCount; i++)
+	{
+		// Get Mesh Buffers
+		vertexBuffer = Model_->GetMesh(i)->GetVertexBuffer();
+		indexBuffer = Model_->GetMesh(i)->GetIndexBuffer();
 
-	// Set the index buffer to active in the InputManager assembler so it can be rendered
-	DirectXManager::Instance()->GetDeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		// Set the vertex buffer to active in the InputManager assembler so it can be rendered
+		DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 
-	// Set the type of primitive that should be rendered from this vertex buffer
-	DirectXManager::Instance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// Set the index buffer to active in the InputManager assembler so it can be rendered
+		DirectXManager::Instance()->GetDeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+		// Set the type of primitive that should be rendered from this vertex buffer
+		DirectXManager::Instance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	}
 
 	return true;
 }
@@ -163,6 +165,10 @@ Model* GameObject::GetModel()
 // Transform Getter
 Transform* GameObject::GetTransform()
 {	
+	if (!Transform_)
+	{
+		Transform_ = new Transform;
+	}
 	return Transform_;
 }
 

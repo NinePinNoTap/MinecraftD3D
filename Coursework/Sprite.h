@@ -18,5 +18,5 @@ public:
 	~Sprite();
 
 	bool Initialise(Rect3D Dimensions);
-	bool SetTexture(WCHAR* filename);
+	bool SetTexture(string filename);
 };

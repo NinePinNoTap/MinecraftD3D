@@ -20,7 +20,7 @@ ParticleSystem::~ParticleSystem()
 }
 
 // Initialising
-bool ParticleSystem::Initialise(WCHAR* textureFilename)
+bool ParticleSystem::Initialise(string textureFilename)
 {
 	// Load the texture 
 	Material_ = new Material;

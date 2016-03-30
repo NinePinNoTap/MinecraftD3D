@@ -2,9 +2,12 @@
 
 #include <d3d11.h>
 #include <d3dx10math.h>
+#include <string>
 
 #include "Colour.h"
 #include "Rect.h"
+
+using namespace std;
 
 class Texture
 {
@@ -14,7 +17,7 @@ public:
 	~Texture();
 
 	// Initialising and shutdown
-	bool Initialise(WCHAR* filename);
+	bool Initialise(string filename);
 	bool Initialise(Rect2D textureResolution);
 	void Shutdown();
 

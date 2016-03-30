@@ -9,7 +9,7 @@ Fire::~Fire()
 }
 
 // Initialising
-bool Fire::Initialise(char* modelFilename, WCHAR* textureFilename, WCHAR* noiseFilename, WCHAR* alphaFilename)
+bool Fire::Initialise(char* modelFilename, std::string textureFilename, std::string noiseFilename, std::string alphaFilename)
 {
 	TXTLoader txtLoader;
 
@@ -44,12 +44,6 @@ bool Fire::Initialise(char* modelFilename, WCHAR* textureFilename, WCHAR* noiseF
 		return false;
 	}
 
-	Result_ = Model_->Initialise();
-	if (!Result_)
-	{
-		return false;
-	}
-
 	// Load Model
 	Result_ = txtLoader.LoadModel(modelFilename, *Model_);
 	if (!Result_)
@@ -61,25 +55,25 @@ bool Fire::Initialise(char* modelFilename, WCHAR* textureFilename, WCHAR* noiseF
 	// Create Material
 	//=================
 
-	Model_->GetMaterial()->SetColour(WHITE);
-
-	Result_ = Model_->GetMaterial()->SetBaseTexture(textureFilename);
+	Material* newMaterial = new Material;
+	Result_ = newMaterial->SetBaseTexture(textureFilename);
 	if (!Result_)
 	{
 		return false;
 	}
 
-	Result_ = Model_->GetMaterial()->SetAlphaTexture(alphaFilename);
+	Result_ = newMaterial->SetAlphaTexture(alphaFilename);
 	if (!Result_)
 	{
 		return false;
 	}
 
-	Result_ = Model_->GetMaterial()->SetNoiseTexture(noiseFilename);
+	Result_ = newMaterial->SetNoiseTexture(noiseFilename);
 	if (!Result_)
 	{
 		return false;
 	}
+	Model_->AddMaterial(newMaterial);
 
 	//==================
 	// Create Transform

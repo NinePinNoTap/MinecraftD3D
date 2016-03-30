@@ -2,9 +2,6 @@
 
 Water::Water() : GameObject()
 {
-	// Initialise the pointers to null
-	VertexBuffer_ = 0;
-	IndexBuffer_ = 0;
 }
 
 Water::Water(const Water& other)
@@ -16,7 +13,7 @@ Water::~Water()
 }
 
 // Initialising
-bool Water::Initialise(WCHAR* textureFilename, Rect3D waterResolution)
+bool Water::Initialise(string textureFilename, Rect3D waterResolution)
 {
 	PrimitiveFactory primitiveFactory;
 
@@ -42,12 +39,6 @@ bool Water::Initialise(WCHAR* textureFilename, Rect3D waterResolution)
 		return false;
 	}
 
-	Result_ = Model_->Initialise();
-	if (!Result_)
-	{
-		return false;
-	}
-
 	// Load Model
 	Result_ = primitiveFactory.CreatePlane(waterResolution, Rect3D(1, 1), 1.0f, *Model_);
 	if (!Result_)
@@ -55,11 +46,17 @@ bool Water::Initialise(WCHAR* textureFilename, Rect3D waterResolution)
 		return false;
 	}
 
-	Result_ = Model_->GetMaterial()->SetNormalTexture(textureFilename);
+	//=================
+	// Create Material
+	//=================
+
+	Material* newMaterial = new Material;
+	Result_ = newMaterial->SetNormalTexture(textureFilename);
 	if (!Result_)
 	{
 		return false;
 	}
+	Model_->AddMaterial(newMaterial);
 
 	//==================
 	// Create Transform
@@ -78,10 +75,6 @@ bool Water::Initialise(WCHAR* textureFilename, Rect3D waterResolution)
 	Frame_ = 0;
 	IsReflectable_ = false;
 	IsActive_ = true;
-
-	// Return the buffers as we use a different render method
-	VertexBuffer_ = Model_->GetMesh()->GetVertexBuffer();
-	IndexBuffer_ = Model_->GetMesh()->GetIndexBuffer();
 
 	return true;
 }
@@ -131,8 +124,8 @@ bool Water::Render()
 	offset = 0;
 
 	// Get Mesh Buffers
-	vertexBuffer = Model_->GetMesh()->GetVertexBuffer();
-	indexBuffer = Model_->GetMesh()->GetIndexBuffer();
+	vertexBuffer = Model_->GetMesh(0)->GetVertexBuffer();
+	indexBuffer = Model_->GetMesh(0)->GetIndexBuffer();
 
 	// Set the vertex buffer to active in the InputManager assembler so it can be rendered
 	DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);

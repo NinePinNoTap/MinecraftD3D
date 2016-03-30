@@ -16,18 +16,18 @@ AssetManager::~AssetManager()
 
 void AssetManager::Initialise()
 {
-
+	// Do we need this?
 }
 
 void AssetManager::Shutdown()
 {
 	// De-allocate all audio clips
-	/*for (std::map<string, AudioClip*>::iterator it = AudioDatabase_.begin(); it != AudioDatabase_.end(); ++it)
+	for (std::map<string, AudioClip*>::iterator it = AudioDatabase_.begin(); it != AudioDatabase_.end(); ++it)
 	{
-	it->second->Shutdown();
-	delete it->second;
-	it->second = 0;
-	}*/
+		//it->second->Shutdown();
+		delete it->second;
+		it->second = 0;
+	}
 
 	// De-allocate all fonts
 	for (std::map<string, Font*>::iterator it = FontDatabase_.begin(); it != FontDatabase_.end(); ++it)
@@ -36,6 +36,7 @@ void AssetManager::Shutdown()
 		delete it->second;
 		it->second = 0;
 	}
+
 	// De-allocate all model
 	for (std::map<string, Model*>::iterator it = ModelDatabase_.begin(); it != ModelDatabase_.end(); ++it)
 	{
@@ -43,6 +44,7 @@ void AssetManager::Shutdown()
 		delete it->second;
 		it->second = 0;
 	}
+
 	// De-allocate all textures
 	for (std::map<string, Texture*>::iterator it = TextureDatabase_.begin(); it != TextureDatabase_.end(); ++it)
 	{
@@ -57,8 +59,6 @@ void AssetManager::LoadAudio(AudioClip** audioClip, std::string filename, bool i
 	// Check if the font already exists
 	if (AudioDatabase_.count(filename))
 	{
-		OutputDebugString(L"Already loaded\n");
-
 		*audioClip = AudioDatabase_[filename];
 
 		return;
@@ -73,15 +73,12 @@ void AssetManager::LoadAudio(AudioClip** audioClip, std::string filename, bool i
 	Result_ = loadedClip->LoadFile(audioFilePath, is3D);
 	if (!Result_)
 	{
-		OutputDebugString(L"Could not load audio\n");
 		audioClip = 0;
 		return;
 	}
 
 	// Add to map
 	AudioDatabase_[filename] = loadedClip;
-
-	OutputDebugString(L"Added audio\n");
 
 	*audioClip = loadedClip;
 
@@ -102,15 +99,9 @@ void AssetManager::LoadFont(Font** font, std::string filename)
 	std::string txtPath = FONT_DIR + filename + ".txt";
 	const char* txtFilePath = txtPath.c_str();
 
-	// Construct filename path to dds
-	std::wstring ddsPath = L"Data/Font/";
-	ddsPath += std::wstring(filename.begin(), filename.end());
-	ddsPath += L".dds";
-	WCHAR* ddsFilePath = (WCHAR*)ddsPath.c_str();
-
 	// Create Font
 	Font* loadedFont = new Font;
-	Result_ = loadedFont->Initialise(txtFilePath, ddsFilePath);
+	Result_ = loadedFont->Initialise(txtFilePath, FONT_DIR + filename + ".dds");
 	if (!Result_)
 	{
 		*font = 0;
@@ -137,18 +128,22 @@ void AssetManager::LoadModel(Model** model, std::string filename)
 	}
 
 	OBJLoader objLoader;
+	TXTLoader txtLoader;
 
 	// Create the Model
 	Model* loadedModel = new Model;
-	Result_ = loadedModel->Initialise();
-	if (!Result_)
-	{
-		*model = 0;
-		return;
-	}
 
-	// Load the Model
-	Result_ = objLoader.LoadModel(filename.c_str(), *loadedModel);
+	// Check what format we are dealing with
+	if (string(filename).find(".txt"))
+	{
+		// Load the Model
+		Result_ = txtLoader.LoadModel(filename.c_str(), *loadedModel);
+	}
+	else
+	{
+		// Load the Model
+		Result_ = objLoader.LoadModel(filename.c_str(), *loadedModel);
+	}
 
 	// Check if we loaded the model properly
 	if (Result_)
@@ -166,51 +161,6 @@ void AssetManager::LoadModel(Model** model, std::string filename)
 	return;
 }
 
-void AssetManager::LoadModel(Model** model, std::string filename, wstring textureFilename)
-{
-	// Check if the font already exists
-	if (ModelDatabase_.count(filename))
-	{
-		// Don't continue
-		*model = ModelDatabase_[filename];
-
-		return;
-	}
-
-	TXTLoader txtLoader;
-	Model* loadedModel;
-
-	// Create the Model
-	loadedModel = new Model;
-	Result_ = loadedModel->Initialise();
-	if (!Result_)
-	{
-		*model = 0;
-		return;
-	}
-
-	// Load the Model
-	Result_ = txtLoader.LoadModel(filename.c_str(), *loadedModel);
-
-	// Check if we loaded the model properly
-	if (!Result_)
-	{
-		*model = 0;
-		return;
-	}
-
-	// Load the Texture
-	loadedModel->GetMaterial()->SetTextureArray(std::vector<wstring>(1, textureFilename));
-
-	// Return loaded model
-	*model = loadedModel;
-
-	// Add to the map
-	ModelDatabase_[filename] = loadedModel;
-
-	return;
-}
-
 void AssetManager::LoadTexture(Texture** texture, std::string filename)
 {
 	// Check if the font already exists
@@ -221,15 +171,9 @@ void AssetManager::LoadTexture(Texture** texture, std::string filename)
 		return;
 	}
 
-	// Construct filename path to dds
-	std::wstring ddsPath = L"Data/Textures/";
-	ddsPath += std::wstring(filename.begin(), filename.end());
-	ddsPath += L".dds";
-	WCHAR* ddsFilePath = (WCHAR*)ddsPath.c_str();
-
 	// Create the texture
 	Texture* loadedTexture = new Texture;
-	Result_ = loadedTexture->Initialise(ddsFilePath);
+	Result_ = loadedTexture->Initialise(TEXTURE_DIR + filename);
 	if (!Result_)
 	{
 		*texture = 0;

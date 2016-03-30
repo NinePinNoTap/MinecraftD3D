@@ -14,7 +14,7 @@ public:
 	~Fire();
 
 	// Initialising
-	bool Initialise(char* modelFilename, WCHAR* textureFilename, WCHAR* noiseFilename, WCHAR* alphaFilename);
+	bool Initialise(char* modelFilename, std::string textureFilename, std::string noiseFilename, std::string alphaFilename);
 
 	// Frame
 	bool Frame();

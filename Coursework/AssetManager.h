@@ -27,7 +27,6 @@ public:
 	void LoadAudio(AudioClip** clip, std::string filename, bool is3D = false);
 	void LoadFont(Font** font, std::string filename);
 	void LoadModel(Model** model, std::string filename);
-	void LoadModel(Model** model, std::string filename, wstring textureFilename);
 	void LoadTexture(Texture** texture, std::string filename);
 
 private:

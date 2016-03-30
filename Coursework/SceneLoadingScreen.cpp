@@ -29,7 +29,7 @@ bool SceneLoadingScreen::Initialise(Rect2D WindowResolution)
 	{
 		return false;
 	}
-	Result_ = Background_->SetTexture(L"Data/Textures/LoadingScreen.dds");
+	Result_ = Background_->SetTexture("LoadingScreen.dds");
 	if (!Result_)
 	{
 		return false;

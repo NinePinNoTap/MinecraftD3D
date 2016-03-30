@@ -1,4 +1,5 @@
 #include "Material.h"
+#include "AssetManager.h"
 
 Material::Material()
 {
@@ -8,14 +9,18 @@ Material::Material()
 	AlphaTexture_ = 0;
 	NoiseTexture_ = 0;
 	DistortionTexture_ = 0;
-	TextureArray_ = 0;
-	Tint_ = Colour(1.0f, 1.0f, 1.0f, 1.0f);
+	PerturbTexture_ = 0;
+
+	// Initialise colours
+	Tint_ = WHITE;
+	SpecularAmount_ = 1.0f;
 }
 
 Material::~Material()
 {
 
 }
+
 // Shutdown
 void Material::Shutdown()
 {
@@ -49,11 +54,11 @@ void Material::Shutdown()
 		delete DistortionTexture_;
 		DistortionTexture_ = 0;
 	}
-	if (TextureArray_)
+	if (PerturbTexture_)
 	{
-		TextureArray_->Shutdown();
-		delete TextureArray_;
-		TextureArray_ = 0;
+		PerturbTexture_->Shutdown();
+		delete PerturbTexture_;
+		PerturbTexture_ = 0;
 	}
 }
 
@@ -63,10 +68,15 @@ void Material::SetColour(Colour tint)
 	Tint_ = tint;
 }
 
-bool Material::SetBaseTexture(WCHAR* textureFilename)
+void Material::SetSpecular(float amount)
+{
+	SpecularAmount_ = amount;
+}
+
+bool Material::SetBaseTexture(std::string textureFilename)
 {
 	// Create the texture
-	BaseTexture_ = CreateTexture(textureFilename);
+	AssetManager::Instance()->LoadTexture(&BaseTexture_, textureFilename);
 
 	if (!BaseTexture_)
 	{
@@ -76,10 +86,10 @@ bool Material::SetBaseTexture(WCHAR* textureFilename)
 	return true;
 }
 
-bool Material::SetNormalTexture(WCHAR* textureFilename)
+bool Material::SetNormalTexture(std::string textureFilename)
 {
 	// Create the texture
-	NormalTexture_ = CreateTexture(textureFilename);
+	AssetManager::Instance()->LoadTexture(&NormalTexture_, textureFilename);
 
 	if (!NormalTexture_)
 	{
@@ -89,10 +99,10 @@ bool Material::SetNormalTexture(WCHAR* textureFilename)
 	return true;
 }
 
-bool Material::SetAlphaTexture(WCHAR* textureFilename)
+bool Material::SetAlphaTexture(std::string textureFilename)
 {
 	// Create the texture
-	AlphaTexture_ = CreateTexture(textureFilename);
+	AssetManager::Instance()->LoadTexture(&AlphaTexture_, textureFilename);
 
 	if (!AlphaTexture_)
 	{
@@ -102,10 +112,10 @@ bool Material::SetAlphaTexture(WCHAR* textureFilename)
 	return true;
 }
 
-bool Material::SetNoiseTexture(WCHAR* textureFilename)
+bool Material::SetNoiseTexture(std::string textureFilename)
 {
 	// Create the texture
-	NoiseTexture_ = CreateTexture(textureFilename);
+	AssetManager::Instance()->LoadTexture(&NoiseTexture_, textureFilename);
 
 	if (!NoiseTexture_)
 	{
@@ -115,10 +125,10 @@ bool Material::SetNoiseTexture(WCHAR* textureFilename)
 	return true;
 }
 
-bool Material::SetDistortionTexture(WCHAR* textureFilename)
+bool Material::SetDistortionTexture(std::string textureFilename)
 {
 	// Create the texture
-	DistortionTexture_ = CreateTexture(textureFilename);
+	AssetManager::Instance()->LoadTexture(&DistortionTexture_, textureFilename);
 
 	if (!DistortionTexture_)
 	{
@@ -128,40 +138,28 @@ bool Material::SetDistortionTexture(WCHAR* textureFilename)
 	return true;
 }
 
-bool Material::SetTextureArray(vector<wstring> textureFilenames)
+bool Material::SetPerturbTexture(std::string textureFilename)
 {
-	// Create the object
-	TextureArray_ = new TextureArray;
-	if (!TextureArray_)
+	// Create the texture
+	AssetManager::Instance()->LoadTexture(&PerturbTexture_, textureFilename);
+
+	if (!PerturbTexture_)
 	{
 		return false;
 	}
 
-	// Create the textures
-	return TextureArray_->Initialise(textureFilenames);
-}
-
-Texture* Material::CreateTexture(WCHAR* textureFilename)
-{
-	Texture* NewTexture;
-
-	// Create the object
-	NewTexture = new Texture;
-	if (!NewTexture)
-	{
-		return false;
-	}
-
-	// Load the texture
-	NewTexture->Initialise(textureFilename);
-
-	return NewTexture;
+	return true;
 }
 
 // Getters
 Colour Material::GetTint()
 {
 	return Tint_;
+}
+
+float Material::GetSpecular()
+{
+	return SpecularAmount_;
 }
 
 ID3D11ShaderResourceView* Material::GetBaseTexture()
@@ -204,10 +202,10 @@ ID3D11ShaderResourceView* Material::GetDistortionTexture()
 	return DistortionTexture_->GetTexture();
 }
 
-ID3D11ShaderResourceView* Material::GetTextureArray()
+ID3D11ShaderResourceView* Material::GetPerturbTexture()
 {
-	if (!TextureArray_)
+	if (!PerturbTexture_)
 		return 0;
 
-	return TextureArray_->GetTextures();
+	return PerturbTexture_->GetTexture();
 }

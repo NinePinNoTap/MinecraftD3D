@@ -12,10 +12,7 @@ public:
 
 	void Initialise()
 	{
-		float ChunkSize = BLOCKS_IN_CHUNK * BLOCK_SIZE;
-
 		BlockManager* blockManager = new BlockManager;
-		GameObject* block = blockManager->GetBlock("sand");
 
 		//
 		// Build Terrain
@@ -39,7 +36,7 @@ public:
 				{
 					Chunk* chunk = new Chunk;
 					chunk->Initialise();
-					chunk->GetTransform()->SetPosition(ChunkSize * i, ChunkSize * j, ChunkSize * k);
+					chunk->GetTransform()->SetPosition(CHUNK_SIZE * i, CHUNK_SIZE * j, CHUNK_SIZE * k);
 					TerrainChunks_[i][j][k] = chunk;
 				}
 			}

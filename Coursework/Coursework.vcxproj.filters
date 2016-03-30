@@ -364,6 +364,9 @@
     <ClInclude Include="BlockManager.h">
       <Filter>Framework\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="BlockInfo.h">
+      <Filter>Framework\System\Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shaders\cloud.ps">

@@ -13,7 +13,7 @@ Terrain::~Terrain()
 {
 }
 
-bool Terrain::Initialise(Rect3D terrainSize, TerrainType type, WCHAR* textureFilename, WCHAR* normalTextureFilename, Vector2 textureRepeat, float terrainScale, float terrainSmoothing)
+bool Terrain::Initialise(Rect3D terrainSize, TerrainType type, string textureFilename, string normalTextureFilename, Vector2 textureRepeat, float terrainScale, float terrainSmoothing)
 {
 	TerrainFactory TerrainFactory;
 	int terrainSeed;
@@ -24,12 +24,6 @@ bool Terrain::Initialise(Rect3D terrainSize, TerrainType type, WCHAR* textureFil
 
 	Model_ = new Model;
 	if (!Model_)
-	{
-		return false;
-	}
-
-	Result_ = Model_->Initialise();
-	if (!Result_)
 	{
 		return false;
 	}
@@ -46,16 +40,24 @@ bool Terrain::Initialise(Rect3D terrainSize, TerrainType type, WCHAR* textureFil
 		TerrainFactory.CreateTerrainWithPerlinNoise(terrainSize, textureRepeat, terrainScale, terrainSmoothing * 15, *Model_, terrainSeed);
 	}
 
-	Result_ = Model_->GetMaterial()->SetBaseTexture(textureFilename);
+	//=================
+	// Create Material
+	//=================
+
+	Material* newMaterial = new Material;
+	Result_ = newMaterial->SetBaseTexture(textureFilename);
 	if (!Result_)
 	{
 		return false;
 	}
-	Result_ = Model_->GetMaterial()->SetNormalTexture(normalTextureFilename);
+
+	Result_ = newMaterial->SetNormalTexture(normalTextureFilename);
 	if (!Result_)
 	{
 		return false;
 	}
+
+	Model_->AddMaterial(newMaterial);
 
 	//==================
 	// Create Transform

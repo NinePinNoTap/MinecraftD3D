@@ -2,10 +2,11 @@
 
 #include <d3dx11.h>
 #include <d3dx10math.h>
+#include <string>
 
 #include "Colour.h"
+#include "Constants.h"
 #include "Texture.h"
-#include "TextureArray.h"
 
 class Material
 {
@@ -16,30 +17,32 @@ public:
 	// Shutdown
 	void Shutdown();
 
-	// Setters
+	// Colours
 	void SetColour(Colour tint);
-	bool SetBaseTexture(WCHAR* textureFilename);
-	bool SetNormalTexture(WCHAR* textureFilename);
-	bool SetAlphaTexture(WCHAR* textureFilename);
-	bool SetNoiseTexture(WCHAR* textureFilename);
-	bool SetDistortionTexture(WCHAR* textureFilename);
-	bool SetTextureArray(vector<wstring> textureFilenames);
+	void SetSpecular(float amount);
+
+	// Textures
+	bool SetBaseTexture(std::string textureFilename);
+	bool SetNormalTexture(std::string textureFilename);
+	bool SetAlphaTexture(std::string textureFilename);
+	bool SetNoiseTexture(std::string textureFilename);
+	bool SetDistortionTexture(std::string textureFilename);
+	bool SetPerturbTexture(std::string textureFilename);
 
 	// Getters
 	Colour GetTint();
+	float GetSpecular();
 	ID3D11ShaderResourceView* GetBaseTexture();
 	ID3D11ShaderResourceView* GetNormalTexture();
 	ID3D11ShaderResourceView* GetAlphaTexture();
 	ID3D11ShaderResourceView* GetNoiseTexture();
 	ID3D11ShaderResourceView* GetDistortionTexture();
-	ID3D11ShaderResourceView* GetTextureArray();
+	ID3D11ShaderResourceView* GetPerturbTexture();
 
 private:
-	// Texture Loader
-	Texture* CreateTexture(WCHAR* textureFilename);
-
-	// Base
+	// Colour
 	Colour Tint_;
+	float SpecularAmount_;
 
 	// Textures
 	Texture* BaseTexture_;
@@ -47,7 +50,7 @@ private:
 	Texture* AlphaTexture_;
 	Texture* NoiseTexture_;
 	Texture* DistortionTexture_;
-	TextureArray* TextureArray_;
+	Texture* PerturbTexture_;
 };
 
 

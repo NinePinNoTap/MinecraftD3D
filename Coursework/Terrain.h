@@ -22,7 +22,7 @@ public:
 	~Terrain();
 
 	// Initialise
-	bool Initialise(Rect3D terrainSize, TerrainType type, WCHAR* textureFilename, WCHAR* normalTextureFilename, Vector2 textureRepeat, float terrainScale = 1.0f, float terrainSmoothing = 1.0f);
+	bool Initialise(Rect3D terrainSize, TerrainType type, string textureFilename, string normalTextureFilename, Vector2 textureRepeat, float terrainScale = 1.0f, float terrainSmoothing = 1.0f);
 };
 
 

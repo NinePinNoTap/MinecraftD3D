@@ -29,7 +29,7 @@ public:
 	~ParticleSystem();
 
 	// Initialising
-	bool Initialise(WCHAR*);
+	bool Initialise(string textureFilename);
 
 	// Shutdown
 	void Shutdown();

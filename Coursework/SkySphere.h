@@ -4,9 +4,8 @@
 #include <d3dx10math.h>
 #include <fstream>
 
+#include "AssetManager.h"
 #include "GameObject.h"
-#include "TXTLoader.h"
-
 
 using namespace std;
 

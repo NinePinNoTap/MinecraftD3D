@@ -41,7 +41,7 @@ bool TerrainFactory::CreateTerrain(Rect3D terrainSize, Vector2 textureRepeat, in
 
 			// Store the position and calculate texture
 			modelData[index].position = tempVertex;
-			modelData[index].texture = D3DXVECTOR3(i * uW, j * uH, 0.0f);
+			modelData[index].texture = D3DXVECTOR2(i * uW, j * uH);
 		}
 	}
 
@@ -109,7 +109,7 @@ bool TerrainFactory::CreateTerrainWithPerlinNoise(const Rect3D terrainSize, Vect
 
 			// Store the position and calculate texture
 			modelData[index].position = tempVertex;
-			modelData[index].texture = D3DXVECTOR3(i * uW, j * uH, 0.0f);
+			modelData[index].texture = D3DXVECTOR2(i * uW, j * uH);
 		}
 	}
 
@@ -131,6 +131,7 @@ bool TerrainFactory::BuildModelFromModelData(Rect3D Terrain, VertexData* modelDa
 	int vertexCount, indexCount;
 	VertexData* terrainMesh;
 	unsigned long* Indices;
+	bool Result;
 
 	// Set the number of vertices
 	vertexCount = (Terrain.width - 1) * (Terrain.height - 1) * 6;
@@ -162,51 +163,59 @@ bool TerrainFactory::BuildModelFromModelData(Rect3D Terrain, VertexData* modelDa
 
 			// Upper left
 			terrainMesh[index] = modelData[index3];
-			terrainMesh[index].texture = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			terrainMesh[index].texture = D3DXVECTOR2(0.0f, 0.0f);
 			Indices[index] = index;
 			index++;
 
 			// Upper right
 			terrainMesh[index] = modelData[index4];
-			terrainMesh[index].texture = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+			terrainMesh[index].texture = D3DXVECTOR2(1.0f, 0.0f);
 			Indices[index] = index;
 			index++;
 
 			// Bottom left
 			terrainMesh[index] = modelData[index1];
-			terrainMesh[index].texture = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+			terrainMesh[index].texture = D3DXVECTOR2(0.0f, 1.0f);
 			Indices[index] = index;
 			index++;
 
 			// Bottom left
 			terrainMesh[index] = modelData[index1];
-			terrainMesh[index].texture = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+			terrainMesh[index].texture = D3DXVECTOR2(0.0f, 1.0f);
 			Indices[index] = index;
 			index++;
 
 			// Upper right
 			terrainMesh[index] = modelData[index4];
-			terrainMesh[index].texture = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+			terrainMesh[index].texture = D3DXVECTOR2(1.0f, 0.0f);
 			Indices[index] = index;
 			index++;
 
 			// Bottom right
 			terrainMesh[index] = modelData[index2];
-			terrainMesh[index].texture = D3DXVECTOR3(1.0f, 1.0f, 0.0f);
+			terrainMesh[index].texture = D3DXVECTOR2(1.0f, 1.0f);
 			Indices[index] = index;
 			index++;
 		}
 	}
 
-	//================================
-	// Send to model for finalisation
-	//================================
+	//=============
+	// Create Mesh
+	//=============
 	
-	model.GetMesh()->SetMesh(terrainMesh, Indices);
-	model.GetMesh()->SetIndexCount(indexCount);
-	model.GetMesh()->SetVertexCount(vertexCount);
+	Mesh3D* newMesh = new Mesh3D;
+	newMesh->SetMesh(terrainMesh, Indices);
+	newMesh->SetIndexCount(indexCount);
+	newMesh->SetVertexCount(vertexCount);
+	Result = newMesh->Build();
+	if (!Result)
+	{
+		return false;
+	}
 
-	return model.GetMesh()->Build();
+	model.AddMesh(newMesh);
+
+	return true;
 }
 
 bool TerrainFactory::CalculateTerrainNormals(Rect3D terrainSize, VertexData* modelData)

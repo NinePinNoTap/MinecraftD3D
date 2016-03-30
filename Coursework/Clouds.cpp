@@ -14,7 +14,7 @@ Clouds::~Clouds()
 }
 
 // Set up
-bool Clouds::Initialise(WCHAR* cloudTextureFilename, WCHAR* perturbTextureFilename)
+bool Clouds::Initialise(string cloudTextureFilename, string perturbTextureFilename)
 {
 	PrimitiveFactory primitiveFactory;
 
@@ -37,12 +37,6 @@ bool Clouds::Initialise(WCHAR* cloudTextureFilename, WCHAR* perturbTextureFilena
 		return false;
 	}
 
-	Result_ = Model_->Initialise();
-	if (!Result_)
-	{
-		return false;
-	}
-
 	// Load Model
 	Result_ = primitiveFactory.CreateSkyPlane(QuadCount_, PlaneWidth_, MaxHeight_, TextureRepeat_, *Model_);
 	if (!Result_)
@@ -52,7 +46,10 @@ bool Clouds::Initialise(WCHAR* cloudTextureFilename, WCHAR* perturbTextureFilena
 
 	// Load Textures
 	Result_ = LoadTextures(cloudTextureFilename, perturbTextureFilename);
-	if (!Result_)	{ return false; }
+	if (!Result_)
+	{
+		return false;
+	}
 
 	//==================
 	// Create Transform
@@ -76,22 +73,23 @@ bool Clouds::Initialise(WCHAR* cloudTextureFilename, WCHAR* perturbTextureFilena
 }
 
 // Textures
-bool Clouds::LoadTextures(WCHAR* textureFilename1, WCHAR* textureFilename2)
+bool Clouds::LoadTextures(string cloudFilename, string perturbFilename)
 {
-	// Load our textures
-	vector<wstring> TextureFilenames;
-	TextureFilenames.push_back(textureFilename1);
-	TextureFilenames.push_back(textureFilename2);
-
 	// Create the material
-	Result_ = Model_->GetMaterial()->SetTextureArray(TextureFilenames);
+	Material* newMaterial = new Material;
+	Result_ = newMaterial->SetBaseTexture(cloudFilename);
 	if (!Result_)
 	{
 		return false;
 	}
 
-	// Clean up
-	TextureFilenames.clear();
+	Result_ = newMaterial->SetNoiseTexture(perturbFilename);
+	if (!Result_)
+	{
+		return false;
+	}
+
+	Model_->AddMaterial(newMaterial);
 
 	return true;
 }

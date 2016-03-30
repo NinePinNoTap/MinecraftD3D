@@ -2,60 +2,62 @@
 
 Model::Model()
 {
-	Material_ = 0;
-	Mesh_ = 0;
 }
 
 Model::~Model()
 {
-
-}
-
-bool Model::Initialise()
-{
-	// Create Mesh3D
-	Mesh_ = new Mesh3D;
-	if (!Mesh_)
-	{
-		return false;
-	}
-
-	// Create Material
-	Material_ = new Material;
-	if (!Material_)
-	{
-		return false;
-	}
-
-	return true;
 }
 
 void Model::Shutdown()
 {
-	// Shutdown Mesh3D
-	if (Mesh_)
+	// Shutdown meshes
+	if (Meshes_.size() > 0)
 	{
-		Mesh_->Shutdown();
-		delete Mesh_;
-		Mesh_ = 0;
+		for (int i = 0; i < Meshes_.size(); i++)
+		{
+			Meshes_[i]->Shutdown();
+			delete Meshes_[i];
+			Meshes_[i] = 0;
+		}
+
+		Meshes_.clear();
 	}
-	
-	// Shutdown Material
-	if (Material_)
+
+	// Shutdown materials
+	if (Materials_.size() > 0)
 	{
-		Material_->Shutdown();
-		delete Material_;
-		Material_ = 0;
+		for (int i = 0; i < Materials_.size(); i++)
+		{
+			Materials_[i]->Shutdown();
+			delete Materials_[i];
+			Materials_[i] = 0;
+		}
+
+		Materials_.clear();
 	}
 }
 
-
-Mesh3D* Model::GetMesh()
+void Model::AddMesh(Mesh3D* mesh)
 {
-	return Mesh_;
+	Meshes_.push_back(mesh);
 }
 
-Material* Model::GetMaterial()
+void Model::AddMaterial(Material* material)
 {
-	return Material_;
+	Materials_.push_back(material);
+}
+
+Mesh3D* Model::GetMesh(int index)
+{
+	return Meshes_[index];
+}
+
+Material* Model::GetMaterial(int index)
+{
+	return Materials_[index];
+}
+
+int Model::GetMeshCount()
+{
+	return Meshes_.size();
 }
