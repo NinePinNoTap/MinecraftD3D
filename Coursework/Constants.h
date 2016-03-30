@@ -29,7 +29,7 @@ const float CAMERA_SENSITIVITY  = 10.0f;
 //===============
 
 const int BLOCK_SIZE = 2; // How big a block is in world space
-const int BLOCKS_IN_CHUNK = 20; // How many blocks in a chunk
+const int BLOCKS_IN_CHUNK = 16; // How many blocks in a chunk
 const int NO_OF_CHUNKS = 1; // How many chunks in the terrain
 const int CHUNK_SIZE = BLOCKS_IN_CHUNK * BLOCK_SIZE;
 

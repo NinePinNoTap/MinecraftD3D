@@ -11,14 +11,14 @@
 #include "Singleton.h"
 #include "TXTLoader.h"
 
-class BlockManager : public Singleton <BlockManager>
+class BlockLoader : public Singleton <BlockLoader>
 {
 public:
-	BlockManager()
+	BlockLoader()
 	{
 
 	}
-	~BlockManager()
+	~BlockLoader()
 	{
 
 	}

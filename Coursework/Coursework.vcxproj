@@ -82,7 +82,9 @@
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AudioTrigger.cpp" />
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="Clouds.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="DirectSound.cpp" />
@@ -114,6 +116,7 @@
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="SkySphere.cpp" />
+    <ClCompile Include="VoxelTerrain.cpp" />
     <ClCompile Include="WindowManager.cpp" />
     <ClCompile Include="AudioClip.cpp" />
     <ClCompile Include="Terrain.cpp" />
@@ -126,7 +129,7 @@
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockInfo.h" />
-    <ClInclude Include="BlockManager.h" />
+    <ClInclude Include="BlockLoader.h" />
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="Mesh3D.h" />
     <ClInclude Include="OBJLoader.h" />
