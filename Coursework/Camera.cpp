@@ -13,7 +13,7 @@ Camera::~Camera()
 }
 
 // Initialising
-void Camera::Initialise()
+bool Camera::Initialise()
 {
 	//=======================
 	// Initialise Properties
@@ -46,6 +46,8 @@ void Camera::Initialise()
 
 	CanFreeRoam_ = true;
 	CanLook_ = true;
+
+	return true;
 }
 
 // Frame

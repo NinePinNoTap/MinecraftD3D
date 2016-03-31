@@ -3,6 +3,7 @@
 #include "DirectXManager.h"
 #include "Singleton.h"
 
+#include "Block.h"
 #include "Camera.h"
 #include "Clouds.h"
 #include "Fire.h"

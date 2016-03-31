@@ -16,4 +16,7 @@ public:
 	~OBJLoader();
 
 	bool LoadModel(const char* ModelFilename, Model& model);
+
+private:
+	bool Result_;
 };

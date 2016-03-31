@@ -17,7 +17,7 @@ public:
 	~Camera();
 
 	// Initialising
-	void Initialise();
+	bool Initialise();
 
 	// Frame
 	bool Frame();

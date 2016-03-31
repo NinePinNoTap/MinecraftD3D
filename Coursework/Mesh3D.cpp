@@ -21,7 +21,7 @@ bool Mesh3D::InitialiseBuffers()
 	D3D11_BUFFER_DESC indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData;
 	D3D11_SUBRESOURCE_DATA indexData;
-	HRESULT Result;
+	HRESULT Result_;
 
 	// Set up the description of the vertex buffer
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -37,8 +37,8 @@ bool Mesh3D::InitialiseBuffers()
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer
-	Result = DirectXManager::Instance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &VertexBuffer_);
-	if (FAILED(Result))
+	Result_ = DirectXManager::Instance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &VertexBuffer_);
+	if (FAILED(Result_))
 	{
 		return false;
 	}
@@ -55,8 +55,8 @@ bool Mesh3D::InitialiseBuffers()
 	indexData.pSysMem = Indices_;
 
 	// Create the index buffer
-	Result = DirectXManager::Instance()->GetDevice()->CreateBuffer(&indexBufferDesc, &indexData, &IndexBuffer_);
-	if (FAILED(Result))
+	Result_ = DirectXManager::Instance()->GetDevice()->CreateBuffer(&indexBufferDesc, &indexData, &IndexBuffer_);
+	if (FAILED(Result_))
 	{
 		return false;
 	}

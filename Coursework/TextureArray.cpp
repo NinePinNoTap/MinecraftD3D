@@ -18,7 +18,7 @@ TextureArray::~TextureArray()
 
 bool TextureArray::Initialise(vector<wstring> TextureFilenames)
 {
-	HRESULT Result;
+	HRESULT Result_;
 	UINT TextureCount;
 	
 	// Count how many textures there are
@@ -47,8 +47,8 @@ bool TextureArray::Initialise(vector<wstring> TextureFilenames)
 		loadInfo.pSrcInfo  = 0;
 
 		// Create a texture using the file name using the above description
-		Result = D3DX11CreateTextureFromFile(DirectXManager::Instance()->GetDevice(), TextureFilenames[i].c_str(), &loadInfo, 0, (ID3D11Resource**)&srcTex[i], 0);
-		if(FAILED(Result)) { return false; }
+		Result_ = D3DX11CreateTextureFromFile(DirectXManager::Instance()->GetDevice(), TextureFilenames[i].c_str(), &loadInfo, 0, (ID3D11Resource**)&srcTex[i], 0);
+		if(FAILED(Result_)) { return false; }
 	}
 
 	// Get a description of the first image in the array
@@ -71,8 +71,8 @@ bool TextureArray::Initialise(vector<wstring> TextureFilenames)
 
 	// Create a texture using tha above description
 	ID3D11Texture2D* texArray = 0;
-	Result = DirectXManager::Instance()->GetDevice()->CreateTexture2D(&texArrayDesc, 0, &texArray);
-	if(FAILED(Result))
+	Result_ = DirectXManager::Instance()->GetDevice()->CreateTexture2D(&texArrayDesc, 0, &texArray);
+	if(FAILED(Result_))
 		return false;
 
 	// Insert textures into the texture array
@@ -81,7 +81,7 @@ bool TextureArray::Initialise(vector<wstring> TextureFilenames)
 		for(UINT mipLevel = 0; mipLevel < texElementDesc.MipLevels; ++mipLevel)
 		{
 			D3D11_MAPPED_SUBRESOURCE mappedTex2D;
-			Result = DirectXManager::Instance()->GetDeviceContext()->Map(srcTex[texElement], mipLevel, D3D11_MAP_READ, 0, &mappedTex2D);
+			Result_ = DirectXManager::Instance()->GetDeviceContext()->Map(srcTex[texElement], mipLevel, D3D11_MAP_READ, 0, &mappedTex2D);
 
 			DirectXManager::Instance()->GetDeviceContext()->UpdateSubresource(texArray, D3D11CalcSubresource(mipLevel, texElement, texElementDesc.MipLevels),
 											0, mappedTex2D.pData, mappedTex2D.RowPitch, mappedTex2D.DepthPitch);
@@ -100,8 +100,8 @@ bool TextureArray::Initialise(vector<wstring> TextureFilenames)
 	viewDesc.Texture2DArray.ArraySize = TextureCount;
 
 	// Create the shader resource view for the texture array
-	Result = DirectXManager::Instance()->GetDevice()->CreateShaderResourceView(texArray, &viewDesc, &Textures_);
-	if(FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDevice()->CreateShaderResourceView(texArray, &viewDesc, &Textures_);
+	if(FAILED(Result_)) { return false; }
 
 	// Cleanup
 	texArray -> Release();

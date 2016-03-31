@@ -43,7 +43,7 @@ bool Text::InitialiseSentence(SentenceType** sentence, int maxLength)
 	unsigned long* indices;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
-	HRESULT Result;
+	HRESULT Result_;
 	int i;
 
 	// Create a new sentence object.
@@ -94,8 +94,8 @@ bool Text::InitialiseSentence(SentenceType** sentence, int maxLength)
 	vertexData.SysMemSlicePitch = 0;
 
 	// Create the vertex buffer.
-	Result = DirectXManager::Instance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &(*sentence)->vertexBuffer);
-	if (FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &(*sentence)->vertexBuffer);
+	if (FAILED(Result_)) { return false; }
 
 	// Set up the description of the static index buffer
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -111,8 +111,8 @@ bool Text::InitialiseSentence(SentenceType** sentence, int maxLength)
 	indexData.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
-	Result = DirectXManager::Instance()->GetDevice()->CreateBuffer(&indexBufferDesc, &indexData, &(*sentence)->indexBuffer);
-	if (FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDevice()->CreateBuffer(&indexBufferDesc, &indexData, &(*sentence)->indexBuffer);
+	if (FAILED(Result_)) { return false; }
 
 	// Release the vertex array as it is no longer needed
 	delete[] vertices;
@@ -164,8 +164,8 @@ void Text::CreateText(char* text, Vector2 position, Colour colour, Alignment ali
 bool Text::SetText(int ID, char* text)
 {
 	// Update the sentence vertex buffer with the new string information.
-	bool Result = UpdateSentence(Sentences_[ID], text, Sentences_[ID]->position, Sentences_[ID]->colour, Sentences_[ID]->align);
-	if (!Result) { return false; }
+	bool Result_ = UpdateSentence(Sentences_[ID], text, Sentences_[ID]->position, Sentences_[ID]->colour, Sentences_[ID]->align);
+	if (!Result_) { return false; }
 
 	return true;
 }
@@ -186,8 +186,8 @@ bool Text::SetText(int ID, char* text, float value)
 	strcat(TextToDisplay, ToStr(value).c_str());
 
 	// Update the text
-	bool Result = SetText(ID, TextToDisplay);
-	if (!Result) { return false; }
+	bool Result_ = SetText(ID, TextToDisplay);
+	if (!Result_) { return false; }
 
 	return true;
 }
@@ -195,8 +195,8 @@ bool Text::SetText(int ID, char* text, float value)
 bool Text::SetPosition(int ID, Vector2 NewPosition)
 {
 	// Update the sentence vertex buffer with the new string information.
-	bool Result = UpdateSentence(Sentences_[ID], Sentences_[ID]->text, NewPosition, Sentences_[ID]->colour, Sentences_[ID]->align);
-	if (!Result)
+	bool Result_ = UpdateSentence(Sentences_[ID], Sentences_[ID]->text, NewPosition, Sentences_[ID]->colour, Sentences_[ID]->align);
+	if (!Result_)
 	{
 		return false;
 	}
@@ -207,8 +207,8 @@ bool Text::SetPosition(int ID, Vector2 NewPosition)
 bool Text::SetColour(int ID, Colour NewColour)
 {
 	// Update the sentence vertex buffer with the new string information.
-	bool Result = UpdateSentence(Sentences_[ID], Sentences_[ID]->text, Sentences_[ID]->position, NewColour, Sentences_[ID]->align);
-	if (!Result)
+	bool Result_ = UpdateSentence(Sentences_[ID], Sentences_[ID]->text, Sentences_[ID]->position, NewColour, Sentences_[ID]->align);
+	if (!Result_)
 	{
 		return false;
 	}
@@ -237,7 +237,7 @@ bool Text::UpdateSentence(SentenceType* sentence, char* text, Vector2 position, 
 	int numLetters;
 	VertexType* vertices;
 	float drawX, drawY;
-	HRESULT Result;
+	HRESULT Result_;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	VertexType* verticesPtr;
 
@@ -281,8 +281,8 @@ bool Text::UpdateSentence(SentenceType* sentence, char* text, Vector2 position, 
 	Font_ -> BuildVertexArray((void*)vertices, text, drawX, drawY);
 
 	// Lock the vertex buffer so it can be written to.
-	Result = DirectXManager::Instance()->GetDeviceContext()->Map(sentence->vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if(FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDeviceContext()->Map(sentence->vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if(FAILED(Result_)) { return false; }
 
 	// Get a pointer to the data in the vertex buffer.
 	verticesPtr = (VertexType*)mappedResource.pData;

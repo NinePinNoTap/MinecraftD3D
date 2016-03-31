@@ -14,43 +14,36 @@ AssetManager::~AssetManager()
 
 }
 
-void AssetManager::Initialise()
-{
-	// Do we need this?
-}
-
 void AssetManager::Shutdown()
 {
 	// De-allocate all audio clips
 	for (std::map<string, AudioClip*>::iterator it = AudioDatabase_.begin(); it != AudioDatabase_.end(); ++it)
 	{
-		//it->second->Shutdown();
-		delete it->second;
-		it->second = 0;
+		if (it->second)
+		{
+			it->second->Shutdown();
+			it->second = 0;
+		}
 	}
 
 	// De-allocate all fonts
 	for (std::map<string, Font*>::iterator it = FontDatabase_.begin(); it != FontDatabase_.end(); ++it)
 	{
-		it->second->Shutdown();
-		delete it->second;
-		it->second = 0;
+		if (it->second)
+		{
+			it->second->Shutdown();
+			it->second = 0;
+		}
 	}
 
 	// De-allocate all model
 	for (std::map<string, Model*>::iterator it = ModelDatabase_.begin(); it != ModelDatabase_.end(); ++it)
 	{
-		it->second->Shutdown();
-		delete it->second;
-		it->second = 0;
-	}
-
-	// De-allocate all textures
-	for (std::map<string, Texture*>::iterator it = TextureDatabase_.begin(); it != TextureDatabase_.end(); ++it)
-	{
-		it->second->Shutdown();
-		delete it->second;
-		it->second = 0;
+		if (it->second)
+		{
+			it->second->Shutdown();
+			it->second = 0;
+		}
 	}
 }
 
@@ -177,6 +170,10 @@ void AssetManager::LoadTexture(Texture** texture, std::string filename)
 	if (!Result_)
 	{
 		*texture = 0;
+		OutputToDebug("Could not load : ");
+		OutputToDebug(filename);
+		OutputToDebug("\n");
+		return;
 	}
 
 	// Add to the map

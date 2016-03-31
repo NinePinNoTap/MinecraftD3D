@@ -83,6 +83,7 @@
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AudioTrigger.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="BlockLoader.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="Clouds.cpp" />
@@ -128,7 +129,6 @@
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="Block.h" />
-    <ClInclude Include="BlockInfo.h" />
     <ClInclude Include="BlockLoader.h" />
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="Mesh3D.h" />

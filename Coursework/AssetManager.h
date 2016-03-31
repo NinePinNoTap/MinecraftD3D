@@ -21,9 +21,10 @@ public:
 	AssetManager(const AssetManager&);
 	~AssetManager();
 
-	void Initialise();
+	// Shutdown
 	void Shutdown();
 
+	// Loaders
 	void LoadAudio(AudioClip** clip, std::string filename, bool is3D = false);
 	void LoadFont(Font** font, std::string filename);
 	void LoadModel(Model** model, std::string filename);

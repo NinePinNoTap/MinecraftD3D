@@ -18,5 +18,6 @@ public:
 private:
 	// Model Building
 	bool BuildModelFromModelData(Rect3D Terrain, VertexData* ModelData, Model& model);
-	bool CalculateTerrainNormals(Rect3D terrainSize, VertexData* ModelData);
+	bool CalculateTerrainNormals(Rect3D terrainSize, VertexData* ModelData); 
+	bool Result_;
 };

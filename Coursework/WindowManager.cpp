@@ -14,8 +14,6 @@ WindowManager::~WindowManager()
 
 bool WindowManager::Initialise()
 {
-	bool Result;
-
 	// Initialise the width and height of the screen to zero before sending the variables into the function.
 	Rect2D WindowResolution;
 
@@ -28,8 +26,8 @@ bool WindowManager::Initialise()
 		return false;
 
 	// Initialise the ApplicationManager
-	Result = ApplicationManager_->Initialise(HWND_, WindowResolution);
-	if(!Result)
+	Result_ = ApplicationManager_->Initialise(HWND_, WindowResolution);
+	if(!Result_)
 	{
 		return false;
 	}
@@ -149,7 +147,6 @@ void WindowManager::Shutdown()
 void WindowManager::Run()
 {
 	MSG msg;
-	bool Result;
 	bool Running = true;
 
 	// Initialise the message structure.
@@ -173,8 +170,8 @@ void WindowManager::Run()
 		else
 		{
 			// Do the frame processing for the ApplicationManager object.
-			Result = ApplicationManager_->Frame();
-			if (!Result)
+			Result_ = ApplicationManager_->Frame();
+			if (!Result_)
 			{
 				Running = false;
 			}

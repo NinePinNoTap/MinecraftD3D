@@ -51,6 +51,8 @@ private:
 
 	// Texture
 	Texture* Texture_;
+
+	bool Result_;
 };
 
 

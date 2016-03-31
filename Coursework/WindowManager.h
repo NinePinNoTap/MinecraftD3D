@@ -29,6 +29,8 @@ private:
 	HINSTANCE HInstance_;
 	HWND HWND_;
 	ApplicationManager* ApplicationManager_;
+
+	bool Result_;
 };
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

@@ -19,24 +19,24 @@ void VoxelTerrain::Initialise()
 	//
 
 	// Create the 3D array to store blocks in chunk
-	TerrainChunks_ = new Chunk***[NO_OF_CHUNKS];
+	TerrainChunks_ = new Chunk***[CHUNK_COUNT];
 
 	// Loop through x dimension
-	for (int i = 0; i < NO_OF_CHUNKS; i++)
+	for (int i = 0; i < CHUNK_COUNT; i++)
 	{
-		TerrainChunks_[i] = new Chunk**[NO_OF_CHUNKS];
+		TerrainChunks_[i] = new Chunk**[CHUNK_COUNT];
 
 		// Loop through y dimension
-		for (int j = 0; j < NO_OF_CHUNKS; j++)
+		for (int j = 0; j < CHUNK_COUNT; j++)
 		{
-			TerrainChunks_[i][j] = new Chunk*[NO_OF_CHUNKS];
+			TerrainChunks_[i][j] = new Chunk*[CHUNK_COUNT];
 
 			// Loop through z dimension
-			for (int k = 0; k < NO_OF_CHUNKS; k++)
+			for (int k = 0; k < CHUNK_COUNT; k++)
 			{
 				Chunk* chunk = new Chunk;
 				chunk->Initialise();
-				chunk->GetTransform()->SetPosition(CHUNK_SIZE * i, CHUNK_SIZE * j, CHUNK_SIZE * k);
+				chunk->GetTransform()->SetPosition(CHUNK_TOTAL_WIDTH * i, CHUNK_TOTAL_HEIGHT * j, CHUNK_TOTAL_DEPTH * k);
 				TerrainChunks_[i][j][k] = chunk;
 			}
 		}
@@ -46,13 +46,13 @@ void VoxelTerrain::Initialise()
 void VoxelTerrain::Render()
 {
 	// Loop through x dimension
-	for (int i = 0; i < NO_OF_CHUNKS; i++)
+	for (int i = 0; i < CHUNK_COUNT; i++)
 	{
 		// Loop through y dimension
-		for (int j = 0; j < NO_OF_CHUNKS; j++)
+		for (int j = 0; j < CHUNK_COUNT; j++)
 		{
 			// Loop through z dimension
-			for (int k = 0; k < NO_OF_CHUNKS; k++)
+			for (int k = 0; k < CHUNK_COUNT; k++)
 			{
 				//if (TerrainChunks_[i][j][k])
 				TerrainChunks_[i][j][k]->Render();

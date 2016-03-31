@@ -158,13 +158,12 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	Terrain_ = new Terrain;
 	if (!Terrain_) { return false; }
-	Result_ = Terrain_->Initialise(Rect3D(256, 256), TerrainType::PERLIN, "sand_real.dds", "sand_real_normal.dds", Vector2(50, 50), 1.0f);
+	Result_ = Terrain_->Initialise(Rect3D(512, 512), TerrainType::PERLIN, "sand_real.dds", "sand_real_normal.dds", Vector2(5, 5), 1.0f, 0.5f);
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the terrain object.", L"Error", MB_OK);
 		return false;
 	}
-	Terrain_->GetTransform()->SetY(50);
 
 	//=================
 	// Initialise Text
@@ -178,20 +177,20 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 		MessageBox(hwnd, L"Could not initialise the text object.", L"Error", MB_OK);
 		return false;
 	}
-	Text_->CreateText("", Vector2(10, 10), YELLOW); // FPS
-	Text_->CreateText("", Vector2(10, 30), YELLOW); // CPU
-	Text_->CreateText("", Vector2(10, 50), YELLOW); // CameraX
-	Text_->CreateText("", Vector2(10, 70), YELLOW); // CameraY
-	Text_->CreateText("", Vector2(10, 90), YELLOW); // CameraZ
-	Text_->CreateText("", Vector2(10, 110), YELLOW); // RotationX
-	Text_->CreateText("", Vector2(10, 130), YELLOW); // RotationY
-	Text_->CreateText("", Vector2(10, 150), YELLOW); // Rotation Z
+	Text_->CreateText("", Vector2(10, 10), BLACK); // FPS
+	Text_->CreateText("", Vector2(10, 30), BLACK); // CPU
+	Text_->CreateText("", Vector2(10, 50), BLACK); // CameraX
+	Text_->CreateText("", Vector2(10, 70), BLACK); // CameraY
+	Text_->CreateText("", Vector2(10, 90), BLACK); // CameraZ
+	Text_->CreateText("", Vector2(10, 110), BLACK); // RotationX
+	Text_->CreateText("", Vector2(10, 130), BLACK); // RotationY
+	Text_->CreateText("", Vector2(10, 150), BLACK); // Rotation Z
 
-	Text_->CreateText("CONTROLS", Vector2(WindowResolution.width - 10, 10), WHITE, RIGHT);
-	Text_->CreateText("[1] - Toggle Wireframe", Vector2(WindowResolution.width - 10, 30), WHITE, RIGHT);
-	Text_->CreateText("[2] - Toggle Time", Vector2(WindowResolution.width - 10, 50), WHITE, RIGHT);
-	Text_->CreateText("[BACKSPACE] - Reset Camera", Vector2(WindowResolution.width - 10, 70), WHITE, RIGHT);
-	Text_->CreateText("[ESC] - Quit", Vector2(WindowResolution.width - 10, 110), WHITE, RIGHT);
+	Text_->CreateText("CONTROLS", Vector2(WindowResolution.width - 10, 10), BLACK, RIGHT);
+	Text_->CreateText("[1] - Toggle Wireframe", Vector2(WindowResolution.width - 10, 30), BLACK, RIGHT);
+	Text_->CreateText("[2] - Toggle Time", Vector2(WindowResolution.width - 10, 50), BLACK, RIGHT);
+	Text_->CreateText("[BACKSPACE] - Reset Camera", Vector2(WindowResolution.width - 10, 70), BLACK, RIGHT);
+	Text_->CreateText("[ESC] - Quit", Vector2(WindowResolution.width - 10, 110), BLACK, RIGHT);
 
 	Chunk_ = new VoxelTerrain;
 	Chunk_->Initialise();
@@ -302,7 +301,7 @@ void MainScene::Reset()
 	//=========================================
 
 	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
-	Camera::Instance()->SetStartPosition(0, 3, 0);
+	Camera::Instance()->SetStartPosition(0, 0, -10);
 	Camera::Instance()->SetStartRotation(0, 0, 0);
 	Camera::Instance()->AllowFlying(true);
 	Camera::Instance()->SetSpeed(0.5f);
@@ -354,6 +353,7 @@ bool MainScene::UpdateObjects()
 	//================
 
 	Camera::Instance() -> Frame();
+	PerformanceManager::Instance()->Frame();
 	Clouds_ -> Frame();
 	Ocean_ -> Frame();
 
@@ -463,7 +463,7 @@ bool MainScene::UserInputManager()
 		Light::Instance() -> ToggleTime(NightTimeMode_);
 		SkySphere_ -> ToggleTime(NightTimeMode_);
 		Ocean_ -> ToggleTime(NightTimeMode_);
-		Fire_ -> SetActive(NightTimeMode_);
+		//Fire_ -> SetActive(NightTimeMode_);
 	}
 
 	return true;
@@ -558,15 +558,15 @@ bool MainScene::RenderScene(bool ShowText)
 	// Render the Terrain
 	//====================
 
-	Result_ = ShaderManager::Instance()->TerrainRender(Terrain_);
-	if (!Result_) { return false; }
+	//Result_ = ShaderManager::Instance()->TerrainRender(Terrain_);
+	//if (!Result_) { return false; }
 
 	//==================
 	// Render the Ocean 
 	//==================
 
-	Result_ = ShaderManager::Instance()->WaterRender(Ocean_, RefractionTexture_, ReflectionTexture_);
-	if (!Result_) { return false; }
+	//Result_ = ShaderManager::Instance()->WaterRender(Ocean_, RefractionTexture_, ReflectionTexture_);
+	//if (!Result_) { return false; }
 
 	//===================
 	// Render the Models 
@@ -697,7 +697,7 @@ bool MainScene::RenderRefraction()
 
 	// Render the terrain using reflection shader
 	//Result_ = ShaderManager::Instance()->TerrainRender(Terrain_, ClipPlane_);
-	if (!Result_) { return false; }
+	//if (!Result_) { return false; }
 
 	// Reset rendering back to normal
 	DirectXManager::Instance() -> SetBackBufferRenderTarget();
@@ -791,7 +791,7 @@ bool MainScene::RenderReflection()
 	ClipPlane_ = D3DXVECTOR4(0.0f, 1.0f, 0.0f, -Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
 
 	//Result_ = ShaderManager::Instance()->TerrainRender(Terrain_, ClipPlane_);
-	if (!Result_) { return false; }
+	//if (!Result_) { return false; }
 
 	// Re-enable culling
 	DirectXManager::Instance() -> ToggleCulling(false);

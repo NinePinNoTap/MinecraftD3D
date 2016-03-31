@@ -16,8 +16,8 @@ public:
 	~GameObject();
 
 	// Initialising
-	bool Initialise();
-	bool Initialise(const char* filename);
+	virtual bool Initialise();
+	virtual bool Initialise(const char* filename);
 
 	// Shutdown
 	virtual void Shutdown();

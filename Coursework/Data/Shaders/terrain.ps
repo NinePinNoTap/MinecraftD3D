@@ -1,4 +1,4 @@
-Texture2D colorTexture : register(t0);
+Texture2D terrainTexture : register(t0);
 Texture2D normalTexture : register(t1);
 SamplerState SampleType;
 
@@ -42,10 +42,10 @@ float4 PixelShaderMain(PixelInputType input) : SV_TARGET
 	lightColor += (lightDiffuseColor * lightIntensity1);
 
 	// Sample the color texture
-    textureColor = colorTexture.Sample(SampleType, input.tex.xy);
+    textureColor = terrainTexture.Sample(SampleType, input.tex);
 
 	// Sample normal texture
-	bumpMap = normalTexture.Sample(SampleType, input.tex.xy);
+	bumpMap = normalTexture.Sample(SampleType, input.tex);
 
 	// Expand to -1/+1
 	bumpMap = (bumpMap * 2.0f) - 1.0f;

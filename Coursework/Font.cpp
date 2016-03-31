@@ -18,15 +18,13 @@ Font::~Font()
 // Initialising
 bool Font::Initialise(const char* fontFilename, string textureFilename)
 {
-	bool Result;
-
 	// Load in the text file containing the font data
-	Result = LoadFontData(fontFilename);
-	if(!Result)	{ return false;	}
+	Result_ = LoadFontData(fontFilename);
+	if(!Result_)	{ return false;	}
 
 	// Load the texture that has the font characters on it
-	Result = LoadTexture(textureFilename);
-	if(!Result)	{ return false;	}
+	Result_ = LoadTexture(textureFilename);
+	if(!Result_)	{ return false;	}
 
 	return true;
 }
@@ -94,15 +92,13 @@ bool Font::LoadFontData(const char* filename)
 
 bool Font::LoadTexture(string filename)
 {
-	bool Result;
-
 	// Create the texture object
 	Texture_ = new Texture;
 	if(!Texture_) { return false; }
 
 	// Initialise the texture object
-	Result = Texture_ -> Initialise(filename);
-	if(!Result)	{ return false;	}
+	Result_ = Texture_ -> Initialise(filename);
+	if(!Result_)	{ return false;	}
 
 	return true;
 }

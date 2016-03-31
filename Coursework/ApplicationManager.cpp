@@ -43,7 +43,6 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 		MessageBox(hwnd, L"Could not create the Asset Manager.", L"Error", MB_OK);
 		return false;
 	}
-	AssetManager_->Initialise();
 
 	//====================
 	// Initialise DirectX
@@ -193,45 +192,51 @@ void ApplicationManager::Shutdown()
 	// Shutdown Singletons
 	//=====================
 
+	if (AssetManager_)
+	{
+		AssetManager_->Shutdown();
+		AssetManager_ = 0;
+	}
 	if (Camera_)
 	{
 		Camera_->Shutdown();
 		delete Camera_;
 		Camera_ = 0;
 	}
+
 	if (DirectXManager_)
 	{
 		DirectXManager_->Shutdown();
-		delete DirectXManager_;
 		DirectXManager_ = 0;
 	}
+
 	if (DirectSound_)
 	{
 		DirectSound_->Shutdown();
-		delete DirectSound_;
 		DirectSound_ = 0;
 	}
+
 	if (InputManager_)
 	{
 		delete InputManager_;
 		InputManager_ = 0;
 	}
+
 	if (Light_)
 	{
 		Light_->Shutdown();
 		delete Light_;
 		Light_ = 0;
 	}
+
 	if (ShaderManager_)
 	{
 		ShaderManager_->Shutdown();
-		delete ShaderManager_;
 		ShaderManager_ = 0;
 	}
 	if (PerformanceManager_)
 	{
 		PerformanceManager_->Shutdown();
-		delete PerformanceManager_;
 		PerformanceManager_ = 0;
 	}
 

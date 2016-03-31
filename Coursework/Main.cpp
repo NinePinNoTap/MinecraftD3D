@@ -2,9 +2,8 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-	bool Result;
+	bool Result_;
 	WindowManager* windowManager;
-
 
 	//===================
 	// Create the window
@@ -15,8 +14,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 		return 0;
 
 	// Initialise it
-	Result = windowManager->Initialise();
-	if (Result)
+	Result_ = windowManager->Initialise();
+	if (Result_)
 	{
 		// Run the window
 		windowManager->Run();

@@ -22,14 +22,14 @@ Texture::~Texture()
 // Initialising
 bool Texture::Initialise(string filename)
 {
-	HRESULT Result;
+	HRESULT Result_;
 
 	// Convert to correct format
 	std::wstring textureFilename = std::wstring(filename.begin(), filename.end());
 
 	// Load the texture in
-	Result = D3DX11CreateShaderResourceViewFromFile(DirectXManager::Instance()->GetDevice(), textureFilename.c_str(), NULL, NULL, &Texture_, NULL);
-	if (FAILED(Result)) { return false; }
+	Result_ = D3DX11CreateShaderResourceViewFromFile(DirectXManager::Instance()->GetDevice(), textureFilename.c_str(), NULL, NULL, &Texture_, NULL);
+	if (FAILED(Result_)) { return false; }
 
 	return true;
 }
@@ -37,7 +37,7 @@ bool Texture::Initialise(string filename)
 bool Texture::Initialise(Rect2D textureResolution)
 {
 	D3D11_TEXTURE2D_DESC textureDesc;
-	HRESULT Result;
+	HRESULT Result_;
 	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
 	D3D11_TEXTURE2D_DESC depthBufferDesc;
@@ -59,8 +59,8 @@ bool Texture::Initialise(Rect2D textureResolution)
     textureDesc.MiscFlags = 0;
 
 	// Create the render target texture.
-	Result = DirectXManager::Instance()->GetDevice()-> CreateTexture2D(&textureDesc, NULL, &RenderTargetTexture_);
-	if(FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDevice()-> CreateTexture2D(&textureDesc, NULL, &RenderTargetTexture_);
+	if(FAILED(Result_)) { return false; }
 
 	// Setup the description of the render target view.
 	renderTargetViewDesc.Format = textureDesc.Format;
@@ -68,8 +68,8 @@ bool Texture::Initialise(Rect2D textureResolution)
 	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
 	// Create the render target view.
-	Result = DirectXManager::Instance()->GetDevice() -> CreateRenderTargetView(RenderTargetTexture_, &renderTargetViewDesc, &RenderTargetView_);
-	if(FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDevice() -> CreateRenderTargetView(RenderTargetTexture_, &renderTargetViewDesc, &RenderTargetView_);
+	if(FAILED(Result_)) { return false; }
 
 	// Setup the description of the shader resource view.
 	shaderResourceViewDesc.Format = textureDesc.Format;
@@ -78,8 +78,8 @@ bool Texture::Initialise(Rect2D textureResolution)
 	shaderResourceViewDesc.Texture2D.MipLevels = 1;
 
 	// Create the shader resource view.
-	Result = DirectXManager::Instance()->GetDevice() -> CreateShaderResourceView(RenderTargetTexture_, &shaderResourceViewDesc, &Texture_);
-	if(FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDevice() -> CreateShaderResourceView(RenderTargetTexture_, &shaderResourceViewDesc, &Texture_);
+	if(FAILED(Result_)) { return false; }
 
 	// Initialise the description of the depth buffer.
 	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
@@ -98,8 +98,8 @@ bool Texture::Initialise(Rect2D textureResolution)
 	depthBufferDesc.MiscFlags = 0;
 
 	// Create the texture for the depth buffer using the filled out description.
-	Result = DirectXManager::Instance()->GetDevice() -> CreateTexture2D(&depthBufferDesc, NULL, &DepthStencilBuffer_);
-	if(FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDevice() -> CreateTexture2D(&depthBufferDesc, NULL, &DepthStencilBuffer_);
+	if(FAILED(Result_)) { return false; }
 
 	// Initailze the depth stencil view description.
 	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
@@ -110,8 +110,8 @@ bool Texture::Initialise(Rect2D textureResolution)
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	// Create the depth stencil view.
-	Result = DirectXManager::Instance()->GetDevice() -> CreateDepthStencilView(DepthStencilBuffer_, &depthStencilViewDesc, &DepthStencilView_);
-	if(FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDevice() -> CreateDepthStencilView(DepthStencilBuffer_, &depthStencilViewDesc, &DepthStencilView_);
+	if(FAILED(Result_)) { return false; }
 
 	// Setup the viewport for rendering.
 	Viewport_.Width = (float)textureResolution.width;

@@ -161,6 +161,21 @@ bool AudioClip::LoadFile(const char* filename, bool Is3D)
 	return true;
 }
 
+void AudioClip::Shutdown()
+{
+	if (SoundBuffer_)
+	{
+		SoundBuffer_->Release();
+		SoundBuffer_ = 0;
+	}
+
+	if (SoundBuffer3D_)
+	{
+		SoundBuffer3D_->Release();
+		SoundBuffer3D_ = 0;
+	}
+}
+
 // Controls
 bool AudioClip::Play(bool Loop)
 {

@@ -256,7 +256,6 @@ bool PrimitiveFactory::CreatePlane(Rect3D planeSize, Rect3D tileCount, float tex
 
 bool PrimitiveFactory::Create2DBox(Rect3D planeSize, Model& model)
 {
-	bool result;
 	int vertexCount, indexCount;
 	VertexData* primitiveMesh;
 	unsigned long* Indices;

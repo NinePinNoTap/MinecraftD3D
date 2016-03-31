@@ -131,7 +131,6 @@ bool TerrainFactory::BuildModelFromModelData(Rect3D Terrain, VertexData* modelDa
 	int vertexCount, indexCount;
 	VertexData* terrainMesh;
 	unsigned long* Indices;
-	bool Result;
 
 	// Set the number of vertices
 	vertexCount = (Terrain.width - 1) * (Terrain.height - 1) * 6;
@@ -207,8 +206,8 @@ bool TerrainFactory::BuildModelFromModelData(Rect3D Terrain, VertexData* modelDa
 	newMesh->SetMesh(terrainMesh, Indices);
 	newMesh->SetIndexCount(indexCount);
 	newMesh->SetVertexCount(vertexCount);
-	Result = newMesh->Build();
-	if (!Result)
+	Result_ = newMesh->Build();
+	if (!Result_)
 	{
 		return false;
 	}

@@ -4,8 +4,8 @@
 #include <d3dx10math.h>
 #include <string>
 
+//#include "Block.h"
 #include "Colour.h"
-#include "BlockInfo.h"
 
 //==========
 // Graphics
@@ -28,10 +28,18 @@ const float CAMERA_SENSITIVITY  = 10.0f;
 // Voxel Terrain
 //===============
 
-const int BLOCK_SIZE = 2; // How big a block is in world space
-const int BLOCKS_IN_CHUNK = 16; // How many blocks in a chunk
-const int NO_OF_CHUNKS = 1; // How many chunks in the terrain
-const int CHUNK_SIZE = BLOCKS_IN_CHUNK * BLOCK_SIZE;
+const int BLOCK_SIZE = 2;
+const int CHUNK_COUNT = 1;
+
+const int BLOCK_COUNT_WIDTH = 16;
+const int BLOCK_COUNT_HEIGHT = 16;
+const int BLOCK_COUNT_DEPTH = 16;
+
+const int CHUNK_TOTAL_WIDTH = BLOCK_COUNT_WIDTH * BLOCK_SIZE;
+const int CHUNK_TOTAL_HEIGHT = BLOCK_COUNT_HEIGHT * BLOCK_SIZE;
+const int CHUNK_TOTAL_DEPTH = BLOCK_COUNT_DEPTH * BLOCK_SIZE;
+
+const int TOTAL_BLOCKS_IN_CHUNK = BLOCK_COUNT_WIDTH * BLOCK_COUNT_HEIGHT * BLOCK_COUNT_DEPTH;
 
 //=========
 // Colours
@@ -47,11 +55,12 @@ const Colour YELLOW = Colour(1, 1, 0, 1);
 //========
 // Blocks
 //========
-const BlockInfo AIR = BlockInfo();
-const BlockInfo DIRT = BlockInfo("dirt", BlockType::Dirt, true);
-const BlockInfo SAND = BlockInfo("sand", BlockType::Sand, true);
-const BlockInfo COBBLESTONE = BlockInfo("cobblestone", BlockType::Cobblestone, true);
-const BlockInfo GOLD = BlockInfo("gold", BlockType::Gold, true);
+
+//const Block BLOCK_AIR = Block("air", BlockType::Air, false);
+//const Block BLOCK_DIRT = Block("dirt", BlockType::Dirt, true);
+//const Block BLOCK_SAND = Block("sand", BlockType::Sand, true);
+//const Block BLOCK_COBBLESTONE = Block("cobblestone", BlockType::Cobblestone, true);
+//const Block BLOCK_GOLD = Block("gold", BlockType::Gold, true);
 
 //===================
 // Direction Vectors

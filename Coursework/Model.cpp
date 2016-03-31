@@ -4,6 +4,11 @@ Model::Model()
 {
 }
 
+Model::Model(const Model& model)
+{
+	*this = model; // copy the value
+}
+
 Model::~Model()
 {
 }

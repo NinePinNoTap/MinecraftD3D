@@ -25,7 +25,6 @@ bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
 	D3DXVECTOR2 tempTextureUV;
 	D3DXVECTOR3 tempFace[3];
 	std::string textureFilename;
-	bool Result;
 
 	float vertexID, textureID, normalID;
 	int indexCount, vertexCount;
@@ -131,16 +130,16 @@ bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
 				newMesh->SetIndexCount(indexCount);
 				newMesh->SetVertexCount(vertexCount);
 				newMesh->SetMesh(ObjMesh, Indices);
-				Result = newMesh->Build();
-				if (!Result)
+				Result_ = newMesh->Build();
+				if (!Result_)
 				{
 					return false;
 				}
 
 				// Create Material
 				Material* newMaterial = new Material;
-				Result = newMaterial->SetBaseTexture(textureFilename);
-				if (!Result)
+				Result_ = newMaterial->SetBaseTexture(textureFilename);
+				if (!Result_)
 				{
 					return false;
 				}

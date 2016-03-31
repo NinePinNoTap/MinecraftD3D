@@ -17,6 +17,7 @@ public:
 
 	// Initialising
 	bool LoadFile(const char* filename, bool Is3D);
+	void Shutdown();
 
 	// Controls
 	bool Play(bool Loop);

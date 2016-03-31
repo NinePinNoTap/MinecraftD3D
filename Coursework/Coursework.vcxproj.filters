@@ -209,6 +209,9 @@
     <ClCompile Include="VoxelTerrain.cpp">
       <Filter>Scene\VoxelTerrain</Filter>
     </ClCompile>
+    <ClCompile Include="BlockLoader.cpp">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h">
@@ -369,9 +372,6 @@
     </ClInclude>
     <ClInclude Include="Block.h">
       <Filter>Scene\VoxelTerrain</Filter>
-    </ClInclude>
-    <ClInclude Include="BlockInfo.h">
-      <Filter>Framework\System\Data</Filter>
     </ClInclude>
     <ClInclude Include="BlockLoader.h">
       <Filter>Scene\VoxelTerrain</Filter>

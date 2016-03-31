@@ -100,7 +100,7 @@ bool ParticleSystem::InitialiseBuffers()
 	int i;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
-	HRESULT Result;
+	HRESULT Result_;
 
 	// Set the maximum number of vertices in the vertex array
 	VertexCount_ = MaxParticles_ * 6;
@@ -139,8 +139,8 @@ bool ParticleSystem::InitialiseBuffers()
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now finally create the vertex buffer
-	Result = DirectXManager::Instance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &VertexBuffer_);
-	if (FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &VertexBuffer_);
+	if (FAILED(Result_)) { return false; }
 
 	// Set up the description of the static index buffer
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -156,8 +156,8 @@ bool ParticleSystem::InitialiseBuffers()
 	indexData.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
-	Result = DirectXManager::Instance()->GetDevice()->CreateBuffer(&indexBufferDesc, &indexData, &IndexBuffer_);
-	if (FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDevice()->CreateBuffer(&indexBufferDesc, &indexData, &IndexBuffer_);
+	if (FAILED(Result_)) { return false; }
 
 	// Release the index array since it is no longer needed
 	delete[] indices;
@@ -350,7 +350,7 @@ void ParticleSystem::KillParticles()
 
 bool ParticleSystem::UpdateBuffers()
 {
-	HRESULT Result;
+	HRESULT Result_;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	VertexType* verticesPtr;
 
@@ -397,8 +397,8 @@ bool ParticleSystem::UpdateBuffers()
 	}
 	
 	// Lock the vertex buffer
-	Result = DirectXManager::Instance()->GetDeviceContext()->Map(VertexBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if(FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDeviceContext()->Map(VertexBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if(FAILED(Result_)) { return false; }
 
 	// Get a pointer to the data in the vertex buffer
 	verticesPtr = (VertexType*)mappedResource.pData;

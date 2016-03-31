@@ -9,6 +9,7 @@ class Model
 {
 public:
 	Model();
+	Model(const Model& model);
 	~Model();
 
 	void Shutdown();

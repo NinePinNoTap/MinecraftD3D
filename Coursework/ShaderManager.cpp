@@ -734,7 +734,7 @@ bool ShaderManager::TextureRender(GameObject* Obj)
 		return false;
 	}
 
-	int indexCount = objMesh -> GetIndexCount();
+	int indexCount = objMesh->GetIndexCount();
 	ID3D11ShaderResourceView* texture = objMaterial->GetBaseTexture();
 
 	// Create the world matrix for the model
@@ -751,8 +751,8 @@ bool ShaderManager::TextureRender(GameObject* Obj)
 
 	// Render using shader
 	Obj->Render();
-	TextureShader_ -> Render(indexCount);
-	
+	TextureShader_->Render(indexCount);
+
 	return true;
 }
 

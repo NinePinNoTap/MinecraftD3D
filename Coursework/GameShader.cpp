@@ -21,7 +21,7 @@ GameShader::~GameShader()
 // Initialising
 bool GameShader::InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename, WCHAR* hsFilename, WCHAR* dsFilename)
 {
-	HRESULT Result;
+	HRESULT Result_;
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* hullShaderBuffer;
@@ -42,15 +42,15 @@ bool GameShader::InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilenam
 	//=================
 
 	// Vertex Shader
-	Result = CompileShader(hwnd, vsFilename, "VertexShaderMain", "vs_5_0", &vertexShaderBuffer);
-	if (FAILED(Result))
+	Result_ = CompileShader(hwnd, vsFilename, "VertexShaderMain", "vs_5_0", &vertexShaderBuffer);
+	if (FAILED(Result_))
 	{
 		return false;
 	}
 	
 	// Pixel Shader
-	Result = CompileShader(hwnd, psFilename, "PixelShaderMain", "ps_5_0", &pixelShaderBuffer);
-	if (FAILED(Result))
+	Result_ = CompileShader(hwnd, psFilename, "PixelShaderMain", "ps_5_0", &pixelShaderBuffer);
+	if (FAILED(Result_))
 	{
 		return false;
 	}
@@ -58,8 +58,8 @@ bool GameShader::InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilenam
 	// Hull Shader (If we need to)
 	if (hsFilename)
 	{
-		Result = CompileShader(hwnd, hsFilename, "HullShaderMain", "hs_5_0", &hullShaderBuffer);
-		if (FAILED(Result))
+		Result_ = CompileShader(hwnd, hsFilename, "HullShaderMain", "hs_5_0", &hullShaderBuffer);
+		if (FAILED(Result_))
 		{
 			return false;
 		}
@@ -68,8 +68,8 @@ bool GameShader::InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilenam
 	// Domain Shader (If we need to)
 	if (dsFilename)
 	{
-		Result = CompileShader(hwnd, dsFilename, "DomainShaderMain", "ds_5_0", &domainShaderBuffer);
-		if (FAILED(Result))
+		Result_ = CompileShader(hwnd, dsFilename, "DomainShaderMain", "ds_5_0", &domainShaderBuffer);
+		if (FAILED(Result_))
 		{
 			return false;
 		}
@@ -79,21 +79,21 @@ bool GameShader::InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilenam
 	// Create Shader Buffers
 	//=======================
 
-	Result = DirectXManager::Instance()->GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &VertexShader_);
-	if (FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &VertexShader_);
+	if (FAILED(Result_)) { return false; }
 
-	Result = DirectXManager::Instance()->GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &PixelShader_);
-	if (FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &PixelShader_);
+	if (FAILED(Result_)) { return false; }
 
 	if (hsFilename)
 	{
-		Result = DirectXManager::Instance()->GetDevice()->CreateHullShader(hullShaderBuffer->GetBufferPointer(), hullShaderBuffer->GetBufferSize(), NULL, &HullShader_);
-		if (FAILED(Result)) { return false; }
+		Result_ = DirectXManager::Instance()->GetDevice()->CreateHullShader(hullShaderBuffer->GetBufferPointer(), hullShaderBuffer->GetBufferSize(), NULL, &HullShader_);
+		if (FAILED(Result_)) { return false; }
 	}
 	if (dsFilename)
 	{
-		Result = DirectXManager::Instance()->GetDevice()->CreateDomainShader(domainShaderBuffer->GetBufferPointer(), domainShaderBuffer->GetBufferSize(), NULL, &DomainShader_);
-		if (FAILED(Result)) { return false; }
+		Result_ = DirectXManager::Instance()->GetDevice()->CreateDomainShader(domainShaderBuffer->GetBufferPointer(), domainShaderBuffer->GetBufferSize(), NULL, &DomainShader_);
+		if (FAILED(Result_)) { return false; }
 	}
 
 	//=================================
@@ -110,7 +110,7 @@ bool GameShader::InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilenam
 
 	polygonLayout[1].SemanticName = "TEXCOORD";
 	polygonLayout[1].SemanticIndex = 0;
-	polygonLayout[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	polygonLayout[1].InputSlot = 0;
 	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
@@ -144,8 +144,8 @@ bool GameShader::InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilenam
 	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
 	// Create the vertex InputManager layout
-	Result = DirectXManager::Instance()->GetDevice()->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &Layout_);
-	if (FAILED(Result)) { return false; }
+	Result_ = DirectXManager::Instance()->GetDevice()->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &Layout_);
+	if (FAILED(Result_)) { return false; }
 
 	//==========
 	// Clean Up
@@ -174,7 +174,7 @@ bool GameShader::InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilenam
 
 bool GameShader::CompileShader(HWND hwnd, WCHAR* filename, LPCSTR EntryPoint, LPCSTR Version, ID3D10Blob** Buffer)
 {
-	HRESULT Result;
+	HRESULT Result_;
 	ID3D10Blob* errorMessage;
 	std::wstring output;
 	
@@ -183,10 +183,10 @@ bool GameShader::CompileShader(HWND hwnd, WCHAR* filename, LPCSTR EntryPoint, LP
 	output += filename;
 
 	// Compile the Shader
-	Result = D3DX11CompileFromFile(output.c_str(), NULL, NULL, EntryPoint, Version, D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, Buffer, &errorMessage, NULL);
+	Result_ = D3DX11CompileFromFile(output.c_str(), NULL, NULL, EntryPoint, Version, D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, Buffer, &errorMessage, NULL);
 
 	// Check if it failed
-	if (FAILED(Result))
+	if (FAILED(Result_))
 	{
 		if (errorMessage)
 		{
@@ -306,7 +306,7 @@ void GameShader::Render(int indexCount)
 // Shader Management
 void GameShader::AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE TextureMode)
 {
-	HRESULT Result;
+	HRESULT Result_;
 	D3D11_SAMPLER_DESC samplerDesc;
 	ID3D11SamplerState* samplerState;
 
@@ -326,7 +326,7 @@ void GameShader::AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// Create the sampler state using the above description
-	Result = DirectXManager::Instance()->GetDevice()->CreateSamplerState(&samplerDesc, &samplerState);
+	Result_ = DirectXManager::Instance()->GetDevice()->CreateSamplerState(&samplerDesc, &samplerState);
 
 	// Add to the vector
 	SampleStates_.push_back(samplerState);

@@ -26,11 +26,10 @@ public:
 	float GetElapsedTime();
 
 private:
-	unsigned long StartTime_;
-
 	// FPS
 	int FPS_;
 	int Count_;
+	unsigned long FPSCheckStartTime_;
 
 	// CPU
 	bool CanReadCPU_;
@@ -45,6 +44,7 @@ private:
 	INT64 CurrentTime_;
 	INT64 BootTime_;
 	float FrameTime_;
+	unsigned long TimerStartTime_;
 };
 
 

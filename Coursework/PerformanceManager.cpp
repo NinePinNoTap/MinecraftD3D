@@ -16,7 +16,7 @@ void PerformanceManager::Initialise()
 
 	FPS_ = 0;
 	Count_ = 0;
-	StartTime_ = timeGetTime();
+	FPSCheckStartTime_ = timeGetTime();
 
 	//======
 	// CPU
@@ -56,7 +56,7 @@ void PerformanceManager::Initialise()
 	TicksPerMs_ = (float)(Frequency_ / 1000);
 
 	// Get the WindowManager time
-	QueryPerformanceCounter((LARGE_INTEGER*)&StartTime_);
+	QueryPerformanceCounter((LARGE_INTEGER*)&TimerStartTime_);
 
 	// Store the time we initialised
 	QueryPerformanceCounter((LARGE_INTEGER*)&BootTime_);
@@ -82,12 +82,12 @@ bool PerformanceManager::Frame()
 	Count_++;
 
 	// If one second has passed then update the frame per second speed.
-	if (timeGetTime() >= (StartTime_ + 1000))
+	if (timeGetTime() >= (FPSCheckStartTime_ + 1000))
 	{
 		FPS_ = Count_;
 		Count_ = 0;
 
-		StartTime_ = timeGetTime();
+		FPSCheckStartTime_ = timeGetTime();
 	}
 
 	//=====
@@ -117,13 +117,13 @@ bool PerformanceManager::Frame()
 	QueryPerformanceCounter((LARGE_INTEGER*)&CurrentTime_);
 
 	// Calculate the difference in time since the last time we queried for the current time.
-	timeDifference = (float)(CurrentTime_ - StartTime_);
+	timeDifference = (float)(CurrentTime_ - TimerStartTime_);
 
 	// Calculate the frame time by the time difference over the timer speed resolution.
 	FrameTime_ = timeDifference / TicksPerMs_;
 
 	// Restart the timer.
-	StartTime_ = (unsigned long)CurrentTime_;
+	TimerStartTime_ = (unsigned long)CurrentTime_;
 
 	return true;
 }
