@@ -13,8 +13,7 @@ Material::Material()
 
 	// Initialise colours
 	Tint_ = WHITE;
-	SpecularAmount_ = 1.0f;
-
+	SpecularAmount_ = 32.0f;
 
 	// Add Default Data
 	SetColour("BaseColour", WHITE);

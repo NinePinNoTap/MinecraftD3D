@@ -41,17 +41,22 @@ bool Clouds::Initialise(string cloudTextureFilename, string perturbTextureFilena
 
 	// Create the material
 	Material* newMaterial = new Material;
-	Result_ = newMaterial->SetBaseTexture(cloudTextureFilename);
+
+	//Result_ = newMaterial->SetBaseTexture(cloudTextureFilename);
+	Result_ = newMaterial->SetTexture("BaseTexture", cloudTextureFilename);
+	if (!Result_)
+	{
+		return false;
+	}
+	//Result_ = newMaterial->SetPerturbTexture(perturbTextureFilename);
+	Result_ = newMaterial->SetTexture("PerturbTexture", perturbTextureFilename);
 	if (!Result_)
 	{
 		return false;
 	}
 
-	Result_ = newMaterial->SetPerturbTexture(perturbTextureFilename);
-	if (!Result_)
-	{
-		return false;
-	}
+	newMaterial->SetFloat("TextureScale", ScaleFactor_);
+	newMaterial->SetFloat("TextureBrightness", Brightness_);
 
 	Model_->AddMaterial(newMaterial);
 

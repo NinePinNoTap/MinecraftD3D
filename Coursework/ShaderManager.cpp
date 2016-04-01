@@ -269,8 +269,8 @@ bool ShaderManager::CloudShader(Clouds* Obj)
 
 	// Model Properties
 	int indexCount = objMesh->GetIndexCount();
-	ID3D11ShaderResourceView* cloudTexture = objMaterial->GetBaseTexture();
-	ID3D11ShaderResourceView* perturbTexture = objMaterial->GetPerturbTexture();
+	ID3D11ShaderResourceView* cloudTexture = objMaterial->GetTexture("BaseTexture")->GetTexture();
+	ID3D11ShaderResourceView* perturbTexture = objMaterial->GetTexture("PerturbTexture")->GetTexture();
 
 	// Create matrix buffer
 	MatrixCBuffer Matrix = MatrixBuffer_;
@@ -279,8 +279,8 @@ bool ShaderManager::CloudShader(Clouds* Obj)
 
 	// Create the sky buffer
 	SkyCBuffer Sky;
-	Sky.brightness = Obj->GetBrightness();
-	Sky.scale = Obj->GetScale();
+	Sky.brightness = objMaterial->GetFloat("TextureBrightness");
+	Sky.scale = objMaterial->GetFloat("TextureScale");
 	Sky.translation = Obj->GetFrame();
 	Sky.padding = 0.0f;
 
