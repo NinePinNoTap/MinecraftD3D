@@ -77,12 +77,12 @@
     <Filter Include="Scene\VoxelTerrain">
       <UniqueIdentifier>{de71abc2-a071-4e45-89b1-bcce2d10c559}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Graphics\Shader\SpecificShader">
+      <UniqueIdentifier>{1be2031e-f3fd-4076-8d27-a49fe5a78110}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="TextureArray.cpp">
-      <Filter>Framework\Graphics\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="MainScene.cpp">
       <Filter>Scene\Scenes</Filter>
     </ClCompile>
@@ -253,9 +253,6 @@
     <ClInclude Include="GameShader.h">
       <Filter>Framework\Graphics\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="TextureArray.h">
-      <Filter>Framework\Graphics\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
       <Filter>Framework\Graphics\Shader</Filter>
     </ClInclude>
@@ -375,6 +372,36 @@
     </ClInclude>
     <ClInclude Include="BlockLoader.h">
       <Filter>Scene\VoxelTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="CloudShader.h">
+      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
+    </ClInclude>
+    <ClInclude Include="FireShader.h">
+      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
+    </ClInclude>
+    <ClInclude Include="FontShader.h">
+      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShader.h">
+      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleShader.h">
+      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyShader.h">
+      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteShader.h">
+      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainShader.h">
+      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainReflectionShader.h">
+      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureShader.h">
+      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -32,28 +32,8 @@ public:
 	// Setter
 	void ToggleTime(bool);
 
-	// Getters
-	float GetTessellation();
-	float GetWaterHeight();
-	D3DXVECTOR2 GetNormalMapTiling();
-	float GetWaterTimer();
-	float GetWaveHeight();
-	float GetReflectRefractScale();
-	D3DXVECTOR4 GetRefractionTint();
-	float GetSpecularShininess();
-
 private:
-	// Properties
-	D3DXVECTOR2 NormalMapTiling_;
-	D3DXVECTOR4 RefractionTint_;
-
-	float Tessellation_;
-	float WaterHeight_;
-	float ReflectRefractScale_;
-	float WaterShininess_;
-	float WaterTimer_;
 	float WaveSpeed_;
-	float WaveHeight_;
 };
 
 

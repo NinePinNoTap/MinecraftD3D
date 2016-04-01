@@ -23,8 +23,8 @@ public:
 	void ClearMeshes();
 	void ClearMaterials();
 
-	Mesh3D* GetMesh(int index);
-	Material* GetMaterial(int index);
+	Mesh3D* GetMesh(int index = 0);
+	Material* GetMaterial(int index = 0);
 
 	int GetMeshCount();
 

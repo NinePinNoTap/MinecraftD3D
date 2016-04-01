@@ -24,7 +24,7 @@ bool ParticleSystem::Initialise(string textureFilename)
 {
 	// Load the texture 
 	Material_ = new Material;
-	Result_ = Material_->SetBaseTexture(textureFilename);
+	Result_ = Material_->SetTexture("BaseTexture", textureFilename);
 	if (!Result_)
 	{
 		return false;
@@ -192,7 +192,6 @@ void ParticleSystem::Shutdown()
 	// Release the texture
 	if (Material_)
 	{
-		Material_->Shutdown();
 		delete Material_;
 		Material_ = 0;
 	}

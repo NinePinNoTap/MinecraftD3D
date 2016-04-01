@@ -18,15 +18,6 @@ bool Clouds::Initialise(string cloudTextureFilename, string perturbTextureFilena
 {
 	PrimitiveFactory primitiveFactory;
 
-	// Set Properties
-	QuadCount_ = 100;
-	PlaneWidth_ = 100.0f;
-	MaxHeight_ = 0.5f;
-	TextureRepeat_ = 20;
-	ScaleFactor_ = 0.3f;
-	Brightness_ = 0.5f;
-	Translation_ = 0.0f;
-
 	//==============
 	// Create Model
 	//==============
@@ -38,18 +29,25 @@ bool Clouds::Initialise(string cloudTextureFilename, string perturbTextureFilena
 	}
 
 	// Load Model
-	Result_ = primitiveFactory.CreateSkyPlane(QuadCount_, PlaneWidth_, MaxHeight_, TextureRepeat_, *Model_);
+	Result_ = primitiveFactory.CreateSkyPlane(100, 100.0f, 0.5f, 20, *Model_);
 	if (!Result_)
 	{
 		return false;
 	}
 
-	// Load Textures
-	Result_ = LoadTextures(cloudTextureFilename, perturbTextureFilename);
+	// Create Material
+	Material* newMaterial = new Material;
+	Result_ = newMaterial->SetTexture("BaseTexture", cloudTextureFilename);
 	if (!Result_)
 	{
 		return false;
 	}
+	Result_ = newMaterial->SetTexture("PerturbTexture", perturbTextureFilename);
+	if (!Result_)
+	{
+		return false;
+	}
+	Model_->AddMaterial(newMaterial);
 
 	//==================
 	// Create Transform
@@ -65,31 +63,11 @@ bool Clouds::Initialise(string cloudTextureFilename, string perturbTextureFilena
 	// Initialise Vars
 	//=================
 
-	Frame_ = 0;
+	ScaleFactor_ = 0.3f;
+	Brightness_ = 0.5f;
+	Frame_ = 0.0f;
 	IsReflectable_ = false;
 	IsActive_ = true;
-
-	return true;
-}
-
-// Textures
-bool Clouds::LoadTextures(string cloudFilename, string perturbFilename)
-{
-	// Create the material
-	Material* newMaterial = new Material;
-	Result_ = newMaterial->SetBaseTexture(cloudFilename);
-	if (!Result_)
-	{
-		return false;
-	}
-
-	Result_ = newMaterial->SetNoiseTexture(perturbFilename);
-	if (!Result_)
-	{
-		return false;
-	}
-
-	Model_->AddMaterial(newMaterial);
 
 	return true;
 }
@@ -101,10 +79,10 @@ bool Clouds::Frame()
 	// Animate Clouds
 	//================
 
-	Translation_ += 0.0001f;
-	if (Translation_ > 1.0f)
+	Frame_ += 0.0001f;
+	if (Frame_ > 1.0f)
 	{
-		Translation_ -= 1.0f;
+		Frame_ -= 1.0f;
 	}
 
 	return true;
@@ -119,9 +97,4 @@ float Clouds::GetScale()
 float Clouds::GetBrightness()
 {
 	return Brightness_;
-}
-
-float Clouds::GetTranslation()
-{
-	return Translation_;
 }

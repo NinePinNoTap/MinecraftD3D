@@ -138,7 +138,7 @@ bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
 
 				// Create Material
 				Material* newMaterial = new Material;
-				Result_ = newMaterial->SetBaseTexture(textureFilename);
+				Result_ = newMaterial->SetTexture("BaseTexture", textureFilename);
 				if (!Result_)
 				{
 					return false;

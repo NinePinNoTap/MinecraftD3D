@@ -45,13 +45,13 @@ bool Terrain::Initialise(Rect3D terrainSize, TerrainType type, string textureFil
 	//=================
 
 	Material* newMaterial = new Material;
-	Result_ = newMaterial->SetBaseTexture(textureFilename);
+	Result_ = newMaterial->SetTexture("BaseTexture", textureFilename);
 	if (!Result_)
 	{
 		return false;
 	}
 
-	Result_ = newMaterial->SetNormalTexture(normalTextureFilename);
+	Result_ = newMaterial->SetTexture("NormalTexture", normalTextureFilename);
 	if (!Result_)
 	{
 		return false;

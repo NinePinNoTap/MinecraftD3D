@@ -122,7 +122,6 @@
     <ClCompile Include="AudioClip.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Text.cpp" />
-    <ClCompile Include="TextureArray.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Water.cpp" />
   </ItemGroup>
@@ -134,6 +133,16 @@
     <ClInclude Include="Mesh3D.h" />
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="PrimitiveFactory.h" />
+    <ClInclude Include="CloudShader.h" />
+    <ClInclude Include="TextureShader.h" />
+    <ClInclude Include="FireShader.h" />
+    <ClInclude Include="FontShader.h" />
+    <ClInclude Include="LightShader.h" />
+    <ClInclude Include="ParticleShader.h" />
+    <ClInclude Include="SkyShader.h" />
+    <ClInclude Include="SpriteShader.h" />
+    <ClInclude Include="TerrainShader.h" />
+    <ClInclude Include="TerrainReflectionShader.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TerrainFactory.h" />
     <ClInclude Include="TXTLoader.h" />
@@ -177,7 +186,6 @@
     <ClInclude Include="AudioClip.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Text.h" />
-    <ClInclude Include="TextureArray.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Water.h" />

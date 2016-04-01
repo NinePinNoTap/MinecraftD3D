@@ -16,19 +16,7 @@ Water::~Water()
 bool Water::Initialise(string textureFilename, Rect3D waterResolution)
 {
 	PrimitiveFactory primitiveFactory;
-
-	// Initialise water variables
-	WaterHeight_ = waterResolution.depth;
-	NormalMapTiling_ = D3DXVECTOR2(0.01f, 0.02f);
-	Frame_ = 0.0f;
-	WaterTimer_ = 0.0f;
-	ReflectRefractScale_ = 0.03f;
-	RefractionTint_ = D3DXVECTOR4(0.0f, 0.8f, 1.0f, 1.0f);
-	WaterShininess_ = 50.0f;
-	WaveHeight_ = 1.5f;
-	WaveSpeed_ = 0.025f;
-	Tessellation_ = 58.0f;
-	
+		
 	//==============
 	// Create Model
 	//==============
@@ -51,11 +39,23 @@ bool Water::Initialise(string textureFilename, Rect3D waterResolution)
 	//=================
 
 	Material* newMaterial = new Material;
-	Result_ = newMaterial->SetNormalTexture(textureFilename);
+	Result_ = newMaterial->SetTexture("NormalTexture", textureFilename);
 	if (!Result_)
 	{
 		return false;
 	}
+
+	// Add values
+	newMaterial->SetFloat("FrameTime", 0.0f);
+	newMaterial->SetFloat("WaveHeight", 1.5f);
+	newMaterial->SetFloat("TextureOffset", 0.0f);
+	newMaterial->SetFloat("SpecularPower", 50.0f);
+	newMaterial->SetFloat("ReflectRefractScale", 0.03f);
+	newMaterial->SetFloat("TessellationAmount", 58.0f);
+	newMaterial->SetVector2("NormalMapTiling", D3DXVECTOR2(0.01f, 0.02f));
+	newMaterial->SetVector4("RefractionTint", D3DXVECTOR4(0.0f, 0.8f, 1.0f, 1.0f));
+
+	// Add material to model
 	Model_->AddMaterial(newMaterial);
 
 	//==================
@@ -73,6 +73,7 @@ bool Water::Initialise(string textureFilename, Rect3D waterResolution)
 	//=================
 
 	Frame_ = 0;
+	WaveSpeed_ = 0.025f;
 	IsReflectable_ = false;
 	IsActive_ = true;
 
@@ -102,12 +103,19 @@ void Water::Shutdown()
 // Frame
 bool Water::Frame()
 {
-	// Update the position of the water to simulate motion
-	Frame_ += 0.003f;
-	Wrap(Frame_, 0, 1.0f);
+	float textureOffset;
 
-	// Update the waater time to simulate waves
-	WaterTimer_ += WaveSpeed_;
+	// Get current texture offset
+	textureOffset = Model_->GetMaterial()->GetFloat("TextureOffset");
+
+	// Update the position of the water to simulate motion
+	textureOffset += 0.003f;
+	Wrap(textureOffset, 0, 1.0f);
+
+	Model_->GetMaterial()->SetFloat("TextureOffset", textureOffset);
+
+	// Update the water time to simulate waves
+	Frame_ += WaveSpeed_;
 
 	return true;
 }
@@ -124,8 +132,8 @@ bool Water::Render()
 	offset = 0;
 
 	// Get Mesh Buffers
-	vertexBuffer = Model_->GetMesh(0)->GetVertexBuffer();
-	indexBuffer = Model_->GetMesh(0)->GetIndexBuffer();
+	vertexBuffer = Model_->GetMesh()->GetVertexBuffer();
+	indexBuffer = Model_->GetMesh()->GetIndexBuffer();
 
 	// Set the vertex buffer to active in the InputManager assembler so it can be rendered
 	DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
@@ -145,53 +153,12 @@ void Water::ToggleTime(bool NightTimeMode)
 	// Toggle between good weather and bad weather
 	if (NightTimeMode)
 	{
-		WaveHeight_ = 2.0f;
+		Model_->GetMaterial()->SetFloat("WaveHeight", 2.0f);
 		WaveSpeed_ = 0.06f;
 	}
 	else
 	{
-		WaveHeight_ = 1.5f;
+		Model_->GetMaterial()->SetFloat("WaveHeight", 1.5f);
 		WaveSpeed_ = 0.025f;
 	}
-}
-
-// Getters
-float Water::GetTessellation()
-{
-	return Tessellation_;
-}
-
-float Water::GetWaterHeight()
-{
-	return WaterHeight_;
-}
-
-float Water::GetWaveHeight()
-{
-	return WaveHeight_;
-}
-
-D3DXVECTOR2 Water::GetNormalMapTiling()
-{
-	return NormalMapTiling_;
-}
-
-float Water::GetWaterTimer()
-{
-	return WaterTimer_;
-}
-
-float Water::GetReflectRefractScale()
-{
-	return ReflectRefractScale_;
-}
-
-D3DXVECTOR4 Water::GetRefractionTint()
-{
-	return RefractionTint_;
-}
-
-float Water::GetSpecularShininess()
-{
-	return WaterShininess_;
 }

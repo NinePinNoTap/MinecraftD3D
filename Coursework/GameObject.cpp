@@ -123,8 +123,8 @@ bool GameObject::Render()
 	//for (int i = 0; i < meshCount; i++)
 	//{
 		// Get Mesh Buffers
-		vertexBuffer = Model_->GetMesh(0)->GetVertexBuffer();
-		indexBuffer = Model_->GetMesh(0)->GetIndexBuffer();
+		vertexBuffer = Model_->GetMesh()->GetVertexBuffer();
+		indexBuffer = Model_->GetMesh()->GetIndexBuffer();
 
 		// Set the vertex buffer to active in the InputManager assembler so it can be rendered
 		DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
