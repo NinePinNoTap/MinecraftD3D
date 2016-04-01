@@ -426,7 +426,7 @@ bool ShaderManager::LightShader(GameObject* Obj)
 	Light.ambientColor = Light::Instance()->GetAmbientColor();
 	Light.diffuseColor = Light::Instance()->GetDiffuseColor();
 	Light.specularColor = Light::Instance()->GetSpecularColor();
-	Light.specularPower = objMaterial->GetSpecular();
+	Light.specularPower = objMaterial->GetFloat("SpecularPower");
 
 	// Create light position buffer
 	LightPositionCBuffer LightPosition;
@@ -567,11 +567,18 @@ bool ShaderManager::ParticleShader(ParticleSystem* Obj)
 bool ShaderManager::SkyShader(SkySphere* Obj)
 {
 	Mesh3D* objMesh;
+	Material* objMaterial;
 	
 	objMesh = Obj->GetModel()->GetMesh();
 	if (!objMesh)
 	{
 		MessageBox(NULL, L"No Model Attached - SkySphere", L"Error", MB_OK);
+		return false;
+	}
+	objMaterial = Obj->GetModel()->GetMaterial();
+	if (!objMaterial)
+	{
+		MessageBox(NULL, L"No Material Attached - SkySphere", L"Error", MB_OK);
 		return false;
 	}
 
@@ -585,8 +592,8 @@ bool ShaderManager::SkyShader(SkySphere* Obj)
 
 	// Create the sky buffer
 	GradientCBuffer Gradient;
-	Gradient.topColor = Obj->GetTopColor();
-	Gradient.centerColor = Obj->GetCenterColor();
+	Gradient.topColor = objMaterial->GetVector4("TopColour");
+	Gradient.centerColor = objMaterial->GetVector4("CenterColour");
 
 	// Update Buffers
 	SkySphereShader_->UpdateBuffer(VertexShader, 0, Matrix);

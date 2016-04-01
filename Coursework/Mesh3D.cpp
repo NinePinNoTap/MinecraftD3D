@@ -115,6 +115,10 @@ bool Mesh3D::Build()
 	{
 		return false;
 	}
+
+	IsActive_ = true;
+
+	return true;
 }
 
 // Setters
@@ -132,6 +136,11 @@ void Mesh3D::SetMesh(VertexData* mesh, unsigned long* indices)
 {
 	Mesh_ = mesh;
 	Indices_ = indices;
+}
+
+void Mesh3D::SetActive(bool flag)
+{
+	IsActive_ = flag;
 }
 
 // Getters
@@ -153,6 +162,11 @@ ID3D11Buffer* Mesh3D::GetIndexBuffer()
 ID3D11Buffer* Mesh3D::GetVertexBuffer()
 {
 	return VertexBuffer_;
+}
+
+bool Mesh3D::IsActive()
+{
+	return IsActive_;
 }
 
 void Mesh3D::CalculateTangentBinormals()

@@ -43,7 +43,7 @@ void VoxelTerrain::Initialise()
 	}
 }
 
-void VoxelTerrain::Render()
+void VoxelTerrain::Frame()
 {
 	// Loop through x dimension
 	for (int i = 0; i < CHUNK_COUNT; i++)
@@ -54,8 +54,27 @@ void VoxelTerrain::Render()
 			// Loop through z dimension
 			for (int k = 0; k < CHUNK_COUNT; k++)
 			{
-				//if (TerrainChunks_[i][j][k])
-				TerrainChunks_[i][j][k]->Render();
+				TerrainChunks_[i][j][k]->Update();
+			}
+		}
+	}
+}
+
+void VoxelTerrain::Render()
+{	
+	// Loop through x dimension
+	for (int i = 0; i < CHUNK_COUNT; i++)
+	{
+		// Loop through y dimension
+		for (int j = 0; j < CHUNK_COUNT; j++)
+		{
+			// Loop through z dimension
+			for (int k = 0; k < CHUNK_COUNT; k++)
+			{	
+				if (TerrainChunks_[i][j][k]->IsVisible())
+				{
+					TerrainChunks_[i][j][k]->Render();
+				}
 			}
 		}
 	}

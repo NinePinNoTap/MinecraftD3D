@@ -24,12 +24,14 @@ public:
 	void SetIndexCount(int count);
 	void SetVertexCount(int count);
 	void SetMesh(VertexData* mesh, unsigned long* indices);
+	void SetActive(bool flag);
 
 	// Getters
 	int GetIndexCount();
 	BoundingBox GetBoundingBox();
 	ID3D11Buffer* GetIndexBuffer();
 	ID3D11Buffer* GetVertexBuffer();
+	bool IsActive();
 
 protected:
 	// Initialising
@@ -58,4 +60,5 @@ protected:
 
 	// Flags
 	bool Result_;
+	bool IsActive_;
 };

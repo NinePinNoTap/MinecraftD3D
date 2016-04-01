@@ -117,23 +117,31 @@ void Chunk::RefreshVisible()
 				{
 					// Skip as we auto dont want to see it
 					Chunk_[i][j][k].SetActive(false);
-					continue;
+					
+				}
+				else if (!CheckScreenSpace(Chunk_[i][j][k].GetTransform()->GetPosition()))
+				{
+					Chunk_[i][j][k].SetActive(false);
+				}
+				else
+				{
+					// Check if theres block in that particle position
+					xPositive = CheckBlock(i + 1, j, k);
+					xNegative = CheckBlock(i - 1, j, k);
+					yPositive = CheckBlock(i, j + 1, k);
+					yNegative = CheckBlock(i, j - 1, k);
+					zPositive = CheckBlock(i, j, k + 1);
+					zNegative = CheckBlock(i, j, k - 1);
+
+					// THIS IS WHERE WE PERFORM MESH UPDATING FOR DIFFERENT SIDES
+
+					bool result = !(xPositive && xNegative && yPositive && yNegative && zPositive && zNegative);
+
+					Chunk_[i][j][k].SetActive(result);
 				}
 
-				// Check if theres block in that particle position
-				xPositive = CheckBlock(i + 1, j, k);
-				xNegative = CheckBlock(i - 1, j, k);
-				yPositive = CheckBlock(i, j + 1, k);
-				yNegative = CheckBlock(i, j - 1, k);
-				zPositive = CheckBlock(i, j, k + 1);
-				zNegative = CheckBlock(i, j, k - 1);
-
-				bool result = !(xPositive && xNegative && yPositive && yNegative && zPositive && zNegative);
-
-				Chunk_[i][j][k].SetActive(result);
-
 				// Debugging
-				if (result)
+				if (Chunk_[i][j][k].IsActive())
 				{
 					activeBlocks++;
 				}
@@ -181,10 +189,11 @@ bool Chunk::CheckBlock(int x, int y, int z)
 }
 
 // Frame
-void Chunk::Update()
+void Chunk::Frame()
 {
 	// Check frustrum
 	// Set IsActive_ based on frustum state
+	RefreshVisible();
 }
 
 void Chunk::Render()
@@ -212,6 +221,11 @@ void Chunk::Render()
 }
 
 // Getters
+bool Chunk::IsVisible()
+{
+	return IsVisible_;
+}
+
 Transform* Chunk::GetTransform()
 {
 	return Transform_;

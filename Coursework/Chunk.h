@@ -17,10 +17,11 @@ public:
 	void Shutdown();
 
 	// Frame
-	void Update();
+	void Frame();
 	void Render();
 
 	// Getters
+	bool IsVisible();
 	Transform* GetTransform();
 
 private:

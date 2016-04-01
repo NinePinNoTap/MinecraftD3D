@@ -14,11 +14,8 @@ WindowManager::~WindowManager()
 
 bool WindowManager::Initialise()
 {
-	// Initialise the width and height of the screen to zero before sending the variables into the function.
-	Rect2D WindowResolution;
-
-	// Initialise the windows api.
-	InitialiseWindows(WindowResolution.width, WindowResolution.height);
+	// Initialise the width and height of the screen to zero before sending the variables into the function
+	InitialiseWindows(WindowResolution_.width, WindowResolution_.height);
 
 	// Initialise application
 	ApplicationManager_ = new ApplicationManager;
@@ -26,7 +23,7 @@ bool WindowManager::Initialise()
 		return false;
 
 	// Initialise the ApplicationManager
-	Result_ = ApplicationManager_->Initialise(HWND_, WindowResolution);
+	Result_ = ApplicationManager_->Initialise(HWND_, WindowResolution_);
 	if(!Result_)
 	{
 		return false;
@@ -193,6 +190,11 @@ LRESULT CALLBACK WindowManager::MessageHandler(HWND hwnd, UINT umsg, WPARAM wpar
 	}
 
 	return DefWindowProc(hwnd, umsg, wparam, lparam);
+}
+
+Rect2D WindowManager::GetWindowResolution()
+{
+	return WindowResolution_;
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)

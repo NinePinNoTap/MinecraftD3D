@@ -16,7 +16,7 @@ Material::Material()
 	SpecularAmount_ = 32.0f;
 
 	// Add Default Data
-	SetColour("BaseColour", WHITE);
+	SetVector4("BaseColour", D3DXVECTOR4(1,1,1,1));
 	SetFloat("SpecularPower", 32.0f);
 }
 
@@ -219,11 +219,6 @@ ID3D11ShaderResourceView* Material::GetPerturbTexture()
 //========================================================================
 
 // Setters
-void Material::SetColour(string keyName, Colour value)
-{
-	ColourDatabase_[keyName] = value;
-}
-
 void Material::SetFloat(string keyName, float value)
 {
 	FloatDatabase_[keyName] = value;
@@ -231,6 +226,11 @@ void Material::SetFloat(string keyName, float value)
 
 bool Material::SetTexture(string keyName, string value)
 {
+	if (TextureDatabase_.count(keyName))
+	{
+		return true;
+	}
+
 	Texture* newTexture = 0;
 
 	// Load Texture
@@ -267,16 +267,6 @@ void Material::SetVector4(string keyName, D3DXVECTOR4 value)
 }
 
 // Getters
-Colour Material::GetColour(string keyName)
-{
-	if (ColourDatabase_.count(keyName))
-	{
-		return ColourDatabase_[keyName];
-	}
-
-	return WHITE;
-}
-
 float Material::GetFloat(string keyName)
 {
 	if (FloatDatabase_.count(keyName))

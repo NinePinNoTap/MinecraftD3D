@@ -42,7 +42,6 @@ public:
 
 
 	// Setters
-	void SetColour(string keyName, Colour value);
 	void SetFloat(string keyName, float value);
 	bool SetTexture(string keyName, string value);
 	void SetTexture(string keyName, Texture* value);
@@ -51,7 +50,6 @@ public:
 	void SetVector4(string keyName, D3DXVECTOR4 value);
 
 	// Getters
-	Colour GetColour(string keyName);
 	float GetFloat(string keyName);
 	Texture* GetTexture(string keyName);
 	D3DXVECTOR2 GetVector2(string keyName);

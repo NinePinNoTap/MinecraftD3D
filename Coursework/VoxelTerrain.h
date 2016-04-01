@@ -12,6 +12,7 @@ public:
 
 	void Initialise();
 
+	void Frame();
 	void Render();
 
 private:

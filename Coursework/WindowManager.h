@@ -6,7 +6,7 @@
 
 #include "ApplicationManager.h"
 #include "Constants.h"
-
+#include "Rect.h"
 #include "Singleton.h"
 
 class WindowManager : public Singleton<WindowManager>
@@ -20,6 +20,8 @@ public:
 	void Shutdown();
 	void Run();
 
+	Rect2D GetWindowResolution();
+
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 
 private:
@@ -29,6 +31,7 @@ private:
 	HINSTANCE HInstance_;
 	HWND HWND_;
 	ApplicationManager* ApplicationManager_;
+	Rect2D WindowResolution_;
 
 	bool Result_;
 };

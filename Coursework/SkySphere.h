@@ -28,7 +28,5 @@ public:
 
 private:
 	// Properties
-	D3DXVECTOR4 TopColor_;
-	D3DXVECTOR4 CenterColor_;
 	D3DXVECTOR4 Colors_[2][2];
 };

@@ -1,4 +1,7 @@
 #include "Utilities.h"
+#include "Camera.h"
+#include "DirectXManager.h"
+#include "WindowManager.h"
 
 float Distance(D3DXVECTOR3 a, D3DXVECTOR3 b)
 {
@@ -162,8 +165,16 @@ D3DXVECTOR2 ConvertToScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMAT
 	return D3DXVECTOR2(pos.x, pos.y);
 }
 
-bool CheckScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, Rect2D windowSize)
+bool CheckScreenSpace(D3DXVECTOR3 pos)
 {
+	// Get View Matrices
+	D3DXMATRIX viewMatrix, projectionMatrix;
+	Camera::Instance()->GetViewMatrix(viewMatrix);
+	DirectXManager::Instance()->GetProjectionMatrix(projectionMatrix);
+
+	// Get size of window
+	Rect2D windowSize = WindowManager::Instance()->GetWindowResolution();
+
 	// Convert the 3D position to screen space
 	D3DXVECTOR2 ConvertedPos = ConvertToScreenSpace(pos, viewMatrix, projectionMatrix, windowSize);
 	float halfWidth = windowSize.width;
@@ -190,7 +201,7 @@ bool CheckScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMATRIX project
 	return xCheck && yCheck && D3DXPlaneDotCoord(&viewPlane, &pos) >= 0.0f;
 }
 
-bool CheckScreenSpace(D3DXVECTOR3 position, BoundingBox box, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, Rect2D windowSize)
+bool CheckScreenSpace(D3DXVECTOR3 position, BoundingBox box)
 {
 	// Create the positions in world space
 	D3DXVECTOR3 leftPos = position + D3DXVECTOR3(box.left, 0, 0);
@@ -201,13 +212,13 @@ bool CheckScreenSpace(D3DXVECTOR3 position, BoundingBox box, D3DXMATRIX viewMatr
 	D3DXVECTOR3 backPos = position + D3DXVECTOR3(0, 0, box.back);
 
 	// Check each position against the camera
-	bool Left = CheckScreenSpace(leftPos, viewMatrix, projectionMatrix, windowSize);
-	bool Right = CheckScreenSpace(rightPos, viewMatrix, projectionMatrix, windowSize);
-	bool Up = CheckScreenSpace(upPos, viewMatrix, projectionMatrix, windowSize);
-	bool Down = CheckScreenSpace(downPos, viewMatrix, projectionMatrix, windowSize);
-	bool Front = CheckScreenSpace(frontPos, viewMatrix, projectionMatrix, windowSize);
-	bool Back = CheckScreenSpace(backPos, viewMatrix, projectionMatrix, windowSize);
-	bool Center = CheckScreenSpace(position, viewMatrix, projectionMatrix, windowSize);
+	bool Left = CheckScreenSpace(leftPos);
+	bool Right = CheckScreenSpace(rightPos);
+	bool Up = CheckScreenSpace(upPos);
+	bool Down = CheckScreenSpace(downPos);
+	bool Front = CheckScreenSpace(frontPos);
+	bool Back = CheckScreenSpace(backPos);
+	bool Center = CheckScreenSpace(position);
 
 	return Left || Right || Up || Down || Front || Back || Center;
 }

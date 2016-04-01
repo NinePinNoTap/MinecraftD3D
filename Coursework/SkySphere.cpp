@@ -1,6 +1,6 @@
 #include "SkySphere.h"
 
-SkySphere::SkySphere()
+SkySphere::SkySphere() : GameObject()
 {
 	
 }
@@ -21,7 +21,15 @@ bool SkySphere::Initialise(const char* filename)
 	// Create Model
 	//==============
 
+	// Load Model
 	AssetManager::Instance()->LoadModel(&Model_, filename);
+	if (!Model_)
+	{
+		return false;
+	}
+
+	// Create Material
+	Model_->AddMaterial(new Material);
 
 	//==================
 	// Create Transform
@@ -50,27 +58,17 @@ bool SkySphere::Initialise(const char* filename)
 	Colors_[1][1] = D3DXVECTOR4(0.2f, 0.4f, 0.4f, 1.0f); //Center
 
 	// Initialise the current color for daytime
-	TopColor_ = Colors_[0][0];
-	CenterColor_ = Colors_[0][1];
+	Model_->GetMaterial()->SetVector4("TopColour", Colors_[0][0]);
+	Model_->GetMaterial()->SetVector4("CenterColour", Colors_[0][1]);
 
 	return true;
 }
 
-void SkySphere::ToggleTime(bool NightTimeMode)
+void SkySphere::ToggleTime(bool timeMode)
 {
-	// Set the appropriate colors
-	TopColor_ = Colors_[(int)NightTimeMode][0];
-	CenterColor_ = Colors_[(int)NightTimeMode][1];
-}
+	int ID = (int)timeMode;
 
-D3DXVECTOR4 SkySphere::GetTopColor()
-{
-	//Colour thats at the top of the sphere
-	return TopColor_;
-}
-
-D3DXVECTOR4 SkySphere::GetCenterColor()
-{
-	//Colour thats at the center of the sphere
-	return CenterColor_;
+	// Update Material
+	Model_->GetMaterial()->SetVector4("TopColour", Colors_[ID][0]);
+	Model_->GetMaterial()->SetVector4("CenterColour", Colors_[ID][1]);
 }
