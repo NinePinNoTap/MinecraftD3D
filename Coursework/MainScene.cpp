@@ -69,7 +69,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 		MessageBox(hwnd, L"Could not initialise the ocean object.", L"Error", MB_OK);
 		return false;
 	}
-	Ocean_->GetTransform()->SetPosition(256.0f, 17.5f, 256.0f);
+	Ocean_->GetTransform()->SetPosition(256, Ocean_->GetWaterHeight(), 256);
 
 	//================================
 	// Initialise the Particle System
@@ -563,8 +563,8 @@ bool MainScene::RenderScene(bool ShowText)
 	// Render the Ocean 
 	//==================
 
-	Result_ = ShaderManager::Instance()->OceanShader(Ocean_, RefractionTexture_, ReflectionTexture_);
-	if (!Result_) { return false; }
+	//Result_ = ShaderManager::Instance()->OceanShader(Ocean_, RefractionTexture_, ReflectionTexture_);
+	//if (!Result_) { return false; }
 
 	//===================
 	// Render the Models 
@@ -691,9 +691,7 @@ bool MainScene::RenderRefraction()
 
 	// Clip everything above the maximum wave height water
 	// We use max wave height here otherwise the refraction renders incorrectly
-	//float waterHeight = Ocean_->GetTransform()->GetPosition().y;
-	//float waveHeight = Ocean_->GetModel()->GetMaterial()->GetFloat("WaveHeight");
-	//ClipPlane_ = D3DXVECTOR4(0.0f, -1.0f, 0.0f, waterHeight + (waveHeight * 2));
+	ClipPlane_ = D3DXVECTOR4(0.0f, -1.0f, 0.0f, Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
 
 	// Render the terrain using reflection shader
 	//Result_ = ShaderManager::Instance()->TerrainShader(Terrain_, ClipPlane_);
@@ -727,7 +725,7 @@ bool MainScene::RenderReflection()
 
 	// Create a camera reflected in the Y axis
 	ReflectedCameraPosition = Camera::Instance()->GetTransform()->GetPosition();
-	ReflectedCameraPosition.y = -Camera::Instance()->GetTransform()->GetY() + (Ocean_->GetTransform()->GetPosition().y * 2.0f);
+	ReflectedCameraPosition.y = -Camera::Instance()->GetTransform()->GetY() + (Ocean_->GetWaterHeight() * 2.0f);
 
 	// Update Camera Position
 	SkySphere_->GetTransform()->SetPosition(ReflectedCameraPosition);
@@ -770,7 +768,7 @@ bool MainScene::RenderReflection()
 	DirectXManager::Instance() -> ToggleCulling(false);
 
 	// Render Models
-	for each (GameObject* gameObject in Objects_)
+	/*for each (GameObject* gameObject in Objects_)
 	{
 		if (gameObject->IsReflectable())
 		{
@@ -782,13 +780,15 @@ bool MainScene::RenderReflection()
 		}
 	}
 
+	Chunk_->Render();*/
+
 	//====================
 	// Render the Terrain
 	//====================
 
 	// Clip everything above the maximum wave height water
 	// We use max wave height here otherwise the refraction renders incorrectly
-	//ClipPlane_ = D3DXVECTOR4(0.0f, 1.0f, 0.0f, -Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
+	ClipPlane_ = D3DXVECTOR4(0.0f, 1.0f, 0.0f, -Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
 
 	//Result_ = ShaderManager::Instance()->TerrainShader(Terrain_, ClipPlane_);
 	//if (!Result_) { return false; }
@@ -856,7 +856,7 @@ void MainScene::GenerateMatrices()
 	//===============================================
 
 	Camera::Instance() -> Render();
-	Camera::Instance()->RenderReflection(Ocean_->GetTransform()->GetPosition().y);
+	Camera::Instance() -> RenderReflection(Ocean_ -> GetWaterHeight());
 	Camera::Instance() -> GetViewMatrix(ViewMatrix_);
 	Camera::Instance() -> Get2DViewMatrix(BaseViewMatrix_);
 	Camera::Instance() -> GetReflectionMatrix(ReflectionViewMatrix_);

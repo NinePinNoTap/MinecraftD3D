@@ -4,11 +4,12 @@
 #include <d3dx10math.h>
 #include <vector>
 
+using namespace std;
+
 #include "GameObject.h"
 #include "PrimitiveFactory.h"
 #include "Texture.h"
 
-using namespace std;
 
 class Clouds : public GameObject
 {

@@ -18,6 +18,10 @@ bool Clouds::Initialise(string cloudTextureFilename, string perturbTextureFilena
 {
 	PrimitiveFactory primitiveFactory;
 
+	// Set Properties
+	ScaleFactor_ = 0.3f;
+	Brightness_ = 0.5f;
+
 	//==============
 	// Create Model
 	//==============
@@ -35,18 +39,20 @@ bool Clouds::Initialise(string cloudTextureFilename, string perturbTextureFilena
 		return false;
 	}
 
-	// Create Material
+	// Create the material
 	Material* newMaterial = new Material;
-	Result_ = newMaterial->SetTexture("BaseTexture", cloudTextureFilename);
+	Result_ = newMaterial->SetBaseTexture(cloudTextureFilename);
 	if (!Result_)
 	{
 		return false;
 	}
-	Result_ = newMaterial->SetTexture("PerturbTexture", perturbTextureFilename);
+
+	Result_ = newMaterial->SetPerturbTexture(perturbTextureFilename);
 	if (!Result_)
 	{
 		return false;
 	}
+
 	Model_->AddMaterial(newMaterial);
 
 	//==================
@@ -63,9 +69,7 @@ bool Clouds::Initialise(string cloudTextureFilename, string perturbTextureFilena
 	// Initialise Vars
 	//=================
 
-	ScaleFactor_ = 0.3f;
-	Brightness_ = 0.5f;
-	Frame_ = 0.0f;
+	Frame_ = 0;
 	IsReflectable_ = false;
 	IsActive_ = true;
 

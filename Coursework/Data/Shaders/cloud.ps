@@ -28,7 +28,7 @@ float4 PixelShaderMain(PixelInputType input) : SV_TARGET
 	input.tex.x += translation;
 
 	// Sample the perturb texture
-	perturbValue = cloudTexture.Sample(SampleType, input.tex);
+	perturbValue = perturbTexture.Sample(SampleType, input.tex);
 
 	// Scale the sample
 	perturbValue *= scale;
@@ -37,7 +37,7 @@ float4 PixelShaderMain(PixelInputType input) : SV_TARGET
 	perturbValue.xy += input.tex.xy + translation;
 
 	// Sample the texture using the perturb value
-    cloudColor = perturbTexture.Sample(SampleType, perturbValue);
+    cloudColor = cloudTexture.Sample(SampleType, perturbValue);
 
 	// Apply the brightness
 	cloudColor *= brightness;

@@ -260,7 +260,7 @@ bool ShaderManager::CloudShader(Clouds* Obj)
 		MessageBox(NULL, L"No Model Attached - Clouds", L"Error", MB_OK);
 		return false;
 	}
-	objMaterial = Obj->GetModel()->GetMaterial(0);
+	objMaterial = Obj->GetModel()->GetMaterial();
 	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Clouds", L"Error", MB_OK);
@@ -269,8 +269,8 @@ bool ShaderManager::CloudShader(Clouds* Obj)
 
 	// Model Properties
 	int indexCount = objMesh->GetIndexCount();
-	ID3D11ShaderResourceView* cloudTexture = objMaterial->GetTexture("BaseTexture")->GetTexture();
-	ID3D11ShaderResourceView* perturbTexture = objMaterial->GetTexture("PerturbTexture")->GetTexture();
+	ID3D11ShaderResourceView* cloudTexture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* perturbTexture = objMaterial->GetPerturbTexture();
 
 	// Create matrix buffer
 	MatrixCBuffer Matrix = MatrixBuffer_;
@@ -321,14 +321,9 @@ bool ShaderManager::FireShader(Fire* Obj)
 	}
 
 	int indexCount = objMesh->GetIndexCount();
-	ID3D11ShaderResourceView* fireTexture = objMaterial->GetTexture("BaseTexture")->GetTexture();
-	ID3D11ShaderResourceView* noiseTexture = objMaterial->GetTexture("NoiseTexture")->GetTexture();
-	ID3D11ShaderResourceView* alphaTexture = objMaterial->GetTexture("AlphaTexture")->GetTexture();
-
-	// Create matrix buffer
-	MatrixCBuffer Matrix = MatrixBuffer_;
-	Obj->GetTransform()->GetWorldMatrix(Matrix.world);
-	TransposeMatrix(Matrix);
+	ID3D11ShaderResourceView* fireTexture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* noiseTexture = objMaterial->GetNoiseTexture();
+	ID3D11ShaderResourceView* alphaTexture = objMaterial->GetAlphaTexture();
 
 	// Create noise buffer
 	NoiseCBuffer Noise;
@@ -342,6 +337,11 @@ bool ShaderManager::FireShader(Fire* Obj)
 	Obj->GetDistortion(Distortion.distortion1, Distortion.distortion2, Distortion.distortion3);
 	Distortion.distortionScale = Obj->GetDistortionAmount();
 	Distortion.distortionBias = Obj->GetDistortionBias();
+
+	// Create matrix buffer
+	MatrixCBuffer Matrix = MatrixBuffer_;
+	Obj->GetTransform()->GetWorldMatrix(Matrix.world);
+	TransposeMatrix(Matrix);
 
 	// Update Buffers
 	FireShader_->UpdateBuffer(VertexShader, 0, Matrix);
@@ -366,16 +366,16 @@ bool ShaderManager::FontShader(Text::SentenceType* sentence, ID3D11ShaderResourc
 	// Model Properties
 	int indexCount = sentence->indexCount;
 
-	// Create matrix buffer
-	MatrixCBuffer Matrix = MatrixBuffer_;
-	TransposeMatrix(Matrix);
-
 	// Create the pixel buffer
 	PixelCBuffer Pixel;
 	Pixel.pixelColor.x = sentence->colour.r;
 	Pixel.pixelColor.y = sentence->colour.g;
 	Pixel.pixelColor.z = sentence->colour.b;
 	Pixel.pixelColor.w = sentence->colour.a;
+
+	// Create matrix buffer
+	MatrixCBuffer Matrix = MatrixBuffer_;
+	TransposeMatrix(Matrix);
 
 	// Update Buffers
 	FontShader_->UpdateBuffer(VertexShader, 0, Matrix);
@@ -412,12 +412,7 @@ bool ShaderManager::LightShader(GameObject* Obj)
 	}
 
 	int indexCount = objMesh -> GetIndexCount();
-	ID3D11ShaderResourceView* texture = objMaterial -> GetTexture("BaseTexture") -> GetTexture();
-
-	// Create matrix buffer
-	MatrixCBuffer Matrix = MatrixBuffer_;
-	Obj->GetTransform()->GetWorldMatrix(Matrix.world);
-	TransposeMatrix(Matrix);
+	ID3D11ShaderResourceView* texture = objMaterial -> GetBaseTexture();
 
 	// Create camera buffer
 	CameraCBuffer Camera;
@@ -431,11 +426,16 @@ bool ShaderManager::LightShader(GameObject* Obj)
 	Light.ambientColor = Light::Instance()->GetAmbientColor();
 	Light.diffuseColor = Light::Instance()->GetDiffuseColor();
 	Light.specularColor = Light::Instance()->GetSpecularColor();
-	Light.specularPower = objMaterial->GetFloat("SpecularPower");
+	Light.specularPower = objMaterial->GetSpecular();
 
 	// Create light position buffer
 	LightPositionCBuffer LightPosition;
 	LightPosition.lightPosition = D3DXVECTOR4(Light::Instance()->GetTransform()->GetPosition(), 1.0f);
+
+	// Create matrix buffer
+	MatrixCBuffer Matrix = MatrixBuffer_;
+	Obj->GetTransform()->GetWorldMatrix(Matrix.world);
+	TransposeMatrix(Matrix);
 
 	// Pass the texture to the shader
 	LightShader_->SendTextureToShader(0, texture);
@@ -477,38 +477,38 @@ bool ShaderManager::OceanShader(Water* Obj, Texture* refraction, Texture* reflec
 	int indexCount = objMesh -> GetIndexCount();
 	ID3D11ShaderResourceView* refractionTexture = refraction -> GetTexture();
 	ID3D11ShaderResourceView* reflectionTexture = reflection -> GetTexture();
-	ID3D11ShaderResourceView* normalTexture = objMaterial->GetTexture("NormalTexture")->GetTexture();
-
-	// Create the world matrix for the model
-	MatrixCBuffer Matrix = MatrixBuffer_;
-	Obj->GetTransform()->GetWorldMatrix(Matrix.world);
-	TransposeMatrix(Matrix);
+	ID3D11ShaderResourceView* normalTexture = objMaterial->GetNormalTexture();
 
 	// Create camera buffer
 	CameraCBuffer Camera;
 	Camera.cameraPosition = Camera::Instance()->GetTransform()->GetPosition();
-	Camera.normalMapTiling = objMaterial->GetVector2("NormalMapTiling");
+	Camera.normalMapTiling = Obj -> GetNormalMapTiling();
 	Camera.padding = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	// Create ocean buffer
 	OceanCBuffer Ocean;
-	Ocean.waterTranslation = objMaterial->GetFloat("TextureOffset");
-	Ocean.reflectRefractScale = objMaterial->GetFloat("ReflectRefractScale");
-	Ocean.refractionTint = objMaterial->GetVector4("RefractionTint");
+	Ocean.waterTranslation = Obj->GetWaterTranslation();
+	Ocean.reflectRefractScale = Obj->GetReflectRefractScale();
+	Ocean.refractionTint = Obj->GetRefractionTint();
 	Ocean.lightDirection = Light::Instance() -> GetDirection();
-	Ocean.specularShininess = objMaterial->GetFloat("SpecularPower");
+	Ocean.specularShininess = Obj->GetSpecularShininess();
 	Ocean.padding = D3DXVECTOR2(0.0f, 0.0f);
 
 	// Create wave buffer
 	WaveCBuffer Wave;
 	Wave.waveTime = Obj->GetFrame();
-	Wave.waveHeight = objMaterial->GetFloat("WaveHeight") / 2;
+	Wave.waveHeight = Obj->GetWaveHeight() / 2;
 	Wave.padding = D3DXVECTOR2(0.0f, 0.0f);
 
 	// Create tessellation buffer
 	TessellationCBuffer Tessellation;
-	Tessellation.tessellationAmount = objMaterial->GetFloat("TessellationAmount");
+	Tessellation.tessellationAmount = Obj->GetTessellation();
 	Tessellation.padding = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	// Create the world matrix for the model
+	MatrixCBuffer Matrix = MatrixBuffer_;
+	Obj->GetTransform()->GetWorldMatrix(Matrix.world);
+	TransposeMatrix(Matrix);
 
 	// Pass the textures to the shader
 	OceanShader_->SendTextureToShader(0, refractionTexture);
@@ -534,7 +534,7 @@ bool ShaderManager::ParticleShader(ParticleSystem* Obj)
 {
 	Material* objMaterial;
 	
-	objMaterial = Obj->GetModel()->GetMaterial(0);
+	objMaterial = Obj->GetModel()->GetMaterial();
 	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Particle", L"Error", MB_OK);
@@ -543,7 +543,7 @@ bool ShaderManager::ParticleShader(ParticleSystem* Obj)
 
 	// Model Properties
 	int indexCount = Obj->GetIndexCount();
-	ID3D11ShaderResourceView* texture = objMaterial->GetTexture("BaseTexture")->GetTexture();
+	ID3D11ShaderResourceView* texture = objMaterial->GetBaseTexture();
 
 	// Create matrix buffer
 	MatrixCBuffer Matrix = MatrixBuffer_;
@@ -621,8 +621,8 @@ bool ShaderManager::TerrainShader(Terrain* Obj)
 
 	// Retrieve variables for rendering
 	int indexCount = objMesh -> GetIndexCount();
-	ID3D11ShaderResourceView* colorTexture = objMaterial->GetTexture("BaseTexture")->GetTexture();
-	ID3D11ShaderResourceView* normalTexture = objMaterial->GetTexture("NormalTexture")->GetTexture();
+	ID3D11ShaderResourceView* colorTexture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* normalTexture = objMaterial->GetNormalTexture();
 
 	// Create the light buffer
 	LightCBuffer Light;
@@ -677,8 +677,8 @@ bool ShaderManager::TerrainShader(Terrain* Obj, D3DXVECTOR4 clipPlane)
 
 	// Model Properties
 	int indexCount = objMesh -> GetIndexCount();
-	ID3D11ShaderResourceView* colorTexture = objMaterial->GetTexture("BaseTexture")->GetTexture();
-	ID3D11ShaderResourceView* normalTexture = objMaterial->GetTexture("NormalTexture")->GetTexture();
+	ID3D11ShaderResourceView* colorTexture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* normalTexture = objMaterial->GetNormalTexture();
 
 	// Create the light buffer
 	LightCBuffer Light;
@@ -690,14 +690,14 @@ bool ShaderManager::TerrainShader(Terrain* Obj, D3DXVECTOR4 clipPlane)
 	LightPositionCBuffer LightPosition;
 	LightPosition.lightPosition = D3DXVECTOR4(Light::Instance()->GetTransform()->GetPosition(), 1.0f);
 
+	// Create the clip plane buffer
+	ClipPlaneCBuffer ClipPlane;
+	ClipPlane.clipPlane = clipPlane;
+
 	// Create matrix buffer
 	MatrixCBuffer Matrix = MatrixBuffer_;
 	Obj->GetTransform()->GetWorldMatrix(Matrix.world);
 	TransposeMatrix(Matrix);
-
-	// Create the clip plane buffer
-	ClipPlaneCBuffer ClipPlane;
-	ClipPlane.clipPlane = clipPlane;
 
 	// Pass the textures to the shader
 	TerrainReflectionShader_->SendTextureToShader(0, colorTexture);
@@ -736,7 +736,7 @@ bool ShaderManager::TextureShader(GameObject* Obj)
 	}
 
 	int indexCount = objMesh->GetIndexCount();
-	ID3D11ShaderResourceView* texture = objMaterial->GetTexture("BaseTexture")->GetTexture();
+	ID3D11ShaderResourceView* texture = objMaterial->GetBaseTexture();
 
 	// Create the world matrix for the model
 	MatrixCBuffer Matrix = MatrixBuffer_;

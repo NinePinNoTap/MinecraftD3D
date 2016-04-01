@@ -57,7 +57,7 @@ bool Sprite::Initialise(Rect3D Dimensions)
 bool Sprite::SetTexture(string textureFilename)
 {
 	Material* newMaterial = new Material;
-	newMaterial->SetTexture("BaseTexture", textureFilename);
+	newMaterial->SetBaseTexture(textureFilename);
 
 	Model_->AddMaterial(newMaterial);
 

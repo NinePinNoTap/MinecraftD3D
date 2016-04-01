@@ -4,7 +4,6 @@
 #include <d3dx10math.h>
 #include <string>
 
-//#include "Block.h"
 #include "Colour.h"
 
 //==========
@@ -51,16 +50,6 @@ const Colour RED = Colour(1, 0, 0, 1);
 const Colour GREEN = Colour(0, 1, 0, 1);
 const Colour BLUE = Colour(0, 0, 1, 1);
 const Colour YELLOW = Colour(1, 1, 0, 1);
-
-//========
-// Blocks
-//========
-
-//const Block BLOCK_AIR = Block("air", BlockType::Air, false);
-//const Block BLOCK_DIRT = Block("dirt", BlockType::Dirt, true);
-//const Block BLOCK_SAND = Block("sand", BlockType::Sand, true);
-//const Block BLOCK_COBBLESTONE = Block("cobblestone", BlockType::Cobblestone, true);
-//const Block BLOCK_GOLD = Block("gold", BlockType::Gold, true);
 
 //===================
 // Direction Vectors

@@ -27,7 +27,7 @@ void BlockLoader::LoadBlock(Model** model, string blockName)
 
 	// Create a material for the model
 	Material* newMaterial = new Material;
-	newMaterial->SetTexture("BaseTexture", blockName + ".dds");
+	newMaterial->SetBaseTexture(blockName + ".dds");
 
 	// Remove any materials from the model
 	loadedModel->ClearMaterials();

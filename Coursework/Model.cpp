@@ -33,6 +33,7 @@ void Model::Shutdown()
 	{
 		for (int i = 0; i < Materials_.size(); i++)
 		{
+			Materials_[i]->Shutdown();
 			delete Materials_[i];
 			Materials_[i] = 0;
 		}

@@ -77,9 +77,6 @@
     <Filter Include="Scene\VoxelTerrain">
       <UniqueIdentifier>{de71abc2-a071-4e45-89b1-bcce2d10c559}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Graphics\Shader\SpecificShader">
-      <UniqueIdentifier>{1be2031e-f3fd-4076-8d27-a49fe5a78110}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -372,36 +369,6 @@
     </ClInclude>
     <ClInclude Include="BlockLoader.h">
       <Filter>Scene\VoxelTerrain</Filter>
-    </ClInclude>
-    <ClInclude Include="CloudShader.h">
-      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
-    </ClInclude>
-    <ClInclude Include="FireShader.h">
-      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
-    </ClInclude>
-    <ClInclude Include="FontShader.h">
-      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
-    </ClInclude>
-    <ClInclude Include="LightShader.h">
-      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleShader.h">
-      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
-    </ClInclude>
-    <ClInclude Include="SkyShader.h">
-      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteShader.h">
-      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
-    </ClInclude>
-    <ClInclude Include="TerrainShader.h">
-      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
-    </ClInclude>
-    <ClInclude Include="TerrainReflectionShader.h">
-      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureShader.h">
-      <Filter>Framework\Graphics\Shader\SpecificShader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

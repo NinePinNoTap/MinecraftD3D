@@ -56,19 +56,19 @@ bool Fire::Initialise(char* modelFilename, std::string textureFilename, std::str
 	//=================
 
 	Material* newMaterial = new Material;
-	Result_ = newMaterial->SetTexture("BaseTexture", textureFilename);
+	Result_ = newMaterial->SetBaseTexture(textureFilename);
 	if (!Result_)
 	{
 		return false;
 	}
 
-	Result_ = newMaterial->SetTexture("AlphaTexture", alphaFilename);
+	Result_ = newMaterial->SetAlphaTexture(alphaFilename);
 	if (!Result_)
 	{
 		return false;
 	}
 
-	Result_ = newMaterial->SetTexture("NoiseTexture", noiseFilename);
+	Result_ = newMaterial->SetNoiseTexture(noiseFilename);
 	if (!Result_)
 	{
 		return false;

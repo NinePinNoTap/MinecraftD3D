@@ -50,7 +50,7 @@ bool Block::Initialise()
 	//=================
 
 	Frame_ = 0;
-	IsReflectable_ = false;
+	IsReflectable_ = true;
 	IsActive_ = true;
 }
 
