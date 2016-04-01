@@ -2,10 +2,11 @@
 
 #include <d3d11.h>
 #include <d3dx10math.h>
+#include <list>
 
+#include "Camera.h"
 #include "GameObject.h"
 #include "Texture.h"
-
 
 class ParticleSystem : public GameObject
 {
@@ -15,6 +16,8 @@ private:
 		D3DXVECTOR3 position;
 		D3DXVECTOR3 velocity;
 		bool active;
+
+		bool operator < (const ParticleType& other);
 	};
 
 	struct VertexType
@@ -78,6 +81,9 @@ private:
 
 	// Material
 	Material* Material_;
+
+	// List of active particles
+	std::list<ParticleType> ParticleTypeList_;
 };
 
 

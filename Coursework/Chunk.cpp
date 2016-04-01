@@ -204,7 +204,7 @@ void Chunk::Render()
 				if (Chunk_[i][j][k].IsActive())
 				{
 					// Render
-					ShaderManager::Instance()->TextureRender(&Chunk_[i][j][k]);
+					ShaderManager::Instance()->TextureShader(&Chunk_[i][j][k]);
 				}
 			}
 		}

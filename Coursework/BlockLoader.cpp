@@ -15,16 +15,29 @@ void BlockLoader::LoadBlock(Model** model, string blockName)
 {
 	Model* loadedModel = 0;
 
-	// Load the model
+	//==================
+	// Create the Model
+	//==================
+
 	AssetManager::Instance()->LoadModel(&loadedModel, "cube.txt");
 
-	// Load the texture
+	//=====================
+	// Create the Material
+	//=====================
+
+	// Create a material for the model
 	Material* newMaterial = new Material;
 	newMaterial->SetBaseTexture(blockName + ".dds");
 
-	// Apply material to model
-	loadedModel->UpdateMaterial(0, newMaterial);
+	// Remove any materials from the model
+	loadedModel->ClearMaterials();
 
-	// Take a copy of the model
+	// Apply material to model
+	loadedModel->AddMaterial(newMaterial);
+
+	//================
+	// Finalise Model
+	//================
+
 	*model = new Model(*loadedModel);
 }

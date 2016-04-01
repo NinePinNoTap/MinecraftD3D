@@ -66,14 +66,34 @@ void Model::UpdateMesh(int index, Mesh3D* mesh)
 
 void Model::UpdateMaterial(int index, Material* material)
 {
-	// Check if we can access the element
-	if (index >= Materials_.size())
+	// Make sure we have materials to update
+	if (Materials_.empty())
 	{
+		// Add material
 		Materials_.push_back(material);
 		return;
 	}
 
+	// Make sure the index isn't out of range
+	if (index >= Materials_.size())
+	{
+		// Add material
+		Materials_.push_back(material);
+		return;
+	}
+
+	// Update material
 	Materials_[index] = material;
+}
+
+void Model::ClearMeshes()
+{
+	Meshes_.clear();
+}
+
+void Model::ClearMaterials()
+{
+	Materials_.clear();
 }
 
 Mesh3D* Model::GetMesh(int index)

@@ -20,6 +20,9 @@ public:
 	void UpdateMesh(int index, Mesh3D* mesh);
 	void UpdateMaterial(int index, Material* material);
 
+	void ClearMeshes();
+	void ClearMaterials();
+
 	Mesh3D* GetMesh(int index);
 	Material* GetMaterial(int index);
 

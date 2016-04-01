@@ -84,7 +84,7 @@ void SceneLoadingScreen::Render()
 	SetShaderManager2DVars();
 
 	// Render the loading screen
-	ShaderManager::Instance()->TextureRender(Background_);
+	ShaderManager::Instance()->TextureShader(Background_);
 
 	SetShaderManager2DVars();
 

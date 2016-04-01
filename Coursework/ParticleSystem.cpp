@@ -424,3 +424,19 @@ Material* ParticleSystem::GetMaterial()
 {
 	return Material_;
 }
+
+bool ParticleSystem::ParticleType::operator<(const ParticleType& other)
+{
+	D3DXVECTOR3 cameraPosition;
+	
+	float particleDistance;
+	float otherDistance;
+
+	// Calculate distance from camera to this particle
+	particleDistance = Distance(position, cameraPosition);
+
+	// Calculate distance from camera to other particle
+	otherDistance = Distance(other.position, cameraPosition);
+
+	return particleDistance > otherDistance;
+}

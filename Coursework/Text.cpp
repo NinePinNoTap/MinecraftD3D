@@ -344,7 +344,7 @@ bool Text::RenderSentence(SentenceType* sentence)
 	DirectXManager::Instance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Render the text using the font shader
-	Result_ = ShaderManager::Instance()->FontRender(sentence, Font_->GetTexture());
+	Result_ = ShaderManager::Instance()->FontShader(sentence, Font_->GetTexture());
 	if (!Result_)
 	{
 		return false;

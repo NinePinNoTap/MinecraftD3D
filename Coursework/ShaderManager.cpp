@@ -158,9 +158,9 @@ bool ShaderManager::Initialise(HWND hwnd)
 // Shutdown
 void ShaderManager::Shutdown()
 {
-	//=========================================
-	// Go through each shader and shut it down
-	//=========================================
+	//==================
+	// Shutdown Shaders
+	//==================
 
 	if (CloudShader_)
 	{
@@ -248,7 +248,7 @@ void ShaderManager::SetReflectionViewMatrix(D3DXMATRIX reflection)
 }
 
 // Rendering
-bool ShaderManager::CloudRender(Clouds* Obj)
+bool ShaderManager::CloudShader(Clouds* Obj)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -300,7 +300,7 @@ bool ShaderManager::CloudRender(Clouds* Obj)
 	return true;
 }
 
-bool ShaderManager::FireRender(Fire* Obj)
+bool ShaderManager::FireShader(Fire* Obj)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -361,7 +361,7 @@ bool ShaderManager::FireRender(Fire* Obj)
 	return true;
 }
 
-bool ShaderManager::FontRender(Text::SentenceType* sentence, ID3D11ShaderResourceView* texture)
+bool ShaderManager::FontShader(Text::SentenceType* sentence, ID3D11ShaderResourceView* texture)
 {
 	// Model Properties
 	int indexCount = sentence->indexCount;
@@ -391,7 +391,7 @@ bool ShaderManager::FontRender(Text::SentenceType* sentence, ID3D11ShaderResourc
 	return true;
 }
 
-bool ShaderManager::LightRender(GameObject* Obj, float specularPower)
+bool ShaderManager::LightShader(GameObject* Obj)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -403,6 +403,7 @@ bool ShaderManager::LightRender(GameObject* Obj, float specularPower)
 		MessageBox(NULL, L"No Model Attached - Light", L"Error", MB_OK);
 		return false;
 	}
+
 	objMaterial = Obj->GetModel()->GetMaterial(0);
 	if (!objMaterial)
 	{
@@ -453,7 +454,7 @@ bool ShaderManager::LightRender(GameObject* Obj, float specularPower)
 	return true;
 }
 
-bool ShaderManager::WaterRender(Water* Obj, Texture* refraction, Texture* reflection)
+bool ShaderManager::OceanShader(Water* Obj, Texture* refraction, Texture* reflection)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -529,7 +530,7 @@ bool ShaderManager::WaterRender(Water* Obj, Texture* refraction, Texture* reflec
 	return true;
 }
 
-bool ShaderManager::ParticleRender(ParticleSystem* Obj)
+bool ShaderManager::ParticleShader(ParticleSystem* Obj)
 {
 	Material* objMaterial;
 	
@@ -563,7 +564,7 @@ bool ShaderManager::ParticleRender(ParticleSystem* Obj)
 	return true;
 }
 
-bool ShaderManager::SkyRender(SkySphere* Obj)
+bool ShaderManager::SkyShader(SkySphere* Obj)
 {
 	Mesh3D* objMesh;
 	
@@ -599,7 +600,7 @@ bool ShaderManager::SkyRender(SkySphere* Obj)
 	return true;
 }
 
-bool ShaderManager::TerrainRender(Terrain* Obj)
+bool ShaderManager::TerrainShader(Terrain* Obj)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -655,7 +656,7 @@ bool ShaderManager::TerrainRender(Terrain* Obj)
 	return true;
 }
 
-bool ShaderManager::TerrainRender(Terrain* Obj, D3DXVECTOR4 clipPlane)
+bool ShaderManager::TerrainShader(Terrain* Obj, D3DXVECTOR4 clipPlane)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -715,7 +716,7 @@ bool ShaderManager::TerrainRender(Terrain* Obj, D3DXVECTOR4 clipPlane)
 	return true;
 }
 
-bool ShaderManager::TextureRender(GameObject* Obj)
+bool ShaderManager::TextureShader(GameObject* Obj)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -756,7 +757,7 @@ bool ShaderManager::TextureRender(GameObject* Obj)
 	return true;
 }
 
-bool ShaderManager::TextureRender(Sprite* Obj, Texture* render)
+bool ShaderManager::TextureShader(Sprite* Obj, Texture* render)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;

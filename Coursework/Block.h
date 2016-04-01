@@ -11,6 +11,11 @@ enum BlockType
 	Air, Sand, Dirt, Cobblestone, Gold
 };
 
+enum BlockFace
+{
+	Up = 0, Down = 1, Left = 2, Right = 3, Front = 4, Back = 5
+};
+
 class Block : public GameObject
 {
 public:
@@ -21,6 +26,7 @@ public:
 	// Setters
 	void SetType(BlockType type); 
 	void SetSolid(bool solid);
+	void SetFaceVisible(int index, bool flag);
 
 	// Getters
 	BlockType GetType();
@@ -32,4 +38,6 @@ private:
 	string BlockName_;
 	BlockType Type_;
 	bool IsSolid_;
+
+	bool VisibleFace_[6];
 };

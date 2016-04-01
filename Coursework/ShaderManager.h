@@ -37,37 +37,19 @@ public:
 	void SetViewMatrix(D3DXMATRIX view);
 	void SetProjectionMatrix(D3DXMATRIX projection);
 	void SetReflectionViewMatrix(D3DXMATRIX reflection);
-
-	// Render Using Cloud Shader
-	bool CloudRender(Clouds* cloud);
-
-	// Render Using Fire Shader
-	bool FireRender(Fire* fire);
-
-	// Render Using Font Shader
-	bool FontRender(Text::SentenceType* sentence, ID3D11ShaderResourceView* texture);
-
-	// Render Using Light Shader
-	bool LightRender(GameObject* model, float Specular);
-
-	// Render Using Water Shader
-	bool WaterRender(Water* ocean, Texture* refraction, Texture* reflection);
-
-	// Render Using Particle Shader
-	bool ParticleRender(ParticleSystem* particles);
-
-	// Render Using Sky Shader
-	bool SkyRender(SkySphere* sky);
-
-	// Render Using Terrain Shader
-	bool TerrainRender(Terrain* terrain);
-
-	// Render Using Terrain Reflection Shader
-	bool TerrainRender(Terrain* terrain, D3DXVECTOR4 clip);
-
-	// Render Using Texture Shader
-	bool TextureRender(GameObject* model);
-	bool TextureRender(Sprite* window, Texture* render);
+	
+	// Shaders
+	bool CloudShader(Clouds* cloud);
+	bool FireShader(Fire* fire);
+	bool FontShader(Text::SentenceType* sentence, ID3D11ShaderResourceView* texture);
+	bool LightShader(GameObject* model);
+	bool OceanShader(Water* ocean, Texture* refraction, Texture* reflection);
+	bool ParticleShader(ParticleSystem* particles);
+	bool SkyShader(SkySphere* sky);
+	bool TerrainShader(Terrain* terrain);
+	bool TerrainShader(Terrain* terrain, D3DXVECTOR4 clip);
+	bool TextureShader(GameObject* model);
+	bool TextureShader(Sprite* window, Texture* render);
 
 private:
 	bool Result_;

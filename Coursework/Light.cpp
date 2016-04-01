@@ -29,7 +29,6 @@ bool Light::Initialise()
 	SetDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
 	SetDirection(0.5f, -0.75f, 0.25f);
 	SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	SetSpecularPower(32.0f);
 
 	return true;
 }
@@ -56,12 +55,6 @@ void Light::SetDirection(float x, float y, float z)
 void Light::SetSpecularColor(float red, float green, float blue, float alpha)
 {
 	SpecularColour_ = D3DXVECTOR4(red, green, blue, alpha);
-	return;
-}
-
-void Light::SetSpecularPower(float power)
-{
-	SpecularPower_ = power;
 	return;
 }
 
@@ -100,9 +93,4 @@ D3DXVECTOR3 Light::GetDirection()
 D3DXVECTOR4 Light::GetSpecularColor()
 {
 	return SpecularColour_;
-}
-
-float Light::GetSpecularPower()
-{
-	return SpecularPower_;
 }

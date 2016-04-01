@@ -114,7 +114,7 @@ void AssetManager::LoadModel(Model** model, std::string filename)
 	// Check if the font already exists
 	if (ModelDatabase_.count(filename))
 	{
-		// Don't continue
+		// Return the pre-loaded model
 		*model = ModelDatabase_[filename];
 
 		return;

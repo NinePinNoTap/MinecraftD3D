@@ -104,7 +104,6 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	Light_->SetDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
 	Light_->SetDirection(0.5f, -0.75f, 0.25f);
 	Light_->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	Light_->SetSpecularPower(32.0f);
 
 	//==========================
 	// Initialise ShaderManager

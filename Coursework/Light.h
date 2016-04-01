@@ -21,7 +21,6 @@ public:
 	void SetDiffuseColor(float r, float g, float b, float a);
 	void SetDirection(float x, float y, float z);
 	void SetSpecularColor(float r, float g, float b, float a);
-	void SetSpecularPower(float specularamount);
 
 	// Setter
 	void ToggleTime(bool Flag);
@@ -31,7 +30,6 @@ public:
 	D3DXVECTOR4 GetDiffuseColor();
 	D3DXVECTOR3 GetDirection();
 	D3DXVECTOR4 GetSpecularColor();
-	float GetSpecularPower();
 
 private:
 	// Properties
@@ -39,7 +37,6 @@ private:
 	D3DXVECTOR4 DiffuseColor_;
 	D3DXVECTOR3 Direction_;
 	D3DXVECTOR4 SpecularColour_;
-	float SpecularPower_;
 };
 
 
