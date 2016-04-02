@@ -11,19 +11,19 @@ enum ShaderType
 	DomainShader
 };
 
-struct CameraCBuffer
+struct CameraBuffer
 {
 	D3DXVECTOR3 cameraPosition;
 	D3DXVECTOR2 normalMapTiling;
 	D3DXVECTOR3 padding;
 };
 
-struct ClipPlaneCBuffer
+struct ClipPlaneBuffer
 {
 	D3DXVECTOR4 clipPlane;
 };
 
-struct DistortionCBuffer
+struct DistortionBuffer
 {
 	D3DXVECTOR2 distortion1;
 	D3DXVECTOR2 distortion2;
@@ -32,13 +32,13 @@ struct DistortionCBuffer
 	float distortionBias;
 };
 
-struct GradientCBuffer
+struct GradientBuffer
 {
 	D3DXVECTOR4 topColor;
 	D3DXVECTOR4 centerColor;
 };
 
-struct LightCBuffer
+struct LightBuffer
 {
 	D3DXVECTOR4 ambientColor;
 	D3DXVECTOR4 diffuseColor;
@@ -47,12 +47,12 @@ struct LightCBuffer
 	D3DXVECTOR4 specularColor;
 };
 
-struct LightPositionCBuffer
+struct LightPositionBuffer
 {
 	D3DXVECTOR4 lightPosition;
 };
 
-struct MatrixCBuffer
+struct MatrixBuffer
 {
 	D3DXMATRIX world;
 	D3DXMATRIX view;
@@ -60,7 +60,7 @@ struct MatrixCBuffer
 	D3DXMATRIX reflection;
 };
 
-struct NoiseCBuffer
+struct NoiseBuffer
 {
 	float frameTime;
 	D3DXVECTOR3 scrollSpeeds;
@@ -68,7 +68,7 @@ struct NoiseCBuffer
 	float padding;
 };
 
-struct OceanCBuffer
+struct OceanBuffer
 {
 	D3DXVECTOR4 refractionTint;
 	D3DXVECTOR3 lightDirection;
@@ -78,12 +78,12 @@ struct OceanCBuffer
 	D3DXVECTOR2 padding;
 };
 
-struct PixelCBuffer
+struct PixelBuffer
 {
 	D3DXVECTOR4 pixelColor;
 };
 
-struct SkyCBuffer
+struct SkyBuffer
 {
 	float translation;
 	float scale;
@@ -91,20 +91,20 @@ struct SkyCBuffer
 	float padding;
 };
 
-struct TessellationCBuffer
+struct TessellationBuffer
 {
 	float tessellationAmount;
 	D3DXVECTOR3 padding;
 };
 
-struct WaveCBuffer
+struct WaveBuffer
 {
 	float waveTime;
 	float waveHeight;
 	D3DXVECTOR2 padding;
 };
 
-struct WaterEffectCBuffer
+struct WaterEffectBuffer
 {
 	float refractionScale;
 	float effectTime;

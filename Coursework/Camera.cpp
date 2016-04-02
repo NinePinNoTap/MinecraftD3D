@@ -29,7 +29,7 @@ bool Camera::Initialise()
 	SetSpeed(1.0f);
 
 	// Set default move velocity
-	Velocity_ = ZERO;
+	Velocity_ = D3DXVECTOR3();
 
 	// Set Base Vectors
 	Position2D_ = D3DXVECTOR3(0, 0, -10);

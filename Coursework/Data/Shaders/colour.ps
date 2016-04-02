@@ -1,14 +1,18 @@
-Texture2D shaderTexture;
-SamplerState SampleType;
+cbuffer PixelBuffer
+{
+    float4 pixelColor;
+};
 
+// Typedef
 struct PixelInputType
 {
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
 };
 
+// Pixel Shader
 float4 PixelShaderMain(PixelInputType input) : SV_TARGET
 {
-    // Sample the texture
-    return shaderTexture.Sample(SampleType, input.tex);;
+	return float4(1,1,1,1);
+	return pixelColor;
 }

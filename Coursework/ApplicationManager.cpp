@@ -134,6 +134,12 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	}
 	PerformanceManager_->Initialise();
 
+	//=========================
+	// Initialise View Frustum
+	//=========================
+
+	ViewFrustumManager_ = new ViewFrustumManager;
+
 	//===================
 	// Initialise Scenes
 	//===================

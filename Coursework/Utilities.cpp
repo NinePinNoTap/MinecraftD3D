@@ -223,7 +223,7 @@ bool CheckScreenSpace(D3DXVECTOR3 position, BoundingBox box)
 	return Left || Right || Up || Down || Front || Back || Center;
 }
 
-void TransposeMatrix(MatrixCBuffer& matrix)
+void TransposeMatrix(MatrixBuffer& matrix)
 {
 	// Prepare matrices for the shader
 	D3DXMatrixTranspose(&matrix.world, &matrix.world);

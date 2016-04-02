@@ -8,7 +8,10 @@
 
 #include "ConstantBuffer.h"
 #include "DirectXManager.h"
+#include "Material.h"
+#include "Mesh3D.h"
 #include "Utilities.h"
+#include "Transform.h"
 #include "ShaderBuffers.h"
 
 using namespace std;
@@ -84,13 +87,17 @@ public:
 	}
 
 	// Rendering
+	virtual bool Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+	{
+		return true;
+	}
 	void SendBuffersToShader();
 	void SendTextureToShader(int Slot, ID3D11ShaderResourceView* Texture);
 
+protected:
 	// Error Handling
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
 
-private:
 	// Set up
 	bool CompileShader(HWND hwnd, WCHAR* filename, LPCSTR EntryPoint, LPCSTR Version, ID3D10Blob** Buffer);
 

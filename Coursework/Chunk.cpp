@@ -1,4 +1,5 @@
 #include "Chunk.h"
+#include "ViewFrustumManager.h"
 
 Chunk::Chunk()
 {
@@ -136,17 +137,23 @@ void Chunk::RefreshVisible()
 			// Loop through z dimension
 			for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
 			{
+				// Make sure we can see the block
+				if (!ViewFrustumManager::Instance()->CheckCube(Chunk_[i][j][k].GetTransform()->GetPosition(), BLOCK_SIZE / 2))
+				{
+					Chunk_[i][j][k].SetActive(false);
+					continue;
+				}
+
 				// Check if the block is air
 				if (Chunk_[i][j][k].GetType() == BlockType::Air)
 				{
 					// Skip as we auto dont want to see it
 					Chunk_[i][j][k].SetActive(false);
-					
-				}/*
-				else if (!CheckScreenSpace(Chunk_[i][j][k].GetTransform()->GetPosition()))
+				}
+				else if (!ViewFrustumManager::Instance()->CheckCube(Chunk_[i][j][k].GetTransform()->GetPosition(), 0.5f))
 				{
 					Chunk_[i][j][k].SetActive(false);
-				}*/
+				}
 				else
 				{
 					// Check if theres block in that particle position
@@ -162,7 +169,7 @@ void Chunk::RefreshVisible()
 					bool result = !(xPositive && xNegative && yPositive && yNegative && zPositive && zNegative);
 
 					Chunk_[i][j][k].SetActive(result);
-				}
+				}			
 
 				// Debugging
 				if (Chunk_[i][j][k].IsActive())
@@ -236,6 +243,10 @@ void Chunk::Render()
 			{
 				if (Chunk_[i][j][k].IsActive())
 				{
+					Mesh3D* mesh = Chunk_[i][j][k].GetModel()->GetMesh();
+					Material* material = Chunk_[i][j][k].GetModel()->GetMaterial();
+					Transform* transform = Chunk_[i][j][k].GetTransform();
+
 					// Render
 					ShaderManager::Instance()->LightShader(&Chunk_[i][j][k]);
 				}

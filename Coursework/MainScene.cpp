@@ -352,6 +352,7 @@ bool MainScene::UpdateObjects()
 
 	Camera::Instance() -> Frame();
 	PerformanceManager::Instance()->Frame();
+	ViewFrustumManager::Instance()->ConstructFrustum();
 	Clouds_ -> Frame();
 	Ocean_ -> Frame();
 
@@ -607,7 +608,7 @@ bool MainScene::RenderScene(bool ShowText)
 		DirectXManager::Instance() -> ToggleAlphaBlending(true);
 
 		// Render the particle WindowManager
-		Result_ = ShaderManager::Instance()->ParticleShader(ParticleSystem_);
+		Result_ = ShaderManager::Instance()->TextureShader(ParticleSystem_);
 		if (!Result_) { return false; }
 
 		// Turn off alpha blending.

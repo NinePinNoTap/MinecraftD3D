@@ -10,6 +10,7 @@
 #include "Scene3D.h"
 #include "SceneLoadingScreen.h"
 #include "ShaderManager.h"
+#include "ViewFrustumManager.h"
 
 enum SceneState
 {
@@ -50,6 +51,7 @@ private:
 	InputManager* InputManager_;
 	ShaderManager* ShaderManager_;
 	PerformanceManager* PerformanceManager_;
+	ViewFrustumManager* ViewFrustumManager_;
 	
 	// Scenes
 	MainScene* MainScene_;

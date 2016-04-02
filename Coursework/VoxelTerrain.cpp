@@ -62,6 +62,8 @@ void VoxelTerrain::Frame()
 
 void VoxelTerrain::Render()
 {	
+	Frame();
+
 	// Loop through x dimension
 	for (int i = 0; i < CHUNK_COUNT_WIDTH; i++)
 	{

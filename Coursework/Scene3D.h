@@ -29,7 +29,7 @@ public:
 	void SetDirectory(string directory);
 
 	// Sound Loading
-	AudioClip* CreateSound(char* filename, float Volume = 1.0f, bool is3D = false, D3DXVECTOR3 position = ZERO);
+	AudioClip* CreateSound(char* filename, float Volume = 1.0f, bool is3D = false, D3DXVECTOR3 position = D3DXVECTOR3());
 	
 protected:
 	virtual void GenerateMatrices() = 0;

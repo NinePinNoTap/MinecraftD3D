@@ -16,40 +16,6 @@
     <Filter Include="Framework\Graphics">
       <UniqueIdentifier>{06046781-5474-492b-b273-08acc55670db}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Graphics\Shader">
-      <UniqueIdentifier>{a9a22140-7aac-4a52-a893-c31f04d47177}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Graphics\Shader\HLSL Shader Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Framework\Graphics\Shader\HLSL Shader Files\Cloud">
-      <UniqueIdentifier>{571c4953-68a7-4a27-8cb7-da5fdf97ce5f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Graphics\Shader\HLSL Shader Files\Fire">
-      <UniqueIdentifier>{c946d1b6-2954-4ac0-915e-e2ffb7e70f15}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Graphics\Shader\HLSL Shader Files\Font">
-      <UniqueIdentifier>{1a3d32f0-17ca-4156-9288-bdb317b26306}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Graphics\Shader\HLSL Shader Files\Light">
-      <UniqueIdentifier>{160915ec-78a6-4f91-85e6-365207a81b29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Graphics\Shader\HLSL Shader Files\Ocean">
-      <UniqueIdentifier>{f27a9d56-b371-4938-a0ad-e7fe4b1233e9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Graphics\Shader\HLSL Shader Files\Particle">
-      <UniqueIdentifier>{3218d805-80d4-4ed5-9b7a-184e318846ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Graphics\Shader\HLSL Shader Files\SkySphere">
-      <UniqueIdentifier>{61c12df0-450d-4309-96d3-6d568ad2cf5a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Graphics\Shader\HLSL Shader Files\Terrain">
-      <UniqueIdentifier>{f76930ad-863a-47eb-a550-4fb5f954032f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Graphics\Shader\HLSL Shader Files\Texture">
-      <UniqueIdentifier>{d43ebb08-4d43-4448-9566-da3ad7425ede}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework\Graphics\Texture">
       <UniqueIdentifier>{0cbc688c-2f74-404c-9e56-f94e6f22d447}</UniqueIdentifier>
     </Filter>
@@ -76,6 +42,43 @@
     </Filter>
     <Filter Include="Scene\VoxelTerrain">
       <UniqueIdentifier>{de71abc2-a071-4e45-89b1-bcce2d10c559}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Shader">
+      <UniqueIdentifier>{a9a22140-7aac-4a52-a893-c31f04d47177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Shader\HLSL Shader Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Framework\Shader\HLSL Shader Files\Cloud">
+      <UniqueIdentifier>{571c4953-68a7-4a27-8cb7-da5fdf97ce5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Shader\HLSL Shader Files\Fire">
+      <UniqueIdentifier>{c946d1b6-2954-4ac0-915e-e2ffb7e70f15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Shader\HLSL Shader Files\Font">
+      <UniqueIdentifier>{1a3d32f0-17ca-4156-9288-bdb317b26306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Shader\HLSL Shader Files\Light">
+      <UniqueIdentifier>{160915ec-78a6-4f91-85e6-365207a81b29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Shader\HLSL Shader Files\Ocean">
+      <UniqueIdentifier>{f27a9d56-b371-4938-a0ad-e7fe4b1233e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Shader\HLSL Shader Files\SkySphere">
+      <UniqueIdentifier>{61c12df0-450d-4309-96d3-6d568ad2cf5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Shader\HLSL Shader Files\Terrain">
+      <UniqueIdentifier>{f76930ad-863a-47eb-a550-4fb5f954032f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Shader\HLSL Shader Files\Texture">
+      <UniqueIdentifier>{d43ebb08-4d43-4448-9566-da3ad7425ede}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Shader\HLSL Shader Files\Colour">
+      <UniqueIdentifier>{4184daf3-2447-4c8d-b7be-4ed2811cc913}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Shader\Shaders">
+      <UniqueIdentifier>{f7661ea1-ddd1-41fe-a735-2f29e3a62935}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -105,7 +108,7 @@
       <Filter>Framework\Graphics\Text</Filter>
     </ClCompile>
     <ClCompile Include="GameShader.cpp">
-      <Filter>Framework\Graphics\Shader</Filter>
+      <Filter>Framework\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Interpolator.cpp">
       <Filter>Framework\System</Filter>
@@ -144,7 +147,7 @@
       <Filter>Framework\Graphics\Texture</Filter>
     </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp">
-      <Filter>Framework\Graphics\Shader</Filter>
+      <Filter>Framework\Shader</Filter>
     </ClCompile>
     <ClCompile Include="AssetManager.cpp">
       <Filter>Framework\Manager</Filter>
@@ -209,6 +212,33 @@
     <ClCompile Include="BlockLoader.cpp">
       <Filter>Scene\VoxelTerrain</Filter>
     </ClCompile>
+    <ClCompile Include="ViewFrustumManager.cpp">
+      <Filter>Framework\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="CloudShader.cpp">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ColourShader.cpp">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="FireShader.cpp">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShader.cpp">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyShader.cpp">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainShader.cpp">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainReflectionShader.cpp">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureShaderNEW.cpp">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h">
@@ -248,13 +278,13 @@
       <Filter>Framework\Graphics\Text</Filter>
     </ClInclude>
     <ClInclude Include="GameShader.h">
-      <Filter>Framework\Graphics\Shader</Filter>
+      <Filter>Framework\Shader</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
-      <Filter>Framework\Graphics\Shader</Filter>
+      <Filter>Framework\Shader</Filter>
     </ClInclude>
     <ClInclude Include="ShaderBuffers.h">
-      <Filter>Framework\Graphics\Shader</Filter>
+      <Filter>Framework\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Scene\GameObjects</Filter>
@@ -370,73 +400,100 @@
     <ClInclude Include="BlockLoader.h">
       <Filter>Scene\VoxelTerrain</Filter>
     </ClInclude>
+    <ClInclude Include="ViewFrustumManager.h">
+      <Filter>Framework\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="CloudShader.h">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ColourShader.h">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="FireShader.h">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShader.h">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyShader.h">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainShader.h">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainReflectionShader.h">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureShaderNEW.h">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shaders\cloud.ps">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Cloud</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Cloud</Filter>
     </None>
     <None Include="Data\Shaders\cloud.vs">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Cloud</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Cloud</Filter>
     </None>
     <None Include="Data\Shaders\fire.ps">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Fire</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Fire</Filter>
     </None>
     <None Include="Data\Shaders\fire.vs">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Fire</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Fire</Filter>
     </None>
     <None Include="Data\Shaders\font.ps">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Font</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Font</Filter>
     </None>
     <None Include="Data\Shaders\font.vs">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Font</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Font</Filter>
     </None>
     <None Include="Data\Shaders\light.ps">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Light</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Light</Filter>
     </None>
     <None Include="Data\Shaders\light.vs">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Light</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Light</Filter>
     </None>
     <None Include="Data\Shaders\ocean.ds">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Ocean</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Ocean</Filter>
     </None>
     <None Include="Data\Shaders\ocean.hs">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Ocean</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Ocean</Filter>
     </None>
     <None Include="Data\Shaders\ocean.ps">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Ocean</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Ocean</Filter>
     </None>
     <None Include="Data\Shaders\ocean.vs">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Ocean</Filter>
-    </None>
-    <None Include="Data\Shaders\particle.ps">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Particle</Filter>
-    </None>
-    <None Include="Data\Shaders\particle.vs">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Particle</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Ocean</Filter>
     </None>
     <None Include="Data\Shaders\skysphere.ps">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\SkySphere</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\SkySphere</Filter>
     </None>
     <None Include="Data\Shaders\skysphere.vs">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\SkySphere</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\SkySphere</Filter>
     </None>
     <None Include="Data\Shaders\terrain.ps">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Terrain</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Terrain</Filter>
     </None>
     <None Include="Data\Shaders\terrain.vs">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Terrain</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Terrain</Filter>
     </None>
     <None Include="Data\Shaders\terrainreflection.ps">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Terrain</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Terrain</Filter>
     </None>
     <None Include="Data\Shaders\terrainreflection.vs">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Terrain</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Terrain</Filter>
     </None>
     <None Include="Data\Shaders\texture.ps">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Texture</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Texture</Filter>
     </None>
     <None Include="Data\Shaders\texture.vs">
-      <Filter>Framework\Graphics\Shader\HLSL Shader Files\Texture</Filter>
+      <Filter>Framework\Shader\HLSL Shader Files\Texture</Filter>
+    </None>
+    <None Include="Data\Shaders\colour.ps">
+      <Filter>Framework\Shader\HLSL Shader Files\Colour</Filter>
+    </None>
+    <None Include="Data\Shaders\colour.vs">
+      <Filter>Framework\Shader\HLSL Shader Files\Colour</Filter>
     </None>
   </ItemGroup>
 </Project>

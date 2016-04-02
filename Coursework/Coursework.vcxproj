@@ -87,15 +87,19 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="Clouds.cpp" />
+    <ClCompile Include="CloudShader.cpp" />
+    <ClCompile Include="ColourShader.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="DirectSound.cpp" />
     <ClCompile Include="DirectXManager.cpp" />
     <ClCompile Include="Fire.cpp" />
+    <ClCompile Include="FireShader.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameShader.cpp" />
     <ClCompile Include="Interpolator.cpp" />
+    <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh3D.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -106,8 +110,12 @@
     <ClCompile Include="Scene3D.cpp" />
     <ClCompile Include="SceneLoadingScreen.cpp" />
     <ClCompile Include="ApplicationManager.cpp" />
+    <ClCompile Include="SkyShader.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TerrainFactory.cpp" />
+    <ClCompile Include="TerrainReflectionShader.cpp" />
+    <ClCompile Include="TerrainShader.cpp" />
+    <ClCompile Include="TextureShaderNEW.cpp" />
     <ClCompile Include="TXTLoader.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -117,6 +125,7 @@
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="SkySphere.cpp" />
+    <ClCompile Include="ViewFrustumManager.cpp" />
     <ClCompile Include="VoxelTerrain.cpp" />
     <ClCompile Include="WindowManager.cpp" />
     <ClCompile Include="AudioClip.cpp" />
@@ -133,9 +142,18 @@
     <ClInclude Include="Mesh3D.h" />
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="PrimitiveFactory.h" />
+    <ClInclude Include="ColourShader.h" />
+    <ClInclude Include="CloudShader.h" />
+    <ClInclude Include="FireShader.h" />
+    <ClInclude Include="LightShader.h" />
+    <ClInclude Include="SkyShader.h" />
+    <ClInclude Include="TerrainShader.h" />
+    <ClInclude Include="TerrainReflectionShader.h" />
+    <ClInclude Include="TextureShaderNEW.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TerrainFactory.h" />
     <ClInclude Include="TXTLoader.h" />
+    <ClInclude Include="ViewFrustumManager.h" />
     <ClInclude Include="VoxelTerrain.h" />
     <ClInclude Include="WaveHeader.h" />
     <ClInclude Include="AudioTrigger.h" />
@@ -183,6 +201,8 @@
   <ItemGroup>
     <None Include="Data\Shaders\cloud.ps" />
     <None Include="Data\Shaders\cloud.vs" />
+    <None Include="Data\Shaders\colour.ps" />
+    <None Include="Data\Shaders\colour.vs" />
     <None Include="Data\Shaders\fire.ps" />
     <None Include="Data\Shaders\fire.vs" />
     <None Include="Data\Shaders\font.ps" />
@@ -193,8 +213,6 @@
     <None Include="Data\Shaders\ocean.hs" />
     <None Include="Data\Shaders\ocean.ps" />
     <None Include="Data\Shaders\ocean.vs" />
-    <None Include="Data\Shaders\particle.ps" />
-    <None Include="Data\Shaders\particle.vs" />
     <None Include="Data\Shaders\skysphere.ps" />
     <None Include="Data\Shaders\skysphere.vs" />
     <None Include="Data\Shaders\terrain.ps" />
