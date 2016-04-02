@@ -25,10 +25,10 @@ public:
 
 	// Frames
 	virtual bool Frame();
-	virtual bool Render();
+	bool Render();
 
 	// Rendering
-	void SetRender(string shaderName);
+	void SetShader(string shaderName);
 	void SetReflectable(bool Flag);
 	void SetActive(bool Flag);
 
@@ -44,6 +44,8 @@ public:
 	float GetFrame();
 
 protected:
+	virtual bool SendModelToPipeline(Mesh3D* objMesh);
+
 	// Model
 	Model* Model_;
 

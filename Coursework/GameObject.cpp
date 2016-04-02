@@ -110,6 +110,29 @@ bool GameObject::Frame()
 
 bool GameObject::Render()
 {
+	// Make sure we have a shader to use
+	if (!Shader_)
+		return true;
+
+	Mesh3D* objMesh;
+	Material* objMaterial;
+
+	// Access model mesh and material
+	objMesh = Model_->GetMesh(0);
+	objMaterial = Model_->GetMaterial(0);
+
+	// Send model to pipeline
+	SendModelToPipeline(objMesh);
+
+	// Send material to shader
+	Shader_->Prepare(objMesh, objMaterial, Transform_);
+
+	// Render Object
+	Shader_->Render(objMesh->GetIndexCount());
+}
+
+bool GameObject::SendModelToPipeline(Mesh3D* objMesh)
+{
 	unsigned int stride;
 	unsigned int offset;
 	ID3D11Buffer* vertexBuffer;
@@ -121,8 +144,8 @@ bool GameObject::Render()
 	offset = 0;
 
 	// Get mesh buffers
-	vertexBuffer = Model_->GetMesh()->GetVertexBuffer();
-	indexBuffer = Model_->GetMesh()->GetIndexBuffer();
+	vertexBuffer = objMesh->GetVertexBuffer();
+	indexBuffer = objMesh->GetIndexBuffer();
 
 	// Set the vertex buffer to active in the InputManager assembler so it can be rendered
 	DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
@@ -137,9 +160,9 @@ bool GameObject::Render()
 }
 
 // Rendering
-void GameObject::SetRender(string shaderName)
+void GameObject::SetShader(string shaderName)
 {
-	//Shader_ = ShaderManager::Instance()->GetRender(shaderName);
+	Shader_ = ShaderManager::Instance()->GetShader(shaderName);
 }
 void GameObject::SetReflectable(bool Flag)
 {

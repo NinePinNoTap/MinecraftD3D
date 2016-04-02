@@ -59,7 +59,4 @@ bool FireShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objT
 	SendTextureToShader(0, fireTexture);
 	SendTextureToShader(1, noiseTexture);
 	SendTextureToShader(2, alphaTexture);
-
-	// Render using shader
-	Render(indexCount);
 }

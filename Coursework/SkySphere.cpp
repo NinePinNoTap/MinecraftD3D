@@ -1,4 +1,5 @@
 #include "SkySphere.h"
+#include "ShaderManager.h"
 
 SkySphere::SkySphere() : GameObject()
 {
@@ -30,6 +31,12 @@ bool SkySphere::Initialise(const char* filename)
 
 	// Create Material
 	Model_->AddMaterial(new Material);
+
+	//============
+	// Set Shader
+	//============
+
+	Shader_ = ShaderManager::Instance()->GetShader("skysphere");
 
 	//==================
 	// Create Transform

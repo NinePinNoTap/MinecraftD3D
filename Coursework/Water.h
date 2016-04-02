@@ -27,7 +27,6 @@ public:
 
 	// Frame
 	bool Frame();
-	bool Render();
 
 	// Setter
 	void ToggleTime(bool);
@@ -43,6 +42,8 @@ public:
 	float GetSpecularShininess();
 
 private:
+	bool SendModelToPipeline(Mesh3D* objMesh);
+
 	// Properties
 	D3DXVECTOR2 NormalMapTiling_;
 	D3DXVECTOR4 RefractionTint_;

@@ -18,6 +18,14 @@
 #include "Water.h"
 
 #include "GameShader.h"
+#include "CloudShader.h"
+#include "ColourShader.h"
+#include "FireShader.h"
+#include "LightShader.h"
+#include "SkyShader.h"
+#include "TerrainReflectionShader.h"
+#include "TerrainShader.h"
+#include "TextureShader.h"
 
 class ShaderManager : public Singleton<ShaderManager>
 {
@@ -42,27 +50,20 @@ public:
 	MatrixBuffer GetMatrixBuffer() { return MatrixBuffer_; }
 	
 	// Shaders
-	bool CloudRender(Clouds* cloud);
-
-	bool ColourRender(GameObject* obj);
-
-	bool FireRender(Fire* fire);
-
+	//bool CloudRender(Clouds* cloud);
+	//bool ColourRender(GameObject* obj);
+	//bool FireRender(Fire* fire);
 	bool FontRender(Text::SentenceType* sentence, ID3D11ShaderResourceView* texture);
-
-	bool LightRender(GameObject* model);
-
+	//bool LightRender(GameObject* model);
 	bool OceanRender(Water* ocean, Texture* refraction, Texture* reflection);
+	//bool SkyRender(GameObject* sky);
 
-	bool SkyRender(GameObject* sky);
+	//bool TerrainRender(Terrain* terrain);
+	//bool TerrainRender(Terrain* terrain, D3DXVECTOR4 clip);
 
-	bool TerrainRender(Terrain* terrain);
-	bool TerrainRender(Terrain* terrain, D3DXVECTOR4 clip);
-
-	bool TextureRender(GameObject* model);
 	bool TextureRender(ParticleSystem* particles);
 	
-	GameShader* GetRender(string keyName)
+	GameShader* GetShader(string keyName)
 	{
 		return ShaderDatabase_[keyName];
 	}
@@ -74,17 +75,18 @@ private:
 	MatrixBuffer MatrixBuffer_;
 	
 	// Shaders
-	GameShader* CloudShader_;
-	GameShader* ColourShader_;
-	GameShader* FireShader_;
+	CloudShader* CloudShader_;
+	ColourShader* ColourShader_;
+	FireShader* FireShader_;
 	GameShader* FontShader_;
-	GameShader* LightShader_;
+	LightShader* LightShader_;
 	GameShader* OceanShader_;
-	GameShader* SkySphereShader_;
-	GameShader* TerrainShader_;
-	GameShader* TerrainReflectionShader_;
-	GameShader* TextureShader_;
+	SkyShader* SkySphereShader_;
+	TerrainShader* TerrainShader_;
+	TerrainReflectionShader* TerrainReflectionShader_;
+	TextureShader* TextureShader_;
 
+	// Shader Database
 	std::map<string, GameShader*> ShaderDatabase_;
 };
 

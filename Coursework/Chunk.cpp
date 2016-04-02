@@ -80,12 +80,8 @@ void Chunk::Render()
 			{
 				if (Chunk_[i][j][k].IsActive())
 				{
-					Mesh3D* mesh = Chunk_[i][j][k].GetModel()->GetMesh();
-					Material* material = Chunk_[i][j][k].GetModel()->GetMaterial();
-					Transform* transform = Chunk_[i][j][k].GetTransform();
-
 					// Render
-					ShaderManager::Instance()->LightRender(&Chunk_[i][j][k]);
+					Chunk_[i][j][k].Render();
 				}
 			}
 		}
@@ -119,6 +115,7 @@ void Chunk::GenerateBlankChunk()
 				// Initialise air block
 				Chunk_[i][j][k] = Block();
 				Chunk_[i][j][k].Initialise();
+				Chunk_[i][j][k].SetShader("texture");
 
 				// Set block world transform
 				Chunk_[i][j][k].GetTransform()->SetPosition(Transform_->GetPosition());

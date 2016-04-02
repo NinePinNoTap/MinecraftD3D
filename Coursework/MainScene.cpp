@@ -531,7 +531,8 @@ bool MainScene::RenderScene(bool ShowText)
 	DirectXManager::Instance() -> ToggleZBuffer(false);
 
 	// Render the sky dome
-	ShaderManager::Instance() -> SkyRender(SkySphere_);
+	//ShaderManager::Instance() -> SkyRender(SkySphere_);
+	SkySphere_->Render();
 
 	// Turn back face culling on
 	DirectXManager::Instance() -> ToggleCulling(true);
@@ -540,7 +541,8 @@ bool MainScene::RenderScene(bool ShowText)
 	DirectXManager::Instance() -> EnableSecondBlendState();
 
 	// Render the clouds
-	ShaderManager::Instance() -> CloudRender(Clouds_);
+	//ShaderManager::Instance() -> CloudRender(Clouds_);
+	Clouds_->Render();
 
 	// Enable culling and the z buffer
 	DirectXManager::Instance() -> ToggleAlphaBlending(false);
@@ -579,7 +581,8 @@ bool MainScene::RenderScene(bool ShowText)
 	{
 		if (gameObject->IsActive())
 		{
-			Result_ = ShaderManager::Instance()->LightRender(gameObject);
+			//Result_ = ShaderManager::Instance()->LightRender(gameObject);
+			gameObject->Render();
 			if (!Result_)
 			{
 				return false;
@@ -737,7 +740,8 @@ bool MainScene::RenderReflection()
 	DirectXManager::Instance() -> ToggleZBuffer(false);
 
 	// Render the sky sphere
-	Result_ = ShaderManager::Instance()->SkyRender(SkySphere_);
+	//Result_ = ShaderManager::Instance()->SkyRender(SkySphere_);
+	SkySphere_->Render();
 	if (!Result_) { return false; }
 
 	// Re-enable culling
@@ -747,7 +751,8 @@ bool MainScene::RenderReflection()
 	DirectXManager::Instance() -> EnableSecondBlendState();
 
 	// Render the clouds
-	Result_ = ShaderManager::Instance()->CloudRender(Clouds_);
+	//Result_ = ShaderManager::Instance()->CloudRender(Clouds_);
+	Clouds_->Render();
 	if (!Result_) { return false; }
 
 	// Disable blending and re-enable the z buffer

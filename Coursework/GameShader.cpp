@@ -19,7 +19,7 @@ GameShader::~GameShader()
 }
 
 // Initialising
-bool GameShader::InitialiseRender(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename, WCHAR* hsFilename, WCHAR* dsFilename)
+bool GameShader::InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename, WCHAR* hsFilename, WCHAR* dsFilename)
 {
 	HRESULT Result_;
 	ID3D10Blob* errorMessage;

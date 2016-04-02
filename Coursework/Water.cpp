@@ -112,7 +112,7 @@ bool Water::Frame()
 	return true;
 }
 
-bool Water::Render()
+bool Water::SendModelToPipeline(Mesh3D* objMesh)
 {
 	unsigned int stride;
 	unsigned int offset;
@@ -124,8 +124,8 @@ bool Water::Render()
 	offset = 0;
 
 	// Get Mesh Buffers
-	vertexBuffer = Model_->GetMesh()->GetVertexBuffer();
-	indexBuffer = Model_->GetMesh()->GetIndexBuffer();
+	vertexBuffer = objMesh->GetVertexBuffer();
+	indexBuffer = objMesh->GetIndexBuffer();
 
 	// Set the vertex buffer to active in the InputManager assembler so it can be rendered
 	DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);

@@ -24,7 +24,7 @@ public:
 	~GameShader();
 
 	// Initialising
-	bool InitialiseRender(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename, WCHAR* hsFilename = 0, WCHAR* dsFilename = 0);
+	bool InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename, WCHAR* hsFilename = 0, WCHAR* dsFilename = 0);
 
 	// Shutdown
 	void Shutdown();

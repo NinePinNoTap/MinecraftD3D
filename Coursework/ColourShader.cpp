@@ -39,6 +39,4 @@ bool ColourShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* ob
 	UpdateBuffer(VertexShader, 0, matrixBuffer);
 	UpdateBuffer(PixelShader, 0, pixelBuffer);
 	SendBuffersToShader();
-
-	Render(indexCount);
 }

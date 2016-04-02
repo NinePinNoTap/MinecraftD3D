@@ -49,7 +49,4 @@ bool CloudShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* obj
 	// Send Textures
 	SendTextureToShader(0, cloudTexture);
 	SendTextureToShader(1, perturbTexture);
-
-	// Render using shader
-	Render(indexCount);
 }

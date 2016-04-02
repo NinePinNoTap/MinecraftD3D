@@ -54,8 +54,5 @@ bool TerrainShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* o
 	UpdateBuffer(PixelShader, 0, lightBuffer);
 	SendBuffersToShader();
 
-	// Render using shader
-	Render(indexCount);
-
 	return true;
 }

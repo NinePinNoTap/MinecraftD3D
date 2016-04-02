@@ -35,6 +35,7 @@ bool SceneLoadingScreen::Initialise(Rect2D WindowResolution)
 		return false;
 	}
 	Background_->GetTransform()->MoveZ(-5.0f);
+	Background_->SetShader("texture");
 
 	//================
 	// Initialise GUI
@@ -84,7 +85,8 @@ void SceneLoadingScreen::Render()
 	SetShaderManager2DVars();
 
 	// Render the loading screen
-	ShaderManager::Instance()->TextureRender(Background_);
+	//ShaderManager::Instance()->TextureRender(Background_);
+	Background_->Render();
 
 	SetShaderManager2DVars();
 

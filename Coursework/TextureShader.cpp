@@ -39,8 +39,5 @@ bool TextureShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* o
 	// Pass the texture into the shader
 	SendTextureToShader(0, texture);
 
-	// Render using shader
-	Render(indexCount);
-
 	return true;
 }

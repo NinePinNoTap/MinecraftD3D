@@ -1,5 +1,6 @@
 #include "Clouds.h"
 #include "DirectXManager.h"
+#include "ShaderManager.h"
 
 Clouds::Clouds() : GameObject()
 {
@@ -55,10 +56,17 @@ bool Clouds::Initialise(string cloudTextureFilename, string perturbTextureFilena
 		return false;
 	}
 
+	// Set material properties
 	newMaterial->SetFloat("TextureScale", ScaleFactor_);
 	newMaterial->SetFloat("TextureBrightness", Brightness_);
 
 	Model_->AddMaterial(newMaterial);
+
+	//============
+	// Set Shader
+	//============
+
+	Shader_ = ShaderManager::Instance()->GetShader("cloud");
 
 	//==================
 	// Create Transform
