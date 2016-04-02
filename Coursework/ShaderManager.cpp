@@ -12,9 +12,6 @@ ShaderManager::ShaderManager()
 	TerrainShader_ = 0;
 	TerrainReflectionShader_ = 0;
 	TextureShader_ = 0;
-
-
-	TextureShader2_ = 0;
 }
 
 ShaderManager::ShaderManager(const ShaderManager& other)
@@ -154,20 +151,6 @@ bool ShaderManager::Initialise(HWND hwnd)
 	if(!Result_) { return false; }
 	TextureShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	TextureShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
-
-
-
-
-	//===============================
-	// Initialise the Texture Shader
-	//===============================
-
-	TextureShader2_ = new TextureShaderNEW;
-	if (!TextureShader2_) { return false; }
-	Result_ = TextureShader2_->InitialiseShader(hwnd, L"texture.vs", L"texture.ps");
-	if (!Result_) { return false; }
-	TextureShader2_->AddBuffer<MatrixBuffer>(VertexShader);
-	TextureShader2_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
 
 	return true;
 }

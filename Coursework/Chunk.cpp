@@ -84,6 +84,10 @@ void Chunk::GenerateChunk()
 
 	PerlinNoiseGenerator perlinNoise;
 
+	// Generate a random seed to use
+	perlinNoise.SetSeed(rand()%10000);
+
+	// Update blocks
 	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
 	{
 		for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)

@@ -1,16 +1,16 @@
-#include "TextureShaderNEW.h"
+#include "TextureShader.h"
 #include "ShaderManager.h"
 
-TextureShaderNEW::TextureShaderNEW() : GameShader()
+TextureShader::TextureShader() : GameShader()
 {
 }
 
-TextureShaderNEW::~TextureShaderNEW()
+TextureShader::~TextureShader()
 {
 
 }
 
-bool TextureShaderNEW::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+bool TextureShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
 {
 	// Model Properties
 	if (!objMesh)

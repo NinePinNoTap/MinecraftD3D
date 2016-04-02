@@ -3,11 +3,11 @@
 #include "GameShader.h"
 #include "ConstantBuffer.h"
 
-class TextureShaderNEW : public GameShader
+class TextureShader : public GameShader
 {
 public:
-	TextureShaderNEW();
-	~TextureShaderNEW();
+	TextureShader();
+	~TextureShader();
 
 	bool Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform);
 };

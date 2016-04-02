@@ -236,7 +236,7 @@
     <ClCompile Include="TerrainReflectionShader.cpp">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClCompile>
-    <ClCompile Include="TextureShaderNEW.cpp">
+    <ClCompile Include="TextureShader.cpp">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
@@ -424,7 +424,7 @@
     <ClInclude Include="TerrainReflectionShader.h">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="TextureShaderNEW.h">
+    <ClInclude Include="TextureShader.h">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClInclude>
   </ItemGroup>

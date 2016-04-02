@@ -115,7 +115,7 @@
     <ClCompile Include="TerrainFactory.cpp" />
     <ClCompile Include="TerrainReflectionShader.cpp" />
     <ClCompile Include="TerrainShader.cpp" />
-    <ClCompile Include="TextureShaderNEW.cpp" />
+    <ClCompile Include="TextureShader.cpp" />
     <ClCompile Include="TXTLoader.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -149,7 +149,7 @@
     <ClInclude Include="SkyShader.h" />
     <ClInclude Include="TerrainShader.h" />
     <ClInclude Include="TerrainReflectionShader.h" />
-    <ClInclude Include="TextureShaderNEW.h" />
+    <ClInclude Include="TextureShader.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TerrainFactory.h" />
     <ClInclude Include="TXTLoader.h" />

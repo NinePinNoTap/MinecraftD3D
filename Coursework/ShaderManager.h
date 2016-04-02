@@ -19,8 +19,6 @@
 
 #include "GameShader.h"
 
-#include "TextureShaderNEW.h"
-
 class ShaderManager : public Singleton<ShaderManager>
 {
 public:
@@ -63,9 +61,7 @@ public:
 
 	bool TextureShader(GameObject* model);
 	bool TextureShader(ParticleSystem* particles);
-
-	TextureShaderNEW* GetTextureShader() { return TextureShader2_; }
-
+	
 private:
 	bool Result_;
 
@@ -83,8 +79,6 @@ private:
 	GameShader* TerrainShader_;
 	GameShader* TerrainReflectionShader_;
 	GameShader* TextureShader_;
-
-	TextureShaderNEW* TextureShader2_;
 };
 
 
