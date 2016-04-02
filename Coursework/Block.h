@@ -20,11 +20,11 @@ class Block : public GameObject
 {
 public:
 	Block();
-	Block(string blockName, BlockType blockType, bool isSolid);
 	~Block();
-
+	
 	// Setters
-	void SetType(BlockType type); 
+	bool SetName(string blockName);
+	void SetType(BlockType type);
 	void SetSolid(bool solid);
 	void SetFaceVisible(int index, bool flag);
 
@@ -33,8 +33,6 @@ public:
 	bool GetSolid();
 
 private:
-	bool Initialise();
-
 	string BlockName_;
 	BlockType Type_;
 	bool IsSolid_;

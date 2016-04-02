@@ -8,6 +8,7 @@
 #include "OBJLoader.h"
 #include "Transform.h"
 #include "Utilities.h"
+#include "GameShader.h"
 
 class GameObject
 {
@@ -18,7 +19,7 @@ public:
 	// Initialising
 	virtual bool Initialise();
 	virtual bool Initialise(const char* filename);
-
+	
 	// Shutdown
 	virtual void Shutdown();
 
@@ -27,6 +28,7 @@ public:
 	virtual bool Render();
 
 	// Rendering
+	void SetRender(string shaderName);
 	void SetReflectable(bool Flag);
 	void SetActive(bool Flag);
 
@@ -44,6 +46,9 @@ public:
 protected:
 	// Model
 	Model* Model_;
+
+	// Shader
+	GameShader* Shader_;
 
 	// Transform
 	Transform* Transform_;

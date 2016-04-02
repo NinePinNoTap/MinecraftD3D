@@ -31,7 +31,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	ColourShader_ = new GameShader;
 	if (!ColourShader_) { return false; }
-	Result_ = ColourShader_->InitialiseShader(hwnd, L"colour.vs", L"colour.ps");
+	Result_ = ColourShader_->InitialiseRender(hwnd, L"colour.vs", L"colour.ps");
 	if (!Result_) { return false; }
 	ColourShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	ColourShader_->AddBuffer<PixelBuffer>(PixelShader);
@@ -42,7 +42,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	CloudShader_ = new GameShader;
 	if (!CloudShader_) { return false; }
-	Result_ = CloudShader_ -> InitialiseShader(hwnd, L"cloud.vs", L"cloud.ps");
+	Result_ = CloudShader_ -> InitialiseRender(hwnd, L"cloud.vs", L"cloud.ps");
 	if (!Result_) { return false; }
 	CloudShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	CloudShader_->AddBuffer<SkyBuffer>(PixelShader);
@@ -54,7 +54,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	FireShader_ = new GameShader;
 	if (!FireShader_) { return false; }
-	Result_ = FireShader_->InitialiseShader(hwnd, L"fire.vs", L"fire.ps");
+	Result_ = FireShader_->InitialiseRender(hwnd, L"fire.vs", L"fire.ps");
 	if (!Result_) { return false; }
 	FireShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	FireShader_->AddBuffer<NoiseBuffer>(VertexShader);
@@ -68,7 +68,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	FontShader_ = new GameShader;
 	if (!FontShader_) { return false; }
-	Result_ = FontShader_->InitialiseShader(hwnd, L"font.vs", L"font.ps");
+	Result_ = FontShader_->InitialiseRender(hwnd, L"font.vs", L"font.ps");
 	if (!Result_) { return false; }
 	FontShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	FontShader_->AddBuffer<PixelBuffer>(PixelShader);
@@ -80,7 +80,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	LightShader_ = new GameShader;
 	if(!LightShader_) { return false; }
-	Result_ = LightShader_->InitialiseShader(hwnd, L"light.vs", L"light.ps");
+	Result_ = LightShader_->InitialiseRender(hwnd, L"light.vs", L"light.ps");
 	if(!Result_) { return false; }
 	LightShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	LightShader_->AddBuffer<CameraBuffer>(VertexShader);
@@ -94,7 +94,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	OceanShader_ = new GameShader;
 	if(!OceanShader_) { return false; }
-	Result_ = OceanShader_->InitialiseShader(hwnd, L"ocean.vs", L"ocean.ps", L"ocean.hs", L"ocean.ds");
+	Result_ = OceanShader_->InitialiseRender(hwnd, L"ocean.vs", L"ocean.ps", L"ocean.hs", L"ocean.ds");
 	if(!Result_) { return false; }
 	OceanShader_->AddBuffer<MatrixBuffer>(DomainShader);
 	OceanShader_->AddBuffer<CameraBuffer>(DomainShader);
@@ -109,7 +109,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	SkySphereShader_ = new GameShader;
 	if(!SkySphereShader_) { return false; }
-	Result_ = SkySphereShader_->InitialiseShader(hwnd, L"skysphere.vs", L"skysphere.ps");
+	Result_ = SkySphereShader_->InitialiseRender(hwnd, L"skysphere.vs", L"skysphere.ps");
 	if(!Result_) { return false; }
 	SkySphereShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	SkySphereShader_->AddBuffer<GradientBuffer>(PixelShader);
@@ -121,7 +121,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	TerrainShader_ = new GameShader;
 	if(!TerrainShader_) { return false; }
-	Result_ = TerrainShader_->InitialiseShader(hwnd, L"terrain.vs", L"terrain.ps");
+	Result_ = TerrainShader_->InitialiseRender(hwnd, L"terrain.vs", L"terrain.ps");
 	if(!Result_) { return false; }
 	TerrainShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	TerrainShader_->AddBuffer<LightPositionBuffer>(VertexShader);
@@ -134,7 +134,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	TerrainReflectionShader_ = new GameShader;
 	if(!TerrainReflectionShader_) { return false; }
-	Result_ = TerrainReflectionShader_->InitialiseShader(hwnd, L"terrainreflection.vs", L"terrainreflection.ps");
+	Result_ = TerrainReflectionShader_->InitialiseRender(hwnd, L"terrainreflection.vs", L"terrainreflection.ps");
 	if(!Result_) { return false; }
 	TerrainReflectionShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	TerrainReflectionShader_->AddBuffer<ClipPlaneBuffer>(VertexShader);
@@ -147,7 +147,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 
 	TextureShader_ = new GameShader;
 	if(!TextureShader_) { return false; }
-	Result_ = TextureShader_->InitialiseShader(hwnd, L"texture.vs", L"texture.ps");
+	Result_ = TextureShader_->InitialiseRender(hwnd, L"texture.vs", L"texture.ps");
 	if(!Result_) { return false; }
 	TextureShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	TextureShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
@@ -255,7 +255,7 @@ void ShaderManager::SetReflectionViewMatrix(D3DXMATRIX reflection)
 }
 
 // Rendering
-bool ShaderManager::CloudShader(Clouds* gameObject)
+bool ShaderManager::CloudRender(Clouds* gameObject)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -307,7 +307,7 @@ bool ShaderManager::CloudShader(Clouds* gameObject)
 	return true;
 }
 
-bool ShaderManager::ColourShader(GameObject* gameObject)
+bool ShaderManager::ColourRender(GameObject* gameObject)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -335,7 +335,7 @@ bool ShaderManager::ColourShader(GameObject* gameObject)
 
 	// Create pixel buffer
 	PixelBuffer pixelBuffer;
-	pixelBuffer.pixelColor = D3DXVECTOR4(1, 1, 1, 1);
+	pixelBuffer.pixelColor = objMaterial->GetVector4("BaseColour");
 
 	// Update Buffers
 	ColourShader_->UpdateBuffer(VertexShader, 0, matrixBuffer);
@@ -349,7 +349,7 @@ bool ShaderManager::ColourShader(GameObject* gameObject)
 	return true;
 }
 
-bool ShaderManager::FireShader(Fire* gameObject)
+bool ShaderManager::FireRender(Fire* gameObject)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -410,7 +410,7 @@ bool ShaderManager::FireShader(Fire* gameObject)
 	return true;
 }
 
-bool ShaderManager::FontShader(Text::SentenceType* sentence, ID3D11ShaderResourceView* texture)
+bool ShaderManager::FontRender(Text::SentenceType* sentence, ID3D11ShaderResourceView* texture)
 {
 	// Model Properties
 	int indexCount = sentence->indexCount;
@@ -440,7 +440,7 @@ bool ShaderManager::FontShader(Text::SentenceType* sentence, ID3D11ShaderResourc
 	return true;
 }
 
-bool ShaderManager::LightShader(GameObject* gameObject)
+bool ShaderManager::LightRender(GameObject* gameObject)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -475,7 +475,7 @@ bool ShaderManager::LightShader(GameObject* gameObject)
 	lightBuffer.ambientColor = Light::Instance()->GetAmbientColor();
 	lightBuffer.diffuseColor = Light::Instance()->GetDiffuseColor();
 	lightBuffer.specularColor = Light::Instance()->GetSpecularColor();
-	lightBuffer.specularPower = objMaterial->GetFloat("SpecularPower");
+	lightBuffer.specularPower = 255;// objMaterial->GetFloat("SpecularPower");
 
 	// Create light position buffer
 	LightPositionBuffer lightPositionBuffer;
@@ -503,7 +503,7 @@ bool ShaderManager::LightShader(GameObject* gameObject)
 	return true;
 }
 
-bool ShaderManager::OceanShader(Water* gameObject, Texture* refraction, Texture* reflection)
+bool ShaderManager::OceanRender(Water* gameObject, Texture* refraction, Texture* reflection)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -579,7 +579,7 @@ bool ShaderManager::OceanShader(Water* gameObject, Texture* refraction, Texture*
 	return true;
 }
 
-bool ShaderManager::SkyShader(GameObject* gameObject)
+bool ShaderManager::SkyRender(GameObject* gameObject)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -622,7 +622,7 @@ bool ShaderManager::SkyShader(GameObject* gameObject)
 	return true;
 }
 
-bool ShaderManager::TerrainShader(Terrain* gameObject)
+bool ShaderManager::TerrainRender(Terrain* gameObject)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -678,7 +678,7 @@ bool ShaderManager::TerrainShader(Terrain* gameObject)
 	return true;
 }
 
-bool ShaderManager::TerrainShader(Terrain* gameObject, D3DXVECTOR4 clipPlane)
+bool ShaderManager::TerrainRender(Terrain* gameObject, D3DXVECTOR4 clipPlane)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -738,7 +738,7 @@ bool ShaderManager::TerrainShader(Terrain* gameObject, D3DXVECTOR4 clipPlane)
 	return true;
 }
 
-bool ShaderManager::TextureShader(GameObject* gameObject)
+bool ShaderManager::TextureRender(GameObject* gameObject)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;
@@ -779,7 +779,7 @@ bool ShaderManager::TextureShader(GameObject* gameObject)
 	return true;
 }
 
-bool ShaderManager::TextureShader(ParticleSystem* gameObject)
+bool ShaderManager::TextureRender(ParticleSystem* gameObject)
 {
 	Material* objMaterial;
 

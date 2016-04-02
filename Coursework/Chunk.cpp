@@ -22,8 +22,8 @@ void Chunk::Initialise()
 	// Generate Chunk
 	//================
 
-	GenerateChunk();
-	RefreshVisible();
+	GenerateBlankChunk();
+	GenerateTerrain();
 
 	//==================
 	// Initialise Flags
@@ -49,192 +49,25 @@ void Chunk::Shutdown()
 	delete[] Chunk_;
 }
 
-void Chunk::GenerateChunk()
-{
-	D3DXVECTOR3 blockPosition;
-
-	//
-	// Build Blank Chunk
-	//
-
-	// Create the 3D array to store blocks in chunk
-	Chunk_ = new Block**[BLOCK_COUNT_WIDTH];
-
-	// Loop through x dimension
-	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
-	{
-		Chunk_[i] = new Block*[BLOCK_COUNT_HEIGHT];
-
-		// Loop through y dimension
-		for (int j = 0; j < BLOCK_COUNT_HEIGHT; j++)
-		{
-			Chunk_[i][j] = new Block[BLOCK_COUNT_DEPTH];
-
-			// Loop through z dimension -- SELF PERLIN NOISE
-			for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
-			{
-				Chunk_[i][j][k] = Block();
-			}
-		}
-	}
-
-	//
-	// Fill the Chunk
-	//
-
-	PerlinNoiseGenerator perlinNoise;
-
-	// Generate a random seed to use
-	perlinNoise.SetSeed(rand()%10000);
-
-	// Update blocks
-	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
-	{
-		for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
-		{
-			// Create noise
-			double x = (GetTransform()->GetPosition().x + (double)k) / ((double)BLOCK_COUNT_WIDTH);
-			double y = (GetTransform()->GetPosition().y + (double)i) / ((double)BLOCK_COUNT_HEIGHT);
-			float noise = perlinNoise.CreateNoise(x, y, 0.8f);
-			float val = floor(BLOCK_COUNT_HEIGHT * noise);
-
-			// Loop through z dimension -- SELF PERLIN NOISE
-			for (int j = 0; j < val; j++)
-			{
-				if (j < 1)
-				{
-					Chunk_[i][j][k] = Block("cobblestone", BlockType::Cobblestone, true);
-				}
-				else if (j < 3)
-				{
-					Chunk_[i][j][k] = Block("dirt", BlockType::Dirt, true);
-				}
-				else
-				{
-					Chunk_[i][j][k] = Block("sand", BlockType::Sand, true);
-				}
-
-				// Calculate block position inside the world
-				blockPosition = GetTransform()->GetPosition();
-				blockPosition += D3DXVECTOR3(i, j, k) * BLOCK_SIZE;
-
-				// Apply transform to block
-				Chunk_[i][j][k].GetTransform()->SetPosition(blockPosition);
-			}
-		}
-	}
-}
-
-void Chunk::RefreshVisible()
-{
-	bool xPositive, xNegative;
-	bool yPositive, yNegative;
-	bool zPositive, zNegative;
-	int activeBlocks = 0;
-
-	// Loop through x dimension
-	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
-	{
-		// Loop through y dimension
-		for (int j = 0; j < BLOCK_COUNT_HEIGHT; j++)
-		{
-			// Loop through z dimension
-			for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
-			{
-				// Make sure we can see the block
-				if (!ViewFrustumManager::Instance()->CheckCube(Chunk_[i][j][k].GetTransform()->GetPosition(), BLOCK_SIZE / 2))
-				{
-					Chunk_[i][j][k].SetActive(false);
-					continue;
-				}
-
-				// Check if the block is air
-				if (Chunk_[i][j][k].GetType() == BlockType::Air)
-				{
-					// Skip as we auto dont want to see it
-					Chunk_[i][j][k].SetActive(false);
-				}
-				else if (!ViewFrustumManager::Instance()->CheckCube(Chunk_[i][j][k].GetTransform()->GetPosition(), 0.5f))
-				{
-					Chunk_[i][j][k].SetActive(false);
-				}
-				else
-				{
-					// Check if theres block in that particle position
-					xPositive = CheckBlock(i + 1, j, k);
-					xNegative = CheckBlock(i - 1, j, k);
-					yPositive = CheckBlock(i, j + 1, k);
-					yNegative = CheckBlock(i, j - 1, k);
-					zPositive = CheckBlock(i, j, k + 1);
-					zNegative = CheckBlock(i, j, k - 1);
-
-					// THIS IS WHERE WE PERFORM MESH UPDATING FOR DIFFERENT SIDES
-
-					bool result = !(xPositive && xNegative && yPositive && yNegative && zPositive && zNegative);
-
-					Chunk_[i][j][k].SetActive(result);
-				}			
-
-				// Debugging
-				if (Chunk_[i][j][k].IsActive())
-				{
-					activeBlocks++;
-				}
-			}
-		}
-	}
-
-	OutputToDebug("Rendered Blocks : ");
-	OutputToDebug(to_string(activeBlocks));
-	OutputToDebug(" / ");
-	OutputToDebug(to_string(TOTAL_BLOCKS_IN_CHUNK));
-	OutputToDebug("\n");
-}
-
-bool Chunk::CheckBlock(int x, int y, int z)
-{
-	// Check if the block is out of range
-	if (x < 0 || x >= BLOCK_COUNT_WIDTH)
-	{
-		return false;
-	}
-	if (y < 0 || y >= BLOCK_COUNT_HEIGHT)
-	{
-		return false;
-	}
-	if (z < 0 || z >= BLOCK_COUNT_DEPTH)
-	{
-		return false;
-	}
-
-	// Check the type of block
-	switch (Chunk_[x][y][z].GetType())
-	{
-		// AIR - Simulates no block
-		case BlockType::Air:
-			return false;
-			break;
-
-		default:
-			return true;
-			break;
-	}
-
-	return true;
-}
-
 // Frame
 void Chunk::Frame()
 {
 	// Check frustrum
-	// Set IsActive_ based on frustum state
-	RefreshVisible();
+	if (!IsVisible_)
+	{
+		return;
+	}
+
+	RefreshVisibleBlocks();
+	RefreshVisibleFaces();
 }
 
 void Chunk::Render()
 {
 	if (!IsVisible_)
+	{
 		return;
+	}
 
 	// Loop through x dimension
 	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
@@ -252,11 +85,210 @@ void Chunk::Render()
 					Transform* transform = Chunk_[i][j][k].GetTransform();
 
 					// Render
-					ShaderManager::Instance()->LightShader(&Chunk_[i][j][k]);
+					ShaderManager::Instance()->LightRender(&Chunk_[i][j][k]);
 				}
 			}
 		}
 	}
+}
+
+// Terrain Generation
+void Chunk::GenerateBlankChunk()
+{
+	D3DXVECTOR3 halfChunkOffset;
+
+	// Calculate half dimensions of the chunk
+	halfChunkOffset = D3DXVECTOR3(CHUNK_TOTAL_WIDTH, CHUNK_TOTAL_HEIGHT, CHUNK_COUNT_DEPTH) / 2;
+
+	// Create the 3D array to store blocks in chunk
+	Chunk_ = new Block**[BLOCK_COUNT_WIDTH];
+
+	// Loop through x dimension
+	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
+	{
+		Chunk_[i] = new Block*[BLOCK_COUNT_HEIGHT];
+
+		// Loop through y dimension
+		for (int j = 0; j < BLOCK_COUNT_HEIGHT; j++)
+		{
+			Chunk_[i][j] = new Block[BLOCK_COUNT_DEPTH];
+
+			// Loop through z dimension -- SELF PERLIN NOISE
+			for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
+			{
+				// Initialise air block
+				Chunk_[i][j][k] = Block();
+				Chunk_[i][j][k].Initialise();
+
+				// Set block world transform
+				Chunk_[i][j][k].GetTransform()->SetPosition(Transform_->GetPosition());
+				Chunk_[i][j][k].GetTransform()->Move(D3DXVECTOR3(i, j, k) * BLOCK_SIZE);
+				Chunk_[i][j][k].GetTransform()->Move(-halfChunkOffset);
+			}
+		}
+	}
+}
+
+void Chunk::GenerateTerrain()
+{
+	PerlinNoiseGenerator perlinNoise;
+
+	// Generate a random seed for the noise to use
+	perlinNoise.SetSeed(rand() % 10000);
+
+	// Loop through x dimension
+	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
+	{
+		// Loop through z dimension
+		for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
+		{
+			// Create noise values based on x and y coordinate
+			double x = (GetTransform()->GetPosition().x + (double)k) / ((double)BLOCK_COUNT_WIDTH);
+			double y = (GetTransform()->GetPosition().y + (double)i) / ((double)BLOCK_COUNT_HEIGHT);
+			float noise = perlinNoise.CreateNoise(x, y, 0.8f);
+			float height = floor(BLOCK_COUNT_HEIGHT * noise);
+
+			// Loop through y dimension
+			for (int j = 0; j < height; j++)
+			{
+				if (j < 1)
+				{
+					Chunk_[i][j][k].SetName("cobblestone");
+					Chunk_[i][j][k].SetType(BlockType::Cobblestone);
+					Chunk_[i][j][k].SetSolid(true);
+				}
+				else if (j < 3)
+				{
+					Chunk_[i][j][k].SetName("dirt");
+					Chunk_[i][j][k].SetType(BlockType::Dirt);
+					Chunk_[i][j][k].SetSolid(true);
+				}
+				else
+				{
+					Chunk_[i][j][k].SetName("sand");
+					Chunk_[i][j][k].SetType(BlockType::Sand);
+					Chunk_[i][j][k].SetSolid(true);
+				}
+				Chunk_[i][j][k].SetActive(true);
+			}
+		}
+	}
+}
+
+void Chunk::RefreshVisibleBlocks()
+{
+	bool blockVisible;
+
+	// Loop through x dimension
+	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
+	{
+		// Loop through y dimension
+		for (int j = 0; j < BLOCK_COUNT_HEIGHT; j++)
+		{
+			// Loop through z dimension
+			for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
+			{
+				// Check if the block is air
+				if (Chunk_[i][j][k].GetType() == BlockType::Air)
+				{
+					// Skip as we auto dont want to see it
+					Chunk_[i][j][k].SetActive(false);
+					continue;
+				}
+
+				// Check if we can see the block
+				blockVisible = ViewFrustumManager::Instance()->CheckCube(Chunk_[i][j][k].GetTransform()->GetPosition(), BLOCK_SIZE / 2);
+
+				// Set block state
+				Chunk_[i][j][k].SetActive(blockVisible);
+			}
+		}
+	}
+}
+
+void Chunk::RefreshVisibleFaces()
+{
+	// Loop through x dimension
+	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
+	{
+		// Loop through y dimension
+		for (int j = 0; j < BLOCK_COUNT_HEIGHT; j++)
+		{
+			// Loop through z dimension
+			for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
+			{
+				// Check if we can see it
+				if (Chunk_[i][j][k].IsActive())
+				{
+					// Check if the block is air
+					if (Chunk_[i][j][k].GetType() == BlockType::Air)
+					{
+						// Skip as we auto dont want to see it
+						Chunk_[i][j][k].SetActive(false);
+					}
+					else
+					{
+						// Check if we can see the block
+						CheckBlockVisibility(i, j, k);
+					}
+				}
+			}
+		}
+	}
+}
+
+void Chunk::CheckBlockVisibility(int i, int j, int k)
+{
+	bool xPositive, xNegative;
+	bool yPositive, yNegative;
+	bool zPositive, zNegative;
+	bool blockVisible;
+
+	// Check if theres block in that particular position
+	xPositive = CheckBlockTaken(i + 1, j, k);
+	xNegative = CheckBlockTaken(i - 1, j, k);
+	yPositive = CheckBlockTaken(i, j + 1, k);
+	yNegative = CheckBlockTaken(i, j - 1, k);
+	zPositive = CheckBlockTaken(i, j, k + 1);
+	zNegative = CheckBlockTaken(i, j, k - 1);
+
+	//============================================================\\
+	// THIS IS WHERE WE PERFORM MESH UPDATING FOR DIFFERENT SIDES \\
+	//============================================================\\
+
+	blockVisible = !(xPositive && xNegative && yPositive && yNegative && zPositive && zNegative);
+
+	Chunk_[i][j][k].SetActive(blockVisible);
+}
+
+bool Chunk::CheckBlockTaken(int i, int j, int k)
+{
+	// Check if the block is out of range
+	if (i < 0 || i >= BLOCK_COUNT_WIDTH)
+	{
+		return false;
+	}
+	if (j < 0 || j >= BLOCK_COUNT_HEIGHT)
+	{
+		return false;
+	}
+	if (k < 0 || k >= BLOCK_COUNT_DEPTH)
+	{
+		return false;
+	}
+
+	switch (Chunk_[i][j][k].GetType())
+	{
+		case BlockType::Air:
+			return false;
+			break;
+
+		default:
+			return true;
+			break;
+	}
+
+	return true;
 }
 
 // Getters

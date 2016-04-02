@@ -19,7 +19,7 @@ GameShader::~GameShader()
 }
 
 // Initialising
-bool GameShader::InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename, WCHAR* hsFilename, WCHAR* dsFilename)
+bool GameShader::InitialiseRender(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename, WCHAR* hsFilename, WCHAR* dsFilename)
 {
 	HRESULT Result_;
 	ID3D10Blob* errorMessage;
@@ -80,10 +80,16 @@ bool GameShader::InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilenam
 	//=======================
 
 	Result_ = DirectXManager::Instance()->GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &VertexShader_);
-	if (FAILED(Result_)) { return false; }
+	if (FAILED(Result_))
+	{
+		return false;
+	}
 
 	Result_ = DirectXManager::Instance()->GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &PixelShader_);
-	if (FAILED(Result_)) { return false; }
+	if (FAILED(Result_))
+	{
+		return false;
+	}
 
 	if (hsFilename)
 	{
@@ -339,7 +345,7 @@ void GameShader::SendBuffersToShader()
 	{
 		for (int i = 0; i < VertexBuffers_.size(); i++)
 		{
-			VertexBuffers_[i]->SendToShader(VertexShader, i);
+			VertexBuffers_[i]->SendToRender(VertexShader, i);
 		}
 	}
 
@@ -348,7 +354,7 @@ void GameShader::SendBuffersToShader()
 	{
 		for (int i = 0; i < PixelBuffers_.size(); i++)
 		{
-			PixelBuffers_[i]->SendToShader(PixelShader, i);
+			PixelBuffers_[i]->SendToRender(PixelShader, i);
 		}
 	}
 
@@ -357,7 +363,7 @@ void GameShader::SendBuffersToShader()
 	{
 		for (int i = 0; i < HullBuffers_.size(); i++)
 		{
-			HullBuffers_[i]->SendToShader(HullShader, i);
+			HullBuffers_[i]->SendToRender(HullShader, i);
 		}
 	}
 
@@ -366,7 +372,7 @@ void GameShader::SendBuffersToShader()
 	{
 		for (int i = 0; i < DomainBuffers_.size(); i++)
 		{
-			DomainBuffers_[i]->SendToShader(DomainShader, i);
+			DomainBuffers_[i]->SendToRender(DomainShader, i);
 		}
 	}
 }

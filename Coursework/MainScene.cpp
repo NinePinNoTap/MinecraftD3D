@@ -531,7 +531,7 @@ bool MainScene::RenderScene(bool ShowText)
 	DirectXManager::Instance() -> ToggleZBuffer(false);
 
 	// Render the sky dome
-	ShaderManager::Instance() -> SkyShader(SkySphere_);
+	ShaderManager::Instance() -> SkyRender(SkySphere_);
 
 	// Turn back face culling on
 	DirectXManager::Instance() -> ToggleCulling(true);
@@ -540,7 +540,7 @@ bool MainScene::RenderScene(bool ShowText)
 	DirectXManager::Instance() -> EnableSecondBlendState();
 
 	// Render the clouds
-	ShaderManager::Instance() -> CloudShader(Clouds_);
+	ShaderManager::Instance() -> CloudRender(Clouds_);
 
 	// Enable culling and the z buffer
 	DirectXManager::Instance() -> ToggleAlphaBlending(false);
@@ -557,14 +557,14 @@ bool MainScene::RenderScene(bool ShowText)
 	// Render the Terrain
 	//====================
 
-	//Result_ = ShaderManager::Instance()->TerrainShader(Terrain_);
+	//Result_ = ShaderManager::Instance()->TerrainRender(Terrain_);
 	//if (!Result_) { return false; }
 
 	//==================
 	// Render the Ocean 
 	//==================
 
-	//Result_ = ShaderManager::Instance()->OceanShader(Ocean_, RefractionTexture_, ReflectionTexture_);
+	//Result_ = ShaderManager::Instance()->OceanRender(Ocean_, RefractionTexture_, ReflectionTexture_);
 	//if (!Result_) { return false; }
 
 	//===================
@@ -579,7 +579,7 @@ bool MainScene::RenderScene(bool ShowText)
 	{
 		if (gameObject->IsActive())
 		{
-			Result_ = ShaderManager::Instance()->LightShader(gameObject);
+			Result_ = ShaderManager::Instance()->LightRender(gameObject);
 			if (!Result_)
 			{
 				return false;
@@ -608,7 +608,7 @@ bool MainScene::RenderScene(bool ShowText)
 		DirectXManager::Instance() -> ToggleAlphaBlending(true);
 
 		// Render the particle WindowManager
-		Result_ = ShaderManager::Instance()->TextureShader(ParticleSystem_);
+		Result_ = ShaderManager::Instance()->TextureRender(ParticleSystem_);
 		if (!Result_) { return false; }
 
 		// Turn off alpha blending.
@@ -695,7 +695,7 @@ bool MainScene::RenderRefraction()
 	ClipPlane_ = D3DXVECTOR4(0.0f, -1.0f, 0.0f, Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
 
 	// Render the terrain using reflection shader
-	//Result_ = ShaderManager::Instance()->TerrainShader(Terrain_, ClipPlane_);
+	//Result_ = ShaderManager::Instance()->TerrainRender(Terrain_, ClipPlane_);
 	//if (!Result_) { return false; }
 
 	// Reset rendering back to normal
@@ -737,7 +737,7 @@ bool MainScene::RenderReflection()
 	DirectXManager::Instance() -> ToggleZBuffer(false);
 
 	// Render the sky sphere
-	Result_ = ShaderManager::Instance()->SkyShader(SkySphere_);
+	Result_ = ShaderManager::Instance()->SkyRender(SkySphere_);
 	if (!Result_) { return false; }
 
 	// Re-enable culling
@@ -747,7 +747,7 @@ bool MainScene::RenderReflection()
 	DirectXManager::Instance() -> EnableSecondBlendState();
 
 	// Render the clouds
-	Result_ = ShaderManager::Instance()->CloudShader(Clouds_);
+	Result_ = ShaderManager::Instance()->CloudRender(Clouds_);
 	if (!Result_) { return false; }
 
 	// Disable blending and re-enable the z buffer
@@ -773,7 +773,7 @@ bool MainScene::RenderReflection()
 	{
 		if (gameObject->IsReflectable())
 		{
-			Result_ = ShaderManager::Instance()->LightShader(gameObject);
+			Result_ = ShaderManager::Instance()->LightRender(gameObject);
 			if (!Result_)
 			{
 				return false;
@@ -791,7 +791,7 @@ bool MainScene::RenderReflection()
 	// We use max wave height here otherwise the refraction renders incorrectly
 	ClipPlane_ = D3DXVECTOR4(0.0f, 1.0f, 0.0f, -Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
 
-	//Result_ = ShaderManager::Instance()->TerrainShader(Terrain_, ClipPlane_);
+	//Result_ = ShaderManager::Instance()->TerrainRender(Terrain_, ClipPlane_);
 	//if (!Result_) { return false; }
 
 	// Re-enable culling

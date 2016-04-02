@@ -1,9 +1,13 @@
 #include "GameObject.h"
+#include "ShaderManager.h"
 
 GameObject::GameObject()
 {
 	// Initialise the pointers
 	Model_ = 0;
+
+	// Initialise the shader
+	Shader_ = 0;
 
 	// Initialise default transforms
 	Transform_ = 0;
@@ -133,6 +137,10 @@ bool GameObject::Render()
 }
 
 // Rendering
+void GameObject::SetRender(string shaderName)
+{
+	//Shader_ = ShaderManager::Instance()->GetRender(shaderName);
+}
 void GameObject::SetReflectable(bool Flag)
 {
 	IsReflectable_ = Flag;

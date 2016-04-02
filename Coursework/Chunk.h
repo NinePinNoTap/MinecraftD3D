@@ -25,9 +25,13 @@ public:
 	Transform* GetTransform();
 
 private:
-	void GenerateChunk();
-	void RefreshVisible();
-	bool CheckBlock(int x, int y, int z);
+	void GenerateBlankChunk();
+	void GenerateTerrain();
+	void RefreshVisibleBlocks();
+	void RefreshVisibleFaces();
+
+	void CheckBlockVisibility(int x, int y, int z);
+	bool CheckBlockTaken(int x, int y, int z);
 
 	Block*** Chunk_;
 	bool IsVisible_;

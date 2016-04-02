@@ -19,7 +19,7 @@ void ConstantBuffer::Shutdown()
 	}
 }
 
-void ConstantBuffer::SendToShader(ShaderType Type, int Slot, int NoOfBuffers)
+void ConstantBuffer::SendToRender(ShaderType Type, int Slot, int NoOfBuffers)
 {
 	switch (Type)
 	{

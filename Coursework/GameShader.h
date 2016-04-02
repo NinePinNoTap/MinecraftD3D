@@ -24,7 +24,7 @@ public:
 	~GameShader();
 
 	// Initialising
-	bool InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename, WCHAR* hsFilename = 0, WCHAR* dsFilename = 0);
+	bool InitialiseRender(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename, WCHAR* hsFilename = 0, WCHAR* dsFilename = 0);
 
 	// Shutdown
 	void Shutdown();
@@ -39,49 +39,49 @@ public:
 	void AddBuffer(ShaderType type)
 	{
 		// Create a buffer
-		ConstantBuffer* TempBuffer = new ConstantBuffer;
-		TempBuffer->BuildBuffer<T>();
+		ConstantBuffer* tempBuffer = new ConstantBuffer;
+		tempBuffer->BuildBuffer<T>();
 
 		// Add to the required shader
 		switch (type)
 		{
 			case VertexShader:
-				VertexBuffers_.push_back(TempBuffer);
+				VertexBuffers_.push_back(tempBuffer);
 				break;
 
 			case PixelShader:
-				PixelBuffers_.push_back(TempBuffer);
+				PixelBuffers_.push_back(tempBuffer);
 				break;
 
 			case HullShader:
-				HullBuffers_.push_back(TempBuffer);
+				HullBuffers_.push_back(tempBuffer);
 				break;
 
 			case DomainShader:
-				DomainBuffers_.push_back(TempBuffer);
+				DomainBuffers_.push_back(tempBuffer);
 				break;
 		}
 	}
 
 	template <class T>
-	void UpdateBuffer(ShaderType type, int BufferNo, T Data)
+	void UpdateBuffer(ShaderType shaderType, int bufferSlot, T bufferData)
 	{
-		switch (type)
+		switch (shaderType)
 		{
 			case VertexShader:
-				VertexBuffers_[BufferNo]->MapBuffer(Data);
+				VertexBuffers_[bufferSlot]->MapBuffer(bufferData);
 				break;
 
 			case PixelShader:
-				PixelBuffers_[BufferNo]->MapBuffer(Data);
+				PixelBuffers_[bufferSlot]->MapBuffer(bufferData);
 				break;
 
 			case HullShader:
-				HullBuffers_[BufferNo]->MapBuffer(Data);
+				HullBuffers_[bufferSlot]->MapBuffer(bufferData);
 				break;
 
 			case DomainShader:
-				DomainBuffers_[BufferNo]->MapBuffer(Data);
+				DomainBuffers_[bufferSlot]->MapBuffer(bufferData);
 				break;
 		}
 	}
@@ -91,6 +91,7 @@ public:
 	{
 		return true;
 	}
+
 	void SendBuffersToShader();
 	void SendTextureToShader(int Slot, ID3D11ShaderResourceView* Texture);
 

@@ -79,7 +79,7 @@ public:
 	bool CheckPoint(D3DXVECTOR3 position)
 	{
 		// Check if the point is inside all six planes of the view frustum.
-		for (int i = 0; i<6; i++)
+		for (int i = 0; i < NO_OF_PLANES; i++)
 		{
 			if (D3DXPlaneDotCoord(&ViewPlanes_[i], &position) < 0.0f)
 			{
@@ -99,7 +99,7 @@ public:
 		float z = position.z;
 
 		// Check if any one point of the cube is in the view frustum.
-		for (i = 0; i<6; i++)
+		for (i = 0; i < NO_OF_PLANES; i++)
 		{
 			if (D3DXPlaneDotCoord(&ViewPlanes_[i], &D3DXVECTOR3((x - radius), (y - radius), (z - radius))) >= 0.0f)
 			{
@@ -148,6 +148,7 @@ public:
 	}
 
 private:
-	D3DXPLANE ViewPlanes_[6];
+	static const int NO_OF_PLANES = 6;
+	D3DXPLANE ViewPlanes_[NO_OF_PLANES];
 };
 

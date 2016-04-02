@@ -1,9 +1,9 @@
 #pragma once
 
+#include <map>
+
 #include "DirectXManager.h"
 #include "Singleton.h"
-
-#include "Block.h"
 #include "Camera.h"
 #include "Clouds.h"
 #include "Fire.h"
@@ -42,26 +42,31 @@ public:
 	MatrixBuffer GetMatrixBuffer() { return MatrixBuffer_; }
 	
 	// Shaders
-	bool CloudShader(Clouds* cloud);
+	bool CloudRender(Clouds* cloud);
 
-	bool ColourShader(GameObject* obj);
+	bool ColourRender(GameObject* obj);
 
-	bool FireShader(Fire* fire);
+	bool FireRender(Fire* fire);
 
-	bool FontShader(Text::SentenceType* sentence, ID3D11ShaderResourceView* texture);
+	bool FontRender(Text::SentenceType* sentence, ID3D11ShaderResourceView* texture);
 
-	bool LightShader(GameObject* model);
+	bool LightRender(GameObject* model);
 
-	bool OceanShader(Water* ocean, Texture* refraction, Texture* reflection);
+	bool OceanRender(Water* ocean, Texture* refraction, Texture* reflection);
 
-	bool SkyShader(GameObject* sky);
+	bool SkyRender(GameObject* sky);
 
-	bool TerrainShader(Terrain* terrain);
-	bool TerrainShader(Terrain* terrain, D3DXVECTOR4 clip);
+	bool TerrainRender(Terrain* terrain);
+	bool TerrainRender(Terrain* terrain, D3DXVECTOR4 clip);
 
-	bool TextureShader(GameObject* model);
-	bool TextureShader(ParticleSystem* particles);
+	bool TextureRender(GameObject* model);
+	bool TextureRender(ParticleSystem* particles);
 	
+	GameShader* GetRender(string keyName)
+	{
+		return ShaderDatabase_[keyName];
+	}
+
 private:
 	bool Result_;
 
@@ -79,6 +84,8 @@ private:
 	GameShader* TerrainShader_;
 	GameShader* TerrainReflectionShader_;
 	GameShader* TextureShader_;
+
+	std::map<string, GameShader*> ShaderDatabase_;
 };
 
 

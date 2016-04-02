@@ -8,51 +8,32 @@ Block::Block() : GameObject()
 	IsSolid_ = false;
 }
 
-Block::Block(string blockName, BlockType blockType, bool isSolid) : GameObject()
-{
-	BlockName_ = blockName;
-	Type_ = blockType;
-	IsSolid_ = isSolid;
-
-	Initialise();
-}
-
 Block::~Block()
 {
 }
 
-bool Block::Initialise()
+// Setters
+bool Block::SetName(string blockName)
 {
-	//==============
-	// Create Model
-	//==============
+	// Check if we are updating to a new block
+	if (BlockName_ == blockName)
+	{
+		return true;
+	}
 
+	// Store the block name
+	BlockName_ = blockName;
+
+	// Load the new block
 	BlockLoader::Instance()->LoadBlock(&Model_, BlockName_);
 	if (!Model_)
 	{
 		return false;
 	}
 
-	//==================
-	// Create Transform
-	//==================
-
-	Transform_ = new Transform;
-	if (!Transform_)
-	{
-		return false;
-	}
-
-	//=================
-	// Initialise Vars
-	//=================
-
-	Frame_ = 0;
-	IsReflectable_ = true;
-	IsActive_ = true;
+	return true;
 }
 
-// Setters
 void Block::SetType(BlockType type)
 {
 	Type_ = type;

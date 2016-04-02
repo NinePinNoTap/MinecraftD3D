@@ -56,7 +56,7 @@ public:
 		DirectXManager::Instance()->GetDeviceContext()->Unmap(Buffer_, 0);
 	}
 
-	void SendToShader(ShaderType Type, int Slot, int NoOfBuffers = 1);
+	void SendToRender(ShaderType Type, int Slot, int NoOfBuffers = 1);
 
 private:
 	ID3D11Buffer* Buffer_;

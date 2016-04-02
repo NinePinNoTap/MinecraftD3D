@@ -28,6 +28,7 @@ void BlockLoader::LoadBlock(Model** model, string blockName)
 	// Create a material for the model
 	Material* newMaterial = new Material;
 	newMaterial->SetBaseTexture(blockName + ".dds");
+	newMaterial->SetFloat("SpecularPower", 0);
 
 	// Remove any materials from the model
 	loadedModel->ClearMaterials();
