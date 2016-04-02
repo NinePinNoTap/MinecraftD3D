@@ -30,9 +30,13 @@ const float CAMERA_SENSITIVITY  = 10.0f;
 const int BLOCK_SIZE = 2;
 const int CHUNK_COUNT = 1;
 
-const int BLOCK_COUNT_WIDTH = 16;
-const int BLOCK_COUNT_HEIGHT = 16;
-const int BLOCK_COUNT_DEPTH = 16;
+const int CHUNK_COUNT_WIDTH = 1;
+const int CHUNK_COUNT_HEIGHT = 1;
+const int CHUNK_COUNT_DEPTH = 1;
+
+const int BLOCK_COUNT_WIDTH = 8;
+const int BLOCK_COUNT_HEIGHT = 8;
+const int BLOCK_COUNT_DEPTH = 8;
 
 const int CHUNK_TOTAL_WIDTH = BLOCK_COUNT_WIDTH * BLOCK_SIZE;
 const int CHUNK_TOTAL_HEIGHT = BLOCK_COUNT_HEIGHT * BLOCK_SIZE;

@@ -72,17 +72,41 @@ void Chunk::GenerateChunk()
 			// Loop through z dimension -- SELF PERLIN NOISE
 			for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
 			{
-				if (j >= BLOCK_COUNT_HEIGHT - 4)
+				Chunk_[i][j][k] = Block();
+			}
+		}
+	}
+
+	//
+	// Fill the Chunk
+	//
+
+	PerlinNoiseGenerator perlinNoise;
+
+	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
+	{
+		for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
+		{
+			// Create noise
+			double x = (GetTransform()->GetPosition().x + (double)k) / ((double)BLOCK_COUNT_WIDTH);
+			double y = (GetTransform()->GetPosition().y + (double)i) / ((double)BLOCK_COUNT_HEIGHT);
+			float noise = perlinNoise.CreateNoise(x, y, 0.8f);
+			float val = floor(BLOCK_COUNT_HEIGHT * noise);
+
+			// Loop through z dimension -- SELF PERLIN NOISE
+			for (int j = 0; j < val; j++)
+			{
+				if (j < 1)
 				{
-					Chunk_[i][j][k] = Block("sand", BlockType::Sand, true);
+					Chunk_[i][j][k] = Block("cobblestone", BlockType::Cobblestone, true);
 				}
-				else if (j >= BLOCK_COUNT_HEIGHT - 10)
+				else if (j < 3)
 				{
 					Chunk_[i][j][k] = Block("dirt", BlockType::Dirt, true);
 				}
 				else
 				{
-					Chunk_[i][j][k] = Block("cobblestone", BlockType::Cobblestone, true);
+					Chunk_[i][j][k] = Block("sand", BlockType::Sand, true);
 				}
 
 				// Calculate block position inside the world
@@ -118,11 +142,11 @@ void Chunk::RefreshVisible()
 					// Skip as we auto dont want to see it
 					Chunk_[i][j][k].SetActive(false);
 					
-				}
+				}/*
 				else if (!CheckScreenSpace(Chunk_[i][j][k].GetTransform()->GetPosition()))
 				{
 					Chunk_[i][j][k].SetActive(false);
-				}
+				}*/
 				else
 				{
 					// Check if theres block in that particle position

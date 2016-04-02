@@ -3,6 +3,9 @@
 
 Block::Block() : GameObject()
 {
+	BlockName_ = "air";
+	Type_ = BlockType::Air;
+	IsSolid_ = false;
 }
 
 Block::Block(string blockName, BlockType blockType, bool isSolid) : GameObject()
