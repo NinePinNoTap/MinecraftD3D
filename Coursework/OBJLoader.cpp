@@ -9,7 +9,7 @@ OBJLoader::~OBJLoader()
 {
 }
 
-bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
+bool OBJLoader::LoadModel(const char* modelFilename, Model& model)
 {
 	ifstream fin;
 	char linebuffer[256];
@@ -26,19 +26,19 @@ bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
 	D3DXVECTOR3 tempFace[3];
 	std::string textureFilename;
 
-	float vertexID, textureID, normalID;
-	int indexCount, vertexCount;
-
 	//===================
 	// Load the OBJ File
 	//===================
 
 	// Open the file
-	fin.open(MODEL_DIR + ModelFilename);
+	fin.open(MODEL_DIR + modelFilename);
 
 	// Check if file couldnt be opened
-	if (fin.fail()) { return false; }
-
+	if (fin.fail())
+	{
+		return false;
+	}
+	
 	// Loop through the file lines 
 	while (!fin.eof())
 	{
@@ -76,95 +76,145 @@ bool OBJLoader::LoadModel(const char* ModelFilename, Model& model)
 			faceData.push_back(tempFace[1]);
 			faceData.push_back(tempFace[2]);
 		}
-		else if (string(linebuffer).find("usemtl ") == 0) 
+		else if (string(linebuffer).find("usemtl") == 0) 
 		{
 			// Check if we have face data to process
 			if (faceData.size() > 0)
 			{
-				//====================
-				// Construct the Mesh
-				//====================
-
-				VertexData* ObjMesh;
-				unsigned long* Indices;
-
-				// Store how many indices and vertices we will have
-				indexCount = vertexCount = faceData.size();
-
-				// Construct data storage
-				ObjMesh = new VertexData[vertexCount];
-				if (!ObjMesh) { return false; }
-
-				Indices = new unsigned long[indexCount];
-				if (!Indices) { return false; }
-
-				// Loop through face data
-				for (unsigned int Index = 0; Index < faceData.size(); Index++)
-				{
-					// Read in Face Data
-					vertexID = faceData[Index].x - 1;
-					textureID = faceData[Index].y - 1;
-					normalID = faceData[Index].z - 1;
-
-					// Grab data from the vectors and apply them to the model
-					ObjMesh[Index].position.x = vertexData[vertexID].x;
-					ObjMesh[Index].position.y = vertexData[vertexID].y;
-					ObjMesh[Index].position.z = vertexData[vertexID].z * -1; //Flip for RH WindowManager
-
-					ObjMesh[Index].texture.x = textureData[textureID].x;
-					ObjMesh[Index].texture.y = 1 - textureData[textureID].y; //Flip for RH WindowManager
-
-					ObjMesh[Index].normal.x = normalData[normalID].x;
-					ObjMesh[Index].normal.y = normalData[normalID].y;
-					ObjMesh[Index].normal.z = normalData[normalID].z * -1; //Flip for RH WindowManager
-
-					Indices[Index] = Index;
-				}
-
-				//==============
-				// Create Final
-				//==============
-
-				// Create Mesh
-				Mesh3D* newMesh = new Mesh3D;
-				newMesh->SetIndexCount(indexCount);
-				newMesh->SetVertexCount(vertexCount);
-				newMesh->SetMesh(ObjMesh, Indices);
-				Result_ = newMesh->Build();
+				Result_ = BuildModel(&model, textureFilename, vertexData, textureData, normalData, faceData);
 				if (!Result_)
 				{
 					return false;
 				}
-
-				// Create Material
-				Material* newMaterial = new Material;
-				Result_ = newMaterial->SetBaseTexture(textureFilename);
-				if (!Result_)
-				{
-					return false;
-				}
-
-				// Pass to model
-				model.AddMesh(newMesh);
-				model.AddMaterial(newMaterial);
 
 				// Clear Data
-				vertexData.clear();
-				textureData.clear();
-				normalData.clear();
 				faceData.clear();
-			}	
+			}
+
 
 			// Read in the texture name
-			sscanf_s(string(linebuffer).c_str(), "usemtl %s", &textureFilename);
+			std::string str(linebuffer);
+			std::vector<std::string> tokens;
+			std::istringstream split(str);
+			for (std::string temp; std::getline(split, temp, ' '); tokens.push_back(temp));
 
-			// Compile and store new texture for faces
-			textureFilename = TEXTURE_DIR + textureFilename + ".dds";
+			textureFilename = tokens[1];
 		}
 	}
 
+	// Check for any remaining models to be created
+	if (faceData.size() > 0)
+	{
+		Result_ = BuildModel(&model, textureFilename, vertexData, textureData, normalData, faceData);
+		if (!Result_)
+		{
+			return false;
+		}
+	}
+
+	//==========
+	// Clean Up
+	//==========
+
+	vertexData.clear();
+	normalData.clear();
+	textureData.clear();
+	faceData.clear();
+
 	// Close the file
 	fin.close();
+
+	return true;
+}
+
+bool OBJLoader::BuildModel(Model* model, std::string textureFilename, vector<D3DXVECTOR3> vertexData, vector<D3DXVECTOR2> textureData, vector<D3DXVECTOR3> normalData, vector<D3DXVECTOR3> faceData)
+{
+	float vertexID, textureID, normalID;
+	int indexCount, vertexCount;
+
+	//====================
+	// Construct the Mesh
+	//====================
+
+	VertexData* ObjMesh;
+	unsigned long* Indices;
+
+	// Store how many indices and vertices we will have
+	indexCount = vertexCount = faceData.size();
+
+	// Construct data storage
+	ObjMesh = new VertexData[vertexCount];
+	if (!ObjMesh)
+	{
+		return false;
+	}
+
+	Indices = new unsigned long[indexCount];
+	if (!Indices)
+	{
+		return false;
+	}
+
+	// Loop through face data
+	for (unsigned int Index = 0; Index < faceData.size(); Index++)
+	{
+		// Read in Face Data
+		vertexID = faceData[Index].x - 1;
+		textureID = faceData[Index].y - 1;
+		normalID = faceData[Index].z - 1;
+
+		// Grab data from the vectors and apply them to the model
+		ObjMesh[Index].position.x = vertexData[vertexID].x;
+		ObjMesh[Index].position.y = vertexData[vertexID].y;
+		ObjMesh[Index].position.z = vertexData[vertexID].z * -1; //Flip for RH WindowManager
+
+		ObjMesh[Index].texture.x = textureData[textureID].x;
+		ObjMesh[Index].texture.y = 1 - textureData[textureID].y; //Flip for RH WindowManager
+
+		ObjMesh[Index].normal.x = normalData[normalID].x;
+		ObjMesh[Index].normal.y = normalData[normalID].y;
+		ObjMesh[Index].normal.z = normalData[normalID].z * -1; //Flip for RH WindowManager
+
+		Indices[Index] = Index;
+	}
+
+	//=============
+	// Create Mesh
+	//=============
+
+	// Create Mesh
+	Mesh3D* newMesh = new Mesh3D;
+	newMesh->SetIndexCount(indexCount);
+	newMesh->SetVertexCount(vertexCount);
+	newMesh->SetMesh(ObjMesh, Indices);
+	Result_ = newMesh->Build();
+	if (!Result_)
+	{
+		return false;
+	}
+
+	// Pass to model
+	model->AddMesh(newMesh);
+
+	//=================
+	// Create Material
+	//=================
+
+	if (textureFilename.length() > 0)
+	{
+		// Add texture extension
+		textureFilename += ".dds";
+
+		// Create Material
+		Material* newMaterial = new Material;
+		Result_ = newMaterial->SetBaseTexture(textureFilename);
+		if (!Result_)
+		{
+			return false;
+		}
+
+		model->AddMaterial(newMaterial);
+	}
 
 	return true;
 }

@@ -16,6 +16,8 @@ public:
 	void Initialise();
 	void Shutdown();
 
+	void Generate();
+
 	// Frame
 	void Frame();
 	void Render();
@@ -27,11 +29,16 @@ public:
 private:
 	void GenerateBlankChunk();
 	void GenerateTerrain();
-	void RefreshVisibleBlocks();
-	void RefreshVisibleFaces();
 
-	void CheckBlockVisibility(int x, int y, int z);
-	bool CheckBlockTaken(int x, int y, int z);
+	void RefreshBlocks();
+
+	void HandleBlock(int i, int j, int k);
+	void HandleBlockFaces(int i, int j, int k);
+
+	bool HandleBlockVisibility(int i, int j, int k);
+	bool BlockIsEmpty(int x, int y, int z);
+
+	bool BlockIsValid(int x, int y, int z);
 
 	Block*** Chunk_;
 	bool IsVisible_;

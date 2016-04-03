@@ -9,6 +9,11 @@ Mesh3D::Mesh3D()
 	VertexBuffer_ = 0;
 }
 
+Mesh3D::Mesh3D(const Mesh3D& mesh)
+{
+	*this = mesh; // copy the value
+}
+
 Mesh3D::~Mesh3D()
 {
 
@@ -116,6 +121,7 @@ bool Mesh3D::Build()
 		return false;
 	}
 
+	// Set flags
 	IsActive_ = true;
 
 	return true;

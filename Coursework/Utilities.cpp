@@ -99,6 +99,13 @@ void Wrap(float& value, float min, float max)
 	}
 }
 
+void Clamp(int& value, int min, int max)
+{
+	if (value < min)
+		value = min;
+	else if (value > max)
+		value = max;
+}
 void Clamp(float& value, float min, float max)
 {
 	if (value < min)
@@ -136,6 +143,11 @@ float AngleBetweenPoints(Vector2 A, Vector2 B)
 	float deltaY = B.y - A.y;
 
 	return D3DXToDegree(atan2(deltaY, deltaX));
+}
+
+bool RangeCheck(int value, int min, int max)
+{
+	return value >= min && value <= max;
 }
 
 bool RangeCheck(float value, float min, float max)

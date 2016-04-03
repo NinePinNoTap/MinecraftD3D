@@ -12,6 +12,7 @@ class Mesh3D
 {
 public:
 	Mesh3D();
+	Mesh3D(const Mesh3D& mesh);
 	~Mesh3D();
 
 	// Shutdown

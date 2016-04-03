@@ -18,13 +18,6 @@ void Chunk::Initialise()
 
 	Transform_ = new Transform;
 
-	//================
-	// Generate Chunk
-	//================
-
-	GenerateBlankChunk();
-	GenerateTerrain();
-
 	//==================
 	// Initialise Flags
 	//==================
@@ -49,6 +42,17 @@ void Chunk::Shutdown()
 	delete[] Chunk_;
 }
 
+void Chunk::Generate()
+{
+	//================
+	// Generate Chunk
+	//================
+
+	GenerateBlankChunk();
+	GenerateTerrain();
+	RefreshBlocks();
+}
+
 // Frame
 void Chunk::Frame()
 {
@@ -57,9 +61,6 @@ void Chunk::Frame()
 	{
 		return;
 	}
-
-	RefreshVisibleBlocks();
-	RefreshVisibleFaces();
 }
 
 void Chunk::Render()
@@ -81,6 +82,7 @@ void Chunk::Render()
 				if (Chunk_[i][j][k].IsActive())
 				{
 					// Render
+					Block temp = Chunk_[i][j][k];
 					Chunk_[i][j][k].Render();
 				}
 			}
@@ -109,13 +111,13 @@ void Chunk::GenerateBlankChunk()
 		{
 			Chunk_[i][j] = new Block[BLOCK_COUNT_DEPTH];
 
-			// Loop through z dimension -- SELF PERLIN NOISE
+			// Loop through z dimension
 			for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
 			{
 				// Initialise air block
 				Chunk_[i][j][k] = Block();
 				Chunk_[i][j][k].Initialise();
-				Chunk_[i][j][k].SetShader("texture");
+				Chunk_[i][j][k].SetShader("light");
 
 				// Set block world transform
 				Chunk_[i][j][k].GetTransform()->SetPosition(Transform_->GetPosition());
@@ -152,58 +154,26 @@ void Chunk::GenerateTerrain()
 				{
 					Chunk_[i][j][k].SetName("cobblestone");
 					Chunk_[i][j][k].SetType(BlockType::Cobblestone);
-					Chunk_[i][j][k].SetSolid(true);
 				}
 				else if (j < 3)
 				{
 					Chunk_[i][j][k].SetName("dirt");
 					Chunk_[i][j][k].SetType(BlockType::Dirt);
-					Chunk_[i][j][k].SetSolid(true);
 				}
 				else
 				{
 					Chunk_[i][j][k].SetName("sand");
 					Chunk_[i][j][k].SetType(BlockType::Sand);
-					Chunk_[i][j][k].SetSolid(true);
 				}
+
+				Chunk_[i][j][k].SetSolid(true);
 				Chunk_[i][j][k].SetActive(true);
 			}
 		}
 	}
 }
 
-void Chunk::RefreshVisibleBlocks()
-{
-	bool blockVisible;
-
-	// Loop through x dimension
-	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
-	{
-		// Loop through y dimension
-		for (int j = 0; j < BLOCK_COUNT_HEIGHT; j++)
-		{
-			// Loop through z dimension
-			for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
-			{
-				// Check if the block is air
-				if (Chunk_[i][j][k].GetType() == BlockType::Air)
-				{
-					// Skip as we auto dont want to see it
-					Chunk_[i][j][k].SetActive(false);
-					continue;
-				}
-
-				// Check if we can see the block
-				blockVisible = ViewFrustumManager::Instance()->CheckCube(Chunk_[i][j][k].GetTransform()->GetPosition(), BLOCK_SIZE / 2);
-
-				// Set block state
-				Chunk_[i][j][k].SetActive(blockVisible);
-			}
-		}
-	}
-}
-
-void Chunk::RefreshVisibleFaces()
+void Chunk::RefreshBlocks()
 {
 	// Loop through x dimension
 	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
@@ -214,78 +184,202 @@ void Chunk::RefreshVisibleFaces()
 			// Loop through z dimension
 			for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
 			{
-				// Check if we can see it
-				if (Chunk_[i][j][k].IsActive())
-				{
-					// Check if the block is air
-					if (Chunk_[i][j][k].GetType() == BlockType::Air)
-					{
-						// Skip as we auto dont want to see it
-						Chunk_[i][j][k].SetActive(false);
-					}
-					else
-					{
-						// Check if we can see the block
-						CheckBlockVisibility(i, j, k);
-					}
-				}
+				HandleBlock(i, j, k);
 			}
 		}
 	}
 }
 
-void Chunk::CheckBlockVisibility(int i, int j, int k)
+void Chunk::HandleBlock(int i, int j, int k)
 {
-	bool xPositive, xNegative;
-	bool yPositive, yNegative;
-	bool zPositive, zNegative;
-	bool blockVisible;
+	//===================
+	// Check Block State
+	//===================
 
-	// Check if theres block in that particular position
-	xPositive = CheckBlockTaken(i + 1, j, k);
-	xNegative = CheckBlockTaken(i - 1, j, k);
-	yPositive = CheckBlockTaken(i, j + 1, k);
-	yNegative = CheckBlockTaken(i, j - 1, k);
-	zPositive = CheckBlockTaken(i, j, k + 1);
-	zNegative = CheckBlockTaken(i, j, k - 1);
+	if (BlockIsEmpty(i, j, k))
+	{
+		// Block is empty
+		Chunk_[i][j][k].SetActive(false);
+		return;
+	}
 
-	//============================================================\\
-	// THIS IS WHERE WE PERFORM MESH UPDATING FOR DIFFERENT SIDES \\
-	//============================================================\\
+	//=====================
+	// Check Hiddden State
+	//=====================
 
-	blockVisible = !(xPositive && xNegative && yPositive && yNegative && zPositive && zNegative);
+	if (!HandleBlockVisibility(i, j, k))
+	{
+		// Block is hidden
+		Chunk_[i][j][k].SetActive(false);
+		return;
+	}
 
-	Chunk_[i][j][k].SetActive(blockVisible);
+	//==============================
+	// Check what faces can be seen
+	//==============================
+
+	if (Chunk_[i][j][k].IsActive())
+	{
+		// Process faces
+		HandleBlockFaces(i, j, k);
+	}
+
+	return;
+
+
+	//===============================================
+	// Check if the block is within the view frustum
+	//===============================================
+	
+	if (!ViewFrustumManager::Instance()->CheckCube(Chunk_[i][j][k].GetTransform()->GetPosition(), BLOCK_SIZE / 2))
+	{
+		Chunk_[i][j][k].SetActive(false);
+		return;
+	}
 }
 
-bool Chunk::CheckBlockTaken(int i, int j, int k)
+bool Chunk::HandleBlockVisibility(int i, int j, int k)
 {
-	// Check if the block is out of range
-	if (i < 0 || i >= BLOCK_COUNT_WIDTH)
-	{
-		return false;
-	}
-	if (j < 0 || j >= BLOCK_COUNT_HEIGHT)
-	{
-		return false;
-	}
-	if (k < 0 || k >= BLOCK_COUNT_DEPTH)
-	{
-		return false;
-	}
+	bool blockRight, blockLeft;
+	bool blockUp, blockDown;
+	bool blockForward, blockBackward;
+	bool blockVisible;
 
-	switch (Chunk_[i][j][k].GetType())
-	{
-		case BlockType::Air:
-			return false;
-			break;
+	//==========================
+	// Check Surrounding Blocks
+	//==========================
 
-		default:
-			return true;
-			break;
+	blockRight =	BlockIsEmpty(i + 1, j,		k);
+	blockLeft =		BlockIsEmpty(i - 1, j,		k);
+	blockUp =		BlockIsEmpty(i,		j + 1,	k);
+	blockDown =		BlockIsEmpty(i,		j - 1,	k);
+	blockForward =	BlockIsEmpty(i,		j,		k + 1);
+	blockBackward = BlockIsEmpty(i,		j,		k - 1);
+
+	blockVisible = (blockRight || blockLeft || blockUp || blockDown || blockForward || blockBackward);
+	if (blockVisible)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void Chunk::HandleBlockFaces(int i, int j, int k)
+{
+	Block tempBlock;
+	bool canSee[6];
+	int ID = 0;
+
+	//==========================
+	// Check Surrounding Blocks
+	//==========================
+
+	// Up
+	if (BlockIsValid(i, j + 1, k))
+	{
+		tempBlock = Chunk_[i][j + 1][k];
+		canSee[ID] = !tempBlock.IsSolid();
+	}
+	else
+	{
+		canSee[ID] = true;
+	}
+	ID++;
+
+	// Down
+	if (BlockIsValid(i, j - 1, k))
+	{
+		tempBlock = Chunk_[i][j - 1][k];
+		canSee[ID] = !tempBlock.IsSolid();
+	}
+	else
+	{
+		canSee[ID] = true;
+	}
+	ID++;
+
+	// Left
+	if (BlockIsValid(i - 1, j, k))
+	{
+		tempBlock = Chunk_[i - 1][j][k];
+		canSee[ID] = !tempBlock.IsSolid();
+	}
+	else
+	{
+		canSee[ID] = true;
+	}
+	ID++;
+
+	// Right
+	if (BlockIsValid(i + 1, j, k))
+	{
+		tempBlock = Chunk_[i + 1][j][k];
+
+		canSee[ID] = !tempBlock.IsSolid();
+	}
+	else
+	{
+		canSee[ID] = true;
+	}
+	ID++;
+
+	// Forward
+	if (BlockIsValid(i, j, k + 1))
+	{
+		tempBlock = Chunk_[i][j][k + 1];
+		canSee[ID] = !tempBlock.IsSolid();
+	}
+	else
+	{
+		canSee[ID] = true;
+	}
+	ID++;
+
+	// Backward
+	if (BlockIsValid(i, j, k - 1))
+	{
+		tempBlock = Chunk_[i][j][k - 1];
+		canSee[ID] = !tempBlock.IsSolid();
+	}
+	else
+	{
+		canSee[ID] = true;
+	}
+	ID++;
+	
+	//=====================
+	// Set Face Visibility
+	//=====================
+
+	for (int id = 0; id < 6; id++)
+	{
+		Chunk_[i][j][k].GetModel()->GetMesh(id)->SetActive(canSee[id]);
+	}
+	//Chunk_[i][j][k].GetModel()->GetMesh(0)->SetActive(true);
+}
+
+bool Chunk::BlockIsEmpty(int i, int j, int k)
+{
+	if (BlockIsValid(i, j, k))
+	{
+		return !Chunk_[i][j][k].IsSolid();
 	}
 
 	return true;
+}
+
+bool Chunk::BlockIsValid(int i, int j, int k)
+{
+	bool xCheck, yCheck, zCheck;
+
+	xCheck = RangeCheck(i, 0, BLOCK_COUNT_WIDTH - 1);
+	yCheck = RangeCheck(j, 0, BLOCK_COUNT_HEIGHT - 1);
+	zCheck = RangeCheck(k, 0, BLOCK_COUNT_DEPTH - 1);
+
+	return xCheck && yCheck && zCheck;
 }
 
 // Getters

@@ -14,11 +14,12 @@ public:
 	ViewFrustumManager();
 	~ViewFrustumManager();
 
-	void ConstructFrustum()
+	void Frame()
 	{
 		float zMinimum, r;
 		D3DXMATRIX matrix, projectionMatrix, viewMatrix;
 
+		Camera::Instance()->Render();
 		Camera::Instance()->GetViewMatrix(viewMatrix);
 		DirectXManager::Instance()->GetProjectionMatrix(projectionMatrix);
 

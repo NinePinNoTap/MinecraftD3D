@@ -1,6 +1,7 @@
 #include "Text.h"
 #include "DirectXManager.h"
 #include "ShaderManager.h"
+#include "WindowManager.h"
 
 Text::Text()
 {
@@ -17,10 +18,10 @@ Text::~Text()
 }
 
 // Initialising
-bool Text::Initialise(HWND hwnd, Rect2D WindowResolution)
+bool Text::Initialise(HWND hwnd)
 {
 	// Store the resolution of the screen
-	WindowResolution_ = WindowResolution;
+	WindowResolution_ = WindowManager::Instance()->GetWindowResolution();
 
 	// Create the font object
 	Font_ = new Font;

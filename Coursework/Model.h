@@ -26,6 +26,9 @@ public:
 	Mesh3D* GetMesh(int index = 0);
 	Material* GetMaterial(int index = 0);
 
+	vector<Mesh3D*> GetAllMeshes() { return Meshes_; }
+	vector<Material*> GetAllMaterials() { return Materials_; }
+
 	int GetMeshCount();
 
 protected:

@@ -1,4 +1,5 @@
 #include "SceneLoadingScreen.h"
+#include "WindowManager.h"
 
 SceneLoadingScreen::SceneLoadingScreen() : Scene3D()
 {
@@ -9,8 +10,15 @@ SceneLoadingScreen::~SceneLoadingScreen()
 
 }
 
-bool SceneLoadingScreen::Initialise(Rect2D WindowResolution)
+bool SceneLoadingScreen::Initialise()
 {
+	int windowWidth;
+	int windowHeight;
+
+	// Get window width and height
+	windowWidth = WindowManager::Instance()->GetWindowResolution().width;
+	windowHeight = WindowManager::Instance()->GetWindowResolution().height;
+
 	//=======================
 	// Initialise the Camera
 	//=======================
@@ -24,7 +32,7 @@ bool SceneLoadingScreen::Initialise(Rect2D WindowResolution)
 	// Loading Screen BG
 	Background_ = new Sprite;
 	if (!Background_) { return false; }
-	Result_ = Background_->Initialise(Rect3D(WindowResolution.width, WindowResolution.height));
+	Result_ = Background_->Initialise(Rect3D(windowWidth, windowHeight));
 	if (!Result_)
 	{
 		return false;
@@ -34,7 +42,7 @@ bool SceneLoadingScreen::Initialise(Rect2D WindowResolution)
 	{
 		return false;
 	}
-	Background_->GetTransform()->MoveZ(-5.0f);
+	Background_->GetTransform()->MoveZ(1.0f);
 	Background_->SetShader("texture");
 
 	//================
@@ -42,12 +50,11 @@ bool SceneLoadingScreen::Initialise(Rect2D WindowResolution)
 	//================
 
 	LoadingText_ = new Text;
-	LoadingText_->Initialise(GetActiveWindow(), WindowResolution);
-	LoadingText_->CreateText("Loading", Vector2(10, 10), WHITE, LEFT);
+	LoadingText_->Initialise(GetActiveWindow());
+	LoadingText_->CreateText("Loading", Vector2(windowWidth - 50, windowHeight - 50), WHITE, RIGHT);
 	LoadingProgress_ = 0;
 
 	return true;
-
 }
 
 void SceneLoadingScreen::Reset()
@@ -85,7 +92,6 @@ void SceneLoadingScreen::Render()
 	SetShaderManager2DVars();
 
 	// Render the loading screen
-	//ShaderManager::Instance()->TextureRender(Background_);
 	Background_->Render();
 
 	SetShaderManager2DVars();

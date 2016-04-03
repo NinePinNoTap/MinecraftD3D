@@ -103,6 +103,8 @@ Mesh3D* Model::GetMesh(int index)
 
 Material* Model::GetMaterial(int index)
 {
+	Clamp(index, 0, Materials_.size() - 1);
+
 	return Materials_[index];
 }
 

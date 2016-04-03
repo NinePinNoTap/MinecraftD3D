@@ -5,10 +5,12 @@ AssetManager::AssetManager()
 {
 
 }
+
 AssetManager::AssetManager(const AssetManager&)
 {
 
 }
+
 AssetManager::~AssetManager()
 {
 
@@ -114,8 +116,26 @@ void AssetManager::LoadModel(Model** model, std::string filename)
 	// Check if the font already exists
 	if (ModelDatabase_.count(filename))
 	{
-		// Return the pre-loaded model
-		*model = ModelDatabase_[filename];
+		vector<Mesh3D*> modelMesh = ModelDatabase_[filename]->GetAllMeshes();
+		vector<Material*> modelMaterial = ModelDatabase_[filename]->GetAllMaterials();
+
+		(*model) = new Model;
+		
+		for (int i = 0; i < modelMesh.size(); i++)
+		{
+			// Take a copy of the mesh
+			Mesh3D* tempMesh = new Mesh3D(*modelMesh[i]);
+			(*model)->AddMesh(tempMesh);
+		}
+
+		for (int i = 0; i < modelMaterial.size(); i++)
+		{
+			(*model)->AddMaterial(modelMaterial[i]);
+		}
+
+		// Cleanup
+		modelMesh.clear();
+		modelMaterial.clear();
 
 		return;
 	}
@@ -127,14 +147,14 @@ void AssetManager::LoadModel(Model** model, std::string filename)
 	Model* loadedModel = new Model;
 
 	// Check what format we are dealing with
-	if (string(filename).find(".txt"))
+	if (string(filename).find(".txt") != std::string::npos)
 	{
-		// Load the Model
+		// Load TXT File
 		Result_ = txtLoader.LoadModel(filename.c_str(), *loadedModel);
 	}
 	else
 	{
-		// Load the Model
+		// Load Obj File
 		Result_ = objLoader.LoadModel(filename.c_str(), *loadedModel);
 	}
 

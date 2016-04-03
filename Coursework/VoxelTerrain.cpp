@@ -9,6 +9,8 @@ VoxelTerrain::~VoxelTerrain()
 {
 }
 
+Block test = Block();
+
 void VoxelTerrain::Initialise()
 {
 	// Create a Block Manager
@@ -34,13 +36,24 @@ void VoxelTerrain::Initialise()
 			// Loop through z dimension
 			for (int k = 0; k < CHUNK_COUNT_DEPTH; k++)
 			{
+				// Create a new Chunk
 				Chunk* chunk = new Chunk;
+
 				chunk->Initialise();
 				chunk->GetTransform()->SetPosition(CHUNK_TOTAL_WIDTH * i, CHUNK_TOTAL_HEIGHT * j, CHUNK_TOTAL_DEPTH * k);
+				chunk->Generate();
+
 				TerrainChunks_[i][j][k] = chunk;
 			}
 		}
 	}
+
+	test.Initialise();
+	test.GetTransform()->SetPosition(-1, -1, -0.5);
+	test.SetName("gold");
+	test.SetType(BlockType::Gold);
+	test.SetSolid(true);
+	test.SetShader("texture");
 }
 
 void VoxelTerrain::Frame()
@@ -62,8 +75,6 @@ void VoxelTerrain::Frame()
 
 void VoxelTerrain::Render()
 {	
-	Frame();
-
 	// Loop through x dimension
 	for (int i = 0; i < CHUNK_COUNT_WIDTH; i++)
 	{
@@ -80,4 +91,6 @@ void VoxelTerrain::Render()
 			}
 		}
 	}
+
+	//test.Render();
 }

@@ -6,7 +6,6 @@
 #include "Font.h"
 #include "Utilities.h"
 
-
 using namespace std;
 
 enum Alignment { LEFT, CENTRE, RIGHT };
@@ -39,7 +38,7 @@ public:
 	~Text();
 
 	// Initialising
-	bool Initialise(HWND hwnd, Rect2D WindowResolution);
+	bool Initialise(HWND hwnd);
 
 	// Shutdown
 	void Shutdown();

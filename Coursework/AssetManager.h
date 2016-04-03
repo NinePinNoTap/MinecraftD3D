@@ -23,7 +23,7 @@ public:
 
 	// Shutdown
 	void Shutdown();
-
+	
 	// Loaders
 	void LoadAudio(AudioClip** clip, std::string filename, bool is3D = false);
 	void LoadFont(Font** font, std::string filename);

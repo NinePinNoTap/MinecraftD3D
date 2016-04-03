@@ -15,12 +15,12 @@ bool LightShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* obj
 	// Model Properties
 	if (!objMesh)
 	{
-		MessageBox(NULL, L"No Model Attached - lightBuffer", L"Error", MB_OK);
+		MessageBox(NULL, L"No Model Attached - Light", L"Error", MB_OK);
 		return false;
 	}
 	if (!objMaterial)
 	{
-		MessageBox(NULL, L"No Material Attached - lightBuffer", L"Error", MB_OK);
+		MessageBox(NULL, L"No Material Attached - Light", L"Error", MB_OK);
 		return false;
 	}
 
@@ -39,7 +39,7 @@ bool LightShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* obj
 	lightBuffer.ambientColor = Light::Instance()->GetAmbientColor();
 	lightBuffer.diffuseColor = Light::Instance()->GetDiffuseColor();
 	lightBuffer.specularColor = Light::Instance()->GetSpecularColor();
-	lightBuffer.specularPower = objMaterial->GetFloat("SpecularPower");
+	lightBuffer.specularPower = Light::Instance()->GetSpecularPower();
 
 	// Create light position buffer
 	LightPositionBuffer lightPositionBuffer;

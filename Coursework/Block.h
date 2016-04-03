@@ -26,16 +26,13 @@ public:
 	bool SetName(string blockName);
 	void SetType(BlockType type);
 	void SetSolid(bool solid);
-	void SetFaceVisible(int index, bool flag);
 
 	// Getters
 	BlockType GetType();
-	bool GetSolid();
+	bool IsSolid();
 
 private:
 	string BlockName_;
 	BlockType Type_;
 	bool IsSolid_;
-
-	bool VisibleFace_[6];
 };

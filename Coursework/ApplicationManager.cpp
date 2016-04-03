@@ -146,7 +146,7 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	// Loading Screen
 	SceneLoading_ = new SceneLoadingScreen;
-	Result_ = SceneLoading_->Initialise(WindowResolution);
+	Result_ = SceneLoading_->Initialise();
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the loading screen", L"Error", MB_OK);
@@ -159,7 +159,7 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	// Inside the Painting
 	MainScene_ = new MainScene;
-	Result_ = MainScene_->Initialise(hwnd, WindowResolution);
+	Result_ = MainScene_->Initialise(hwnd);
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the inside scene", L"Error", MB_OK);

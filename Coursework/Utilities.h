@@ -42,6 +42,7 @@ void Wrap(int& value, int min, int max);
 void Wrap(float& value, float min, float max);
 
 // Keep between two limits
+void Clamp(int& value, int min, int max);
 void Clamp(float& value, float min, float max);
 
 // Outputs a messagebox with reference
@@ -54,6 +55,7 @@ D3DXVECTOR3 RotateAroundPoint(D3DXVECTOR3 point, D3DXVECTOR3 center, float angle
 float AngleBetweenPoints(Vector2 A, Vector2 B);
 
 // Checks if a value is within a range
+bool RangeCheck(int value, int min, int max);
 bool RangeCheck(float value, float min, float max);
 
 // Checks if the position is inside the bounding box

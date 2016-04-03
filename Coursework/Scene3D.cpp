@@ -27,38 +27,6 @@ void Scene3D::ShutdownGameObjects()
 	Objects_.clear();
 }
 
-// File Loading
-void Scene3D::SetDirectory(string FileDirectory)
-{
-	FileDirectory_ = FileDirectory;
-}
-
-// GameObject Creation
-AudioClip* Scene3D::CreateSound(char* filename, float Volume, bool is3D, D3DXVECTOR3 position)
-{
-	// Create a sound
-	AudioClip* Sound = new AudioClip;
-	if (!Sound)
-	{
-		OutputErrorMessage("Could not create sound", " - Scene3D");
-		return 0;
-	}
-
-	// Load the file
-	Result_ = Sound->LoadFile(filename, is3D);
-	if (!Result_)
-	{
-		OutputErrorMessage("Could not load sound", " - Scene3D");
-		return 0;
-	}
-
-	// Set the properties
-	Sound->SetVolume(Volume);
-	Sound->SetPosition(position);
-
-	return Sound;
-}
-
 void Scene3D::SetShaderManager2DVars()
 {
 	//==============================================

@@ -44,18 +44,13 @@ void Block::SetSolid(bool isSolid)
 	IsSolid_ = isSolid;
 }
 
-void Block::SetFaceVisible(int index, bool flag)
-{
-	VisibleFace_[index] = flag;
-}
-
 // Getters
 BlockType Block::GetType()
 {
 	return Type_;
 }
 
-bool Block::GetSolid()
+bool Block::IsSolid()
 {
 	return IsSolid_;
 }

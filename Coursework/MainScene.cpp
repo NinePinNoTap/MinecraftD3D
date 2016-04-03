@@ -1,6 +1,7 @@
 #include "MainScene.h"
 #include "ApplicationManager.h"
 #include "PerformanceManager.h"
+#include "WindowManager.h"
 
 MainScene::MainScene() : Scene3D()
 {
@@ -22,15 +23,22 @@ MainScene::~MainScene()
 {
 }
 
-bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
+bool MainScene::Initialise(HWND hwnd)
 {
+	int windowWidth;
+	int windowHeight;
+
+	// Get window width and height
+	windowWidth = WindowManager::Instance()->GetWindowResolution().width;
+	windowHeight = WindowManager::Instance()->GetWindowResolution().height;
+
 	//=======================
 	// Initialise the Camera
 	//=======================
 
 	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
-	Camera::Instance()->SetStartPosition(447, 24, 163);
-	Camera::Instance()->SetStartRotation(6, 28, 0);
+	Camera::Instance()->SetStartPosition(-2, 9, -13);
+	Camera::Instance()->SetStartRotation(37, 3, 0);
 	Camera::Instance()->AllowFlying(true);
 	Camera::Instance()->SetSpeed(0.5f);
 
@@ -90,7 +98,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	ReflectionTexture_ = new Texture;
 	if (!ReflectionTexture_) { return false; }
-	Result_ = ReflectionTexture_->Initialise(WindowResolution);
+	Result_ = ReflectionTexture_->Initialise(Rect2D(windowWidth, windowHeight));
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the reflection render to texture object.", L"Error", MB_OK);
@@ -103,7 +111,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	RefractionTexture_ = new Texture;
 	if (!RefractionTexture_) { return false; }
-	Result_ = RefractionTexture_->Initialise(WindowResolution);
+	Result_ = RefractionTexture_->Initialise(Rect2D(windowWidth, windowHeight));
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the refraction render to texture object.", L"Error", MB_OK);
@@ -116,7 +124,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	SceneTexture_ = new Texture;
 	if (!SceneTexture_) { return false; }
-	Result_ = SceneTexture_->Initialise(WindowResolution);
+	Result_ = SceneTexture_->Initialise(Rect2D(windowWidth, windowHeight));
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the scene texture object.", L"Error", MB_OK);
@@ -125,7 +133,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	Sprite_ = new Sprite;
 	if (!Sprite_) { return false; }
-	Result_ = Sprite_->Initialise(Rect3D(WindowResolution.width, WindowResolution.height));
+	Result_ = Sprite_->Initialise(Rect3D(windowWidth, windowHeight));
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the screen window object.", L"Error", MB_OK);
@@ -170,7 +178,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	Text_ = new Text;
 	if (!Text_) { return false; }
-	Result_ = Text_->Initialise(hwnd, WindowResolution);
+	Result_ = Text_->Initialise(hwnd);
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the text object.", L"Error", MB_OK);
@@ -185,11 +193,11 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 	Text_->CreateText("", Vector2(10, 130), BLACK); // RotationY
 	Text_->CreateText("", Vector2(10, 150), BLACK); // Rotation Z
 
-	Text_->CreateText("CONTROLS", Vector2(WindowResolution.width - 10, 10), BLACK, RIGHT);
-	Text_->CreateText("[1] - Toggle Wireframe", Vector2(WindowResolution.width - 10, 30), BLACK, RIGHT);
-	Text_->CreateText("[2] - Toggle Time", Vector2(WindowResolution.width - 10, 50), BLACK, RIGHT);
-	Text_->CreateText("[BACKSPACE] - Reset Camera", Vector2(WindowResolution.width - 10, 70), BLACK, RIGHT);
-	Text_->CreateText("[ESC] - Quit", Vector2(WindowResolution.width - 10, 110), BLACK, RIGHT);
+	Text_->CreateText("CONTROLS", Vector2(windowWidth - 10, 10), BLACK, RIGHT);
+	Text_->CreateText("[1] - Toggle Wireframe", Vector2(windowWidth - 10, 30), BLACK, RIGHT);
+	Text_->CreateText("[2] - Toggle Time", Vector2(windowWidth - 10, 50), BLACK, RIGHT);
+	Text_->CreateText("[BACKSPACE] - Reset Camera", Vector2(windowWidth - 10, 70), BLACK, RIGHT);
+	Text_->CreateText("[ESC] - Quit", Vector2(windowWidth - 10, 110), BLACK, RIGHT);
 
 	Chunk_ = new VoxelTerrain;
 	Chunk_->Initialise();
@@ -201,7 +209,7 @@ bool MainScene::Initialise(HWND hwnd, Rect2D WindowResolution)
 	IsUnderwater_ = false;
 	NightTimeMode_ = false;
 	Result_ = false;
-
+	
 	return true;
 }
 
@@ -300,8 +308,8 @@ void MainScene::Reset()
 	//=========================================
 
 	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
-	Camera::Instance()->SetStartPosition(0, 0, -10);
-	Camera::Instance()->SetStartRotation(0, 0, 0);
+	Camera::Instance()->SetStartPosition(-2, 9, -13);
+	Camera::Instance()->SetStartRotation(37, 3, 0);
 	Camera::Instance()->AllowFlying(true);
 	Camera::Instance()->SetSpeed(0.5f);
 
@@ -352,9 +360,10 @@ bool MainScene::UpdateObjects()
 
 	Camera::Instance() -> Frame();
 	PerformanceManager::Instance()->Frame();
-	ViewFrustumManager::Instance()->ConstructFrustum();
+	ViewFrustumManager::Instance()->Frame();
 	Clouds_ -> Frame();
-	Ocean_ -> Frame();
+	Ocean_->Frame();
+	Chunk_->Frame();
 
 	//Result_ = ParticleSystem_ -> Frame(PerformanceManager::Instance()->GetTime());
 	//if (!Result_) { return false; }
@@ -581,7 +590,6 @@ bool MainScene::RenderScene(bool ShowText)
 	{
 		if (gameObject->IsActive())
 		{
-			//Result_ = ShaderManager::Instance()->LightRender(gameObject);
 			gameObject->Render();
 			if (!Result_)
 			{
@@ -894,9 +902,4 @@ void MainScene::SetShaderManagerReflectionVars()
 	ShaderManager::Instance()->SetProjectionMatrix(ProjectionMatrix_);
 	ShaderManager::Instance()->SetViewMatrix(ReflectionViewMatrix_);
 	ShaderManager::Instance()->SetReflectionViewMatrix(ReflectionViewMatrix_);
-}
-
-Texture* MainScene::GetSceneRender()
-{
-	return SceneTexture_;
 }

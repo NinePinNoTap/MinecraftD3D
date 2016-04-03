@@ -43,21 +43,18 @@ float4 PixelShaderMain(PixelInputType input) : SV_TARGET
 
     // Calculate the light intensity
     lightDir = -lightDirection;
-    lightIntensity = saturate(dot(input.normal, input.lightPos));
+    lightIntensity = saturate(dot(input.normal, lightDir));
 
     if(lightIntensity > 0.0f)
     {
         // Apply diffuse to the lighting
         lighting += (diffuseColor * lightIntensity);
 
-        // Saturate the lighting
-        lighting = saturate(lighting);
-
         // Calculate the reflection vector
-        reflection = normalize(2 * lightIntensity * input.normal - lightDir); 
+        //reflection = normalize(2 * lightIntensity * input.normal - lightDir); 
 
         // Calculate the amount of specular
-        specular = pow(saturate(dot(reflection, input.viewDirection)), specularPower);
+        //specular = pow(saturate(dot(reflection, input.viewDirection)), specularPower);
     }
 
     // Apply lighting to the texture

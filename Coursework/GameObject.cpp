@@ -103,8 +103,6 @@ void GameObject::Shutdown()
 // Frame
 bool GameObject::Frame()
 {
-	// Nothing to do here
-
 	return true;
 }
 
@@ -112,23 +110,31 @@ bool GameObject::Render()
 {
 	// Make sure we have a shader to use
 	if (!Shader_)
+	{
 		return true;
+	}
 
-	Mesh3D* objMesh;
-	Material* objMaterial;
+	if (!Model_)
+	{
+		return true;
+	}
 
-	// Access model mesh and material
-	objMesh = Model_->GetMesh(0);
-	objMaterial = Model_->GetMaterial(0);
+	// Render the model
+	for (int i = 0; i < Model_->GetMeshCount(); i++)
+	{	
+		// Make sure the mesh is active for it to be rendered
+		if (Model_->GetMesh(i)->IsActive())
+		{
+			// Send model to pipeline
+			SendModelToPipeline(Model_->GetMesh(i));
 
-	// Send model to pipeline
-	SendModelToPipeline(objMesh);
+			// Send material to shader
+			Shader_->Prepare(Model_->GetMesh(i), Model_->GetMaterial(i), Transform_);
 
-	// Send material to shader
-	Shader_->Prepare(objMesh, objMaterial, Transform_);
-
-	// Render Object
-	Shader_->Render(objMesh->GetIndexCount());
+			// Render Object
+			Shader_->Render(Model_->GetMesh(i)->GetIndexCount());
+		}
+	}
 }
 
 bool GameObject::SendModelToPipeline(Mesh3D* objMesh)
@@ -137,7 +143,6 @@ bool GameObject::SendModelToPipeline(Mesh3D* objMesh)
 	unsigned int offset;
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
-	int meshCount;
 
 	// Set vertex buffer stride and offset
 	stride = sizeof(VertexData);
@@ -159,11 +164,12 @@ bool GameObject::SendModelToPipeline(Mesh3D* objMesh)
 	return true;
 }
 
-// Rendering
+// Setters
 void GameObject::SetShader(string shaderName)
 {
 	Shader_ = ShaderManager::Instance()->GetShader(shaderName);
 }
+
 void GameObject::SetReflectable(bool Flag)
 {
 	IsReflectable_ = Flag;
@@ -174,29 +180,22 @@ void GameObject::SetActive(bool Flag)
 	IsActive_ = Flag;
 }
 
-// Setters
 void GameObject::SetModel(Model* model)
 {
 	Model_ = model;
 }
 
-// Model Getters
+// Getters
 Model* GameObject::GetModel()
 {
 	return Model_;
 }
 
-// Transform Getter
 Transform* GameObject::GetTransform()
 {	
-	if (!Transform_)
-	{
-		Transform_ = new Transform;
-	}
 	return Transform_;
 }
 
-// Rendering Getter
 bool GameObject::IsReflectable()
 {
 	return IsReflectable_;
@@ -207,7 +206,6 @@ bool GameObject::IsActive()
 	return IsActive_;
 }
 
-// Animation Getter
 float GameObject::GetFrame()
 {
 	return Frame_;

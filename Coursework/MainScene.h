@@ -27,13 +27,11 @@ public:
 	MainScene();
 	~MainScene();
 
-	bool Initialise(HWND hwnd, Rect2D WindowResolution);
+	bool Initialise(HWND hwnd);
 	void Shutdown();
 
 	bool Frame();
 	void Reset();
-
-	Texture* GetSceneRender();
 
 private:
 	bool UpdateObjects();

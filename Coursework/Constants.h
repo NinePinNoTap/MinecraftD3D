@@ -27,7 +27,7 @@ const float CAMERA_SENSITIVITY  = 10.0f;
 // Voxel Terrain
 //===============
 
-const int BLOCK_SIZE = 2;
+const int BLOCK_SIZE = 1;
 
 const int CHUNK_COUNT_WIDTH = 1;
 const int CHUNK_COUNT_HEIGHT = 1;

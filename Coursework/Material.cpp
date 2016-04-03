@@ -17,7 +17,6 @@ Material::Material()
 
 	// Add Default Data
 	SetVector4("BaseColour", D3DXVECTOR4(1,1,1,1));
-	SetFloat("SpecularPower", 32.0f);
 }
 
 Material::~Material()

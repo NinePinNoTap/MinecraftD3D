@@ -23,13 +23,7 @@ public:
 
 	// Frame
 	virtual bool Frame() = 0;
-	virtual void Reset() = 0;	
-
-	// Model Loading
-	void SetDirectory(string directory);
-
-	// Sound Loading
-	AudioClip* CreateSound(char* filename, float Volume = 1.0f, bool is3D = false, D3DXVECTOR3 position = D3DXVECTOR3());
+	virtual void Reset() = 0;
 	
 protected:
 	virtual void GenerateMatrices() = 0;
@@ -47,9 +41,6 @@ protected:
 	// Objects
 	Texture* SceneTexture_;
 	Text* Text_;
-
-	// Model Loading
-	string FileDirectory_;
 
 	// Flags
 	bool Result_;
