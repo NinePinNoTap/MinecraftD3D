@@ -11,11 +11,6 @@ enum BlockType
 	Air, Sand, Dirt, Cobblestone, Gold
 };
 
-enum BlockFace
-{
-	Up = 0, Down = 1, Left = 2, Right = 3, Front = 4, Back = 5
-};
-
 class Block : public GameObject
 {
 public:
@@ -27,6 +22,8 @@ public:
 	void SetType(BlockType type);
 	void SetSolid(bool solid);
 
+	void SetNeighbour(Direction direction, Block* block);
+
 	// Getters
 	BlockType GetType();
 	bool IsSolid();
@@ -35,4 +32,11 @@ private:
 	string BlockName_;
 	BlockType Type_;
 	bool IsSolid_;
+
+	Block* BlockUp_;
+	Block* BlockDown_;
+	Block* BlockLeft_;
+	Block* BlockRight_;
+	Block* BlockForward_;
+	Block* BlockBackward_;
 };

@@ -15,6 +15,16 @@ const bool VSYNC_ENABLED = true;
 const int SCREEN_HEIGHT = 720;
 const int SCREEN_WIDTH = 1280;
 
+//=============
+// Directories
+//=============
+
+const std::string AUDIO_DIR = "data/audio/";
+const std::string FONT_DIR = "data/font/";
+const std::string MODEL_DIR = "data/models/";
+const std::string SHADER_DIR = "data/shaders/";
+const std::string TEXTURE_DIR = "data/textures/";
+
 //===================
 // Camera Properties
 //===================
@@ -29,7 +39,7 @@ const float CAMERA_SENSITIVITY  = 10.0f;
 
 const int BLOCK_SIZE = 1;
 
-const int CHUNK_COUNT_WIDTH = 1;
+const int CHUNK_COUNT_WIDTH = 2;
 const int CHUNK_COUNT_HEIGHT = 1;
 const int CHUNK_COUNT_DEPTH = 1;
 
@@ -54,23 +64,25 @@ const Colour GREEN = Colour(0, 1, 0, 1);
 const Colour BLUE = Colour(0, 0, 1, 1);
 const Colour YELLOW = Colour(1, 1, 0, 1);
 
-//===================
-// Direction Vectors
-//===================
+//============
+// Directions
+//============
 
 const D3DXVECTOR3 FORWARD_VECTOR = D3DXVECTOR3(0, 0, 1);
+const D3DXVECTOR3 BACK_VECTOR = -FORWARD_VECTOR;
+
 const D3DXVECTOR3 RIGHT_VECTOR = D3DXVECTOR3(1, 0, 0);
+const D3DXVECTOR3 LEFT_VECTOR = -RIGHT_VECTOR;
+
 const D3DXVECTOR3 UP_VECTOR = D3DXVECTOR3(0, 1, 0);
+const D3DXVECTOR3 DOWN_VECTOR = -UP_VECTOR;
 
-//=============
-// Directories
-//=============
-
-const std::string AUDIO_DIR = "data/audio/";
-const std::string FONT_DIR = "data/font/";
-const std::string MODEL_DIR = "data/models/";
-const std::string SHADER_DIR = "data/shaders/";
-const std::string TEXTURE_DIR = "data/textures/";
+const enum Direction
+{
+	Up, Down,
+	Left, Right,
+	Forward, Backward
+};
 
 //==============
 // Virtual Keys

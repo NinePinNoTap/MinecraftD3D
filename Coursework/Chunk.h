@@ -13,24 +13,32 @@ public:
 	Chunk();
 	~Chunk();
 
-	void Initialise();
+	void Initialise(int x, int y, int z);
 	void Shutdown();
-
-	void Generate();
 
 	// Frame
 	void Frame();
 	void Render();
+	void RefreshBlocks();
+
+	Block* GetBlock(int x, int y, int z)
+	{
+		return &Chunk_[x][y][z];
+	}
 
 	// Getters
 	bool IsVisible();
 	Transform* GetTransform();
+	D3DXVECTOR3 GetChunkID()
+	{
+		return ChunkID_;
+	}
 
 private:
 	void GenerateBlankChunk();
 	void GenerateTerrain();
 
-	void RefreshBlocks();
+	//void RefreshBlocks();
 
 	void HandleBlock(int i, int j, int k);
 	void HandleBlockFaces(int i, int j, int k);
@@ -43,4 +51,5 @@ private:
 	Block*** Chunk_;
 	bool IsVisible_;
 	Transform* Transform_;
+	D3DXVECTOR3 ChunkID_;
 };

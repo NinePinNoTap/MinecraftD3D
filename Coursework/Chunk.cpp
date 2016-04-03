@@ -10,14 +10,26 @@ Chunk::~Chunk()
 {
 }
 
-void Chunk::Initialise()
+void Chunk::Initialise(int x, int y, int z)
 {
+	// Store the ID of the chunk
+	ChunkID_ = D3DXVECTOR3(x, y, z);
+
 	//==================
 	// Create Transform
 	//==================
 
 	Transform_ = new Transform;
+	Transform_->SetPosition(CHUNK_TOTAL_WIDTH * x, CHUNK_TOTAL_HEIGHT * y, CHUNK_TOTAL_DEPTH * z);
 
+	//================
+	// Generate Chunk
+	//================
+
+	GenerateBlankChunk();
+	//GenerateTerrain();
+	//RefreshBlocks();
+		
 	//==================
 	// Initialise Flags
 	//==================
@@ -28,29 +40,18 @@ void Chunk::Initialise()
 void Chunk::Shutdown()
 {
 	// Delete the blocks
-	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
+	for (int x = 0; x < BLOCK_COUNT_WIDTH; x++)
 	{
 		// Loop through y dimension
-		for (int j = 0; j < BLOCK_COUNT_HEIGHT; j++)
+		for (int y = 0; y < BLOCK_COUNT_HEIGHT; y++)
 		{
-			delete[] Chunk_[i][j];
+			delete[] Chunk_[x][y];
 		}
 
-		delete[] Chunk_[i];
+		delete[] Chunk_[x];
 	}
 
 	delete[] Chunk_;
-}
-
-void Chunk::Generate()
-{
-	//================
-	// Generate Chunk
-	//================
-
-	GenerateBlankChunk();
-	GenerateTerrain();
-	RefreshBlocks();
 }
 
 // Frame
@@ -82,7 +83,6 @@ void Chunk::Render()
 				if (Chunk_[i][j][k].IsActive())
 				{
 					// Render
-					Block temp = Chunk_[i][j][k];
 					Chunk_[i][j][k].Render();
 				}
 			}

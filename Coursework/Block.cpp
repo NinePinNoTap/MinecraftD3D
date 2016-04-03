@@ -44,6 +44,36 @@ void Block::SetSolid(bool isSolid)
 	IsSolid_ = isSolid;
 }
 
+void Block::SetNeighbour(Direction direction, Block* block)
+{
+	switch (direction)
+	{
+		case Direction::Up:
+			BlockUp_ = block;
+			break;
+
+		case Direction::Down:
+			BlockDown_ = block;
+			break;
+
+		case Direction::Left:
+			BlockLeft_ = block;
+			break;
+
+		case Direction::Right:
+			BlockRight_ = block;
+			break;
+
+		case Direction::Forward:
+			BlockForward_ = block;
+			break;
+
+		case Direction::Backward:
+			BlockForward_ = block;
+			break;
+	}
+}
+
 // Getters
 BlockType Block::GetType()
 {
