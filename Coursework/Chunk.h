@@ -19,12 +19,6 @@ public:
 	// Frame
 	void Frame();
 	void Render();
-	void RefreshBlocks();
-
-	Block* GetBlock(int x, int y, int z)
-	{
-		return &Chunk_[x][y][z];
-	}
 
 	// Getters
 	bool IsVisible();
@@ -33,21 +27,14 @@ public:
 	{
 		return ChunkID_;
 	}
+	Block* GetBlock(int x, int y, int z)
+	{
+		return &Chunk_[x][y][z];
+	}
 
 private:
 	void GenerateBlankChunk();
-	void GenerateTerrain();
-
-	//void RefreshBlocks();
-
-	void HandleBlock(int i, int j, int k);
-	void HandleBlockFaces(int i, int j, int k);
-
-	bool HandleBlockVisibility(int i, int j, int k);
-	bool BlockIsEmpty(int x, int y, int z);
-
-	bool BlockIsValid(int x, int y, int z);
-
+	
 	Block*** Chunk_;
 	bool IsVisible_;
 	Transform* Transform_;

@@ -30,7 +30,7 @@ const std::string TEXTURE_DIR = "data/textures/";
 //===================
 
 const float SCREEN_NEAR  = 0.1f;
-const float SCREEN_DEPTH = 10000.0f;
+const float SCREEN_DEPTH = 1000.0f;
 const float CAMERA_SENSITIVITY  = 10.0f;
 
 //===============
@@ -39,9 +39,9 @@ const float CAMERA_SENSITIVITY  = 10.0f;
 
 const int BLOCK_SIZE = 1;
 
-const int CHUNK_COUNT_WIDTH = 2;
+const int CHUNK_COUNT_WIDTH = 4;
 const int CHUNK_COUNT_HEIGHT = 1;
-const int CHUNK_COUNT_DEPTH = 1;
+const int CHUNK_COUNT_DEPTH = 4;
 
 const int BLOCK_COUNT_WIDTH = 16;
 const int BLOCK_COUNT_HEIGHT = 16;

@@ -41,7 +41,7 @@ void VoxelTerrain::Frame()
 }
 
 void VoxelTerrain::Render()
-{	
+{
 	// Loop through x dimension
 	for (int i = 0; i < CHUNK_COUNT_WIDTH; i++)
 	{
@@ -156,7 +156,6 @@ void VoxelTerrain::GenerateTerrain()
 			for (int z = 0; z < CHUNK_COUNT_DEPTH; z++)
 			{
 				GenerateChunkTerrain(TerrainChunks_[x][y][z]);
-				TerrainChunks_[x][y][z]->RefreshBlocks();
 			}
 		}
 	}
@@ -168,19 +167,15 @@ void VoxelTerrain::GenerateChunkTerrain(Chunk* chunk)
 
 	// Generate a random seed for the noise to use
 	perlinNoise.SetSeed(rand() % 10000);
-
+	
 	// Loop through x dimension
 	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
 	{
 		// Loop through z dimension
 		for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
 		{
-			// Create noise values based on x and y coordinate
-			double x = chunk->GetChunkID().x;
-			double y = chunk->GetChunkID().y;
-
-			x = (x + (double)k) / ((double)BLOCK_COUNT_WIDTH);
-			y = (y + (double)i) / ((double)BLOCK_COUNT_HEIGHT);
+			double x = (double)k / (double)BLOCK_COUNT_WIDTH;
+			double y = (double)i / (double)BLOCK_COUNT_DEPTH;
 
 			float noise = perlinNoise.CreateNoise(x, y, 0.8f);
 			float height = floor(BLOCK_COUNT_HEIGHT * noise);

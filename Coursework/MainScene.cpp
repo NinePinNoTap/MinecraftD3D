@@ -583,7 +583,9 @@ bool MainScene::RenderScene(bool ShowText)
 	//===================
 
 	// Turn off back face culling
-	DirectXManager::Instance() -> ToggleCulling(false);
+	DirectXManager::Instance()->ToggleCulling(false);
+
+	Chunk_->Render();
 
 	// Render Static Models
 	for each (GameObject* gameObject in Objects_)
@@ -597,8 +599,6 @@ bool MainScene::RenderScene(bool ShowText)
 			}
 		}
 	}
-
-	Chunk_->Render();
 
 	//==============================================
 	// Generate Matrices and Send To Shader Manager

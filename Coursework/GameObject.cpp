@@ -108,16 +108,16 @@ bool GameObject::Frame()
 
 bool GameObject::Render()
 {
+	// Make sure the object is active
+	if (!IsActive_)
+		return true;
+
 	// Make sure we have a shader to use
 	if (!Shader_)
-	{
 		return true;
-	}
 
 	if (!Model_)
-	{
 		return true;
-	}
 
 	// Render the model
 	for (int i = 0; i < Model_->GetMeshCount(); i++)

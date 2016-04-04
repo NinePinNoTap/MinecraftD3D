@@ -72,9 +72,9 @@ bool OBJLoader::LoadModel(const char* modelFilename, Model& model)
 				&tempFace[2].x, &tempFace[2].y, &tempFace[2].z);
 
 			// Add the faceData into the vector
-			faceData.push_back(tempFace[0]);
-			faceData.push_back(tempFace[1]);
 			faceData.push_back(tempFace[2]);
+			faceData.push_back(tempFace[1]);
+			faceData.push_back(tempFace[0]);
 		}
 		else if (string(linebuffer).find("usemtl") == 0) 
 		{
