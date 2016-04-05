@@ -37,21 +37,31 @@ const float CAMERA_SENSITIVITY  = 10.0f;
 // Voxel Terrain
 //===============
 
+// How big the block model is
 const int BLOCK_SIZE = 1;
 
-const int CHUNK_COUNT_WIDTH = 4;
-const int CHUNK_COUNT_HEIGHT = 1;
-const int CHUNK_COUNT_DEPTH = 4;
+// How many blocks in a chunk
+const int NO_OF_BLOCKS_WIDTH = 16;
+const int NO_OF_BLOCKS_HEIGHT = 16;
+const int NO_OF_BLOCKS_DEPTH = 16;
 
-const int BLOCK_COUNT_WIDTH = 16;
-const int BLOCK_COUNT_HEIGHT = 16;
-const int BLOCK_COUNT_DEPTH = 16;
+// How many chunks in a terrain
+const int NO_OF_CHUNKS_WIDTH = 4;
+const int NO_OF_CHUNKS_HEIGHT = 1;
+const int NO_OF_CHUNKS_DEPTH = 4;
 
-const int CHUNK_TOTAL_WIDTH = BLOCK_COUNT_WIDTH * BLOCK_SIZE;
-const int CHUNK_TOTAL_HEIGHT = BLOCK_COUNT_HEIGHT * BLOCK_SIZE;
-const int CHUNK_TOTAL_DEPTH = BLOCK_COUNT_DEPTH * BLOCK_SIZE;
+// Total size of a chunk dimension
+const int CHUNK_WIDTH = NO_OF_BLOCKS_WIDTH * BLOCK_SIZE;
+const int CHUNK_HEIGHT = NO_OF_BLOCKS_HEIGHT * BLOCK_SIZE;
+const int CHUNK_DEPTH = NO_OF_BLOCKS_DEPTH * BLOCK_SIZE;
 
-const int TOTAL_BLOCKS_IN_CHUNK = BLOCK_COUNT_WIDTH * BLOCK_COUNT_HEIGHT * BLOCK_COUNT_DEPTH;
+// Total size of a terrain dimension
+const int TERRAIN_WIDTH = CHUNK_WIDTH * NO_OF_CHUNKS_WIDTH;
+const int TERRAIN_HEIGHT = CHUNK_HEIGHT * NO_OF_CHUNKS_HEIGHT;
+const int TERRAIN_DEPTH = CHUNK_DEPTH * NO_OF_CHUNKS_DEPTH;
+
+// Global size of the terrain
+const int TERRAIN_VOLUME = NO_OF_BLOCKS_WIDTH * NO_OF_BLOCKS_HEIGHT * NO_OF_BLOCKS_DEPTH;
 
 //=========
 // Colours

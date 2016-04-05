@@ -25,6 +25,7 @@ private:
 	void LinkBlocksInChunk(Chunk* chunk);
 	void SetBlockNeighbours(Chunk* chunk, int x, int y, int z);
 	Block* GetBlock(D3DXVECTOR3 currentChunkID, int x, int y, int z);
+	Block* GetBlock(int x, int y, int z);
 
 	BlockManager* BlockManager_;
 	Chunk**** TerrainChunks_;

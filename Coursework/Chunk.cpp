@@ -19,7 +19,7 @@ void Chunk::Initialise(int x, int y, int z)
 	//==================
 
 	Transform_ = new Transform;
-	Transform_->SetPosition(CHUNK_TOTAL_WIDTH * x, CHUNK_TOTAL_HEIGHT * y, CHUNK_TOTAL_DEPTH * z);
+	Transform_->SetPosition(CHUNK_WIDTH * x, CHUNK_HEIGHT * y, CHUNK_DEPTH * z);
 
 	//================
 	// Generate Chunk
@@ -37,10 +37,10 @@ void Chunk::Initialise(int x, int y, int z)
 void Chunk::Shutdown()
 {
 	// Delete the blocks
-	for (int x = 0; x < BLOCK_COUNT_WIDTH; x++)
+	for (int x = 0; x < NO_OF_BLOCKS_WIDTH; x++)
 	{
 		// Loop through y dimension
-		for (int y = 0; y < BLOCK_COUNT_HEIGHT; y++)
+		for (int y = 0; y < NO_OF_BLOCKS_HEIGHT; y++)
 		{
 			delete[] Chunk_[x][y];
 		}
@@ -55,13 +55,13 @@ void Chunk::Shutdown()
 void Chunk::Frame()
 {
 	// Loop through x dimension
-	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
+	for (int i = 0; i < NO_OF_BLOCKS_WIDTH; i++)
 	{
 		// Loop through y dimension
-		for (int j = 0; j < BLOCK_COUNT_HEIGHT; j++)
+		for (int j = 0; j < NO_OF_BLOCKS_HEIGHT; j++)
 		{
 			// Loop through z dimension
-			for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
+			for (int k = 0; k < NO_OF_BLOCKS_DEPTH; k++)
 			{
 				Chunk_[i][j][k].Frame();
 			}
@@ -77,13 +77,13 @@ void Chunk::Render()
 	}
 
 	// Loop through x dimension
-	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
+	for (int i = 0; i < NO_OF_BLOCKS_WIDTH; i++)
 	{
 		// Loop through y dimension
-		for (int j = 0; j < BLOCK_COUNT_HEIGHT; j++)
+		for (int j = 0; j < NO_OF_BLOCKS_HEIGHT; j++)
 		{
 			// Loop through z dimension
-			for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
+			for (int k = 0; k < NO_OF_BLOCKS_DEPTH; k++)
 			{
 				if (Chunk_[i][j][k].IsActive())
 				{
@@ -101,23 +101,23 @@ void Chunk::GenerateBlankChunk()
 	D3DXVECTOR3 halfChunkOffset;
 
 	// Calculate half dimensions of the chunk
-	halfChunkOffset = D3DXVECTOR3(CHUNK_TOTAL_WIDTH, CHUNK_TOTAL_HEIGHT, CHUNK_COUNT_DEPTH) / 2;
+	halfChunkOffset = D3DXVECTOR3(CHUNK_WIDTH, CHUNK_HEIGHT, NO_OF_CHUNKS_DEPTH) / 2;
 
 	// Create the 3D array to store blocks in chunk
-	Chunk_ = new Block**[BLOCK_COUNT_WIDTH];
+	Chunk_ = new Block**[NO_OF_BLOCKS_WIDTH];
 
 	// Loop through x dimension
-	for (int i = 0; i < BLOCK_COUNT_WIDTH; i++)
+	for (int i = 0; i < NO_OF_BLOCKS_WIDTH; i++)
 	{
-		Chunk_[i] = new Block*[BLOCK_COUNT_HEIGHT];
+		Chunk_[i] = new Block*[NO_OF_BLOCKS_HEIGHT];
 
 		// Loop through y dimension
-		for (int j = 0; j < BLOCK_COUNT_HEIGHT; j++)
+		for (int j = 0; j < NO_OF_BLOCKS_HEIGHT; j++)
 		{
-			Chunk_[i][j] = new Block[BLOCK_COUNT_DEPTH];
+			Chunk_[i][j] = new Block[NO_OF_BLOCKS_DEPTH];
 
 			// Loop through z dimension
-			for (int k = 0; k < BLOCK_COUNT_DEPTH; k++)
+			for (int k = 0; k < NO_OF_BLOCKS_DEPTH; k++)
 			{
 				// Initialise air block
 				Chunk_[i][j][k] = Block();
