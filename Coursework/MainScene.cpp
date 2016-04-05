@@ -12,6 +12,7 @@ MainScene::MainScene() : Scene3D()
 	ParticleSystem_ = 0;
 	RefractionTexture_ = 0;
 	ReflectionTexture_ = 0;
+	RenderTexture_ = 0;
 	Sprite_ = 0;
 	SkySphere_ = 0;
 	Terrain_ = 0;
@@ -92,44 +93,17 @@ bool MainScene::Initialise(HWND hwnd)
 		return false;
 	}
 
-	//===================================
-	// Initialise the Reflection Texture
-	//===================================
+	//============================
+	// Initialise Render Textures
+	//============================
 
-	ReflectionTexture_ = new Texture;
-	if (!ReflectionTexture_) { return false; }
-	Result_ = ReflectionTexture_->Initialise(Rect2D(windowWidth, windowHeight));
-	if (!Result_)
-	{
-		MessageBox(hwnd, L"Could not initialise the reflection render to texture object.", L"Error", MB_OK);
-		return false;
-	}
+	AssetManager::Instance()->LoadTexture(&RenderTexture_, "RenderTexture", Rect2D(windowWidth, windowHeight));
+	AssetManager::Instance()->LoadTexture(&ReflectionTexture_, "ReflectionTexture", Rect2D(windowWidth, windowHeight));
+	AssetManager::Instance()->LoadTexture(&RefractionTexture_, "RefractionTexture", Rect2D(windowWidth, windowHeight));
 
-	//===================================
-	// Initialise the Refraction Texture
-	//===================================
-
-	RefractionTexture_ = new Texture;
-	if (!RefractionTexture_) { return false; }
-	Result_ = RefractionTexture_->Initialise(Rect2D(windowWidth, windowHeight));
-	if (!Result_)
-	{
-		MessageBox(hwnd, L"Could not initialise the refraction render to texture object.", L"Error", MB_OK);
-		return false;
-	}
-
-	//===============================
-	// Initialise the Scene Textures
-	//===============================
-
-	SceneTexture_ = new Texture;
-	if (!SceneTexture_) { return false; }
-	Result_ = SceneTexture_->Initialise(Rect2D(windowWidth, windowHeight));
-	if (!Result_)
-	{
-		MessageBox(hwnd, L"Could not initialise the scene texture object.", L"Error", MB_OK);
-		return false;
-	}
+	//=======================
+	// Initialise 2D Bitmaps
+	//=======================
 
 	Sprite_ = new Sprite;
 	if (!Sprite_) { return false; }
@@ -179,7 +153,7 @@ bool MainScene::Initialise(HWND hwnd)
 
 	Text_ = new Text;
 	if (!Text_) { return false; }
-	Result_ = Text_->Initialise(hwnd);
+	Result_ = Text_->Initialise(hwnd, "shruti", "shruti.dds", 95);
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the text object.", L"Error", MB_OK);
@@ -257,11 +231,11 @@ void MainScene::Shutdown()
 		ReflectionTexture_ = 0;
 	}
 
-	if (SceneTexture_)
+	if (RenderTexture_)
 	{
-		SceneTexture_ -> Shutdown();
-		delete SceneTexture_;
-		SceneTexture_ = 0;
+		RenderTexture_ -> Shutdown();
+		delete RenderTexture_;
+		RenderTexture_ = 0;
 	}
 
 	if (Sprite_)
@@ -821,8 +795,8 @@ bool MainScene::RenderReflection()
 bool MainScene::RenderToTexture(bool ShowText)
 {
 	// Render to the scene texture
-	SceneTexture_ -> SetRenderTarget();
-	SceneTexture_ -> ClearRenderTarget(BLACK);
+	RenderTexture_ -> SetRenderTarget();
+	RenderTexture_ -> ClearRenderTarget(BLACK);
 
 	// Render the scene
 	Result_ = RenderScene(ShowText);

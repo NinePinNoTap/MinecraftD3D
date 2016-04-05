@@ -9,6 +9,7 @@
 #include "Font.h"
 #include "Model.h"
 #include "Texture.h"
+#include "Rect.h"
 #include "OBJLoader.h"
 #include "TXTLoader.h"
 
@@ -23,12 +24,13 @@ public:
 
 	// Shutdown
 	void Shutdown();
-	
+
 	// Loaders
 	void LoadAudio(AudioClip** clip, std::string filename, bool is3D = false);
-	void LoadFont(Font** font, std::string filename);
+	void LoadFont(Font** font, std::string fontFilename, std::string fontTextureFilename, int letterCount);
 	void LoadModel(Model** model, std::string filename);
 	void LoadTexture(Texture** texture, std::string filename);
+	void LoadTexture(Texture** texture, string keyName, Rect2D textureResolution);
 
 private:
 	std::map<std::string, AudioClip*> AudioDatabase_;

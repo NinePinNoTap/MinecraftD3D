@@ -39,7 +39,6 @@ protected:
 	D3DXMATRIX ReflectionViewMatrix_;
 
 	// Objects
-	Texture* SceneTexture_;
 	Text* Text_;
 
 	// Flags

@@ -40,7 +40,6 @@ public:
 	ID3D11ShaderResourceView* GetDistortionTexture();
 	ID3D11ShaderResourceView* GetPerturbTexture();
 
-
 	// Setters
 	void SetFloat(string keyName, float value);
 	bool SetTexture(string keyName, string value);
@@ -69,13 +68,16 @@ private:
 	Texture* DistortionTexture_;
 	Texture* PerturbTexture_;
 
+	Texture* RenderTexture_;
+	Texture* ReflectionRenderTexture_;
+	Texture* RefractionRenderTexture_;
+
 	// Databases
 	std::map<string, float> FloatDatabase_;
 	std::map<string, D3DXVECTOR2> Vector2Database_;
 	std::map<string, D3DXVECTOR3> Vector3Database_;
 	std::map<string, D3DXVECTOR4> Vector4Database_;
 	std::map<string, Texture*> TextureDatabase_;
-	std::map<string, Colour> ColourDatabase_;
 };
 
 

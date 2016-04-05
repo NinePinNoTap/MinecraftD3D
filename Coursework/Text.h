@@ -38,7 +38,7 @@ public:
 	~Text();
 
 	// Initialising
-	bool Initialise(HWND hwnd);
+	bool Initialise(HWND hwnd, string fontName, string fontTexture, int letterCount);
 
 	// Shutdown
 	void Shutdown();

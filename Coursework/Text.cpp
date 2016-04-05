@@ -2,6 +2,7 @@
 #include "DirectXManager.h"
 #include "ShaderManager.h"
 #include "WindowManager.h"
+#include "AssetManager.h"
 
 Text::Text()
 {
@@ -18,18 +19,13 @@ Text::~Text()
 }
 
 // Initialising
-bool Text::Initialise(HWND hwnd)
+bool Text::Initialise(HWND hwnd, string fontName, string fontTexture, int letterCount)
 {
 	// Store the resolution of the screen
 	WindowResolution_ = WindowManager::Instance()->GetWindowResolution();
 
-	// Create the font object
-	Font_ = new Font;
-	if(!Font_) { return false; }
-
-	// Initialise the font object.
-	Result_ = Font_ -> Initialise("Data/Font/shruti.txt", "Data/Font/shruti.dds");
-	if (!Result_)
+	AssetManager::Instance()->LoadFont(&Font_, fontName, fontTexture, letterCount);
+	if (!Font_)
 	{
 		MessageBox(hwnd, L"Could not initialise the font object.", L"Error", MB_OK);
 		return false;
@@ -129,14 +125,6 @@ bool Text::InitialiseSentence(SentenceType** sentence, int maxLength)
 // Shutdown
 void Text::Shutdown()
 {
-	// Release the font object.
-	if (Font_)
-	{
-		Font_->Shutdown();
-		delete Font_;
-		Font_ = 0;
-	}
-
 	// Release the sentences.
 	for (unsigned int i = 0; i < Sentences_.size(); i++)
 	{

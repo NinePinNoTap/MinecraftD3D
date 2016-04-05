@@ -53,18 +53,19 @@ private:
 	// Rendering
 	D3DXVECTOR4 ClipPlane_;
 
-	// Misc
+	// Objects
+	AudioClip* AmbientSound_;
 	Clouds* Clouds_;
 	Fire* Fire_;
 	Model* CampFire_;
+	Ocean* Ocean_;
 	ParticleSystem* ParticleSystem_;
-	Texture* RefractionTexture_;
-	Texture* ReflectionTexture_;
 	Sprite* Sprite_;
 	SkySphere* SkySphere_;
 	Terrain* Terrain_;
-	Ocean* Ocean_;
-	AudioClip* AmbientSound_;
+	Texture* RenderTexture_;
+	Texture* RefractionTexture_;
+	Texture* ReflectionTexture_;
 	VoxelTerrain* Chunk_;
 
 	// Flags

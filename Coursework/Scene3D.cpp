@@ -3,7 +3,6 @@
 Scene3D::Scene3D()
 {
 	// Initialise pointers
-	SceneTexture_ = 0;
 	Text_ = 0;
 }
 

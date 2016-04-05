@@ -80,23 +80,27 @@ void AssetManager::LoadAudio(AudioClip** audioClip, std::string filename, bool i
 	return;
 }
 
-void AssetManager::LoadFont(Font** font, std::string filename)
+void AssetManager::LoadFont(Font** font, std::string fontFilename, std::string fontTextureFilename, int letterCount)
 {
 	// Check if the font already exists
-	if (FontDatabase_.count(filename))
+	if (FontDatabase_.count(fontFilename))
 	{
 		// Don't continue
-		*font = FontDatabase_[filename];
+		*font = FontDatabase_[fontFilename];
 		return;
 	}
 
+	//===============
+	// Load the Font
+	//===============
+
 	// Construct filename path to txt
-	std::string txtPath = FONT_DIR + filename + ".txt";
+	std::string txtPath = FONT_DIR + fontFilename + ".txt";
 	const char* txtFilePath = txtPath.c_str();
 
 	// Create Font
 	Font* loadedFont = new Font;
-	Result_ = loadedFont->Initialise(txtFilePath, FONT_DIR + filename + ".dds");
+	Result_ = loadedFont->Initialise(txtFilePath, letterCount);
 	if (!Result_)
 	{
 		*font = 0;
@@ -104,8 +108,27 @@ void AssetManager::LoadFont(Font** font, std::string filename)
 	}
 
 	// Add to map
-	FontDatabase_[filename] = loadedFont;
+	FontDatabase_[fontFilename] = loadedFont;
 
+	//================
+	// Create Texture
+	//================
+
+	Texture* loadedTexture = new Texture;
+	LoadTexture(&loadedTexture, fontTextureFilename);
+	if (!loadedTexture)
+	{
+		*font = 0;
+		return;
+	}
+
+	// Add to map
+	TextureDatabase_[fontTextureFilename] = loadedTexture;
+
+	// Apply texture to font
+	loadedFont->SetTexture(loadedTexture);
+
+	// Set font and return
 	*font = loadedFont;
 
 	return;
@@ -202,4 +225,39 @@ void AssetManager::LoadTexture(Texture** texture, std::string filename)
 	*texture = loadedTexture;
 
 	return;
+}
+
+void AssetManager::LoadTexture(Texture** texture, string keyName, Rect2D textureResolution)
+{
+	// Check if the texture is in the database
+	if (TextureDatabase_.count(keyName))
+	{
+		*texture = TextureDatabase_[keyName];
+		return;
+	}
+
+	// Create the texture
+	Texture* createdTexture = new Texture;
+	if (!createdTexture)
+	{
+		*texture = 0;
+		return;
+	}
+
+	// Initialise it
+	Result_ = createdTexture->Initialise(textureResolution);
+	if (!Result_)
+	{
+		// Couldn't create
+		*texture = 0;
+		delete createdTexture;
+		createdTexture = 0;
+		return;
+	}
+
+	// Add to the map
+	TextureDatabase_[keyName] = createdTexture;
+
+	// Return it
+	*texture = createdTexture;
 }

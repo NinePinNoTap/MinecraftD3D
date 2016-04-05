@@ -29,10 +29,13 @@ public:
 	~Font();
 
 	// Initialising
-	bool Initialise(const char* fontFilename, string textureFilename);
+	bool Initialise(const char* fontFilename, int letterCount);
 
 	// Shutdown
 	void Shutdown();
+
+	// Setters
+	void SetTexture(Texture* texture);
 
 	// Building
 	void BuildVertexArray(void* vertices, char* sentence, float drawX, float drawY);
@@ -42,10 +45,6 @@ public:
 	ID3D11ShaderResourceView* GetTexture();
 
 private:
-	// Loading
-	bool LoadFontData(const char* filename);
-	bool LoadTexture(string filename);
-
 	// Font Data
 	FontType* Font_;
 

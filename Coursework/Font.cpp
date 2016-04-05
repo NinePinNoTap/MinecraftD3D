@@ -16,15 +16,47 @@ Font::~Font()
 }
 
 // Initialising
-bool Font::Initialise(const char* fontFilename, string textureFilename)
+bool Font::Initialise(const char* fontFilename, int letterCount)
 {
-	// Load in the text file containing the font data
-	Result_ = LoadFontData(fontFilename);
-	if(!Result_)	{ return false;	}
+	ifstream fin;
+	int i;
+	char temp;
 
-	// Load the texture that has the font characters on it
-	Result_ = LoadTexture(textureFilename);
-	if(!Result_)	{ return false;	}
+	// Create the font spacing buffer
+	Font_ = new FontType[letterCount];
+	if (!Font_)
+	{
+		return false;
+	}
+
+	// Read in the font size and spacing between chars
+	fin.open(fontFilename);
+	if (fin.fail())
+	{
+		return false;
+	}
+
+	// Read in the 95 used ascii characters for text
+	for (i = 0; i<letterCount; i++)
+	{
+		fin.get(temp);
+		while (temp != ' ')
+		{
+			fin.get(temp);
+		}
+		fin.get(temp);
+		while (temp != ' ')
+		{
+			fin.get(temp);
+		}
+
+		fin >> Font_[i].left;
+		fin >> Font_[i].right;
+		fin >> Font_[i].size;
+	}
+
+	// Close the file
+	fin.close();
 
 	return true;
 }
@@ -50,57 +82,9 @@ void Font::Shutdown()
 	return;
 }
 
-// Loading
-bool Font::LoadFontData(const char* filename)
+void Font::SetTexture(Texture* texture)
 {
-	ifstream fin;
-	int i;
-	char temp;
-
-	// Create the font spacing buffer
-	Font_ = new FontType[95];
-	if(!Font_) { return false; }
-
-	// Read in the font size and spacing between chars
-	fin.open(filename);
-	if(fin.fail()) { return false; }
-
-	// Read in the 95 used ascii characters for text
-	for (i = 0; i<95; i++)
-	{
-		fin.get(temp);
-		while(temp != ' ')
-		{
-			fin.get(temp);
-		}
-		fin.get(temp);
-		while(temp != ' ')
-		{
-			fin.get(temp);
-		}
-
-		fin >> Font_[i].left;
-		fin >> Font_[i].right;
-		fin >> Font_[i].size;
-	}
-
-	// Close the file
-	fin.close();
-
-	return true;
-}
-
-bool Font::LoadTexture(string filename)
-{
-	// Create the texture object
-	Texture_ = new Texture;
-	if(!Texture_) { return false; }
-
-	// Initialise the texture object
-	Result_ = Texture_ -> Initialise(filename);
-	if(!Result_)	{ return false;	}
-
-	return true;
+	Texture_ = texture;
 }
 
 // Building
