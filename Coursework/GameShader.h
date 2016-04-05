@@ -22,9 +22,8 @@ public:
 	GameShader();
 	GameShader(const GameShader&);
 	~GameShader();
-
-	// Initialising
-	bool InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename, WCHAR* hsFilename = 0, WCHAR* dsFilename = 0);
+	
+	virtual bool Initialise(HWND hwnd) { }
 
 	// Shutdown
 	void Shutdown();
@@ -32,9 +31,19 @@ public:
 	// Rendering
 	void Render(int indexCount);
 
-	// Shader Data Management
-	void AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE TextureMode);
+	// Rendering
+	virtual bool Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+	{
+		return true;
+	}
 
+	// Shader Data Management
+	void AddShader(string shaderName);
+	void AddLayout(LPCSTR semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot, UINT alignedByteOffset, D3D11_INPUT_CLASSIFICATION inputSlotClass, UINT instanceDataStepRate);
+	void AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE AddressUVW, FLOAT MipLODBias, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC ComparisonFunc, Colour borderColor, FLOAT MinLOD, FLOAT MaxLOD);
+	bool BuildShader(HWND hwnd);
+	
+	// Buffer Management
 	template <class T>
 	void AddBuffer(ShaderType type)
 	{
@@ -86,22 +95,17 @@ public:
 		}
 	}
 
-	// Rendering
-	virtual bool Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
-	{
-		return true;
-	}
-
+	// Shader Management
 	void SendBuffersToShader();
-	void SendTextureToShader(int Slot, ID3D11ShaderResourceView* Texture);
+	void SendTextureToShader(int shaderSlot, ID3D11ShaderResourceView* shaderTexture);
 
 protected:
 	// Error Handling
-	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
+	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, const WCHAR* shaderFilename);
 
 	// Set up
-	bool CompileShader(HWND hwnd, WCHAR* filename, LPCSTR EntryPoint, LPCSTR Version, ID3D10Blob** Buffer);
-
+	HRESULT CompileShader(HWND hwnd, string filename, LPCSTR EntryPoint, LPCSTR Version, ID3D10Blob** Buffer);
+	
 	// Shader
 	ID3D11VertexShader* VertexShader_;
 	ID3D11PixelShader* PixelShader_;
@@ -111,7 +115,9 @@ protected:
 	// Interface
 	ID3D11InputLayout* Layout_;
 
-	// Sample State
+	// Storage for compiling the shader
+	vector<string> ShaderFiles_;
+	vector<D3D11_INPUT_ELEMENT_DESC> LayoutElement_;
 	vector<ID3D11SamplerState*> SampleStates_;
 
 	// Buffers

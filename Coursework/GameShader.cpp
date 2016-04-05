@@ -18,203 +18,6 @@ GameShader::~GameShader()
 {
 }
 
-// Initialising
-bool GameShader::InitialiseShader(HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename, WCHAR* hsFilename, WCHAR* dsFilename)
-{
-	HRESULT Result_;
-	ID3D10Blob* errorMessage;
-	ID3D10Blob* vertexShaderBuffer;
-	ID3D10Blob* hullShaderBuffer;
-	ID3D10Blob* domainShaderBuffer;
-	ID3D10Blob* pixelShaderBuffer;
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[5];
-	unsigned int numElements;
-
-	// Initialise the pointers to null
-	errorMessage = 0;
-	vertexShaderBuffer = 0;
-	hullShaderBuffer = 0;
-	domainShaderBuffer = 0;
-	pixelShaderBuffer = 0;
-
-	//=================
-	// Compile Shaders
-	//=================
-
-	// Vertex Shader
-	Result_ = CompileShader(hwnd, vsFilename, "VertexShaderMain", "vs_5_0", &vertexShaderBuffer);
-	if (FAILED(Result_))
-	{
-		return false;
-	}
-	
-	// Pixel Shader
-	Result_ = CompileShader(hwnd, psFilename, "PixelShaderMain", "ps_5_0", &pixelShaderBuffer);
-	if (FAILED(Result_))
-	{
-		return false;
-	}
-
-	// Hull Shader (If we need to)
-	if (hsFilename)
-	{
-		Result_ = CompileShader(hwnd, hsFilename, "HullShaderMain", "hs_5_0", &hullShaderBuffer);
-		if (FAILED(Result_))
-		{
-			return false;
-		}
-	}
-
-	// Domain Shader (If we need to)
-	if (dsFilename)
-	{
-		Result_ = CompileShader(hwnd, dsFilename, "DomainShaderMain", "ds_5_0", &domainShaderBuffer);
-		if (FAILED(Result_))
-		{
-			return false;
-		}
-	}
-
-	//=======================
-	// Create Shader Buffers
-	//=======================
-
-	Result_ = DirectXManager::Instance()->GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &VertexShader_);
-	if (FAILED(Result_))
-	{
-		return false;
-	}
-
-	Result_ = DirectXManager::Instance()->GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &PixelShader_);
-	if (FAILED(Result_))
-	{
-		return false;
-	}
-
-	if (hsFilename)
-	{
-		Result_ = DirectXManager::Instance()->GetDevice()->CreateHullShader(hullShaderBuffer->GetBufferPointer(), hullShaderBuffer->GetBufferSize(), NULL, &HullShader_);
-		if (FAILED(Result_)) { return false; }
-	}
-	if (dsFilename)
-	{
-		Result_ = DirectXManager::Instance()->GetDevice()->CreateDomainShader(domainShaderBuffer->GetBufferPointer(), domainShaderBuffer->GetBufferSize(), NULL, &DomainShader_);
-		if (FAILED(Result_)) { return false; }
-	}
-
-	//=================================
-	// Create Vertex InputManager Description
-	//=================================
-
-	polygonLayout[0].SemanticName = "POSITION";
-	polygonLayout[0].SemanticIndex = 0;
-	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[0].InputSlot = 0;
-	polygonLayout[0].AlignedByteOffset = 0;
-	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[0].InstanceDataStepRate = 0;
-
-	polygonLayout[1].SemanticName = "TEXCOORD";
-	polygonLayout[1].SemanticIndex = 0;
-	polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-	polygonLayout[1].InputSlot = 0;
-	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[1].InstanceDataStepRate = 0;
-
-	polygonLayout[2].SemanticName = "NORMAL";
-	polygonLayout[2].SemanticIndex = 0;
-	polygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[2].InputSlot = 0;
-	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[2].InstanceDataStepRate = 0;
-
-	polygonLayout[3].SemanticName = "TANGENT";
-	polygonLayout[3].SemanticIndex = 0;
-	polygonLayout[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[3].InputSlot = 0;
-	polygonLayout[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[3].InstanceDataStepRate = 0;
-
-	polygonLayout[4].SemanticName = "BINORMAL";
-	polygonLayout[4].SemanticIndex = 0;
-	polygonLayout[4].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[4].InputSlot = 0;
-	polygonLayout[4].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[4].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[4].InstanceDataStepRate = 0;
-
-	// Count how many elements
-	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
-
-	// Create the vertex InputManager layout
-	Result_ = DirectXManager::Instance()->GetDevice()->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &Layout_);
-	if (FAILED(Result_)) { return false; }
-
-	//==========
-	// Clean Up
-	//==========
-
-	vertexShaderBuffer->Release();
-	vertexShaderBuffer = 0;
-
-	pixelShaderBuffer->Release();
-	pixelShaderBuffer = 0;
-
-	if (hullShaderBuffer)
-	{
-		hullShaderBuffer->Release();
-		hullShaderBuffer = 0;
-	}
-
-	if (domainShaderBuffer)
-	{
-		domainShaderBuffer->Release();
-		domainShaderBuffer = 0;
-	}
-
-	return true;
-}
-
-bool GameShader::CompileShader(HWND hwnd, WCHAR* filename, LPCSTR EntryPoint, LPCSTR Version, ID3D10Blob** Buffer)
-{
-	HRESULT Result_;
-	ID3D10Blob* errorMessage;
-	std::wstring output;
-	
-	// Add the shader directory to the filename
-	output = std::wstring(SHADER_DIR.begin(), SHADER_DIR.end());
-	output += filename;
-
-	// Compile the Shader
-	Result_ = D3DX11CompileFromFile(output.c_str(), NULL, NULL, EntryPoint, Version, D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, Buffer, &errorMessage, NULL);
-
-	// Check if it failed
-	if (FAILED(Result_))
-	{
-		if (errorMessage)
-		{
-			// Output the error message to a text file
-			OutputShaderErrorMessage(errorMessage, hwnd, filename);
-
-			// Clean Up
-			errorMessage->Release();
-			errorMessage = 0;
-		}
-		else
-		{
-			// Notify the user that the file doesnt exist
-			MessageBox(hwnd, filename, L"Missing Shader File", MB_OK);
-		}
-
-		return false;
-	}
-
-	return true;
-}
-
 // Shutdown
 void GameShader::Shutdown()
 {
@@ -310,32 +113,203 @@ void GameShader::Render(int indexCount)
 }
 
 // Shader Management
-void GameShader::AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE TextureMode)
+void GameShader::AddShader(string shaderName)
+{
+	ShaderFiles_.push_back(shaderName);
+}
+
+void GameShader::AddLayout(LPCSTR semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot, UINT alignedByteOffset, D3D11_INPUT_CLASSIFICATION inputSlotClass, UINT instanceDataStepRate)
+{
+	D3D11_INPUT_ELEMENT_DESC layoutDesc;
+
+	// Set up the description of the element
+	layoutDesc.SemanticName = semanticName;
+	layoutDesc.SemanticIndex = semanticIndex;
+	layoutDesc.Format = format;
+	layoutDesc.InputSlot = inputSlot;
+	layoutDesc.AlignedByteOffset = alignedByteOffset;
+	layoutDesc.InputSlotClass = inputSlotClass;
+	layoutDesc.InstanceDataStepRate = instanceDataStepRate;
+	
+	LayoutElement_.push_back(layoutDesc);
+}
+
+void GameShader::AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE AddressUVW, FLOAT MipLODBias, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC ComparisonFunc, Colour borderColor, FLOAT MinLOD, FLOAT MaxLOD)
 {
 	HRESULT Result_;
 	D3D11_SAMPLER_DESC samplerDesc;
 	ID3D11SamplerState* samplerState;
 
-	// Create a description for the second sampler state
+	// Create a description
 	samplerDesc.Filter = Filter;
-	samplerDesc.AddressU = TextureMode;
-	samplerDesc.AddressV = TextureMode;
-	samplerDesc.AddressW = TextureMode;
-	samplerDesc.MipLODBias = 0.0f;
-	samplerDesc.MaxAnisotropy = 1;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	samplerDesc.BorderColor[0] = 0;
-	samplerDesc.BorderColor[1] = 0;
-	samplerDesc.BorderColor[2] = 0;
-	samplerDesc.BorderColor[3] = 0;
-	samplerDesc.MinLOD = 0;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	samplerDesc.AddressU = AddressUVW;
+	samplerDesc.AddressV = AddressUVW;
+	samplerDesc.AddressW = AddressUVW;
+	samplerDesc.MipLODBias = MipLODBias;
+	samplerDesc.MaxAnisotropy = MaxAnisotropy;
+	samplerDesc.ComparisonFunc = ComparisonFunc;
+	samplerDesc.BorderColor[0] = borderColor.r;
+	samplerDesc.BorderColor[1] = borderColor.g;
+	samplerDesc.BorderColor[2] = borderColor.b;
+	samplerDesc.BorderColor[3] = borderColor.a;
+	samplerDesc.MinLOD = MinLOD;
+	samplerDesc.MaxLOD = MaxLOD;
 
 	// Create the sampler state using the above description
 	Result_ = DirectXManager::Instance()->GetDevice()->CreateSamplerState(&samplerDesc, &samplerState);
+	if (FAILED(Result_))
+	{
+		OutputToDebug("Could not create sampler state");
+	}
 
 	// Add to the vector
 	SampleStates_.push_back(samplerState);
+}
+
+bool GameShader::BuildShader(HWND hwnd)
+{
+	HRESULT Result_;
+	ID3D10Blob* errorMessage;
+	ID3D10Blob* vertexShaderBuffer;
+	ID3D10Blob* hullShaderBuffer;
+	ID3D10Blob* domainShaderBuffer;
+	ID3D10Blob* pixelShaderBuffer;
+	D3D11_INPUT_ELEMENT_DESC* polygonLayout;
+	unsigned int numElements;
+
+	// Initialise the pointers to null
+	errorMessage = 0;
+	vertexShaderBuffer = 0;
+	hullShaderBuffer = 0;
+	domainShaderBuffer = 0;
+	pixelShaderBuffer = 0;
+
+	// Make sure we have shader files to build
+	if (ShaderFiles_.empty())
+	{
+		return false;
+	}
+
+	//================
+	// Compile Shader
+	//================
+
+	for (int i = 0; i < ShaderFiles_.size(); i++)
+	{
+		// Find out the type and compile it
+		if (ShaderFiles_[i].find(".vs") != std::string::npos)
+		{
+			Result_ = CompileShader(hwnd, ShaderFiles_[i], "VertexShaderMain", "vs_5_0", &vertexShaderBuffer);
+			if (FAILED(Result_))
+			{
+				return false;
+			}
+			Result_ = DirectXManager::Instance()->GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &VertexShader_);
+			if (FAILED(Result_))
+			{
+				return false;
+			}
+		}
+		else if (ShaderFiles_[i].find(".ps") != std::string::npos)
+		{
+			Result_ = CompileShader(hwnd, ShaderFiles_[i], "PixelShaderMain", "ps_5_0", &pixelShaderBuffer);
+			if (FAILED(Result_))
+			{
+				return false;
+			}
+			Result_ = DirectXManager::Instance()->GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &PixelShader_);
+			if (FAILED(Result_))
+			{
+				return false;
+			}
+		}
+		else if (ShaderFiles_[i].find(".hs") != std::string::npos)
+		{
+			Result_ = CompileShader(hwnd, ShaderFiles_[i], "HullShaderMain", "hs_5_0", &hullShaderBuffer);
+			if (FAILED(Result_))
+			{
+				return false;
+			}
+			Result_ = DirectXManager::Instance()->GetDevice()->CreateHullShader(hullShaderBuffer->GetBufferPointer(), hullShaderBuffer->GetBufferSize(), NULL, &HullShader_);
+			if (FAILED(Result_))
+			{
+				return false;
+			}
+		}
+		else if (ShaderFiles_[i].find(".ds") != std::string::npos)
+		{
+			Result_ = CompileShader(hwnd, ShaderFiles_[i], "DomainShaderMain", "ds_5_0", &domainShaderBuffer);
+			if (FAILED(Result_))
+			{
+				return false;
+			}
+			Result_ = DirectXManager::Instance()->GetDevice()->CreateDomainShader(domainShaderBuffer->GetBufferPointer(), domainShaderBuffer->GetBufferSize(), NULL, &DomainShader_);
+			if (FAILED(Result_))
+			{
+				return false;
+			}
+		}
+	}
+
+	//=======================
+	// Create Polygon Layout
+	//=======================
+
+	if (LayoutElement_.empty())
+	{
+		return false;
+	}
+
+	// Access how many layout settings we have
+	numElements = LayoutElement_.size();
+
+	// Create the layout description
+	polygonLayout = new D3D11_INPUT_ELEMENT_DESC[numElements];
+
+	for (int i = 0; i < LayoutElement_.size(); i++)
+	{
+		polygonLayout[i] = LayoutElement_[i];
+	}
+	
+	// Create the vertex input layout
+	Result_ = DirectXManager::Instance()->GetDevice()->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &Layout_);
+	if (FAILED(Result_))
+	{
+		return false;
+	}
+
+	//==========
+	// Clean Up
+	//==========
+	
+	if (vertexShaderBuffer)
+	{
+		vertexShaderBuffer->Release();
+		vertexShaderBuffer = 0;
+	}
+
+	if (pixelShaderBuffer)
+	{
+		pixelShaderBuffer->Release();
+		pixelShaderBuffer = 0;
+	}
+
+	if (hullShaderBuffer)
+	{
+		hullShaderBuffer->Release();
+		hullShaderBuffer = 0;
+	}
+
+	if (domainShaderBuffer)
+	{
+		domainShaderBuffer->Release();
+		domainShaderBuffer = 0;
+	}
+
+	ShaderFiles_.clear();
+	LayoutElement_.clear();
+
+	return true;
 }
 
 void GameShader::SendBuffersToShader()
@@ -377,14 +351,53 @@ void GameShader::SendBuffersToShader()
 	}
 }
 
-void GameShader::SendTextureToShader(int Slot, ID3D11ShaderResourceView* Texture)
+void GameShader::SendTextureToShader(int shaderSlot, ID3D11ShaderResourceView* shaderTexture)
 {
 	// Send the texture to the shader
-	DirectXManager::Instance()->GetDeviceContext()->PSSetShaderResources(Slot, 1, &Texture);
+	DirectXManager::Instance()->GetDeviceContext()->PSSetShaderResources(shaderSlot, 1, &shaderTexture);
+}
+
+HRESULT GameShader::CompileShader(HWND hwnd, string filename, LPCSTR EntryPoint, LPCSTR Version, ID3D10Blob** Buffer)
+{
+	HRESULT Result_;
+	ID3D10Blob* errorMessage;
+	std::wstring output;
+	
+	// Create the full extension
+	string compiledFilename = SHADER_DIR + filename;
+
+	// Add the shader directory to the filename
+	output = std::wstring(compiledFilename.begin(), compiledFilename.end());
+
+	// Compile the Shader
+	Result_ = D3DX11CompileFromFile(output.c_str(), NULL, NULL, EntryPoint, Version, D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, Buffer, &errorMessage, NULL);
+
+	// Check if it failed
+	if (FAILED(Result_))
+	{
+		if (errorMessage)
+		{
+			// Output the error message to a text file
+			OutputShaderErrorMessage(errorMessage, hwnd, output.c_str());
+
+			// Clean Up
+			errorMessage->Release();
+			errorMessage = 0;
+		}
+		else
+		{
+			// Notify the user that the file doesnt exist
+			MessageBox(hwnd, output.c_str(), L"Missing Shader File", MB_OK);
+		}
+
+		return Result_;
+	}
+
+	return S_OK;
 }
 
 // Error Handling
-void GameShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
+void GameShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, const WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long bufferSize, i;

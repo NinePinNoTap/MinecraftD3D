@@ -38,7 +38,7 @@ bool CloudShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* obj
 	SkyBuffer skyBuffer;
 	skyBuffer.brightness = objMaterial->GetFloat("TextureBrightness");
 	skyBuffer.scale = objMaterial->GetFloat("TextureScale");
-	skyBuffer.translation = objMaterial->GetFloat("Frame");// gameObject->GetFrame();
+	skyBuffer.translation = objMaterial->GetFloat("Frame");
 	skyBuffer.padding = 0.0f;
 
 	// Update Buffers

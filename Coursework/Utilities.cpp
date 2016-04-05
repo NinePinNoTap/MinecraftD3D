@@ -65,6 +65,7 @@ void OutputToDebug(std::string text)
 	delete[] buf;
 
 	OutputDebugString(r.c_str());
+	OutputDebugString(L"\n");
 }
 
 void Wrap(int& value, int min, int max)

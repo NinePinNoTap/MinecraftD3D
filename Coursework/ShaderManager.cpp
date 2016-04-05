@@ -6,6 +6,7 @@ ShaderManager::ShaderManager()
 	CloudShader_ = 0;
 	ColourShader_ = 0;
 	FireShader_ = 0;
+	FontShader_ = 0;
 	LightShader_ = 0;
 	OceanShader_ = 0;
 	SkySphereShader_ = 0;
@@ -25,132 +26,274 @@ ShaderManager::~ShaderManager()
 // Initialising
 bool ShaderManager::Initialise(HWND hwnd)
 {
-	//==============================
-	// Initialise the Colour Shader
-	//==============================
-
-	ColourShader_ = new ColourShader;
-	if (!ColourShader_) { return false; }
-	Result_ = ColourShader_->InitialiseShader(hwnd, L"colour.vs", L"colour.ps");
-	if (!Result_) { return false; }
-	ColourShader_->AddBuffer<MatrixBuffer>(VertexShader);
-	ColourShader_->AddBuffer<PixelBuffer>(PixelShader);
-
 	//=============================
 	// Initialise the Cloud Shader
 	//=============================
 
 	CloudShader_ = new CloudShader;
-	if (!CloudShader_) { return false; }
-	Result_ = CloudShader_ -> InitialiseShader(hwnd, L"cloud.vs", L"cloud.ps");
-	if (!Result_) { return false; }
+	if (!CloudShader_)
+	{
+		return false;
+	}
+	CloudShader_->AddShader("cloud.vs");
+	CloudShader_->AddShader("cloud.ps");
+	CloudShader_->AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	CloudShader_->AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	CloudShader_->AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	CloudShader_->AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	CloudShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	CloudShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	CloudShader_->AddBuffer<SkyBuffer>(PixelShader);
-	CloudShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
+	CloudShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	Result_ = CloudShader_->BuildShader(hwnd);
+	if (!Result_)
+	{
+		OutputToDebug("Could not initialise cloud shader.");
+		return false;
+	}
+
+	//==============================
+	// Initialise the Colour Shader
+	//==============================
+
+	ColourShader_ = new ColourShader;
+	if (!ColourShader_)
+	{
+		return false;
+	}
+	ColourShader_->AddShader("colour.vs");
+	ColourShader_->AddShader("colour.ps");
+	ColourShader_->AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	ColourShader_->AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	ColourShader_->AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	ColourShader_->AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	ColourShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	ColourShader_->AddBuffer<MatrixBuffer>(VertexShader);
+	ColourShader_->AddBuffer<PixelBuffer>(PixelShader);
+	Result_ = ColourShader_->BuildShader(hwnd);
+	if (!Result_)
+	{
+		OutputToDebug("Could not initialise colour shader.");
+		return false;
+	}
 
 	//============================
 	// Initialise the Fire Shader
 	//============================
 
 	FireShader_ = new FireShader;
-	if (!FireShader_) { return false; }
-	Result_ = FireShader_->InitialiseShader(hwnd, L"fire.vs", L"fire.ps");
-	if (!Result_) { return false; }
+	if (!FireShader_)
+	{
+		return false;
+	}
+	FireShader_->AddShader("fire.vs");
+	FireShader_->AddShader("fire.ps");
+	FireShader_->AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	FireShader_->AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	FireShader_->AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	FireShader_->AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	FireShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	FireShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	FireShader_->AddBuffer<NoiseBuffer>(VertexShader);
 	FireShader_->AddBuffer<DistortionBuffer>(PixelShader);
-	FireShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
-	FireShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP);
+	FireShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	FireShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	Result_ = FireShader_->BuildShader(hwnd);
+	if (!Result_)
+	{
+		OutputToDebug("Could not initialise fire shader.");
+		return false;
+	}
 
 	//============================
 	// Initialise the Font Shader
 	//============================
 
 	FontShader_ = new GameShader;
-	if (!FontShader_) { return false; }
-	Result_ = FontShader_->InitialiseShader(hwnd, L"font.vs", L"font.ps");
-	if (!Result_) { return false; }
+	if (!FontShader_)
+	{
+		return false;
+	}
+	FontShader_->AddShader("font.vs");
+	FontShader_->AddShader("font.ps");
+	FontShader_->AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	FontShader_->AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	FontShader_->AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	FontShader_->AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	FontShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	FontShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	FontShader_->AddBuffer<PixelBuffer>(PixelShader);
-	FontShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
+	FontShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	Result_ = FontShader_->BuildShader(hwnd);
+	if (!Result_)
+	{
+		OutputToDebug("Could not initialise font shader.");
+		return false;
+	}
 
 	//=============================
 	// Initialise the lightBuffer Shader
 	//=============================
 
 	LightShader_ = new LightShader;
-	if(!LightShader_) { return false; }
-	Result_ = LightShader_->InitialiseShader(hwnd, L"light.vs", L"light.ps");
-	if(!Result_) { return false; }
+	if(!LightShader_)
+	{
+		return false;
+	}
+	LightShader_->AddShader("light.vs");
+	LightShader_->AddShader("light.ps");
+	LightShader_->AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	LightShader_->AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	LightShader_->AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	LightShader_->AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	LightShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	LightShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	LightShader_->AddBuffer<CameraBuffer>(VertexShader);
 	LightShader_->AddBuffer<LightPositionBuffer>(VertexShader);
 	LightShader_->AddBuffer<LightBuffer>(PixelShader);
-	LightShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
+	LightShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	Result_ = LightShader_->BuildShader(hwnd);
+	if (!Result_)
+	{
+		OutputToDebug("Could not initialise light shader.");
+		return false;
+	}
 	
 	//=============================
 	// Initialise the Ocean Shader
 	//=============================
 
 	OceanShader_ = new GameShader;
-	if(!OceanShader_) { return false; }
-	Result_ = OceanShader_->InitialiseShader(hwnd, L"ocean.vs", L"ocean.ps", L"ocean.hs", L"ocean.ds");
-	if(!Result_) { return false; }
+	if(!OceanShader_)
+	{
+		return false;
+	}
+	OceanShader_->AddShader("ocean.vs");
+	OceanShader_->AddShader("ocean.ps");
+	OceanShader_->AddShader("ocean.hs");
+	OceanShader_->AddShader("ocean.ds");
+	OceanShader_->AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	OceanShader_->AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	OceanShader_->AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	OceanShader_->AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	OceanShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	OceanShader_->AddBuffer<MatrixBuffer>(DomainShader);
 	OceanShader_->AddBuffer<CameraBuffer>(DomainShader);
 	OceanShader_->AddBuffer<WaveBuffer>(DomainShader);
 	OceanShader_->AddBuffer<OceanBuffer>(PixelShader);
 	OceanShader_->AddBuffer<TessellationBuffer>(HullShader);
-	OceanShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
-	
+	OceanShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	Result_ = OceanShader_->BuildShader(hwnd);
+	if (!Result_)
+	{
+		OutputToDebug("Could not initialise ocean shader.");
+		return false;
+	}
+
 	//==================================
 	// Initialise the SkySphere Shader
 	//==================================
 
 	SkySphereShader_ = new SkyShader;
-	if(!SkySphereShader_) { return false; }
-	Result_ = SkySphereShader_->InitialiseShader(hwnd, L"skysphere.vs", L"skysphere.ps");
-	if(!Result_) { return false; }
+	if(!SkySphereShader_)
+	{
+		return false;
+	}
+	SkySphereShader_->AddShader("skysphere.vs");
+	SkySphereShader_->AddShader("skysphere.ps");
+	SkySphereShader_->AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	SkySphereShader_->AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	SkySphereShader_->AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	SkySphereShader_->AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	SkySphereShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	SkySphereShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	SkySphereShader_->AddBuffer<GradientBuffer>(PixelShader);
-	SkySphereShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
-	
+	SkySphereShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	Result_ = SkySphereShader_->BuildShader(hwnd);
+	if (!Result_)
+	{
+		OutputToDebug("Could not initialise sky sphere shader.");
+		return false;
+	}
+
 	//===============================
 	// Initialise the Terrain Shader
 	//===============================
 
 	TerrainShader_ = new TerrainShader;
-	if(!TerrainShader_) { return false; }
-	Result_ = TerrainShader_->InitialiseShader(hwnd, L"terrain.vs", L"terrain.ps");
-	if(!Result_) { return false; }
+	if (!TerrainShader_)
+	{
+		return false;
+	}
+	TerrainShader_->AddShader("terrain.vs");
+	TerrainShader_->AddShader("terrain.ps");
+	TerrainShader_->AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	TerrainShader_->AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	TerrainShader_->AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	TerrainShader_->AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	TerrainShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	TerrainShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	TerrainShader_->AddBuffer<LightPositionBuffer>(VertexShader);
 	TerrainShader_->AddBuffer<LightBuffer>(PixelShader);
-	TerrainShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
-	
+	TerrainShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	Result_ = TerrainShader_->BuildShader(hwnd);
+	if (!Result_)
+	{
+		OutputToDebug("Could not initialise terrain shader.");
+		return false;
+	}
+
 	//==========================================
 	// Initialise the Terrain Reflection Shader
 	//==========================================
 
 	TerrainReflectionShader_ = new TerrainReflectionShader;
-	if(!TerrainReflectionShader_) { return false; }
-	Result_ = TerrainReflectionShader_->InitialiseShader(hwnd, L"terrainreflection.vs", L"terrainreflection.ps");
-	if(!Result_) { return false; }
+	if(!TerrainReflectionShader_)
+	{
+		return false;
+	}
+	TerrainReflectionShader_->AddShader("terrainreflection.vs");
+	TerrainReflectionShader_->AddShader("terrainreflection.ps");
+	TerrainReflectionShader_->AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	TerrainReflectionShader_->AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	TerrainReflectionShader_->AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	TerrainReflectionShader_->AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	TerrainReflectionShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	TerrainReflectionShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	TerrainReflectionShader_->AddBuffer<ClipPlaneBuffer>(VertexShader);
 	TerrainReflectionShader_->AddBuffer<LightBuffer>(PixelShader);
-	TerrainReflectionShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
-	
+	TerrainReflectionShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	Result_ = TerrainReflectionShader_->BuildShader(hwnd);
+	if (!Result_)
+	{
+		OutputToDebug("Could not initialise terrain reflection shader.");
+		return false;
+	}
+
 	//===============================
 	// Initialise the Texture Shader
 	//===============================
 
 	TextureShader_ = new TextureShader;
-	if(!TextureShader_) { return false; }
-	Result_ = TextureShader_->InitialiseShader(hwnd, L"texture.vs", L"texture.ps");
-	if(!Result_) { return false; }
+	if(!TextureShader_)
+	{
+		return false;
+	}
+	TextureShader_->AddShader("texture.vs");
+	TextureShader_->AddShader("texture.ps");
+	TextureShader_->AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	TextureShader_->AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	TextureShader_->AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	TextureShader_->AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	TextureShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	TextureShader_->AddBuffer<MatrixBuffer>(VertexShader);
-	TextureShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
+	TextureShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0,0,0,0), 0, D3D11_FLOAT32_MAX);
+	Result_ = TextureShader_->BuildShader(hwnd);
+	if (!Result_)
+	{
+		OutputToDebug("Could not initialise texture shader.");
+		return false;
+	}
 
 	//=======================
 	// Setup Shader Database
