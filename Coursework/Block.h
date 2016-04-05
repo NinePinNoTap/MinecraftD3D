@@ -4,13 +4,9 @@
 
 #include "GameObject.h"
 #include "ViewFrustumManager.h"
+#include "BlockData.h"
 
 using namespace std;
-
-enum BlockType
-{
-	Air, Sand, Dirt, Cobblestone, Gold
-};
 
 const int NO_OF_NEIGHBOURS = 6;
 

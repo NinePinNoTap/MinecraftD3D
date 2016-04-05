@@ -12,7 +12,7 @@ VoxelTerrain::~VoxelTerrain()
 void VoxelTerrain::Initialise()
 {
 	// Create a Block Manager
-	BlockLoader_ = new BlockLoader;
+	BlockManager_ = new BlockManager;
 
 	//=================
 	// Generate Chunks

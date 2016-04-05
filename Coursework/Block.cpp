@@ -1,5 +1,5 @@
 #include "Block.h"
-#include "BlockLoader.h"
+#include "BlockManager.h"
 
 Block::Block() : GameObject()
 {
@@ -110,7 +110,7 @@ bool Block::SetName(string blockName)
 	BlockName_ = blockName;
 
 	// Load the new block
-	BlockLoader::Instance()->LoadBlock(&Model_, BlockName_);
+	BlockManager::Instance()->LoadBlock(&Model_, BlockName_);
 	if (!Model_)
 	{
 		return false;

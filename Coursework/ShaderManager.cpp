@@ -297,7 +297,7 @@ bool ShaderManager::FontRender(Text::SentenceType* sentence, ID3D11ShaderResourc
 	return true;
 }
 
-bool ShaderManager::OceanRender(Water* gameObject, Texture* refraction, Texture* reflection)
+bool ShaderManager::OceanRender(Ocean* gameObject, Texture* refraction, Texture* reflection)
 {
 	Mesh3D* objMesh;
 	Material* objMaterial;

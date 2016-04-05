@@ -2,7 +2,7 @@
 
 #include "Chunk.h"
 #include "Constants.h"
-#include "BlockLoader.h"
+#include "BlockManager.h"
 
 class VoxelTerrain
 {
@@ -26,6 +26,6 @@ private:
 	void SetBlockNeighbours(Chunk* chunk, int x, int y, int z);
 	Block* GetBlock(D3DXVECTOR3 currentChunkID, int x, int y, int z);
 
-	BlockLoader* BlockLoader_;
+	BlockManager* BlockManager_;
 	Chunk**** TerrainChunks_;
 };

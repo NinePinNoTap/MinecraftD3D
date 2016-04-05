@@ -17,7 +17,7 @@
 #include "SkySphere.h"
 #include "Terrain.h"
 #include "Text.h"
-#include "Water.h"
+#include "Ocean.h"
 #include "Model.h"
 #include "VoxelTerrain.h"
 
@@ -63,7 +63,7 @@ private:
 	Sprite* Sprite_;
 	SkySphere* SkySphere_;
 	Terrain* Terrain_;
-	Water* Ocean_;
+	Ocean* Ocean_;
 	AudioClip* AmbientSound_;
 	VoxelTerrain* Chunk_;
 

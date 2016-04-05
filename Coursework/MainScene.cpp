@@ -69,7 +69,7 @@ bool MainScene::Initialise(HWND hwnd)
 	// Initialise the Ocean 
 	//======================
 
-	Ocean_ = new Water;
+	Ocean_ = new Ocean;
 	if (!Ocean_) { return false; }
 	Result_ = Ocean_->Initialise("water_normal.dds", Rect3D(512.0f, 512.0f, 17.5f));
 	if (!Result_)
@@ -157,7 +157,8 @@ bool MainScene::Initialise(HWND hwnd)
 	// Initialise Sounds
 	//===================
 
-	AssetManager::Instance()->LoadAudio(&AmbientSound_, "water");
+	AssetManager::Instance()->LoadAudio(&AmbientSound_, "ambience");
+	AmbientSound_->SetVolume(1.0f);
 
 	//========================
 	// Initialise the Terrain

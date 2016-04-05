@@ -125,9 +125,6 @@
     <ClCompile Include="Terrain.cpp">
       <Filter>Scene\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Water.cpp">
-      <Filter>Scene\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="PerformanceManager.cpp">
       <Filter>Framework\Manager</Filter>
     </ClCompile>
@@ -209,9 +206,6 @@
     <ClCompile Include="VoxelTerrain.cpp">
       <Filter>Scene\VoxelTerrain</Filter>
     </ClCompile>
-    <ClCompile Include="BlockLoader.cpp">
-      <Filter>Scene\VoxelTerrain</Filter>
-    </ClCompile>
     <ClCompile Include="ViewFrustumManager.cpp">
       <Filter>Framework\Manager</Filter>
     </ClCompile>
@@ -238,6 +232,12 @@
     </ClCompile>
     <ClCompile Include="TextureShader.cpp">
       <Filter>Framework\Shader\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockManager.cpp">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Ocean.cpp">
+      <Filter>Scene\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -287,9 +287,6 @@
       <Filter>Framework\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Scene\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Water.h">
       <Filter>Scene\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
@@ -397,9 +394,6 @@
     <ClInclude Include="Block.h">
       <Filter>Scene\VoxelTerrain</Filter>
     </ClInclude>
-    <ClInclude Include="BlockLoader.h">
-      <Filter>Scene\VoxelTerrain</Filter>
-    </ClInclude>
     <ClInclude Include="ViewFrustumManager.h">
       <Filter>Framework\Manager</Filter>
     </ClInclude>
@@ -426,6 +420,15 @@
     </ClInclude>
     <ClInclude Include="TextureShader.h">
       <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockManager.h">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockData.h">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Ocean.h">
+      <Filter>Scene\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

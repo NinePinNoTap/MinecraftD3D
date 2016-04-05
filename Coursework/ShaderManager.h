@@ -15,7 +15,7 @@
 #include "SkySphere.h"
 #include "Terrain.h"
 #include "Text.h"
-#include "Water.h"
+#include "Ocean.h"
 
 #include "GameShader.h"
 #include "CloudShader.h"
@@ -55,7 +55,7 @@ public:
 	//bool FireRender(Fire* fire);
 	bool FontRender(Text::SentenceType* sentence, ID3D11ShaderResourceView* texture);
 	//bool LightRender(GameObject* model);
-	bool OceanRender(Water* ocean, Texture* refraction, Texture* reflection);
+	bool OceanRender(Ocean* ocean, Texture* refraction, Texture* reflection);
 	//bool SkyRender(GameObject* sky);
 
 	//bool TerrainRender(Terrain* terrain);
