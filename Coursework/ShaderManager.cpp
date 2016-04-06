@@ -488,8 +488,16 @@ bool ShaderManager::OceanRender(Ocean* gameObject, Texture* refraction, Texture*
 
 bool ShaderManager::TextureRender(ParticleSystem* gameObject)
 {
+	Mesh3D* objMesh;
 	Material* objMaterial;
 
+	// Model Properties
+	objMesh = gameObject->GetModel()->GetMesh();
+	if (!objMesh)
+	{
+		MessageBox(NULL, L"No Model Attached - Texture", L"Error", MB_OK);
+		return false;
+	}
 	objMaterial = gameObject->GetModel()->GetMaterial();
 	if (!objMaterial)
 	{
@@ -498,7 +506,7 @@ bool ShaderManager::TextureRender(ParticleSystem* gameObject)
 	}
 
 	// Model Properties
-	int indexCount = gameObject->GetIndexCount();
+	int indexCount = objMesh->GetIndexCount();
 	ID3D11ShaderResourceView* texture = objMaterial->GetBaseTexture();
 
 	// Create matrix buffer

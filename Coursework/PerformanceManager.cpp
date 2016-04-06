@@ -15,8 +15,8 @@ void PerformanceManager::Initialise()
 	//=====
 
 	FPS_ = 0;
-	Count_ = 0;
-	FPSCheckStartTime_ = timeGetTime();
+	FrameCount_ = 0;
+	FPSStart_ = timeGetTime();
 
 	//======
 	// CPU
@@ -42,8 +42,8 @@ void PerformanceManager::Initialise()
 	}
 
 	// Initialise the start time and cpu usage.
-	LastSampleTime = GetTickCount();
-	Usage = 0;
+	LastSampleTime_ = GetTickCount();
+	Usage_ = 0;
 
 	//=======
 	// Timer
@@ -56,10 +56,7 @@ void PerformanceManager::Initialise()
 	TicksPerMs_ = (float)(Frequency_ / 1000);
 
 	// Get the WindowManager time
-	QueryPerformanceCounter((LARGE_INTEGER*)&TimerStartTime_);
-
-	// Store the time we initialised
-	QueryPerformanceCounter((LARGE_INTEGER*)&BootTime_);
+	QueryPerformanceCounter((LARGE_INTEGER*)&TimerStart_);
 }
 
 void PerformanceManager::Shutdown()
@@ -73,21 +70,24 @@ void PerformanceManager::Shutdown()
 bool PerformanceManager::Frame()
 {
 	float timeDifference;
+	INT64 currentTime;
 	PDH_FMT_COUNTERVALUE value;
 
 	//=====
 	// FPS 
 	//=====
 
-	Count_++;
+	FrameCount_++;
 
 	// If one second has passed then update the frame per second speed.
-	if (timeGetTime() >= (FPSCheckStartTime_ + 1000))
+	if (timeGetTime() >= (FPSStart_ + 1000))
 	{
-		FPS_ = Count_;
-		Count_ = 0;
+		// Store FPS Count
+		FPS_ = FrameCount_;
 
-		FPSCheckStartTime_ = timeGetTime();
+		// Reset
+		FrameCount_ = 0;
+		FPSStart_ = timeGetTime();
 	}
 
 	//=====
@@ -97,15 +97,15 @@ bool PerformanceManager::Frame()
 	if (CanReadCPU_)
 	{
 		// If it has been 1 second then update the current cpu usage and reset the 1 second timer again.
-		if ((LastSampleTime + 1000) < GetTickCount())
+		if ((LastSampleTime_ + 1000) < GetTickCount())
 		{
-			LastSampleTime = GetTickCount();
+			LastSampleTime_ = GetTickCount();
 
 			PdhCollectQueryData(QueryHandle_);
 
 			PdhGetFormattedCounterValue(CounterHandle_, PDH_FMT_LONG, NULL, &value);
 
-			Usage = value.longValue;
+			Usage_ = value.longValue;
 		}
 	}
 
@@ -113,17 +113,17 @@ bool PerformanceManager::Frame()
 	// Timer
 	//=======
 
-	// Query the current time.
-	QueryPerformanceCounter((LARGE_INTEGER*)&CurrentTime_);
+	// Query the current time
+	QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
 
-	// Calculate the difference in time since the last time we queried for the current time.
-	timeDifference = (float)(CurrentTime_ - TimerStartTime_);
+	// Calculate difference in time since last check
+	timeDifference = (float)(currentTime - TimerStart_);
 
 	// Calculate the frame time by the time difference over the timer speed resolution.
 	FrameTime_ = timeDifference / TicksPerMs_;
 
 	// Restart the timer.
-	TimerStartTime_ = (unsigned long)CurrentTime_;
+	TimerStart_ = (unsigned long)currentTime;
 
 	return true;
 }
@@ -133,7 +133,7 @@ int PerformanceManager::GetUsage()
 	// If the class can read the cpu from the operating WindowManager then return the current usage.  If not then return zero.
 	if (CanReadCPU_)
 	{
-		return (int)Usage;
+		return (int)Usage_;
 	}
 
 	return 0;
@@ -147,14 +147,4 @@ int PerformanceManager::GetFPS()
 float PerformanceManager::GetTime()
 {
 	return FrameTime_;
-}
-
-INT64 PerformanceManager::GetWindowManagerTime()
-{
-	return CurrentTime_;
-}
-
-float PerformanceManager::GetElapsedTime()
-{
-	return (float)(CurrentTime_ - BootTime_);
 }

@@ -6,6 +6,7 @@
 
 #include "Camera.h"
 #include "GameObject.h"
+#include "PerformanceManager.h"
 #include "Texture.h"
 
 class ParticleSystem : public GameObject
@@ -15,15 +16,9 @@ private:
 	{
 		D3DXVECTOR3 position;
 		D3DXVECTOR3 velocity;
-		bool active;
-
+		float lifetime;
+		float maxLifetime;
 		bool operator < (const ParticleType& other);
-	};
-
-	struct VertexType
-	{
-		D3DXVECTOR3 position;
-		D3DXVECTOR2 texture;
 	};
 
 public:
@@ -38,25 +33,15 @@ public:
 	void Shutdown();
 
 	// Frame
-	virtual bool Frame(float);
-	bool Render();
-
-	// Getters
-	int GetIndexCount();
-	Material* GetMaterial();
+	bool Frame();
 
 private:	
-	// Initialising
-	bool InitialiseParticles();
-	bool InitialiseBuffers();
-	
 	// Buffers
 	bool UpdateBuffers();
 
 	// Creating particles
-	void EmitParticles(float);
-	void UpdateParticles(float);
-	void KillParticles();
+	void EmitParticle();
+	void UpdateParticles();
 	
 	// Emission Variables
 	D3DXVECTOR3 Deviation_;
@@ -65,25 +50,9 @@ private:
 	float ParticleSize_;
 	float ParticlesPerSecond_;
 	int MaxParticles_;
-	int CurrentParticleCount_;
-
-	// Vector
-	ParticleType* ParticleList_;
-
-	// Counters
-	int VertexCount_;
-	int IndexCount_;
-
-	// Buffers
-	ID3D11Buffer* VertexBuffer_;
-	ID3D11Buffer* IndexBuffer_;
-	VertexType* Vertices_;
-
-	// Material
-	Material* Material_;
-
+	
 	// List of active particles
-	std::list<ParticleType> ParticleTypeList_;
+	std::list<ParticleType> ParticleList_;
 };
 
 

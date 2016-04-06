@@ -19,32 +19,28 @@ public:
 	bool Frame();
 
 	// Getters
-	int GetUsage();
 	int GetFPS();
+	int GetUsage();
 	float GetTime();
-	INT64 GetWindowManagerTime();
-	float GetElapsedTime();
 
 private:
 	// FPS
 	int FPS_;
-	int Count_;
-	unsigned long FPSCheckStartTime_;
+	int FrameCount_;
+	unsigned long FPSStart_;
 
 	// CPU
 	bool CanReadCPU_;
 	HQUERY QueryHandle_;
 	HCOUNTER CounterHandle_;
-	unsigned long LastSampleTime;
-	long Usage;
+	unsigned long LastSampleTime_;
+	long Usage_;
 
 	// Timer
 	INT64 Frequency_;
 	float TicksPerMs_;
-	INT64 CurrentTime_;
-	INT64 BootTime_;
+	INT64 TimerStart_;
 	float FrameTime_;
-	unsigned long TimerStartTime_;
 };
 
 

@@ -159,7 +159,7 @@ bool MainScene::Initialise(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialise the text object.", L"Error", MB_OK);
 		return false;
 	}
-	Text_->CreateText("FPS:", Vector2(10, 10), BLACK); // FPS
+	Text_->CreateText("FPS:", Vector2(10, 10), WHITE); // FPS
 	Text_->CreateText("CPU:", Vector2(10, 30), BLACK); // CPU
 	Text_->CreateText("Camera X :", Vector2(10, 50), BLACK); // CameraX
 	Text_->CreateText("Camera Y :", Vector2(10, 70), BLACK); // CameraY
@@ -327,7 +327,7 @@ bool MainScene::UpdateObjects()
 	// Set Camera Position
 	//=====================
 	
-	//ParticleSystem_->GetTransform()->SetPosition(Camera::Instance()->GetTransform()->GetPosition() + (Camera::Instance()->GetTransform()->GetForwardVector() * 1.25));
+	ParticleSystem_->GetTransform()->SetPosition(Camera::Instance()->GetTransform()->GetPosition() + (Camera::Instance()->GetTransform()->GetForwardVector() * 1.25));
 
 	//================
 	// Update Objects
@@ -338,11 +338,17 @@ bool MainScene::UpdateObjects()
 	ViewFrustumManager::Instance()->Frame();
 	Clouds_ -> Frame();
 	Ocean_->Frame();
-	Chunk_->Frame();
+	//Chunk_->Frame();
 
-	//Result_ = ParticleSystem_ -> Frame(PerformanceManager::Instance()->GetTime());
-	//if (!Result_) { return false; }
-
+	if (NightTimeMode_)
+	{
+		Result_ = ParticleSystem_->Frame();
+		if (!Result_)
+		{
+			return false;
+		}
+	}
+	
 	//===========================
 	// Update WindowManager Information
 	//===========================
@@ -458,15 +464,15 @@ bool MainScene::Render()
 	// Render Refraction To Texture
 	//==============================
 
-	Result_ = RenderRefraction();
-	if (!Result_) { return false; }
+	//Result_ = RenderRefraction();
+	//if (!Result_) { return false; }
 
 	//==============================
 	// Render Reflection To Texture
 	//==============================
 
-	Result_ = RenderReflection();
-	if (!Result_) { return false; }
+	//Result_ = RenderReflection();
+	//if (!Result_) { return false; }
 
 	//=============================
 	// Render Refraction To Screen
@@ -515,7 +521,6 @@ bool MainScene::RenderScene(bool ShowText)
 	DirectXManager::Instance() -> ToggleZBuffer(false);
 
 	// Render the sky dome
-	//ShaderManager::Instance() -> SkyRender(SkySphere_);
 	SkySphere_->Render();
 
 	// Turn back face culling on
@@ -525,8 +530,7 @@ bool MainScene::RenderScene(bool ShowText)
 	DirectXManager::Instance() -> EnableSecondBlendState();
 
 	// Render the clouds
-	//ShaderManager::Instance() -> CloudRender(Clouds_);
-	Clouds_->Render();
+	//Clouds_->Render();
 
 	// Enable culling and the z buffer
 	DirectXManager::Instance() -> ToggleAlphaBlending(false);
@@ -560,7 +564,7 @@ bool MainScene::RenderScene(bool ShowText)
 	// Turn off back face culling
 	DirectXManager::Instance()->ToggleCulling(false);
 
-	Chunk_->Render();
+	//Chunk_->Render();
 
 	// Render Static Models
 	for each (GameObject* gameObject in Objects_)
@@ -594,8 +598,8 @@ bool MainScene::RenderScene(bool ShowText)
 		DirectXManager::Instance() -> ToggleAlphaBlending(true);
 
 		// Render the particle WindowManager
-		//Result_ = ShaderManager::Instance()->TextureRender(ParticleSystem_);
-		//if (!Result_) { return false; }
+		Result_ = ShaderManager::Instance()->TextureRender(ParticleSystem_);
+		if (!Result_) { return false; }
 
 		// Turn off alpha blending.
 		DirectXManager::Instance() -> ToggleAlphaBlending(false);
