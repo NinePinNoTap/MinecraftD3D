@@ -10,7 +10,6 @@
 #include <d3d11.h>
 #include <d3dx10math.h>
 
-#include "Colour.h"
 #include "Constants.h"
 #include "Rect.h"
 #include "Singleton.h"
@@ -29,7 +28,7 @@ public:
 	void Shutdown();
 	
 	// Rendering
-	void BeginScene(Colour SceneColour = BLACK);
+	void BeginScene(D3DXVECTOR4 clearColour = BLACK);
 	void EndScene();
 
 	// Rendering Toggles

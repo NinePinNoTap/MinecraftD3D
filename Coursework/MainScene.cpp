@@ -159,14 +159,14 @@ bool MainScene::Initialise(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialise the text object.", L"Error", MB_OK);
 		return false;
 	}
-	Text_->CreateText("", Vector2(10, 10), BLACK); // FPS
-	Text_->CreateText("", Vector2(10, 30), BLACK); // CPU
-	Text_->CreateText("", Vector2(10, 50), BLACK); // CameraX
-	Text_->CreateText("", Vector2(10, 70), BLACK); // CameraY
-	Text_->CreateText("", Vector2(10, 90), BLACK); // CameraZ
-	Text_->CreateText("", Vector2(10, 110), BLACK); // RotationX
-	Text_->CreateText("", Vector2(10, 130), BLACK); // RotationY
-	Text_->CreateText("", Vector2(10, 150), BLACK); // Rotation Z
+	Text_->CreateText("FPS:", Vector2(10, 10), BLACK); // FPS
+	Text_->CreateText("CPU:", Vector2(10, 30), BLACK); // CPU
+	Text_->CreateText("Camera X :", Vector2(10, 50), BLACK); // CameraX
+	Text_->CreateText("Camera Y :", Vector2(10, 70), BLACK); // CameraY
+	Text_->CreateText("Camera Z :", Vector2(10, 90), BLACK); // CameraZ
+	Text_->CreateText("Rotation X :", Vector2(10, 110), BLACK); // RotationX
+	Text_->CreateText("Rotation Y :", Vector2(10, 130), BLACK); // RotationY
+	Text_->CreateText("Rotation Z :", Vector2(10, 150), BLACK); // Rotation Z
 
 	Text_->CreateText("CONTROLS", Vector2(windowWidth - 10, 10), BLACK, RIGHT);
 	Text_->CreateText("[1] - Toggle Wireframe", Vector2(windowWidth - 10, 30), BLACK, RIGHT);
@@ -594,8 +594,8 @@ bool MainScene::RenderScene(bool ShowText)
 		DirectXManager::Instance() -> ToggleAlphaBlending(true);
 
 		// Render the particle WindowManager
-		Result_ = ShaderManager::Instance()->TextureRender(ParticleSystem_);
-		if (!Result_) { return false; }
+		//Result_ = ShaderManager::Instance()->TextureRender(ParticleSystem_);
+		//if (!Result_) { return false; }
 
 		// Turn off alpha blending.
 		DirectXManager::Instance() -> ToggleAlphaBlending(false);

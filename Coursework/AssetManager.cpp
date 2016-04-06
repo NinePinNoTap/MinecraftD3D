@@ -80,7 +80,7 @@ void AssetManager::LoadAudio(AudioClip** audioClip, std::string filename, bool i
 	return;
 }
 
-void AssetManager::LoadFont(Font** font, std::string fontFilename, std::string fontTextureFilename, int letterCount)
+void AssetManager::LoadFont(Font** font, std::string fontFilename, int letterCount)
 {
 	// Check if the font already exists
 	if (FontDatabase_.count(fontFilename))
@@ -109,25 +109,7 @@ void AssetManager::LoadFont(Font** font, std::string fontFilename, std::string f
 
 	// Add to map
 	FontDatabase_[fontFilename] = loadedFont;
-
-	//================
-	// Create Texture
-	//================
-
-	Texture* loadedTexture = new Texture;
-	LoadTexture(&loadedTexture, fontTextureFilename);
-	if (!loadedTexture)
-	{
-		*font = 0;
-		return;
-	}
-
-	// Add to map
-	TextureDatabase_[fontTextureFilename] = loadedTexture;
-
-	// Apply texture to font
-	loadedFont->SetTexture(loadedTexture);
-
+	
 	// Set font and return
 	*font = loadedFont;
 

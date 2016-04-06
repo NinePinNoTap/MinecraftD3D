@@ -57,4 +57,6 @@ bool TerrainReflectionShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Tr
 	UpdateBuffer(VertexShader, 1, clipPlaneBuffer);
 	UpdateBuffer(PixelShader, 0, lightBuffer);
 	SendBuffersToShader();
+
+	return true;
 }

@@ -239,6 +239,9 @@
     <ClCompile Include="Ocean.cpp">
       <Filter>Scene\GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="FontShader.cpp">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h">
@@ -326,9 +329,6 @@
       <Filter>Framework\System\Data</Filter>
     </ClInclude>
     <ClInclude Include="BoundingBox.h">
-      <Filter>Framework\System\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="Colour.h">
       <Filter>Framework\System\Data</Filter>
     </ClInclude>
     <ClInclude Include="Rect.h">
@@ -429,6 +429,9 @@
     </ClInclude>
     <ClInclude Include="Ocean.h">
       <Filter>Scene\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="FontShader.h">
+      <Filter>Framework\Shader\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -44,7 +44,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 	CloudShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	CloudShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	CloudShader_->AddBuffer<SkyBuffer>(PixelShader);
-	CloudShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	CloudShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
 	Result_ = CloudShader_->BuildShader(hwnd);
 	if (!Result_)
 	{
@@ -96,8 +96,8 @@ bool ShaderManager::Initialise(HWND hwnd)
 	FireShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	FireShader_->AddBuffer<NoiseBuffer>(VertexShader);
 	FireShader_->AddBuffer<DistortionBuffer>(PixelShader);
-	FireShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
-	FireShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	FireShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	FireShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
 	Result_ = FireShader_->BuildShader(hwnd);
 	if (!Result_)
 	{
@@ -109,7 +109,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 	// Initialise the Font Shader
 	//============================
 
-	FontShader_ = new GameShader;
+	FontShader_ = new FontShader;
 	if (!FontShader_)
 	{
 		return false;
@@ -123,7 +123,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 	FontShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	FontShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	FontShader_->AddBuffer<PixelBuffer>(PixelShader);
-	FontShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	FontShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
 	Result_ = FontShader_->BuildShader(hwnd);
 	if (!Result_)
 	{
@@ -151,7 +151,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 	LightShader_->AddBuffer<CameraBuffer>(VertexShader);
 	LightShader_->AddBuffer<LightPositionBuffer>(VertexShader);
 	LightShader_->AddBuffer<LightBuffer>(PixelShader);
-	LightShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	LightShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
 	Result_ = LightShader_->BuildShader(hwnd);
 	if (!Result_)
 	{
@@ -182,7 +182,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 	OceanShader_->AddBuffer<WaveBuffer>(DomainShader);
 	OceanShader_->AddBuffer<OceanBuffer>(PixelShader);
 	OceanShader_->AddBuffer<TessellationBuffer>(HullShader);
-	OceanShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	OceanShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
 	Result_ = OceanShader_->BuildShader(hwnd);
 	if (!Result_)
 	{
@@ -208,7 +208,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 	SkySphereShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	SkySphereShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	SkySphereShader_->AddBuffer<GradientBuffer>(PixelShader);
-	SkySphereShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	SkySphereShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
 	Result_ = SkySphereShader_->BuildShader(hwnd);
 	if (!Result_)
 	{
@@ -235,7 +235,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 	TerrainShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	TerrainShader_->AddBuffer<LightPositionBuffer>(VertexShader);
 	TerrainShader_->AddBuffer<LightBuffer>(PixelShader);
-	TerrainShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	TerrainShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
 	Result_ = TerrainShader_->BuildShader(hwnd);
 	if (!Result_)
 	{
@@ -262,7 +262,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 	TerrainReflectionShader_->AddBuffer<MatrixBuffer>(VertexShader);
 	TerrainReflectionShader_->AddBuffer<ClipPlaneBuffer>(VertexShader);
 	TerrainReflectionShader_->AddBuffer<LightBuffer>(PixelShader);
-	TerrainReflectionShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	TerrainReflectionShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
 	Result_ = TerrainReflectionShader_->BuildShader(hwnd);
 	if (!Result_)
 	{
@@ -287,7 +287,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 	TextureShader_->AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	TextureShader_->AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	TextureShader_->AddBuffer<MatrixBuffer>(VertexShader);
-	TextureShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, Colour(0,0,0,0), 0, D3D11_FLOAT32_MAX);
+	TextureShader_->AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0,0,0,0), 0, D3D11_FLOAT32_MAX);
 	Result_ = TextureShader_->BuildShader(hwnd);
 	if (!Result_)
 	{
@@ -302,6 +302,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 	ShaderDatabase_["colour"] = ColourShader_;
 	ShaderDatabase_["cloud"] = CloudShader_;
 	ShaderDatabase_["light"] = LightShader_;
+	ShaderDatabase_["font"] = FontShader_;
 	ShaderDatabase_["skysphere"] = SkySphereShader_;
 	ShaderDatabase_["texture"] = TextureShader_;
 	ShaderDatabase_["terrain"] = TerrainShader_;
@@ -407,37 +408,6 @@ void ShaderManager::SetProjectionMatrix(D3DXMATRIX projection)
 void ShaderManager::SetReflectionViewMatrix(D3DXMATRIX reflection)
 {
 	MatrixBuffer_.reflection = reflection;
-}
-
-// Rendering
-bool ShaderManager::FontRender(Text::SentenceType* sentence, ID3D11ShaderResourceView* texture)
-{
-	// Model Properties
-	int indexCount = sentence->indexCount;
-
-	// Create the pixel buffer
-	PixelBuffer pixelBuffer;
-	pixelBuffer.pixelColor.x = sentence->colour.r;
-	pixelBuffer.pixelColor.y = sentence->colour.g;
-	pixelBuffer.pixelColor.z = sentence->colour.b;
-	pixelBuffer.pixelColor.w = sentence->colour.a;
-
-	// Create matrix buffer
-	MatrixBuffer matrixBuffer = MatrixBuffer_;
-	TransposeMatrix(matrixBuffer);
-
-	// Update Buffers
-	FontShader_->UpdateBuffer(VertexShader, 0, matrixBuffer);
-	FontShader_->UpdateBuffer(PixelShader, 0, pixelBuffer);
-	FontShader_->SendBuffersToShader();
-
-	// Pass the texture to the shader
-	FontShader_->SendTextureToShader(0, texture);
-
-	// Render using shader
-	FontShader_->Render(indexCount);
-	
-	return true;
 }
 
 bool ShaderManager::OceanRender(Ocean* gameObject, Texture* refraction, Texture* reflection)

@@ -23,7 +23,7 @@ public:
 	GameShader(const GameShader&);
 	~GameShader();
 	
-	virtual bool Initialise(HWND hwnd) { }
+	virtual bool Initialise(HWND hwnd) { return true; }
 
 	// Shutdown
 	void Shutdown();
@@ -32,7 +32,7 @@ public:
 	void Render(int indexCount);
 
 	// Rendering
-	virtual bool Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+	virtual bool Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform = 0)
 	{
 		return true;
 	}
@@ -40,7 +40,7 @@ public:
 	// Shader Data Management
 	void AddShader(string shaderName);
 	void AddLayout(LPCSTR semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot, UINT alignedByteOffset, D3D11_INPUT_CLASSIFICATION inputSlotClass, UINT instanceDataStepRate);
-	void AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE AddressUVW, FLOAT MipLODBias, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC ComparisonFunc, Colour borderColor, FLOAT MinLOD, FLOAT MaxLOD);
+	void AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE AddressUVW, FLOAT MipLODBias, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC ComparisonFunc, D3DXVECTOR4 borderColor, FLOAT MinLOD, FLOAT MaxLOD);
 	bool BuildShader(HWND hwnd);
 	
 	// Buffer Management

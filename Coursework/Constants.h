@@ -4,8 +4,6 @@
 #include <d3dx10math.h>
 #include <string>
 
-#include "Colour.h"
-
 //==========
 // Graphics
 //==========
@@ -67,12 +65,12 @@ const int TERRAIN_VOLUME = NO_OF_BLOCKS_WIDTH * NO_OF_BLOCKS_HEIGHT * NO_OF_BLOC
 // Colours
 //=========
 
-const Colour BLACK = Colour(0, 0, 0, 1);
-const Colour WHITE = Colour(1, 1, 1, 1);
-const Colour RED = Colour(1, 0, 0, 1);
-const Colour GREEN = Colour(0, 1, 0, 1);
-const Colour BLUE = Colour(0, 0, 1, 1);
-const Colour YELLOW = Colour(1, 1, 0, 1);
+const D3DXVECTOR4 BLACK = D3DXVECTOR4(0, 0, 0, 1);
+const D3DXVECTOR4 WHITE = D3DXVECTOR4(1, 1, 1, 1);
+const D3DXVECTOR4 RED = D3DXVECTOR4(1, 0, 0, 1);
+const D3DXVECTOR4 GREEN = D3DXVECTOR4(0, 1, 0, 1);
+const D3DXVECTOR4 BLUE = D3DXVECTOR4(0, 0, 1, 1);
+const D3DXVECTOR4 YELLOW = D3DXVECTOR4(1, 1, 0, 1);
 
 //============
 // Directions

@@ -59,4 +59,6 @@ bool LightShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* obj
 	UpdateBuffer(VertexShader, 2, lightPositionBuffer);
 	UpdateBuffer(PixelShader, 0, lightBuffer);
 	SendBuffersToShader();
+
+	return true;
 }

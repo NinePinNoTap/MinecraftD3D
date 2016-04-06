@@ -95,6 +95,7 @@
     <ClCompile Include="Fire.cpp" />
     <ClCompile Include="FireShader.cpp" />
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FontShader.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameShader.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="BlockData.h" />
     <ClInclude Include="BlockManager.h" />
     <ClInclude Include="Chunk.h" />
+    <ClInclude Include="FontShader.h" />
     <ClInclude Include="Mesh3D.h" />
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="PrimitiveFactory.h" />
@@ -161,7 +163,6 @@
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Clouds.h" />
-    <ClInclude Include="Colour.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="DirectSound.h" />

@@ -177,13 +177,10 @@ void Texture::SetRenderTarget()
 	return;
 }
 
-void Texture::ClearRenderTarget(Colour ClearColour)
+void Texture::ClearRenderTarget(D3DXVECTOR4 clearColour)
 {
-	// Convert our colour struct to a readable format for deviceContext
-	float color[4] = { ClearColour.r, ClearColour.g, ClearColour.b, ClearColour.a };
-
 	// Clear the back buffer to the colour
-	DirectXManager::Instance()->GetDeviceContext()->ClearRenderTargetView(RenderTargetView_, color);
+	DirectXManager::Instance()->GetDeviceContext()->ClearRenderTargetView(RenderTargetView_, clearColour);
     
 	// Clear the depth buffer
 	DirectXManager::Instance()->GetDeviceContext()->ClearDepthStencilView(DepthStencilView_, D3D11_CLEAR_DEPTH, 1.0f, 0);

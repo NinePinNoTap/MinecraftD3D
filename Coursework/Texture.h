@@ -4,7 +4,6 @@
 #include <d3dx10math.h>
 #include <string>
 
-#include "Colour.h"
 #include "Rect.h"
 
 using namespace std;
@@ -23,7 +22,7 @@ public:
 
 	// Render to Texture
 	void SetRenderTarget();
-	void ClearRenderTarget(Colour ClearColour);
+	void ClearRenderTarget(D3DXVECTOR4 clearColour);
 
 	// Getters
 	ID3D11ShaderResourceView* GetTexture();

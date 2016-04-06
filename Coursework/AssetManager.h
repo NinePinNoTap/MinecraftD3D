@@ -27,7 +27,7 @@ public:
 
 	// Loaders
 	void LoadAudio(AudioClip** clip, std::string filename, bool is3D = false);
-	void LoadFont(Font** font, std::string fontFilename, std::string fontTextureFilename, int letterCount);
+	void LoadFont(Font** font, std::string fontFilename, int letterCount);
 	void LoadModel(Model** model, std::string filename);
 	void LoadTexture(Texture** texture, std::string filename);
 	void LoadTexture(Texture** texture, string keyName, Rect2D textureResolution);

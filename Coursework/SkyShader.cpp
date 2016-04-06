@@ -40,4 +40,6 @@ bool SkyShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTr
 	UpdateBuffer(VertexShader, 0, matrixBuffer);
 	UpdateBuffer(PixelShader, 0, gradientBuffer);
 	SendBuffersToShader();
+
+	return true;
 }

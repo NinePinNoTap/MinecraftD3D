@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "Texture.h"
+#include "VertexData.h"
 
 using namespace std;
 
@@ -17,12 +18,6 @@ private:
 		int size;
 	};
 
-	struct VertexType
-	{
-		D3DXVECTOR3 position;
-	    D3DXVECTOR2 texture;
-	};
-
 public:
 	Font();
 	Font(const Font&);
@@ -33,24 +28,17 @@ public:
 
 	// Shutdown
 	void Shutdown();
-
-	// Setters
-	void SetTexture(Texture* texture);
-
+	
 	// Building
 	void BuildVertexArray(void* vertices, char* sentence, float drawX, float drawY);
 
 	// Getter
 	float GetRenderSize(char* text);
-	ID3D11ShaderResourceView* GetTexture();
 
 private:
 	// Font Data
 	FontType* Font_;
-
-	// Texture
-	Texture* Texture_;
-
+	
 	bool Result_;
 };
 

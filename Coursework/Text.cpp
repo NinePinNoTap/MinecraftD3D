@@ -24,100 +24,27 @@ bool Text::Initialise(HWND hwnd, string fontName, string fontTexture, int letter
 	// Store the resolution of the screen
 	WindowResolution_ = WindowManager::Instance()->GetWindowResolution();
 
-	AssetManager::Instance()->LoadFont(&Font_, fontName, fontTexture, letterCount);
+	// Load the font to use
+	AssetManager::Instance()->LoadFont(&Font_, fontName, letterCount);
 	if (!Font_)
 	{
 		MessageBox(hwnd, L"Could not initialise the font object.", L"Error", MB_OK);
 		return false;
 	}
 
-	return true;
-}
+	// Create the model
+	Model_ = new Model;
 
-bool Text::InitialiseSentence(SentenceType** sentence, int maxLength)
-{
-	VertexType* vertices;
-	unsigned long* indices;
-	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-	D3D11_SUBRESOURCE_DATA vertexData, indexData;
-	HRESULT Result_;
-	int i;
+	// Create Base Material
+	FontMaterial_ = new Material;
+	FontMaterial_->SetBaseTexture(fontTexture);
 
-	// Create a new sentence object.
-	*sentence = new SentenceType;
-	if (!*sentence) { return false; }
-
-	// Initialise the sentence buffers to null.
-	(*sentence)->vertexBuffer = 0;
-	(*sentence)->indexBuffer = 0;
-
-	// Set the maximum length of the sentence.
-	(*sentence)->maxLength = maxLength;
-
-	// Set the number of vertices in the vertex array.
-	(*sentence)->vertexCount = 6 * maxLength;
-
-	// Set the number of indexes in the index array.
-	(*sentence)->indexCount = (*sentence)->vertexCount;
-
-	// Create the vertex array.
-	vertices = new VertexType[(*sentence)->vertexCount];
-	if (!vertices) { return false; }
-
-	// Create the index array.
-	indices = new unsigned long[(*sentence)->indexCount];
-	if (!indices) { return false; }
-
-	// Initialise vertex array to zeros at first.
-	memset(vertices, 0, (sizeof(VertexType)* (*sentence)->vertexCount));
-
-	// Initialise the index array.
-	for (i = 0; i<(*sentence)->indexCount; i++)
+	// Define shader
+	Shader_ = ShaderManager::Instance()->GetShader("font");
+	if (!Shader_)
 	{
-		indices[i] = i;
+		return false;
 	}
-
-	// Set up the description of the dynamic vertex buffer.
-	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	vertexBufferDesc.ByteWidth = sizeof(VertexType)* (*sentence)->vertexCount;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	vertexBufferDesc.MiscFlags = 0;
-	vertexBufferDesc.StructureByteStride = 0;
-
-	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = vertices;
-	vertexData.SysMemPitch = 0;
-	vertexData.SysMemSlicePitch = 0;
-
-	// Create the vertex buffer.
-	Result_ = DirectXManager::Instance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &(*sentence)->vertexBuffer);
-	if (FAILED(Result_)) { return false; }
-
-	// Set up the description of the static index buffer
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long)* (*sentence)->indexCount;
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.CPUAccessFlags = 0;
-	indexBufferDesc.MiscFlags = 0;
-	indexBufferDesc.StructureByteStride = 0;
-
-	// Give the subresource structure a pointer to the index data
-	indexData.pSysMem = indices;
-	indexData.SysMemPitch = 0;
-	indexData.SysMemSlicePitch = 0;
-
-	// Create the index buffer.
-	Result_ = DirectXManager::Instance()->GetDevice()->CreateBuffer(&indexBufferDesc, &indexData, &(*sentence)->indexBuffer);
-	if (FAILED(Result_)) { return false; }
-
-	// Release the vertex array as it is no longer needed
-	delete[] vertices;
-	vertices = 0;
-
-	// Release the index array as it is no longer needed
-	delete[] indices;
-	indices = 0;
 
 	return true;
 }
@@ -125,36 +52,67 @@ bool Text::InitialiseSentence(SentenceType** sentence, int maxLength)
 // Shutdown
 void Text::Shutdown()
 {
-	// Release the sentences.
-	for (unsigned int i = 0; i < Sentences_.size(); i++)
-	{
-		ReleaseSentence(&Sentences_[i]);
-	}
+	// Release the sentences
+	Model_->Shutdown();
+	Sentences_.clear();
 
 	return;
 }
 
 // Text Generation
-void Text::CreateText(char* text, Vector2 position, Colour colour, Alignment align)
+void Text::CreateText(char* text, Vector2 position, D3DXVECTOR4 colour, Alignment align)
 {
+	Material* createdMaterial = 0;
+
 	// Create the sentence
-	SentenceType* TempSentence = new SentenceType;
+	SentenceType tempSentence;
 
-	// Initialise the sentence with a base length
-	InitialiseSentence(&TempSentence, 64);
+	// Set sentence properties
+	tempSentence.ID = Sentences_.size();
+	tempSentence.text = text;
+	tempSentence.position = position;
+	tempSentence.align = align;
 
-	// Set the text, position and colour
-	UpdateSentence(TempSentence, text, position, colour, align);
+	//==============
+	// Create Model
+	//==============
+
+	Result_ = BuildSentence(tempSentence);
+	if (!Result_)
+	{
+		return;
+	}
+
+	//=================
+	// Create Material
+	//=================
+
+	// Copy the font material
+	createdMaterial = new Material(*FontMaterial_);
+	if (!createdMaterial)
+	{
+		return;
+	}
+
+	// Apply colour
+	createdMaterial->SetVector4("BaseColour", colour);
+	Model_->AddMaterial(createdMaterial);
 
 	// Add to the array
-	Sentences_.push_back(TempSentence);
+	Sentences_.push_back(tempSentence);
 }
 
 bool Text::SetText(int ID, char* text)
 {
-	// Update the sentence vertex buffer with the new string information.
-	bool Result_ = UpdateSentence(Sentences_[ID], text, Sentences_[ID]->position, Sentences_[ID]->colour, Sentences_[ID]->align);
-	if (!Result_) { return false; }
+	// Update text
+	Sentences_[ID].text = text;
+
+	// Rebuild sentence with new information
+	Result_ = BuildSentence(Sentences_[ID]);
+	if (!Result_)
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -175,16 +133,7 @@ bool Text::SetText(int ID, char* text, float value)
 	strcat(TextToDisplay, ToStr(value).c_str());
 
 	// Update the text
-	bool Result_ = SetText(ID, TextToDisplay);
-	if (!Result_) { return false; }
-
-	return true;
-}
-
-bool Text::SetPosition(int ID, Vector2 NewPosition)
-{
-	// Update the sentence vertex buffer with the new string information.
-	bool Result_ = UpdateSentence(Sentences_[ID], Sentences_[ID]->text, NewPosition, Sentences_[ID]->colour, Sentences_[ID]->align);
+	Result_ = SetText(ID, TextToDisplay);
 	if (!Result_)
 	{
 		return false;
@@ -193,151 +142,145 @@ bool Text::SetPosition(int ID, Vector2 NewPosition)
 	return true;
 }
 
-bool Text::SetColour(int ID, Colour NewColour)
+bool Text::SetPosition(int ID, Vector2 position)
 {
+	Sentences_[ID].position = position;
+
 	// Update the sentence vertex buffer with the new string information.
-	bool Result_ = UpdateSentence(Sentences_[ID], Sentences_[ID]->text, Sentences_[ID]->position, NewColour, Sentences_[ID]->align);
+	Result_ = BuildSentence(Sentences_[ID]);
 	if (!Result_)
 	{
 		return false;
 	}
 
 	return true;
+}
+
+void Text::SetColour(int ID, D3DXVECTOR4 colour)
+{
+	Model_->GetMaterial(ID)->SetVector4("BaseColour", colour);
 }
 
 // Frame
 bool Text::Render()
 {
+	// Make sure we have sentences to render
+	if (Sentences_.empty())
+	{
+		return true;
+	}
+
+	Mesh3D* objMesh;
+	Material* objMaterial;
+
 	// Look through sentences and render them
 	for (unsigned int i = 0; i < Sentences_.size(); i++)
 	{
-		Result_ = RenderSentence(Sentences_[i]);
+		PrepareSentence(i);
+
+		objMesh = Model_->GetMesh(i);
+		objMaterial = Model_->GetMaterial(i);
+
+		Result_ = Shader_->Prepare(objMesh, objMaterial);
 		if (!Result_)
 		{
 			return false;
 		}
+		Shader_->Render(objMesh->GetIndexCount());
 	}
 
 	return true;
 }
 
-bool Text::UpdateSentence(SentenceType* sentence, char* text, Vector2 position, Colour colour, Alignment align)
+bool Text::BuildSentence(SentenceType sentence)
 {
 	int numLetters;
-	VertexType* vertices;
+	VertexData* textMesh;
+	unsigned long* indices;
 	float drawX, drawY;
 	HRESULT Result_;
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	VertexType* verticesPtr;
-
-	// Store sentence data
-	sentence -> text = text;
-	sentence -> position = position;
-	sentence -> colour = colour;
-	sentence -> align = align;
+	int renderLength, vertexCount, indexCount;
 
 	// Get the number of letters in the sentence.
-	numLetters = (int)strlen(text);
+	numLetters = (int)strlen(sentence.text);
 
-	// Check for possible buffer overflow.
-	if(numLetters > sentence -> maxLength) { return false; }
+	// Calculate mesh counters
+	vertexCount = 6 * numLetters;
+	indexCount = vertexCount;
 
-	// Create the vertex array.
-	vertices = new VertexType[sentence -> vertexCount];
-	if(!vertices) { return false; }
+	// Create the vertex array
+	textMesh = new VertexData[vertexCount];
+	if (!textMesh)
+	{
+		return false;
+	}
 
-	// Initialise vertex array to zeros at first.
-	memset(vertices, 0, (sizeof(VertexType) * sentence -> vertexCount));
-
+	// Create index array
+	indices = new unsigned long[indexCount];
+	for (int i = 0; i < indexCount; i++)
+	{
+		indices[i] = i;
+	}
+	
 	// Calculate the X and Y pixel position on the screen to start drawing to.
-	drawX = (float)(((WindowResolution_.width / 2) * -1) + position.x);
-	drawY = (float)((WindowResolution_.height / 2) - position.y);
+	drawX = (float)(((WindowResolution_.width / 2) * -1) + sentence.position.x);
+	drawY = (float)((WindowResolution_.height / 2) - sentence.position.y);
 
 	// Calculate how big the sentence will be to draw on screen
-	int TextRenderWidth = Font_ -> GetRenderSize(text);
+	renderLength = Font_->GetRenderSize(sentence.text);
 
 	// Adjust starting draw position based on alignment
-	if (align == CENTRE)
+	if (sentence.align == CENTRE)
 	{
-		drawX -= TextRenderWidth / 2;
+		drawX -= renderLength / 2;
 	}
-	else if (align == RIGHT)
+	else if (sentence.align == RIGHT)
 	{
-		drawX -= TextRenderWidth;
+		drawX -= renderLength;
 	}
 
 	// Use the font class to build the vertex array from the sentence text and sentence draw location.
-	Font_ -> BuildVertexArray((void*)vertices, text, drawX, drawY);
+	Font_->BuildVertexArray((void*)textMesh, sentence.text, drawX, drawY);
 
-	// Lock the vertex buffer so it can be written to.
-	Result_ = DirectXManager::Instance()->GetDeviceContext()->Map(sentence->vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if(FAILED(Result_)) { return false; }
-
-	// Get a pointer to the data in the vertex buffer.
-	verticesPtr = (VertexType*)mappedResource.pData;
-
-	// Copy the data into the vertex buffer.
-	memcpy(verticesPtr, (void*)vertices, (sizeof(VertexType) * sentence -> vertexCount));
-
-	// Unlock the vertex buffer.
-	DirectXManager::Instance()->GetDeviceContext()->Unmap(sentence->vertexBuffer, 0);
-
-	// Release the vertex array as it is no longer needed.
-	delete [] vertices;
-	vertices = 0;
-
-	return true;
-}
-
-void Text::ReleaseSentence(SentenceType** sentence)
-{
-	if(*sentence)
-	{
-		// Release the sentence vertex buffer.
-		if((*sentence) -> vertexBuffer)
-		{
-			(*sentence) -> vertexBuffer -> Release();
-			(*sentence) -> vertexBuffer = 0;
-		}
-
-		// Release the sentence index buffer.
-		if((*sentence) -> indexBuffer)
-		{
-			(*sentence) -> indexBuffer -> Release();
-			(*sentence) -> indexBuffer = 0;
-		}
-
-		// Release the sentence.
-		delete *sentence;
-		*sentence = 0;
-	}
-
-	return;
-}
-
-bool Text::RenderSentence(SentenceType* sentence)
-{
-	unsigned int stride, offset;
-
-	// Set vertex buffer stride and offset.
-    stride = sizeof(VertexType); 
-	offset = 0;
-
-	// Set the vertex buffer to active in the InputManager assembler so it can be rendered
-	DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &sentence->vertexBuffer, &stride, &offset);
-
-    // Set the index buffer to active in the InputManager assembler so it can be rendered
-	DirectXManager::Instance()->GetDeviceContext()->IASetIndexBuffer(sentence->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-    // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles
-	DirectXManager::Instance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	// Render the text using the font shader
-	Result_ = ShaderManager::Instance()->FontRender(sentence, Font_->GetTexture());
+	// Create a mesh for the text
+	Mesh3D* createdMesh = new Mesh3D;
+	createdMesh->SetIndexCount(indexCount);
+	createdMesh->SetVertexCount(vertexCount);
+	createdMesh->SetMesh(textMesh, indices);
+	Result_ = createdMesh->Build();
 	if (!Result_)
 	{
 		return false;
 	}
+
+	// Update or add mesh
+	Model_->UpdateMesh(sentence.ID, createdMesh);
+
+	return true;
+}
+
+bool Text::PrepareSentence(int index)
+{
+	unsigned int stride, offset;
+	ID3D11Buffer* vertexBuffer;
+	ID3D11Buffer* indexBuffer;
+
+	// Set vertex buffer stride and offset
+    stride = sizeof(VertexData); 
+	offset = 0;
+
+	// Get buffers from mesh
+	vertexBuffer = Model_->GetMesh(index)->GetVertexBuffer();
+	indexBuffer = Model_->GetMesh(index)->GetIndexBuffer();
+
+	// Set the vertex buffer to active in the InputManager assembler so it can be rendered
+	DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+
+    // Set the index buffer to active in the InputManager assembler so it can be rendered
+	DirectXManager::Instance()->GetDeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+    // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles
+	DirectXManager::Instance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	return true;
 }

@@ -4,7 +4,6 @@ Font::Font()
 {
 	// Initialise pointers to null
 	Font_ = 0;
-	Texture_ = 0;
 }
 
 Font::Font(const Font& other)
@@ -64,14 +63,6 @@ bool Font::Initialise(const char* fontFilename, int letterCount)
 // Shutdown
 void Font::Shutdown()
 {
-	// Release the texture object
-	if (Texture_)
-	{
-		Texture_->Shutdown();
-		delete Texture_;
-		Texture_ = 0;
-	}
-
 	// Release the font data array
 	if (Font_)
 	{
@@ -82,21 +73,16 @@ void Font::Shutdown()
 	return;
 }
 
-void Font::SetTexture(Texture* texture)
-{
-	Texture_ = texture;
-}
-
 // Building
 void Font::BuildVertexArray(void* vertices, char* sentence, float drawX, float drawY)
 {
-	VertexType* vertexPtr;
+	VertexData* vertexPtr;
 	int numLetters;
 	int index;
 	int letter;
 
-	// Coerce the InputManager vertices into a VertexType structure
-	vertexPtr = (VertexType*)vertices;
+	// Coerce the vertices into a VertexType structure
+	vertexPtr = (VertexData*)vertices;
 
 	// Get the number of letters in the sentence
 	numLetters = (int)strlen(sentence);
@@ -148,12 +134,6 @@ void Font::BuildVertexArray(void* vertices, char* sentence, float drawX, float d
 	}
 
 	return;
-}
-
-// Getters
-ID3D11ShaderResourceView* Font::GetTexture()
-{
-	return Texture_ -> GetTexture();
 }
 
 float Font::GetRenderSize(char* text)

@@ -5,7 +5,6 @@
 #include <string>
 #include <map>
 
-#include "Colour.h"
 #include "Constants.h"
 #include "Texture.h"
 
@@ -13,13 +12,14 @@ class Material
 {
 public:
 	Material();
+	Material(const Material& material);
 	~Material();
 
 	// Shutdown
 	void Shutdown();
 
 	// Colours
-	void SetColour(Colour tint);
+	void SetColour(D3DXVECTOR4 tint);
 	void SetSpecular(float amount);
 
 	// Textures
@@ -31,7 +31,7 @@ public:
 	bool SetPerturbTexture(std::string textureFilename);
 
 	// Getters
-	Colour GetTint();
+	D3DXVECTOR4 GetTint();
 	float GetSpecular();
 	ID3D11ShaderResourceView* GetBaseTexture();
 	ID3D11ShaderResourceView* GetNormalTexture();
@@ -57,7 +57,7 @@ public:
 
 private:
 	// Colour
-	Colour Tint_;
+	D3DXVECTOR4 Tint_;
 	float SpecularAmount_;
 
 	// Textures

@@ -21,6 +21,7 @@
 #include "CloudShader.h"
 #include "ColourShader.h"
 #include "FireShader.h"
+#include "FontShader.h"
 #include "LightShader.h"
 #include "SkyShader.h"
 #include "TerrainReflectionShader.h"
@@ -50,17 +51,7 @@ public:
 	MatrixBuffer GetMatrixBuffer() { return MatrixBuffer_; }
 	
 	// Shaders
-	//bool CloudRender(Clouds* cloud);
-	//bool ColourRender(GameObject* obj);
-	//bool FireRender(Fire* fire);
-	bool FontRender(Text::SentenceType* sentence, ID3D11ShaderResourceView* texture);
-	//bool LightRender(GameObject* model);
 	bool OceanRender(Ocean* ocean, Texture* refraction, Texture* reflection);
-	//bool SkyRender(GameObject* sky);
-
-	//bool TerrainRender(Terrain* terrain);
-	//bool TerrainRender(Terrain* terrain, D3DXVECTOR4 clip);
-
 	bool TextureRender(ParticleSystem* particles);
 	
 	GameShader* GetShader(string keyName)
@@ -78,7 +69,7 @@ private:
 	CloudShader* CloudShader_;
 	ColourShader* ColourShader_;
 	FireShader* FireShader_;
-	GameShader* FontShader_;
+	FontShader* FontShader_;
 	LightShader* LightShader_;
 	GameShader* OceanShader_;
 	SkyShader* SkySphereShader_;

@@ -489,17 +489,10 @@ void DirectXManager::Shutdown()
 	return;
 }
 
-void DirectXManager::BeginScene(Colour SceneColour)
+void DirectXManager::BeginScene(D3DXVECTOR4 clearColour)
 {
-	float color[4] = {
-		SceneColour.r,
-		SceneColour.g,
-		SceneColour.b,
-		SceneColour.a
-	};
-
 	// Clear the back buffer.
-	DeviceContext_ -> ClearRenderTargetView(RenderTargetView_, color);
+	DeviceContext_->ClearRenderTargetView(RenderTargetView_, clearColour);
     
 	// Clear the depth buffer.
 	DeviceContext_ -> ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);

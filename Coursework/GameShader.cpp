@@ -134,7 +134,7 @@ void GameShader::AddLayout(LPCSTR semanticName, UINT semanticIndex, DXGI_FORMAT 
 	LayoutElement_.push_back(layoutDesc);
 }
 
-void GameShader::AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE AddressUVW, FLOAT MipLODBias, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC ComparisonFunc, Colour borderColor, FLOAT MinLOD, FLOAT MaxLOD)
+void GameShader::AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE AddressUVW, FLOAT MipLODBias, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC ComparisonFunc, D3DXVECTOR4 borderColor, FLOAT MinLOD, FLOAT MaxLOD)
 {
 	HRESULT Result_;
 	D3D11_SAMPLER_DESC samplerDesc;
@@ -148,10 +148,10 @@ void GameShader::AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE
 	samplerDesc.MipLODBias = MipLODBias;
 	samplerDesc.MaxAnisotropy = MaxAnisotropy;
 	samplerDesc.ComparisonFunc = ComparisonFunc;
-	samplerDesc.BorderColor[0] = borderColor.r;
-	samplerDesc.BorderColor[1] = borderColor.g;
-	samplerDesc.BorderColor[2] = borderColor.b;
-	samplerDesc.BorderColor[3] = borderColor.a;
+	samplerDesc.BorderColor[0] = borderColor.x;
+	samplerDesc.BorderColor[1] = borderColor.y;
+	samplerDesc.BorderColor[2] = borderColor.z;
+	samplerDesc.BorderColor[3] = borderColor.w;
 	samplerDesc.MinLOD = MinLOD;
 	samplerDesc.MaxLOD = MaxLOD;
 

@@ -19,6 +19,11 @@ Material::Material()
 	SetVector4("BaseColour", D3DXVECTOR4(1,1,1,1));
 }
 
+Material::Material(const Material& material)
+{
+	*this = material; // copy the object
+}
+
 Material::~Material()
 {
 
@@ -27,46 +32,11 @@ Material::~Material()
 // Shutdown
 void Material::Shutdown()
 {
-	if (BaseTexture_)
-	{
-		BaseTexture_->Shutdown();
-		delete BaseTexture_;
-		BaseTexture_ = 0;
-	}
-	if (NormalTexture_)
-	{
-		NormalTexture_->Shutdown();
-		delete NormalTexture_;
-		NormalTexture_ = 0;
-	}
-	if (AlphaTexture_)
-	{
-		AlphaTexture_->Shutdown();
-		delete AlphaTexture_;
-		AlphaTexture_ = 0;
-	}
-	if (NoiseTexture_)
-	{
-		NoiseTexture_->Shutdown();
-		delete NoiseTexture_;
-		NoiseTexture_ = 0;
-	}
-	if (DistortionTexture_)
-	{
-		DistortionTexture_->Shutdown();
-		delete DistortionTexture_;
-		DistortionTexture_ = 0;
-	}
-	if (PerturbTexture_)
-	{
-		PerturbTexture_->Shutdown();
-		delete PerturbTexture_;
-		PerturbTexture_ = 0;
-	}
+	
 }
 
 // Setters
-void Material::SetColour(Colour tint)
+void Material::SetColour(D3DXVECTOR4 tint)
 {
 	Tint_ = tint;
 }
@@ -155,7 +125,7 @@ bool Material::SetPerturbTexture(std::string textureFilename)
 }
 
 // Getters
-Colour Material::GetTint()
+D3DXVECTOR4 Material::GetTint()
 {
 	return Tint_;
 }

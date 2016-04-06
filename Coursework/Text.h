@@ -4,32 +4,28 @@
 
 #include "Constants.h"
 #include "Font.h"
+#include "Model.h"
+#include "Mesh3D.h"
+#include "Material.h"
+#include "GameShader.h"
 #include "Utilities.h"
 
 using namespace std;
 
-enum Alignment { LEFT, CENTRE, RIGHT };
+enum Alignment
+{
+	LEFT, CENTRE, RIGHT
+};
 
 class Text
 {
 public:
 	struct SentenceType
 	{
-		ID3D11Buffer* vertexBuffer;
-		ID3D11Buffer* indexBuffer;
-		int vertexCount;
-		int indexCount;
-		int maxLength;
+		int ID;
 		char* text;
 		Vector2 position;
-		Colour colour;
 		Alignment align;
-	};
-
-	struct VertexType
-	{
-		D3DXVECTOR3 position;
-	    D3DXVECTOR2 texture;
 	};
 
 public:
@@ -44,7 +40,7 @@ public:
 	void Shutdown();
 
 	// Text Creation
-	void CreateText(char* text, Vector2 position, Colour colour, Alignment align = LEFT);
+	void CreateText(char* text, Vector2 position, D3DXVECTOR4 colour, Alignment align = LEFT);
 
 	// Rendering
 	bool Render();
@@ -53,13 +49,11 @@ public:
 	bool SetText(int ID, char* text);
 	bool SetText(int ID, char* text, float value);
 	bool SetPosition(int ID, Vector2 position);
-	bool SetColour(int ID, Colour colour);
+	void SetColour(int ID, D3DXVECTOR4 colour);
 
 private:
-	bool InitialiseSentence(SentenceType** sentence, int maxLength);
-	bool UpdateSentence(SentenceType* sentence, char* text, Vector2 position, Colour colour, Alignment align);
-	void ReleaseSentence(SentenceType** sentence);
-	bool RenderSentence(SentenceType* sentence);
+	bool BuildSentence(SentenceType sentence);
+	bool PrepareSentence(int index);
 
 	// Window Size
 	Rect2D WindowResolution_;
@@ -67,8 +61,13 @@ private:
 	// Font Data
 	Font* Font_;
 
+	// Model
+	Model* Model_;
+	Material* FontMaterial_;
+	GameShader* Shader_;
+
 	// Sentences
-	vector<SentenceType*> Sentences_;
+	vector<SentenceType> Sentences_;
 
 	// Flags
 	bool Result_;
