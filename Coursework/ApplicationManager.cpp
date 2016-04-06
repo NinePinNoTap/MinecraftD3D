@@ -1,5 +1,13 @@
 #include "ApplicationManager.h"
 
+void LoadingScreenUpdater()
+{
+	while (ApplicationManager::Instance()->GetScene() == SceneState::LOADING)
+	{
+		ApplicationManager::Instance()->Frame();
+	}
+}
+
 ApplicationManager::ApplicationManager()
 {
 	// Initialise pointers to null
@@ -33,9 +41,9 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	if (!Camera_) { return false; }
 	Camera_->Initialise();
 
-	//
-	//
-	//
+	//=========================
+	// Initialise AssetManager
+	//=========================
 
 	AssetManager_ = new AssetManager;
 	if (!AssetManager_)
@@ -155,7 +163,9 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	// Set starting scene as loading and render it
 	SetScene(LOADING);
-	Frame();
+	//Frame();
+
+	LoadingScreenThread_ = std::thread(LoadingScreenUpdater);     // spawn new thread that calls foo()
 
 	// Inside the Painting
 	MainScene_ = new MainScene;
@@ -282,6 +292,7 @@ void ApplicationManager::UpdateScene()
 	{
 		case MAIN:
 			CurrentScene_ = MainScene_;
+			LoadingScreenThread_.join();
 			break;
 
 		case LOADING:

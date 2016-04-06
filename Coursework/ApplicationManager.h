@@ -1,5 +1,7 @@
 #pragma once
 
+#include <thread>
+
 #include "Camera.h"
 #include "Constants.h"
 #include "DirectXManager.h"
@@ -36,6 +38,8 @@ public:
 
 	// Scene Switching
 	void SetScene(SceneState scene);
+
+	SceneState GetScene() { return NewScene_; }
 	
 private:
 	// Update
@@ -56,6 +60,7 @@ private:
 	// Scenes
 	MainScene* MainScene_;
 	SceneLoadingScreen* SceneLoading_;
+	std::thread LoadingScreenThread_;
 
 	// Global Objects
 	Camera* Camera_;
