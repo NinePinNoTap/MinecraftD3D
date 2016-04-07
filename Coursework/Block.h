@@ -10,8 +10,6 @@ using namespace std;
 
 const int NO_OF_NEIGHBOURS = 6;
 
-const D3DXVECTOR3 FACE_NORMALS[NO_OF_NEIGHBOURS] = { UP_VECTOR, DOWN_VECTOR, LEFT_VECTOR, RIGHT_VECTOR, FORWARD_VECTOR, BACK_VECTOR };
-
 class Block : public GameObject
 {
 public:

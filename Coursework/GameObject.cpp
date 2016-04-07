@@ -152,10 +152,10 @@ bool GameObject::SendModelToPipeline(Mesh3D* objMesh)
 	vertexBuffer = objMesh->GetVertexBuffer();
 	indexBuffer = objMesh->GetIndexBuffer();
 
-	// Set the vertex buffer to active in the InputManager assembler so it can be rendered
+	// Set the vertex buffer to active in the input assembler so it can be rendered
 	DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 
-	// Set the index buffer to active in the InputManager assembler so it can be rendered
+	// Set the index buffer to active in the input assembler so it can be rendered
 	DirectXManager::Instance()->GetDeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	// Set the type of primitive that should be rendered from this vertex buffer

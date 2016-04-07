@@ -18,6 +18,11 @@ GameShader::~GameShader()
 {
 }
 
+bool GameShader::Initialise(HWND hwnd)
+{
+	return true;
+}
+
 // Shutdown
 void GameShader::Shutdown()
 {
@@ -110,6 +115,58 @@ void GameShader::Render(int indexCount)
 	DirectXManager::Instance()->GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
 
 	return;
+}
+
+void GameShader::Render(int vertexCount, int instanceCount)
+{
+	// Set the vertex InputManager layout
+	DirectXManager::Instance()->GetDeviceContext()->IASetInputLayout(Layout_);
+
+	//=============
+	// Set Shaders
+	//=============
+
+	// Base Shaders
+	DirectXManager::Instance()->GetDeviceContext()->VSSetShader(VertexShader_, NULL, 0);
+	DirectXManager::Instance()->GetDeviceContext()->PSSetShader(PixelShader_, NULL, 0);
+
+	// Hull and Domain if required, set to NULL if so the engine doesn't previous passed
+	if (HullShader_)
+	{
+		DirectXManager::Instance()->GetDeviceContext()->HSSetShader(HullShader_, NULL, 0);
+	}
+	else
+	{
+		DirectXManager::Instance()->GetDeviceContext()->HSSetShader(NULL, NULL, 0);
+	}
+
+	if (DomainShader_)
+	{
+		DirectXManager::Instance()->GetDeviceContext()->DSSetShader(DomainShader_, NULL, 0);
+	}
+	else
+	{
+		DirectXManager::Instance()->GetDeviceContext()->DSSetShader(NULL, NULL, 0);
+	}
+
+	//====================
+	// Set Sampler States
+	//====================
+
+	for (int i = 0; i < SampleStates_.size(); i++)
+	{
+		DirectXManager::Instance()->GetDeviceContext()->PSSetSamplers(i, 1, &SampleStates_[i]);
+	}
+
+	// Render the object
+	DirectXManager::Instance()->GetDeviceContext()->DrawInstanced(vertexCount, instanceCount, 0, 0);
+
+	return;
+}
+
+bool GameShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+{
+	return true;
 }
 
 // Shader Management

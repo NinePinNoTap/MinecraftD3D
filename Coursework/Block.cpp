@@ -48,32 +48,22 @@ bool Block::Frame()
 	return true;
 }
 
-#include "Camera.h"
 void Block::HandleNeighbours()
 {
-	bool showFace;
-	int visibleFaces = 0;
+	int visibleSides = 0;
 
-	// Handle face visibility
+	// Count how many neighbours we can see
 	for (int i = 0; i < NO_OF_NEIGHBOURS; i++)
 	{
-		showFace = true;
-
 		// Check if we can see the neighbour
-		if (CheckNeighbour(i))
+		if (!CheckNeighbour(i))
 		{
-			showFace = false;
+			visibleSides++;
 		}
-		else
-		{
-			visibleFaces++;
-		}
-
-		Model_->GetMesh(i)->SetActive(showFace);
 	}
 
 	// Disable entire object if we cant see it
-	if (visibleFaces == NO_OF_NEIGHBOURS)
+	if (visibleSides == NO_OF_NEIGHBOURS)
 	{
 		IsActive_ = false;
 	}

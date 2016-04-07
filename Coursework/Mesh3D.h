@@ -29,9 +29,10 @@ public:
 
 	// Getters
 	int GetIndexCount();
-	BoundingBox GetBoundingBox();
+	int GetVertexCount();
 	ID3D11Buffer* GetIndexBuffer();
 	ID3D11Buffer* GetVertexBuffer();
+	BoundingBox GetBoundingBox();
 	bool IsActive();
 
 protected:

@@ -154,6 +154,10 @@ int Mesh3D::GetIndexCount()
 {
 	return IndexCount_;
 }
+int Mesh3D::GetVertexCount()
+{
+	return VertexCount_;
+}
 
 BoundingBox Mesh3D::GetBoundingBox()
 {

@@ -9,5 +9,7 @@ public:
 	SkyShader();
 	~SkyShader();
 
+	bool Initialise(HWND hwnd);
+
 	bool Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform);
 };

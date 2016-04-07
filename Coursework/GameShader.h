@@ -30,12 +30,10 @@ public:
 
 	// Rendering
 	void Render(int indexCount);
+	void Render(int vertexCount, int instanceCount);
 
 	// Rendering
-	virtual bool Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform = 0)
-	{
-		return true;
-	}
+	virtual bool Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform = 0);
 
 	// Shader Data Management
 	void AddShader(string shaderName);
@@ -105,6 +103,7 @@ protected:
 
 	// Set up
 	HRESULT CompileShader(HWND hwnd, string filename, LPCSTR EntryPoint, LPCSTR Version, ID3D10Blob** Buffer);
+	bool Result_;
 	
 	// Shader
 	ID3D11VertexShader* VertexShader_;
@@ -126,5 +125,3 @@ protected:
 	vector<ConstantBuffer*> HullBuffers_;
 	vector<ConstantBuffer*> DomainBuffers_;
 };
-
-

@@ -10,6 +10,36 @@ TextureShader::~TextureShader()
 
 }
 
+bool TextureShader::Initialise(HWND hwnd)
+{
+	// Define Shaders
+	AddShader("texture.vs");
+	AddShader("texture.ps");
+
+	// Define Input Layout
+	AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+
+	// Define Buffers
+	AddBuffer<MatrixBuffer>(VertexShader);
+
+	// Define Sampler State
+	AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+
+	// Build Shader
+	Result_ = BuildShader(hwnd);
+	if (!Result_)
+	{
+		OutputToDebug("Could not initialise texture shader.");
+		return false;
+	}
+
+	return true;
+}
+
 bool TextureShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
 {
 	// Model Properties
