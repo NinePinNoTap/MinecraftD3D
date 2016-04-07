@@ -20,7 +20,6 @@ private:
 	void GenerateTerrain();
 	void RefreshTerrain();
 
-
 	void LinkBlocks();
 	void SetBlockNeighbours(int x, int y, int z);
 	Block* GetBlock(int x, int y, int z);

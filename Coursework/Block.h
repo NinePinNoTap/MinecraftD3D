@@ -18,7 +18,7 @@ class Block
 {
 public:
 	Block();
-	Block(string name, BlockType type, D3DXVECTOR2 offset, bool solid);
+	Block(string blockName, BlockType blockType, D3DXVECTOR2 textureOffset, D3DXVECTOR2 totalTextures, bool isSolid);
 	~Block();
 
 	// Frame
@@ -40,10 +40,11 @@ private:
 	void HandleNeighbours();
 	bool CheckNeighbour(int i);
 
-	string Name_;
-	BlockType Type_;
+	string BlockName_;
+	BlockType BlockType_;
 	D3DXVECTOR3 Position_;
 	D3DXVECTOR2 TextureOffset_;
+	D3DXVECTOR3 TotalTextures_;
 	bool IsSolid_;
 	bool IsActive_;
 

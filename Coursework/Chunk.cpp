@@ -4,6 +4,7 @@ Chunk::Chunk()
 {
 	Chunk_ = 0;
 	ChunkBlock_ = 0;
+	Transform_ = 0;
 }
 
 Chunk::~Chunk()
@@ -28,15 +29,19 @@ void Chunk::Initialise(int x, int y, int z)
 
 	GenerateBlankChunk();
 		
+	//===========================
+	// Create Representing Block
+	//===========================
+
+	ChunkBlock_ = new InstancedGameObject;
+	ChunkBlock_->Initialise("block.obj");
+	ChunkBlock_->SetShader("instancedlight");
+
 	//==================
 	// Initialise Flags
 	//==================
 
 	IsVisible_ = true;
-
-	ChunkBlock_ = new InstancedGameObject;
-	ChunkBlock_->Initialise("block.obj");
-	ChunkBlock_->SetShader("instancedlight");
 }
 
 void Chunk::Shutdown()
@@ -95,19 +100,9 @@ void Chunk::Build()
 // Frame
 void Chunk::Frame()
 {
-	// Loop through x dimension
-	for(int x = 0; x < NO_OF_BLOCKS_WIDTH; x++)
-	{
-		// Loop through y dimension
-		for (int y = 0; y < NO_OF_BLOCKS_HEIGHT; y++)
-		{
-			// Loop through z dimension
-			for (int z = 0; z < NO_OF_BLOCKS_DEPTH; z++)
-			{
-				//Chunk_[x][y][z].Frame();
-			}
-		}
-	}
+	// Check distance to player
+	// Set IsActive based on that
+	// We need Neighbours for chunks as well
 }
 
 void Chunk::Render()
@@ -152,7 +147,7 @@ void Chunk::GenerateBlankChunk()
 				zPos = chunkPosition.z + (z * BLOCK_SIZE) - (CHUNK_DEPTH / 2);
 
 				// Define base block
-				airBlock = BlockManager::Instance()->GetBlock("air");
+				airBlock.CopyFrom(BlockManager::Instance()->GetBlock("air"));
 				airBlock.SetPosition(xPos, yPos, zPos);
 
 				// Store it

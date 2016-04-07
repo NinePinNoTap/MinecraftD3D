@@ -3,8 +3,8 @@
 
 Block::Block()
 {
-	Name_ = "null";
-	Type_ = BlockType::None;
+	BlockName_ = "null";
+	BlockType_ = BlockType::None;
 	TextureOffset_ = D3DXVECTOR2(0, 0);
 	IsSolid_ = false;
 	IsActive_ = false;
@@ -15,12 +15,13 @@ Block::Block()
 	}
 }
 
-Block::Block(string name, BlockType type, D3DXVECTOR2 offset, bool solid)
+Block::Block(string blockName, BlockType blockType, D3DXVECTOR2 textureOffset, D3DXVECTOR2 totalTextures, bool isSolid)
 {
-	Name_ = name;
-	Type_ = type;
-	TextureOffset_ = offset;
-	IsSolid_ = solid;
+	BlockName_ = blockName;
+	BlockType_ = blockType;
+	TextureOffset_ = textureOffset;
+	TotalTextures_ = totalTextures;
+	IsSolid_ = isSolid;
 	IsActive_ = true;
 
 	for (int i = 0; i < 6; i++)
@@ -40,7 +41,7 @@ void Block::Refresh()
 	// Check if we need to be updated
 	//================================
 
-	if (Type_ == BlockType::Air)
+	if (BlockType_ == BlockType::Air)
 	{
 		IsActive_ = false;
 		return;
@@ -66,10 +67,10 @@ void Block::Refresh()
 void Block::CopyFrom(Block& block)
 {
 	// Copy non-static data
-	Name_ = block.Name_;
-	Type_ = block.Type_;
+	BlockName_ = block.BlockName_;
+	BlockType_ = block.BlockType_;
 	TextureOffset_ = block.TextureOffset_;
-	IsSolid_ = block.Type_;
+	IsSolid_ = block.BlockType_;
 	IsActive_ = true;
 }
 
@@ -126,7 +127,7 @@ void Block::SetNeighbour(Direction direction, Block* block)
 // Getters
 BlockType Block::GetType()
 {
-	return Type_;
+	return BlockType_;
 }
 
 InstanceData Block::GetInstance()
