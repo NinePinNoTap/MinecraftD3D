@@ -13,50 +13,25 @@ BlockManager::~BlockManager()
 
 void BlockManager::Initialise()
 {
-	BlockDatabase_["air"] = BlockData("air", BlockType::Air, false, D3DXVECTOR2(0, 0));
-	BlockDatabase_["dirt"] = BlockData("dirt", BlockType::Dirt, false, D3DXVECTOR2(0, 0));
-	BlockDatabase_["sand"] = BlockData("sand", BlockType::Sand, false, D3DXVECTOR2(0, 0));
-	BlockDatabase_["gravel"] = BlockData("gravel", BlockType::Gravel, false, D3DXVECTOR2(0, 0));
-	BlockDatabase_["water"] = BlockData("water", BlockType::Water, false, D3DXVECTOR2(0, 0));
-	BlockDatabase_["lava"] = BlockData("lava", BlockType::Lava, false, D3DXVECTOR2(0, 0));
-	BlockDatabase_["cobblestone"] = BlockData("cobblestone", BlockType::Cobblestone, false, D3DXVECTOR2(0, 0));
-	BlockDatabase_["stone"] = BlockData("stone", BlockType::Stone, false, D3DXVECTOR2(0, 0));
-	BlockDatabase_["gold"] = BlockData("gold", BlockType::Stone, false, D3DXVECTOR2(0, 0));
-	BlockDatabase_["diamond"] = BlockData("diamond", BlockType::Stone, false, D3DXVECTOR2(0, 0));
+	// Non-Solid
+	BlockDatabase_["air"] = Block("air", BlockType::Air, D3DXVECTOR2(0, 0), false);
+
+	// Solid
+	BlockDatabase_["dirt"] = Block("dirt", BlockType::Dirt, D3DXVECTOR2(0, 0), true);
+	BlockDatabase_["sand"] = Block("sand", BlockType::Sand, D3DXVECTOR2(1, 0), true);
+	BlockDatabase_["wood"] = Block("wood", BlockType::Wood, D3DXVECTOR2(3, 0), true);
+
+	BlockDatabase_["cobblestone"] = Block("cobblestone", BlockType::Cobblestone, D3DXVECTOR2(0, 1), true);
+	BlockDatabase_["stone"] = Block("stone", BlockType::Stone, D3DXVECTOR2(1, 1), true);
+	BlockDatabase_["gravel"] = Block("gravel", BlockType::Gravel, D3DXVECTOR2(1, 2), true);
+
+	BlockDatabase_["water"] = Block("water", BlockType::Water, D3DXVECTOR2(0, 0), true);
+	BlockDatabase_["lava"] = Block("lava", BlockType::Lava, D3DXVECTOR2(0, 0), true);
+	BlockDatabase_["gold"] = Block("gold", BlockType::Gold, D3DXVECTOR2(0, 2), true);
+	BlockDatabase_["diamond"] = Block("diamond", BlockType::Diamond, D3DXVECTOR2(1, 2), true);
 }
 
-void BlockManager::LoadBlock(Model** model, string blockName)
-{
-	Model* loadedModel = 0;
-
-	//==================
-	// Create the Model
-	//==================
-
-	/*AssetManager::Instance()->LoadModel(&loadedModel, "block.obj");
-	
-	//=====================
-	// Create the Material
-	//=====================
-
-	// Create a material for the model
-	Material* newMaterial = new Material;
-	newMaterial->SetBaseTexture(blockName + ".dds");
-
-	// Remove any materials from the model
-	loadedModel->ClearMaterials();
-
-	// Apply material to model
-	loadedModel->AddMaterial(newMaterial);*/
-
-	//================
-	// Finalise Model
-	//================
-
-	//*model = new Model(*loadedModel);
-}
-
-BlockData BlockManager::GetData(string blockName)
+Block BlockManager::GetBlock(string blockName)
 {
 	return BlockDatabase_[blockName];
 }

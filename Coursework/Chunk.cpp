@@ -3,6 +3,7 @@
 Chunk::Chunk()
 {
 	Chunk_ = 0;
+	ChunkBlock_ = 0;
 }
 
 Chunk::~Chunk()
@@ -33,15 +34,9 @@ void Chunk::Initialise(int x, int y, int z)
 
 	IsVisible_ = true;
 
-	block = new Block;
-	block->Initialise("block.obj");
-	//block->SetName("gold");
-	//block->SetType(BlockType::Gold);
-	block->SetActive(true);
-	block->SetSolid(true);
-	block->SetShader("instancedlight");
-
-	block->GetModel()->GetMaterial()->SetBaseTexture("blocks.dds");
+	ChunkBlock_ = new InstancedGameObject;
+	ChunkBlock_->Initialise("block.obj");
+	ChunkBlock_->SetShader("instancedlight");
 }
 
 void Chunk::Shutdown()
@@ -72,7 +67,7 @@ void Chunk::Build()
 			// Loop through z dimension
 			for (int z = 0; z < NO_OF_BLOCKS_DEPTH; z++)
 			{
-				Chunk_[x][y][z].Frame();
+				Chunk_[x][y][z].Refresh();
 			}
 		}
 	}
@@ -88,13 +83,13 @@ void Chunk::Build()
 			{
 				if (Chunk_[x][y][z].IsActive() && Chunk_[x][y][z].IsSolid())
 				{
-					block->AddInstance(Chunk_[x][y][z].GetTransform()->GetPosition(), D3DXVECTOR2(rand()%4, rand()%3));
+					ChunkBlock_->AddInstance(Chunk_[x][y][z].GetInstance());
 				}
 			}
 		}
 	}
 
-	block->RebuildInstanceBuffer();
+	ChunkBlock_->RebuildInstanceBuffer();
 }
 
 // Frame
@@ -121,42 +116,19 @@ void Chunk::Render()
 	{
 		return;
 	}
-
-	//if (needUpdate)
-	//{
-	//	// Loop through x dimension
-	//	for(int x = 0; x < NO_OF_BLOCKS_WIDTH; x++)
-	//	{
-	//		// Loop through y dimension
-	//		for (int y = 0; y < NO_OF_BLOCKS_HEIGHT; y++)
-	//		{
-	//			// Loop through z dimension
-	//			for (int z = 0; z < NO_OF_BLOCKS_DEPTH; z++)
-	//			{
-	//				if (Chunk_[x][y][z].IsActive() && Chunk_[x][y][z].IsSolid())
-	//				{
-	//					// Render
-	//					//Chunk_[x][y][z].Render();
-	//					block->AddInstance(Chunk_[x][y][z].GetTransform()->GetPosition(), D3DXVECTOR2(0, 0));
-	//				}
-	//			}
-	//		}
-	//	}
-
-	//	block->RebuildInstanceBuffer();
-	//	needUpdate = false;
-	//}
-
-	block->Render();
+	
+	ChunkBlock_->Render();
 }
 
 // Terrain Generation
 void Chunk::GenerateBlankChunk()
 {
-	D3DXVECTOR3 halfChunkOffset;
+	D3DXVECTOR3 chunkPosition;
+	Block airBlock;
+	float xPos, yPos, zPos;
 
-	// Calculate half dimensions of the chunk
-	halfChunkOffset = D3DXVECTOR3(CHUNK_WIDTH, CHUNK_HEIGHT, NO_OF_CHUNKS_DEPTH) / 2;
+	// Retrieve start position of the chunk
+	chunkPosition = GetTransform()->GetPosition();
 
 	// Create the 3D array to store blocks in chunk
 	Chunk_ = new Block**[NO_OF_BLOCKS_WIDTH];
@@ -174,15 +146,17 @@ void Chunk::GenerateBlankChunk()
 			// Loop through z dimension
 			for (int z = 0; z < NO_OF_BLOCKS_DEPTH; z++)
 			{
-				// Initialise air block
-				Chunk_[x][y][z] = Block();
-				Chunk_[x][y][z].Initialise();
-				Chunk_[x][y][z].SetShader("texture");
+				// Define position of the block
+				xPos = chunkPosition.x + (x * BLOCK_SIZE) - (CHUNK_WIDTH / 2);
+				yPos = chunkPosition.y + (y * BLOCK_SIZE) - (CHUNK_HEIGHT / 2);
+				zPos = chunkPosition.z + (z * BLOCK_SIZE) - (CHUNK_DEPTH / 2);
 
-				// Set block world transform
-				Chunk_[x][y][z].GetTransform()->SetPosition(Transform_->GetPosition());
-				Chunk_[x][y][z].GetTransform()->Move(D3DXVECTOR3(x, y, z) * BLOCK_SIZE);
-				Chunk_[x][y][z].GetTransform()->Move(-halfChunkOffset);
+				// Define base block
+				airBlock = BlockManager::Instance()->GetBlock("air");
+				airBlock.SetPosition(xPos, yPos, zPos);
+
+				// Store it
+				Chunk_[x][y][z] = airBlock;
 			}
 		}
 	}

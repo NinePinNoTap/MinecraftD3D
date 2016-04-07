@@ -433,9 +433,6 @@
     <ClInclude Include="BlockManager.h">
       <Filter>Scene\VoxelTerrain</Filter>
     </ClInclude>
-    <ClInclude Include="BlockData.h">
-      <Filter>Scene\VoxelTerrain</Filter>
-    </ClInclude>
     <ClInclude Include="Ocean.h">
       <Filter>Scene\GameObjects</Filter>
     </ClInclude>

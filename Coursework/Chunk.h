@@ -3,7 +3,9 @@
 #include <string>
 
 #include "Block.h"
+#include "BlockManager.h"
 #include "Constants.h"
+#include "InstancedGameObject.h"
 #include "ShaderManager.h"
 #include "Transform.h"
 
@@ -42,4 +44,5 @@ private:
 	bool IsVisible_;
 	Transform* Transform_;
 	D3DXVECTOR3 ChunkID_;
+	InstancedGameObject* ChunkBlock_;
 };

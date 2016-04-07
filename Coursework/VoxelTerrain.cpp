@@ -11,8 +11,12 @@ VoxelTerrain::~VoxelTerrain()
 
 void VoxelTerrain::Initialise()
 {
-	// Create a Block Manager
+	//======================
+	// Create Block Manager
+	//======================
+
 	BlockManager_ = new BlockManager;
+	BlockManager_->Initialise();
 
 	//=================
 	// Generate Chunks
@@ -21,6 +25,9 @@ void VoxelTerrain::Initialise()
 	CreateChunks();
 	LinkBlocks();
 	GenerateTerrain();
+	RefreshTerrain();
+
+	OutputToDebug("Terrain generated");
 }
 
 void VoxelTerrain::Frame()
@@ -95,37 +102,19 @@ void VoxelTerrain::LinkBlocks()
 	// Link each block to its surrounding neighbours
 	//===============================================
 
-	for (int x = 0; x < NO_OF_CHUNKS_WIDTH; x++)
+	for (int x = 0; x < TERRAIN_WIDTH; x++)
 	{
-		for (int y = 0; y < NO_OF_CHUNKS_HEIGHT; y++)
+		for (int y = 0; y < TERRAIN_HEIGHT; y++)
 		{
-			for (int z = 0; z < NO_OF_CHUNKS_DEPTH; z++)
+			for (int z = 0; z < TERRAIN_DEPTH; z++)
 			{
-				LinkBlocksInChunk(TerrainChunks_[x][y][z]);
+				SetBlockNeighbours(x, y, z);
 			}
 		}
 	}
 }
 
-void VoxelTerrain::LinkBlocksInChunk(Chunk* chunk)
-{
-	//===========================
-	// Set the blocks neighbours
-	//===========================
-
-	for (int x = 0; x < NO_OF_BLOCKS_WIDTH; x++)
-	{
-		for (int y = 0; y < NO_OF_BLOCKS_HEIGHT; y++)
-		{
-			for (int z = 0; z < NO_OF_BLOCKS_DEPTH; z++)
-			{
-				SetBlockNeighbours(chunk, x, y, z);
-			}
-		}
-	}
-}
-
-void VoxelTerrain::SetBlockNeighbours(Chunk* chunk, int x, int y, int z)
+void VoxelTerrain::SetBlockNeighbours(int x, int y, int z)
 {
 	//===========================
 	// Apply neighbours to block
@@ -134,32 +123,21 @@ void VoxelTerrain::SetBlockNeighbours(Chunk* chunk, int x, int y, int z)
 	Block* blockCurrent;
 
 	// Get current block
-	blockCurrent = GetBlock(chunk->GetChunkID(), x, y, z);
+	blockCurrent = GetBlock(x, y, z);
 
 	// Set block neighbours
-	blockCurrent->SetNeighbour(Direction::Up, GetBlock(chunk->GetChunkID(), x, y + 1, z));
-	blockCurrent->SetNeighbour(Direction::Down, GetBlock(chunk->GetChunkID(), x, y - 1, z));
+	blockCurrent->SetNeighbour(Direction::Up, GetBlock(x, y + 1, z));
+	blockCurrent->SetNeighbour(Direction::Down, GetBlock(x, y - 1, z));
 
-	blockCurrent->SetNeighbour(Direction::Left, GetBlock(chunk->GetChunkID(), x - 1, y, z));
-	blockCurrent->SetNeighbour(Direction::Right, GetBlock(chunk->GetChunkID(), x + 1, y, z));
+	blockCurrent->SetNeighbour(Direction::Left, GetBlock(x - 1, y, z));
+	blockCurrent->SetNeighbour(Direction::Right, GetBlock(x + 1, y, z));
 
-	blockCurrent->SetNeighbour(Direction::Forward, GetBlock(chunk->GetChunkID(), x, y, z + 1));
-	blockCurrent->SetNeighbour(Direction::Backward, GetBlock(chunk->GetChunkID(), x, y, z - 1));
+	blockCurrent->SetNeighbour(Direction::Forward, GetBlock(x, y, z + 1));
+	blockCurrent->SetNeighbour(Direction::Backward, GetBlock(x, y, z - 1));
 }
 
 void VoxelTerrain::GenerateTerrain()
 {
-	/*for (int x = 0; x < NO_OF_CHUNKS_WIDTH; x++)
-	{
-		for (int y = 0; y < NO_OF_CHUNKS_HEIGHT; y++)
-		{
-			for (int z = 0; z < NO_OF_CHUNKS_DEPTH; z++)
-			{
-				GenerateChunkTerrain(TerrainChunks_[x][y][z]);
-			}
-		}
-	}*/
-
 	PerlinNoiseGenerator perlinNoise;
 
 	// Generate a random seed for the noise to use
@@ -169,24 +147,39 @@ void VoxelTerrain::GenerateTerrain()
 	{
 		for (int z = 0; z < TERRAIN_DEPTH; z++)
 		{
-			double a = (double)z / (double)TERRAIN_WIDTH;
-			double b = (double)x / (double)TERRAIN_DEPTH;
+			double a = (double)z / (double)TERRAIN_WIDTH * 2;
+			double b = (double)x / (double)TERRAIN_DEPTH * 2;
 
 			float noise = perlinNoise.CreateNoise(a, b, 0.8f);
 			float height = floor(TERRAIN_HEIGHT * noise);
+			// NEED A BASE HEIGHT VARIABLE HERE SO NOISE IS CREATED ON TOP OF THE GROUND LEVEL
 
 			// Loop through y dimension
-			for (int y = 0; y < height; y++)
+			for (int y = height; y >= 0; y--)
 			{
-				GetBlock(x, y, z)->SetName("dirt");
-				GetBlock(x, y, z)->SetType(BlockType::Dirt);
-
-				GetBlock(x, y, z)->SetSolid(true);
-				GetBlock(x, y, z)->SetActive(true);
+				if (y > height - 10)
+				{
+					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
+				}
+				else if (y > height - 32)
+				{
+					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
+				}
+				else if (y > height - 40)
+				{
+					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
+				}
+				else if (y > height - 60)
+				{
+					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("diamond"));
+				}
 			}
 		}
 	}
+}
 
+void VoxelTerrain::RefreshTerrain()
+{
 	for (int x = 0; x < NO_OF_CHUNKS_WIDTH; x++)
 	{
 		for (int y = 0; y < NO_OF_CHUNKS_HEIGHT; y++)
@@ -197,122 +190,16 @@ void VoxelTerrain::GenerateTerrain()
 			}
 		}
 	}
-
-	OutputToDebug("Terrain generated");
-}
-
-void VoxelTerrain::GenerateChunkTerrain(Chunk* chunk)
-{
-	PerlinNoiseGenerator perlinNoise;
-
-	// Generate a random seed for the noise to use
-	perlinNoise.SetSeed(rand() % 10000);
-	
-	// Loop through x dimension
-	for (int i = 0; i < NO_OF_BLOCKS_WIDTH; i++)
-	{
-		// Loop through z dimension
-		for (int k = 0; k < NO_OF_BLOCKS_DEPTH; k++)
-		{
-			double x = (double)k / (double)NO_OF_BLOCKS_WIDTH;
-			double y = (double)i / (double)NO_OF_BLOCKS_DEPTH;
-
-			float noise = perlinNoise.CreateNoise(x, y, 0.8f);
-			float height = floor(NO_OF_BLOCKS_HEIGHT * noise);
-
-			// Loop through y dimension
-			for (int j = 0; j < height; j++)
-			{
-				if (j < 1)
-				{
-					chunk->GetBlock(i, j, k)->SetName("cobblestone");
-					chunk->GetBlock(i, j, k)->SetType(BlockType::Cobblestone);
-				}
-				else if (j < 3)
-				{
-					chunk->GetBlock(i, j, k)->SetName("dirt");
-					chunk->GetBlock(i, j, k)->SetType(BlockType::Dirt);
-				}
-				else
-				{
-					chunk->GetBlock(i, j, k)->SetName("sand");
-					chunk->GetBlock(i, j, k)->SetType(BlockType::Sand);
-				}
-
-				chunk->GetBlock(i, j, k)->SetSolid(true);
-				chunk->GetBlock(i, j, k)->SetActive(true);
-			}
-		}
-	}
-
-	chunk->Build();
-}
-
-Block* VoxelTerrain::GetBlock(D3DXVECTOR3 currentChunkID, int x, int y, int z)
-{
-	int chunkX = currentChunkID.x;
-	int chunkY = currentChunkID.y;
-	int chunkZ = currentChunkID.z;
-
-	//=============================================================
-	// Check if the block we are trying to get is in another chunk
-	//=============================================================
-
-	// Check x
-	if (!RangeCheck(x, 0, NO_OF_BLOCKS_WIDTH - 1))
-	{
-		if (x < 0)
-			chunkX--;
-		else
-			chunkX++;
-
-		Wrap(x, 0, NO_OF_BLOCKS_WIDTH - 2);
-	}
-
-	// Check y
-	if (!RangeCheck(y, 0, NO_OF_BLOCKS_HEIGHT - 1))
-	{
-		if (y < 0)
-			chunkY--;
-		else
-			chunkY++;
-
-		Wrap(y, 0, NO_OF_BLOCKS_HEIGHT - 2);
-	}
-
-	// Check z
-	if (!RangeCheck(z, 0, NO_OF_BLOCKS_DEPTH - 1))
-	{
-		if (z < 0)
-			chunkZ--;
-		else
-			chunkZ++;
-
-		Wrap(z, 0, NO_OF_BLOCKS_DEPTH - 2);
-	}
-
-	//=================================
-	// Make sure the chunk ID is valid
-	//=================================
-
-	if (RangeCheck(chunkX, 0, NO_OF_CHUNKS_WIDTH - 1) &&
-		RangeCheck(chunkY, 0, NO_OF_CHUNKS_HEIGHT - 1) &&
-		RangeCheck(chunkZ, 0, NO_OF_CHUNKS_DEPTH - 1))
-	{
-		return TerrainChunks_[chunkX][chunkY][chunkZ]->GetBlock(x, y, z);
-	}
-
-	return 0;
 }
 
 Block* VoxelTerrain::GetBlock(int x, int y, int z)
 {
-	D3DXVECTOR3 chunkID;
+	int chunkX, chunkY, chunkZ;
 	int coordX, coordY, coordZ;
 
-	//====================================
-	// Check if the index is out of range
-	//====================================
+	//===================
+	// Check Index Range
+	//===================
 
 	if (!RangeCheck(x, 0, TERRAIN_WIDTH - 1))
 		return 0;
@@ -321,17 +208,17 @@ Block* VoxelTerrain::GetBlock(int x, int y, int z)
 	if (!RangeCheck(z, 0, TERRAIN_DEPTH - 1))
 		return 0;
 
-	//===========================
-	// Convert global coordinate
-	//===========================
+	//=================================
+	// Calculate Chunk and Local Coord
+	//=================================
 
-	coordX = x%NO_OF_BLOCKS_WIDTH;
-	coordY = y%NO_OF_BLOCKS_HEIGHT;
-	coordZ = z%NO_OF_BLOCKS_DEPTH;
+	coordX = x % NO_OF_BLOCKS_WIDTH;
+	coordY = y % NO_OF_BLOCKS_HEIGHT;
+	coordZ = z % NO_OF_BLOCKS_DEPTH;
 
-	chunkID.x = (x - coordX) / NO_OF_BLOCKS_WIDTH;
-	chunkID.y = (y - coordY) / NO_OF_BLOCKS_HEIGHT;
-	chunkID.z = (z - coordZ) / NO_OF_BLOCKS_DEPTH;
+	chunkX = (x - coordX) / NO_OF_BLOCKS_WIDTH;
+	chunkY = (y - coordY) / NO_OF_BLOCKS_HEIGHT;
+	chunkZ = (z - coordZ) / NO_OF_BLOCKS_DEPTH;
 
-	return GetBlock(chunkID, coordX, coordY, coordZ);
+	return TerrainChunks_[chunkX][chunkY][chunkZ]->GetBlock(coordX, coordY, coordZ);
 }

@@ -3,7 +3,6 @@
 #include <string>
 
 #include "Block.h"
-#include "BlockData.h"
 #include "Model.h"
 #include "Material.h"
 #include "Singleton.h"
@@ -16,10 +15,8 @@ public:
 
 	void Initialise();
 
-	void LoadBlock(Model** model, string blockName);
-
-	BlockData GetData(string blockName);
+	Block GetBlock(string blockName);
 
 private:
-	std::map<string, BlockData> BlockDatabase_;
+	std::map<string, Block> BlockDatabase_;
 };

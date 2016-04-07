@@ -1,12 +1,27 @@
 #include "Block.h"
 #include "BlockManager.h"
 
-Block::Block() : InstancedGameObject()
+Block::Block()
 {
-	BlockName_ = "air";
-	Type_ = BlockType::Air;
+	Name_ = "null";
+	Type_ = BlockType::None;
+	TextureOffset_ = D3DXVECTOR2(0, 0);
 	IsSolid_ = false;
 	IsActive_ = false;
+
+	for (int i = 0; i < 6; i++)
+	{
+		NeighbourBlocks_[i] = 0;
+	}
+}
+
+Block::Block(string name, BlockType type, D3DXVECTOR2 offset, bool solid)
+{
+	Name_ = name;
+	Type_ = type;
+	TextureOffset_ = offset;
+	IsSolid_ = solid;
+	IsActive_ = true;
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -19,7 +34,7 @@ Block::~Block()
 }
 
 // Frame
-bool Block::Frame()
+void Block::Refresh()
 {
 	//================================
 	// Check if we need to be updated
@@ -28,13 +43,13 @@ bool Block::Frame()
 	if (Type_ == BlockType::Air)
 	{
 		IsActive_ = false;
-		return true;
+		return;
 	}
 
 	//=========================
 	// Handle frustum checking
 	//=========================
-
+	//
 	//IsActive_ = ViewFrustumManager::Instance()->CheckCube(Transform_->GetPosition(), BLOCK_SIZE * 0.7);
 	//if (!IsActive_)
 	//{
@@ -46,8 +61,16 @@ bool Block::Frame()
 	//===================
 
 	HandleNeighbours();
+}
 
-	return true;
+void Block::CopyFrom(Block& block)
+{
+	// Copy non-static data
+	Name_ = block.Name_;
+	Type_ = block.Type_;
+	TextureOffset_ = block.TextureOffset_;
+	IsSolid_ = block.Type_;
+	IsActive_ = true;
 }
 
 void Block::HandleNeighbours()
@@ -55,7 +78,7 @@ void Block::HandleNeighbours()
 	int visibleSides = 0;
 
 	// Count how many neighbours we can see
-	for (int i = 0; i < NO_OF_NEIGHBOURS; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		// Check if we can see the neighbour
 		if (!CheckNeighbour(i))
@@ -90,35 +113,9 @@ bool Block::CheckNeighbour(int i)
 }
 
 // Setters
-bool Block::SetName(string blockName)
+void Block::SetPosition(float x, float y, float z)
 {
-	// Check if we are updating to a new block
-	if (BlockName_ == blockName)
-	{
-		return true;
-	}
-
-	// Store the block name
-	BlockName_ = blockName;
-
-	// Load the new block
-	BlockManager::Instance()->LoadBlock(&Model_, BlockName_);
-	if (!Model_)
-	{
-		return false;
-	}
-
-	return true;
-}
-
-void Block::SetType(BlockType type)
-{
-	Type_ = type;
-}
-
-void Block::SetSolid(bool isSolid)
-{
-	IsSolid_ = isSolid;
+	Position_ = D3DXVECTOR3(x, y, z);
 }
 
 void Block::SetNeighbour(Direction direction, Block* block)
@@ -132,7 +129,22 @@ BlockType Block::GetType()
 	return Type_;
 }
 
+InstanceData Block::GetInstance()
+{
+	InstanceData instanceData;
+	instanceData.position = Position_;
+	instanceData.textureOffset = TextureOffset_;
+	instanceData.textureTotal = D3DXVECTOR2(4, 3);
+
+	return instanceData;
+}
+
 bool Block::IsSolid()
 {
 	return IsSolid_;
+}
+
+bool Block::IsActive()
+{
+	return IsActive_;
 }

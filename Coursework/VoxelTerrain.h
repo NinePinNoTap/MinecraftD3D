@@ -17,14 +17,12 @@ public:
 
 private:
 	void CreateChunks();
-
 	void GenerateTerrain();
-	void GenerateChunkTerrain(Chunk* chunk);
+	void RefreshTerrain();
+
 
 	void LinkBlocks();
-	void LinkBlocksInChunk(Chunk* chunk);
-	void SetBlockNeighbours(Chunk* chunk, int x, int y, int z);
-	Block* GetBlock(D3DXVECTOR3 currentChunkID, int x, int y, int z);
+	void SetBlockNeighbours(int x, int y, int z);
 	Block* GetBlock(int x, int y, int z);
 
 	BlockManager* BlockManager_;

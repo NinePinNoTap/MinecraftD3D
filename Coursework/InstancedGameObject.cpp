@@ -71,15 +71,27 @@ bool InstancedGameObject::SendModelToPipeline(Mesh3D* objMesh)
 	return true;
 }
 
-void InstancedGameObject::AddInstance(D3DXVECTOR3 position, D3DXVECTOR2 textureOffset)
+void InstancedGameObject::AddInstance(InstanceData instanceData)
 {
+	// Add to list
+	Instances_.push_back(instanceData);
+
+	// Store number of instances
+	InstanceCount_ = Instances_.size();
+}
+
+void InstancedGameObject::AddInstance(D3DXVECTOR3 position, D3DXVECTOR2 textureOffset, D3DXVECTOR2 textureTotal)
+{
+	// Create Instance
 	InstanceData instanceData;
 	instanceData.position = position;
 	instanceData.textureOffset = textureOffset;
-	instanceData.textureTotal = D3DXVECTOR2(4, 3);
+	instanceData.textureTotal = textureTotal;
 
+	// Add to list
 	Instances_.push_back(instanceData);
 
+	// Store number of instances
 	InstanceCount_ = Instances_.size();
 }
 
