@@ -1,7 +1,7 @@
 #include "Block.h"
 #include "BlockManager.h"
 
-Block::Block() : GameObject()
+Block::Block() : InstancedGameObject()
 {
 	BlockName_ = "air";
 	Type_ = BlockType::Air;

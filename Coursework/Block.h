@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "GameObject.h"
+#include "InstancedGameObject.h"
 #include "ViewFrustumManager.h"
 #include "BlockData.h"
 
@@ -10,7 +10,7 @@ using namespace std;
 
 const int NO_OF_NEIGHBOURS = 6;
 
-class Block : public GameObject
+class Block : public InstancedGameObject
 {
 public:
 	Block();

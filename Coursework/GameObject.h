@@ -44,7 +44,7 @@ public:
 	float GetFrame();
 
 protected:
-	virtual bool SendModelToPipeline(Mesh3D* objMesh);
+	bool SendModelToPipeline(Mesh3D* objMesh);
 
 	// Model
 	Model* Model_;

@@ -248,8 +248,8 @@
     <ClCompile Include="InstancedLightShader.cpp">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClCompile>
-    <ClCompile Include="InstancedBlock.cpp">
-      <Filter>Scene\VoxelTerrain</Filter>
+    <ClCompile Include="InstancedGameObject.cpp">
+      <Filter>Framework\Graphics\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -445,8 +445,8 @@
     <ClInclude Include="InstancedLightShader.h">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="InstancedBlock.h">
-      <Filter>Scene\VoxelTerrain</Filter>
+    <ClInclude Include="InstancedGameObject.h">
+      <Filter>Framework\Graphics\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

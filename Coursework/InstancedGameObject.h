@@ -14,11 +14,15 @@ public:
 	InstancedGameObject();
 	~InstancedGameObject();
 
+	// Frame
+	bool Render();
+
+	// Instance Management
 	void AddInstance(D3DXVECTOR3 position, D3DXVECTOR2 textureOffset = D3DXVECTOR2(1, 1));
 	void ClearInstances();
-
 	void RebuildInstanceBuffer();
 
+	// Getters
 	int GetInstanceCount();
 	ID3D11Buffer* GetInstanceBuffer();
 

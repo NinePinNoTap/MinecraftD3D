@@ -9,8 +9,8 @@ Chunk::~Chunk()
 {
 }
 
-#include "InstancedBlock.h"
-InstancedBlock* block;
+#include "Block.h"
+Block* block;
 
 void Chunk::Initialise(int x, int y, int z)
 {
@@ -36,7 +36,7 @@ void Chunk::Initialise(int x, int y, int z)
 
 	IsVisible_ = true;
 
-	block = new InstancedBlock;
+	block = new Block;
 	block->Initialise();
 	block->SetName("gold");
 	block->SetType(BlockType::Gold);
@@ -45,9 +45,6 @@ void Chunk::Initialise(int x, int y, int z)
 	block->SetShader("instancedlight");
 
 	block->GetModel()->GetMaterial()->SetBaseTexture("blocks.dds");
-
-
-	int a = 0;
 }
 
 void Chunk::Shutdown()
