@@ -6,6 +6,7 @@ Block::Block() : InstancedGameObject()
 	BlockName_ = "air";
 	Type_ = BlockType::Air;
 	IsSolid_ = false;
+	IsActive_ = false;
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -26,6 +27,7 @@ bool Block::Frame()
 
 	if (Type_ == BlockType::Air)
 	{
+		IsActive_ = false;
 		return true;
 	}
 
@@ -33,11 +35,11 @@ bool Block::Frame()
 	// Handle frustum checking
 	//=========================
 
-	IsActive_ = ViewFrustumManager::Instance()->CheckCube(Transform_->GetPosition(), BLOCK_SIZE * 0.7);
-	if (!IsActive_)
-	{
-		return true;
-	}
+	//IsActive_ = ViewFrustumManager::Instance()->CheckCube(Transform_->GetPosition(), BLOCK_SIZE * 0.7);
+	//if (!IsActive_)
+	//{
+	//	return true;
+	//}
 
 	//===================
 	// Handle Neighbours
@@ -63,7 +65,7 @@ void Block::HandleNeighbours()
 	}
 
 	// Disable entire object if we cant see it
-	if (visibleSides == NO_OF_NEIGHBOURS)
+	if (visibleSides == 0)
 	{
 		IsActive_ = false;
 	}

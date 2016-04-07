@@ -16,6 +16,8 @@ public:
 	void Initialise(int x, int y, int z);
 	void Shutdown();
 
+	void Build();
+
 	// Frame
 	void Frame();
 	void Render();
@@ -36,6 +38,7 @@ private:
 	void GenerateBlankChunk();
 	
 	Block*** Chunk_;
+	Block* block;
 	bool IsVisible_;
 	Transform* Transform_;
 	D3DXVECTOR3 ChunkID_;

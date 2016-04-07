@@ -149,7 +149,7 @@ void VoxelTerrain::SetBlockNeighbours(Chunk* chunk, int x, int y, int z)
 
 void VoxelTerrain::GenerateTerrain()
 {
-	for (int x = 0; x < NO_OF_CHUNKS_WIDTH; x++)
+	/*for (int x = 0; x < NO_OF_CHUNKS_WIDTH; x++)
 	{
 		for (int y = 0; y < NO_OF_CHUNKS_HEIGHT; y++)
 		{
@@ -158,7 +158,47 @@ void VoxelTerrain::GenerateTerrain()
 				GenerateChunkTerrain(TerrainChunks_[x][y][z]);
 			}
 		}
+	}*/
+
+	PerlinNoiseGenerator perlinNoise;
+
+	// Generate a random seed for the noise to use
+	perlinNoise.SetSeed(rand() % 10000);
+
+	for (int x = 0; x < TERRAIN_WIDTH; x++)
+	{
+		for (int z = 0; z < TERRAIN_DEPTH; z++)
+		{
+			double a = (double)z / (double)TERRAIN_WIDTH;
+			double b = (double)x / (double)TERRAIN_DEPTH;
+
+			float noise = perlinNoise.CreateNoise(a, b, 0.8f);
+			float height = floor(TERRAIN_HEIGHT * noise);
+
+			// Loop through y dimension
+			for (int y = 0; y < height; y++)
+			{
+				GetBlock(x, y, z)->SetName("dirt");
+				GetBlock(x, y, z)->SetType(BlockType::Dirt);
+
+				GetBlock(x, y, z)->SetSolid(true);
+				GetBlock(x, y, z)->SetActive(true);
+			}
+		}
 	}
+
+	for (int x = 0; x < NO_OF_CHUNKS_WIDTH; x++)
+	{
+		for (int y = 0; y < NO_OF_CHUNKS_HEIGHT; y++)
+		{
+			for (int z = 0; z < NO_OF_CHUNKS_DEPTH; z++)
+			{
+				TerrainChunks_[x][y][z]->Build();
+			}
+		}
+	}
+
+	OutputToDebug("Terrain generated");
 }
 
 void VoxelTerrain::GenerateChunkTerrain(Chunk* chunk)
@@ -204,6 +244,8 @@ void VoxelTerrain::GenerateChunkTerrain(Chunk* chunk)
 			}
 		}
 	}
+
+	chunk->Build();
 }
 
 Block* VoxelTerrain::GetBlock(D3DXVECTOR3 currentChunkID, int x, int y, int z)

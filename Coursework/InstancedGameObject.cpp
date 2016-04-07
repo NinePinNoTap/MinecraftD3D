@@ -76,6 +76,7 @@ void InstancedGameObject::AddInstance(D3DXVECTOR3 position, D3DXVECTOR2 textureO
 	InstanceData instanceData;
 	instanceData.position = position;
 	instanceData.textureOffset = textureOffset;
+	instanceData.textureTotal = D3DXVECTOR2(4, 3);
 
 	Instances_.push_back(instanceData);
 

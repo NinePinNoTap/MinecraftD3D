@@ -44,9 +44,9 @@ const int NO_OF_BLOCKS_HEIGHT = 16;
 const int NO_OF_BLOCKS_DEPTH = 16;
 
 // How many chunks in a terrain
-const int NO_OF_CHUNKS_WIDTH = 1;
-const int NO_OF_CHUNKS_HEIGHT = 1;
-const int NO_OF_CHUNKS_DEPTH = 1;
+const int NO_OF_CHUNKS_WIDTH = 8;
+const int NO_OF_CHUNKS_HEIGHT = 4;
+const int NO_OF_CHUNKS_DEPTH = 8;
 
 // Total size of a chunk dimension
 const int CHUNK_WIDTH = NO_OF_BLOCKS_WIDTH * BLOCK_SIZE;

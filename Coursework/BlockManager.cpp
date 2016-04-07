@@ -33,7 +33,7 @@ void BlockManager::LoadBlock(Model** model, string blockName)
 	// Create the Model
 	//==================
 
-	AssetManager::Instance()->LoadModel(&loadedModel, "block.obj");
+	/*AssetManager::Instance()->LoadModel(&loadedModel, "block.obj");
 	
 	//=====================
 	// Create the Material
@@ -47,13 +47,13 @@ void BlockManager::LoadBlock(Model** model, string blockName)
 	loadedModel->ClearMaterials();
 
 	// Apply material to model
-	loadedModel->AddMaterial(newMaterial);
+	loadedModel->AddMaterial(newMaterial);*/
 
 	//================
 	// Finalise Model
 	//================
 
-	*model = new Model(*loadedModel);
+	//*model = new Model(*loadedModel);
 }
 
 BlockData BlockManager::GetData(string blockName)
