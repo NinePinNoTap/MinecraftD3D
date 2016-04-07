@@ -25,7 +25,7 @@ public:
 
 	// Frames
 	virtual bool Frame();
-	bool Render();
+	virtual bool Render();
 
 	// Rendering
 	void SetShader(string shaderName);

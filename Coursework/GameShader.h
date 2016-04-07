@@ -23,7 +23,7 @@ public:
 	GameShader(const GameShader&);
 	~GameShader();
 	
-	virtual bool Initialise(HWND hwnd) { return true; }
+	virtual bool Initialise(HWND hwnd);
 
 	// Shutdown
 	void Shutdown();

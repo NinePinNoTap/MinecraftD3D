@@ -80,6 +80,9 @@
     <Filter Include="Framework\Shader\Shaders">
       <UniqueIdentifier>{f7661ea1-ddd1-41fe-a735-2f29e3a62935}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Shader\HLSL Shader Files\InstancedLight">
+      <UniqueIdentifier>{4d195ff8-fa6e-4655-9273-fcca63fd7607}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -241,6 +244,12 @@
     </ClCompile>
     <ClCompile Include="FontShader.cpp">
       <Filter>Framework\Shader\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancedLightShader.cpp">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancedBlock.cpp">
+      <Filter>Scene\VoxelTerrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -433,6 +442,12 @@
     <ClInclude Include="FontShader.h">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="InstancedLightShader.h">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancedBlock.h">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shaders\cloud.ps">
@@ -500,6 +515,12 @@
     </None>
     <None Include="Data\Shaders\colour.vs">
       <Filter>Framework\Shader\HLSL Shader Files\Colour</Filter>
+    </None>
+    <None Include="Data\Shaders\instancedlight.ps">
+      <Filter>Framework\Shader\HLSL Shader Files\InstancedLight</Filter>
+    </None>
+    <None Include="Data\Shaders\instancedlight.vs">
+      <Filter>Framework\Shader\HLSL Shader Files\InstancedLight</Filter>
     </None>
   </ItemGroup>
 </Project>

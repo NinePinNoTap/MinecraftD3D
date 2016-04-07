@@ -96,6 +96,8 @@
     <ClCompile Include="FireShader.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FontShader.cpp" />
+    <ClCompile Include="InstancedBlock.cpp" />
+    <ClCompile Include="InstancedLightShader.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameShader.cpp" />
@@ -142,6 +144,8 @@
     <ClInclude Include="BlockManager.h" />
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="FontShader.h" />
+    <ClInclude Include="InstancedBlock.h" />
+    <ClInclude Include="InstancedLightShader.h" />
     <ClInclude Include="Mesh3D.h" />
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="PrimitiveFactory.h" />
@@ -209,6 +213,8 @@
     <None Include="Data\Shaders\fire.vs" />
     <None Include="Data\Shaders\font.ps" />
     <None Include="Data\Shaders\font.vs" />
+    <None Include="Data\Shaders\instancedlight.ps" />
+    <None Include="Data\Shaders\instancedlight.vs" />
     <None Include="Data\Shaders\light.ps" />
     <None Include="Data\Shaders\light.vs" />
     <None Include="Data\Shaders\ocean.ds" />

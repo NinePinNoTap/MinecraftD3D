@@ -22,6 +22,7 @@
 #include "ColourShader.h"
 #include "FireShader.h"
 #include "FontShader.h"
+#include "InstancedLightShader.h"
 #include "LightShader.h"
 #include "SkyShader.h"
 #include "TerrainReflectionShader.h"
@@ -70,6 +71,7 @@ private:
 	ColourShader* ColourShader_;
 	FireShader* FireShader_;
 	FontShader* FontShader_;
+	InstancedLightShader* InstancedLightShader_;
 	LightShader* LightShader_;
 	GameShader* OceanShader_;
 	SkyShader* SkySphereShader_;

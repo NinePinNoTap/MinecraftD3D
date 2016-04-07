@@ -7,6 +7,7 @@ ShaderManager::ShaderManager()
 	ColourShader_ = 0;
 	FireShader_ = 0;
 	FontShader_ = 0;
+	InstancedLightShader_ = 0;
 	LightShader_ = 0;
 	OceanShader_ = 0;
 	SkySphereShader_ = 0;
@@ -86,8 +87,23 @@ bool ShaderManager::Initialise(HWND hwnd)
 		return false;
 	}
 
+	//=======================================
+	// Initialise the Instanced Light Shader
+	//=======================================
+
+	InstancedLightShader_ = new InstancedLightShader;
+	if (!InstancedLightShader_)
+	{
+		return false;
+	}
+	Result_ = InstancedLightShader_->Initialise(hwnd);
+	if (!Result_)
+	{
+		return false;
+	}
+
 	//=============================
-	// Initialise the lightBuffer Shader
+	// Initialise the Light Shader
 	//=============================
 
 	LightShader_ = new LightShader;
@@ -201,10 +217,11 @@ bool ShaderManager::Initialise(HWND hwnd)
 	// Setup Shader Database
 	//=======================
 
-	ShaderDatabase_["colour"] = ColourShader_;
 	ShaderDatabase_["cloud"] = CloudShader_;
-	ShaderDatabase_["light"] = LightShader_;
+	ShaderDatabase_["colour"] = ColourShader_;
 	ShaderDatabase_["font"] = FontShader_;
+	ShaderDatabase_["instancedlight"] = InstancedLightShader_;
+	ShaderDatabase_["light"] = LightShader_;
 	ShaderDatabase_["skysphere"] = SkySphereShader_;
 	ShaderDatabase_["texture"] = TextureShader_;
 	ShaderDatabase_["terrain"] = TerrainShader_;

@@ -9,6 +9,9 @@ Chunk::~Chunk()
 {
 }
 
+#include "InstancedBlock.h"
+InstancedBlock* block;
+
 void Chunk::Initialise(int x, int y, int z)
 {
 	// Store the ID of the chunk
@@ -32,6 +35,19 @@ void Chunk::Initialise(int x, int y, int z)
 	//==================
 
 	IsVisible_ = true;
+
+	block = new InstancedBlock;
+	block->Initialise();
+	block->SetName("gold");
+	block->SetType(BlockType::Gold);
+	block->SetActive(true);
+	block->SetSolid(true);
+	block->SetShader("instancedlight");
+
+	block->GetModel()->GetMaterial()->SetBaseTexture("blocks.dds");
+
+
+	int a = 0;
 }
 
 void Chunk::Shutdown()
@@ -69,6 +85,7 @@ void Chunk::Frame()
 	}
 }
 
+bool needUpdate = true;
 void Chunk::Render()
 {
 	if (!IsVisible_)
@@ -76,23 +93,32 @@ void Chunk::Render()
 		return;
 	}
 
-	// Loop through x dimension
-	for (int i = 0; i < NO_OF_BLOCKS_WIDTH; i++)
+	if (needUpdate)
 	{
-		// Loop through y dimension
-		for (int j = 0; j < NO_OF_BLOCKS_HEIGHT; j++)
+		// Loop through x dimension
+		for (int i = 0; i < NO_OF_BLOCKS_WIDTH; i++)
 		{
-			// Loop through z dimension
-			for (int k = 0; k < NO_OF_BLOCKS_DEPTH; k++)
+			// Loop through y dimension
+			for (int j = 0; j < NO_OF_BLOCKS_HEIGHT; j++)
 			{
-				if (Chunk_[i][j][k].IsActive())
+				// Loop through z dimension
+				for (int k = 0; k < NO_OF_BLOCKS_DEPTH; k++)
 				{
-					// Render
-					Chunk_[i][j][k].Render();
+					if (Chunk_[i][j][k].IsActive() && Chunk_[i][j][k].IsSolid())
+					{
+						// Render
+						//Chunk_[i][j][k].Render();
+						block->AddInstance(Chunk_[i][j][k].GetTransform()->GetPosition(), D3DXVECTOR2(0, 0));
+					}
 				}
 			}
 		}
+
+		block->RebuildInstanceBuffer();
+		needUpdate = false;
 	}
+
+	block->Render();
 }
 
 // Terrain Generation

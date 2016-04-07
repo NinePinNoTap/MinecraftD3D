@@ -338,7 +338,7 @@ bool MainScene::UpdateObjects()
 	ViewFrustumManager::Instance()->Frame();
 	Clouds_ -> Frame();
 	Ocean_->Frame();
-	//Chunk_->Frame();
+	Chunk_->Frame();
 
 	if (NightTimeMode_)
 	{
@@ -564,7 +564,7 @@ bool MainScene::RenderScene(bool ShowText)
 	// Turn off back face culling
 	DirectXManager::Instance()->ToggleCulling(false);
 
-	//Chunk_->Render();
+	Chunk_->Render();
 
 	// Render Static Models
 	for each (GameObject* gameObject in Objects_)

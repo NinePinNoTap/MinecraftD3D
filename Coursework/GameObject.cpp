@@ -168,6 +168,11 @@ bool GameObject::SendModelToPipeline(Mesh3D* objMesh)
 void GameObject::SetShader(string shaderName)
 {
 	Shader_ = ShaderManager::Instance()->GetShader(shaderName);
+
+	if (!Shader_)
+	{
+		OutputToDebug("Could not set shader");
+	}
 }
 
 void GameObject::SetReflectable(bool Flag)
