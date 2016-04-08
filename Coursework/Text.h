@@ -23,7 +23,9 @@ public:
 	struct SentenceType
 	{
 		int ID;
-		char* text;
+		string text;
+		float value;
+		bool valueSet;
 		Vector2 position;
 		Alignment align;
 	};
@@ -40,14 +42,14 @@ public:
 	void Shutdown();
 
 	// Text Creation
-	void CreateText(char* text, Vector2 position, D3DXVECTOR4 colour, Alignment align = LEFT);
+	void CreateText(string text, Vector2 position, D3DXVECTOR4 colour, Alignment align = LEFT);
 
 	// Rendering
 	bool Render();
 
 	// Updating
-	bool SetText(int ID, char* text);
-	bool SetText(int ID, char* text, float value);
+	bool SetText(int ID, string text);
+	bool SetValue(int ID, float value);
 	bool SetPosition(int ID, Vector2 position);
 	void SetColour(int ID, D3DXVECTOR4 colour);
 

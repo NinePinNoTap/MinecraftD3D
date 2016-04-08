@@ -48,7 +48,10 @@ bool MainScene::Initialise(HWND hwnd)
 	//=======================
 
 	Clouds_ = new Clouds;
-	if (!Clouds_) { return false; }
+	if (!Clouds_)
+	{
+		return false;
+	}
 	Result_ = Clouds_ -> Initialise("cloud.dds", "cloudperturb.dds");
 	if (!Result_)
 	{
@@ -71,7 +74,10 @@ bool MainScene::Initialise(HWND hwnd)
 	//======================
 
 	Ocean_ = new Ocean;
-	if (!Ocean_) { return false; }
+	if (!Ocean_)
+	{
+		return false;
+	}
 	Result_ = Ocean_->Initialise("water_normal.dds", Rect3D(512.0f, 512.0f, 17.5f));
 	if (!Result_)
 	{
@@ -85,7 +91,10 @@ bool MainScene::Initialise(HWND hwnd)
 	//================================
 
 	ParticleSystem_ = new ParticleSystem;
-	if (!ParticleSystem_) { return false; }
+	if (!ParticleSystem_)
+	{
+		return false;
+	}
 	Result_ = ParticleSystem_ -> Initialise("rain.dds");
 	if (!Result_)
 	{
@@ -106,7 +115,10 @@ bool MainScene::Initialise(HWND hwnd)
 	//=======================
 
 	Sprite_ = new Sprite;
-	if (!Sprite_) { return false; }
+	if (!Sprite_)
+	{
+		return false;
+	}
 	Result_ = Sprite_->Initialise(Rect3D(windowWidth, windowHeight));
 	if (!Result_)
 	{
@@ -119,7 +131,10 @@ bool MainScene::Initialise(HWND hwnd)
 	//===========================
 
 	SkySphere_ = new SkySphere;
-	if (!SkySphere_) { return false; }
+	if (!SkySphere_)
+	{
+		return false;
+	}
 	SkySphere_ -> Initialise("sphere.txt");
 	if (!Result_)
 	{
@@ -139,7 +154,10 @@ bool MainScene::Initialise(HWND hwnd)
 	//========================
 
 	Terrain_ = new Terrain;
-	if (!Terrain_) { return false; }
+	if (!Terrain_)
+	{
+		return false;
+	}
 	Result_ = Terrain_->Initialise(Rect3D(512, 512), TerrainType::PERLIN, "sand_real.dds", "sand_real_normal.dds", Vector2(5, 5), 1.0f, 0.5f);
 	if (!Result_)
 	{
@@ -152,7 +170,10 @@ bool MainScene::Initialise(HWND hwnd)
 	//=================
 
 	Text_ = new Text;
-	if (!Text_) { return false; }
+	if (!Text_)
+	{
+		return false;
+	}
 	Result_ = Text_->Initialise(hwnd, "shruti", "shruti.dds", 95);
 	if (!Result_)
 	{
@@ -308,15 +329,24 @@ bool MainScene::Frame()
 {
 	// Handle user InputManager
 	Result_ = UserInputManager();
-	if (!Result_) { return false; }
+	if (!Result_)
+	{
+		return false;
+	}
 
 	// Handle frame updates
 	Result_ = UpdateObjects();
-	if (!Result_) { return false; }
+	if (!Result_)
+	{
+		return false;
+	}
 
 	// Render the scene
 	Result_ = Render();
-	if (!Result_) { return false; }
+	if (!Result_)
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -354,7 +384,10 @@ bool MainScene::UpdateObjects()
 	//===========================
 
 	Result_ = UpdateText();
-	if (!Result_) { return false; }
+	if (!Result_)
+	{
+		return false;
+	}
 
 	//=========================
 	// Check Underwater Status
@@ -375,24 +408,31 @@ bool MainScene::UpdateObjects()
 bool MainScene::UpdateText()
 {
 	//===========================
-	// Update WindowManager Information
+	// Update System Information
 	//===========================
 
-	Result_ = Text_->SetText(0, "FPS : ", PerformanceManager::Instance()->GetFPS());
+	Result_ = Text_->SetValue(0, PerformanceManager::Instance()->GetFPS());
 	if (!Result_) { return false; }
-	Result_ = Text_->SetText(1, "CPU : ", PerformanceManager::Instance()->GetUsage());
+
+	Result_ = Text_->SetValue(1, PerformanceManager::Instance()->GetUsage());
 	if (!Result_) { return false; }
-	Result_ = Text_->SetText(2, "Camera X : ", (int)Camera::Instance()->GetTransform()->GetX());
+
+	Result_ = Text_->SetValue(2, (int)Camera::Instance()->GetTransform()->GetX());
 	if (!Result_) { return false; }
-	Result_ = Text_->SetText(3, "Camera Y : ", (int)Camera::Instance()->GetTransform()->GetY());
+
+	Result_ = Text_->SetValue(3, (int)Camera::Instance()->GetTransform()->GetY());
 	if (!Result_) { return false; }
-	Result_ = Text_->SetText(4, "Camera Z : ", (int)Camera::Instance()->GetTransform()->GetZ());
+
+	Result_ = Text_->SetValue(4, (int)Camera::Instance()->GetTransform()->GetZ());
 	if (!Result_) { return false; }
-	Result_ = Text_->SetText(5, "Rotation X : ", (int)Camera::Instance()->GetTransform()->GetPitch());
+
+	Result_ = Text_->SetValue(5, (int)Camera::Instance()->GetTransform()->GetPitch());
 	if (!Result_) { return false; }
-	Result_ = Text_->SetText(6, "Rotation Y : ", (int)Camera::Instance()->GetTransform()->GetYaw());
+
+	Result_ = Text_->SetValue(6, (int)Camera::Instance()->GetTransform()->GetYaw());
 	if (!Result_) { return false; }
-	Result_ = Text_->SetText(7, "Rotation Z : ", (int)Camera::Instance()->GetTransform()->GetRoll());
+
+	Result_ = Text_->SetValue(7, (int)Camera::Instance()->GetTransform()->GetRoll());
 	if (!Result_) { return false; }
 
 	return true;
@@ -482,7 +522,10 @@ bool MainScene::Render()
 	{
 		// Render with post processing to the screen
 		Result_ = RenderWithPostProcessing();
-		if (!Result_) { return false; }
+		if (!Result_)
+		{
+			return false;
+		}
 	}
 	else
 	{
@@ -490,7 +533,10 @@ bool MainScene::Render()
 
 		// Render the scene normally to the screen
 		Result_ = RenderScene(!WireframeStatus);
-		if (!Result_) { return false; }
+		if (!Result_)
+		{
+			return false;
+		}
 	}
 
 	return true;
@@ -599,7 +645,10 @@ bool MainScene::RenderScene(bool ShowText)
 
 		// Render the particle WindowManager
 		Result_ = ShaderManager::Instance()->TextureRender(ParticleSystem_);
-		if (!Result_) { return false; }
+		if (!Result_)
+		{
+			return false;
+		}
 
 		// Turn off alpha blending.
 		DirectXManager::Instance() -> ToggleAlphaBlending(false);
@@ -609,7 +658,10 @@ bool MainScene::RenderScene(bool ShowText)
 	if (!IsUnderwater_ && ShowText)
 	{
 		Result_ = RenderText();
-		if (!Result_) { return false; }
+		if (!Result_)
+		{
+			return false;
+		}
 	}
 
 	// End rendering
@@ -622,7 +674,10 @@ bool MainScene::RenderWithPostProcessing()
 {
 	// Render the scene to the scene texture
 	Result_ = RenderToTexture();
-	if (!Result_) { return false; }
+	if (!Result_)
+	{
+		return false;
+	}
 
 	// Begin rendering
 	DirectXManager::Instance() -> BeginScene();
@@ -655,7 +710,10 @@ bool MainScene::RenderWithPostProcessing()
 
 	// Render the screens text
 	Result_ = RenderText();
-	if (!Result_) { return false; }
+	if (!Result_)
+	{
+		return false;
+	}
 
 	// Stop rendering
 	DirectXManager::Instance() -> EndScene();
@@ -729,7 +787,10 @@ bool MainScene::RenderReflection()
 	// Render the sky sphere
 	//Result_ = ShaderManager::Instance()->SkyRender(SkySphere_);
 	SkySphere_->Render();
-	if (!Result_) { return false; }
+	if (!Result_)
+	{
+		return false;
+	}
 
 	// Re-enable culling
 	DirectXManager::Instance() -> ToggleCulling(true);
@@ -740,7 +801,10 @@ bool MainScene::RenderReflection()
 	// Render the clouds
 	//Result_ = ShaderManager::Instance()->CloudRender(Clouds_);
 	Clouds_->Render();
-	if (!Result_) { return false; }
+	if (!Result_)
+	{
+		return false;
+	}
 
 	// Disable blending and re-enable the z buffer
 	DirectXManager::Instance() -> ToggleAlphaBlending(false);
@@ -804,7 +868,10 @@ bool MainScene::RenderToTexture(bool ShowText)
 
 	// Render the scene
 	Result_ = RenderScene(ShowText);
-	if (!Result_) { return false; }
+	if (!Result_)
+	{
+		return false;
+	}
 
 	// Reset rendering back to default
 	DirectXManager::Instance() -> SetBackBufferRenderTarget();
@@ -831,7 +898,10 @@ bool MainScene::RenderText()
 
 	// Render the text
 	Result_ = Text_ -> Render();
-	if (!Result_) { return false; }
+	if (!Result_)
+	{
+		return false;
+	}
 
 	// Disable blending
 	DirectXManager::Instance() -> ToggleAlphaBlending(false);

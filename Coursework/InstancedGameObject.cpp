@@ -68,6 +68,10 @@ bool InstancedGameObject::SendModelToPipeline(Mesh3D* objMesh)
 	// Set the type of primitive that should be rendered from this vertex buffer
 	DirectXManager::Instance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	// Clean Up
+	bufferPointers[0] = 0;
+	bufferPointers[1] = 0;
+
 	return true;
 }
 
@@ -114,6 +118,13 @@ void InstancedGameObject::RebuildInstanceBuffer()
 	if (InstanceCount_ == 0)
 	{
 		return;
+	}
+
+	// Delete Instance Buffer
+	if (InstanceBuffer_)
+	{
+		delete InstanceBuffer_;
+		InstanceBuffer_ = 0;
 	}
 
 	// Create the instance array.

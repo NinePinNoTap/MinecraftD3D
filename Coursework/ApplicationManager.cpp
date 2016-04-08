@@ -38,7 +38,10 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	//===================
 
 	Camera_ = new Camera;
-	if (!Camera_) { return false; }
+	if (!Camera_)
+	{
+		return false;
+	}
 	Camera_->Initialise();
 
 	//=========================
@@ -105,7 +108,10 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	//==================
 
 	Light_ = new Light;
-	if (!Light_) { return false; }
+	if (!Light_)
+	{
+		return false;
+	}
 	Light_->Initialise();
 	Light_->GetTransform()->SetPosition(-3500.0f, 9900.0f, 2100.0f);
 	Light_->SetAmbientColor(0.5f, 0.5f, 0.5f, 1.0f);

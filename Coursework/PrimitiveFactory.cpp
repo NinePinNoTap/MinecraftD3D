@@ -480,7 +480,10 @@ bool PrimitiveFactory::CreateSkyPlane(float quadCount, float planeWidth, float m
 
 	// Create the array to hold the sky plane coordinates.
 	meshData = new VertexData[(quadCount + 1) * (quadCount + 1)];
-	if (!meshData) { return false; }
+	if (!meshData)
+	{
+		return false;
+	}
 
 	// Determine the size of each quad on the sky plane.
 	quadSize = planeWidth / quadCount;
@@ -529,11 +532,17 @@ bool PrimitiveFactory::CreateSkyPlane(float quadCount, float planeWidth, float m
 
 	// Create the vertex array.
 	primitiveMesh = new VertexData[vertexCount];
-	if (!primitiveMesh) { return false; }
+	if (!primitiveMesh)
+	{
+		return false;
+	}
 
 	// Create the index array.
 	Indices = new unsigned long[indexCount];
-	if (!Indices) { return false; }
+	if (!Indices)
+	{
+		return false;
+	}
 
 	// Initialise the index into the vertex array.
 	index = 0;

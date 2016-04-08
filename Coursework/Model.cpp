@@ -61,6 +61,12 @@ void Model::UpdateMesh(int index, Mesh3D* mesh)
 		return;
 	}
 
+	// Delete Old Mesh
+	Meshes_[index]->Shutdown();
+	delete Meshes_[index];
+	Meshes_[index] = 0;
+
+	// Add New Mesh
 	Meshes_[index] = mesh;
 }
 
@@ -82,17 +88,36 @@ void Model::UpdateMaterial(int index, Material* material)
 		return;
 	}
 
-	// Update material
+	// Delete Old Mesh
+	delete Materials_[index];
+	Materials_[index] = 0;
+
+	// Add New Mesh
 	Materials_[index] = material;
 }
 
 void Model::ClearMeshes()
 {
+	// Clean Up
+	for (int i = 0; i < Meshes_.size(); i++)
+	{
+		Meshes_[i]->Shutdown();
+		delete Meshes_[i];
+		Meshes_[i] = 0;
+	}
+
 	Meshes_.clear();
 }
 
 void Model::ClearMaterials()
 {
+	// Clean Up
+	for (int i = 0; i < Meshes_.size(); i++)
+	{
+		delete Materials_[i];
+		Materials_[i] = 0;
+	}
+
 	Materials_.clear();
 }
 

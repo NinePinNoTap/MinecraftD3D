@@ -31,11 +31,11 @@ DirectXManager::~DirectXManager()
 
 bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 {
-	HRESULT Result_;
+	HRESULT result;
 	IDXGIFactory* factory;
 	IDXGIAdapter* adapter;
 	IDXGIOutput* adapterOutput;
-	unsigned int numModes, i, numerator, denominator, stringLength;
+	unsigned int numModes, numerator, denominator, stringLength;
 	DXGI_MODE_DESC* displayModeList;
 	DXGI_ADAPTER_DESC adapterDesc;
 	int error;
@@ -54,32 +54,50 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	VSyncEnabled_ = VSYNC_ENABLED;
 
 	// Create a DirectXManager graphics interface factory.
-	Result_ = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
-	if(FAILED(Result_)) { return false; }
+	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
+	if(FAILED(result))
+	{
+		return false;
+	}
 
 	// Use the factory to create an adapter for the primary graphics interface (video card).
-	Result_ = factory -> EnumAdapters(0, &adapter);
-	if(FAILED(Result_)) { return false; }
+	result = factory -> EnumAdapters(0, &adapter);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Enumerate the primary adapter output (monitor).
-	Result_ = adapter -> EnumOutputs(0, &adapterOutput);
-	if(FAILED(Result_)) { return false; }
+	result = adapter -> EnumOutputs(0, &adapterOutput);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Get the number of modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
-	Result_ = adapterOutput -> GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
-	if(FAILED(Result_)) { return false; }
+	result = adapterOutput -> GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Create a list to hold all the possible display modes for this monitor/video card combination.
 	displayModeList = new DXGI_MODE_DESC[numModes];
-	if(!displayModeList) { return false; }
+	if(!displayModeList)
+	{
+		return false;
+	}
 
 	// Now fill the display mode list structures.
-	Result_ = adapterOutput -> GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
-	if(FAILED(Result_)) { return false; }
+	result = adapterOutput -> GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
+	if(FAILED(result))
+	{
+		return false;
+	}
 
 	// Now go through all the display modes and find the one that matches the screen width and height.
 	// When a match is found store the numerator and denominator of the refresh rate for that monitor.
-	for(i=0; i<numModes; i++)
+	for(int i=0; i < numModes; i++)
 	{
 		if (displayModeList[i].Width == (unsigned int)WindowResolution.width)
 		{
@@ -92,15 +110,21 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	}
 
 	// Get the adapter (video card) description.
-	Result_ = adapter -> GetDesc(&adapterDesc);
-	if(FAILED(Result_)) { return false; }
+	result = adapter -> GetDesc(&adapterDesc);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Store the dedicated video card memory in megabytes.
 	VideoCardMemory = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
 
 	// Convert the name of the video card to a character array and store it.
 	error = wcstombs_s(&stringLength, VideoCardDescription, 128, adapterDesc.Description, 128);
-	if(error != 0) { return false; }
+	if(error != 0)
+	{
+		return false;
+	}
 
 	// Release the display mode list.
 	delete [] displayModeList;
@@ -177,16 +201,25 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	featureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	// Create the swap chain, Direct3D device, and Direct3D device context
-	Result_ = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1, D3D11_SDK_VERSION, &swapChainDesc, &SwapChain_, &Device_, NULL, &DeviceContext_);
-	if(FAILED(Result_)) { return false; }
+	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1, D3D11_SDK_VERSION, &swapChainDesc, &SwapChain_, &Device_, NULL, &DeviceContext_);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Get the pointer to the back buffer
-	Result_ = SwapChain_ -> GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
-	if(FAILED(Result_)) { return false; }
+	result = SwapChain_ -> GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Create the render target view with the back buffer pointer
-	Result_ = Device_ -> CreateRenderTargetView(backBufferPtr, NULL, &RenderTargetView_);
-	if(FAILED(Result_)) { return false; }
+	result = Device_ -> CreateRenderTargetView(backBufferPtr, NULL, &RenderTargetView_);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Release pointer to the back buffer as we no longer need it
 	backBufferPtr -> Release();
@@ -209,8 +242,11 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	depthBufferDesc.MiscFlags = 0;
 
 	// Create the texture for the depth buffer using the filled out description.
-	Result_ = Device_ -> CreateTexture2D(&depthBufferDesc, NULL, &DepthStencilBuffer_);
-	if(FAILED(Result_)) { return false; }
+	result = Device_ -> CreateTexture2D(&depthBufferDesc, NULL, &DepthStencilBuffer_);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Initialise the description of the stencil state.
 	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
@@ -237,8 +273,11 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	// Create the depth stencil state.
-	Result_ = Device_ -> CreateDepthStencilState(&depthStencilDesc, &DepthStencilState_);
-	if(FAILED(Result_)) { return false; }
+	result = Device_ -> CreateDepthStencilState(&depthStencilDesc, &DepthStencilState_);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Set the depth stencil state.
 	DeviceContext_ -> OMSetDepthStencilState(DepthStencilState_, 1);
@@ -252,8 +291,11 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	// Create the depth stencil view.
-	Result_ = Device_ -> CreateDepthStencilView(DepthStencilBuffer_, &depthStencilViewDesc, &DepthStencilView);
-	if(FAILED(Result_)) { return false; }
+	result = Device_ -> CreateDepthStencilView(DepthStencilBuffer_, &depthStencilViewDesc, &DepthStencilView);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
 	DeviceContext_ -> OMSetRenderTargets(1, &RenderTargetView_, DepthStencilView);
@@ -271,8 +313,11 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 	// Create the rasterizer state from the description we just filled out.
-	Result_ = Device_ -> CreateRasterizerState(&rasterDesc, &RasterState_);
-	if(FAILED(Result_)) { return false; }
+	result = Device_ -> CreateRasterizerState(&rasterDesc, &RasterState_);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Now set the rasterizer state.
 	DeviceContext_ -> RSSetState(RasterState_);
@@ -290,8 +335,11 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 	// Create the no culling rasterizer state.
-	Result_ = Device_ -> CreateRasterizerState(&rasterDesc, &RasterStateNoCulling_);
-	if(FAILED(Result_)) { return false; }
+	result = Device_ -> CreateRasterizerState(&rasterDesc, &RasterStateNoCulling_);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Setup the viewport for rendering.
 	Viewport_.Width = (float)WindowResolution.width;
@@ -338,8 +386,11 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	depthDisabledStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	// Create the state using the device.
-	Result_ = Device_ -> CreateDepthStencilState(&depthDisabledStencilDesc, &DepthDisabledStencilState_);
-	if(FAILED(Result_)) { return false; }
+	result = Device_ -> CreateDepthStencilState(&depthDisabledStencilDesc, &DepthDisabledStencilState_);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Clear the blend state description.
 	ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
@@ -355,15 +406,21 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 
 	// Create the blend state using the description.
-	Result_ = Device_ -> CreateBlendState(&blendStateDescription, &AlphaEnableBlendingState_);
-	if(FAILED(Result_)) { return false; }
+	result = Device_ -> CreateBlendState(&blendStateDescription, &AlphaEnableBlendingState_);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Modify the description to create an alpha disabled blend state description.
 	blendStateDescription.RenderTarget[0].BlendEnable = FALSE;
 
 	// Create the second blend state using the description.
-	Result_ = Device_ -> CreateBlendState(&blendStateDescription, &NormalBlendingState_);
-	if(FAILED(Result_)) { return false; }
+	result = Device_ -> CreateBlendState(&blendStateDescription, &NormalBlendingState_);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Create a secondary alpha blend state description.
 	blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
@@ -376,8 +433,11 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 
 	// Create the blend state using the description.
-	Result_ = Device_ -> CreateBlendState(&blendStateDescription, &AlphaCloudBlendState_);
-	if(FAILED(Result_)) { return false; }
+	result = Device_ -> CreateBlendState(&blendStateDescription, &AlphaCloudBlendState_);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Create an fire alpha enabled blend state description.
 	blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
@@ -390,8 +450,8 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 
 	// Create the blend state using the description.
-	Result_ = Device_ -> CreateBlendState(&blendStateDescription, &AlphaFireBlendState_);
-	if (FAILED(Result_))
+	result = Device_ -> CreateBlendState(&blendStateDescription, &AlphaFireBlendState_);
+	if (FAILED(result))
 	{
 		return false;
 	}

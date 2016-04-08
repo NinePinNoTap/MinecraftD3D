@@ -193,7 +193,7 @@ void GameShader::AddLayout(LPCSTR semanticName, UINT semanticIndex, DXGI_FORMAT 
 
 void GameShader::AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE AddressUVW, FLOAT MipLODBias, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC ComparisonFunc, D3DXVECTOR4 borderColor, FLOAT MinLOD, FLOAT MaxLOD)
 {
-	HRESULT Result_;
+	HRESULT result;
 	D3D11_SAMPLER_DESC samplerDesc;
 	ID3D11SamplerState* samplerState;
 
@@ -225,7 +225,7 @@ void GameShader::AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE
 
 bool GameShader::BuildShader(HWND hwnd)
 {
-	HRESULT Result_;
+	HRESULT result;
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* hullShaderBuffer;
@@ -416,7 +416,7 @@ void GameShader::SendTextureToShader(int shaderSlot, ID3D11ShaderResourceView* s
 
 HRESULT GameShader::CompileShader(HWND hwnd, string filename, LPCSTR EntryPoint, LPCSTR Version, ID3D10Blob** Buffer)
 {
-	HRESULT Result_;
+	HRESULT result;
 	ID3D10Blob* errorMessage;
 	std::wstring output;
 	

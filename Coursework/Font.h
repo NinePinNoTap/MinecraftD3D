@@ -24,16 +24,16 @@ public:
 	~Font();
 
 	// Initialising
-	bool Initialise(const char* fontFilename, int letterCount);
+	bool Initialise(const string fontFilename, int letterCount);
 
 	// Shutdown
 	void Shutdown();
 	
 	// Building
-	void BuildVertexArray(void* vertices, char* sentence, float drawX, float drawY);
+	void BuildVertexArray(VertexData* vertices, string sentence, float drawX, float drawY);
 
 	// Getter
-	float GetRenderSize(char* text);
+	float GetRenderSize(string text);
 
 private:
 	// Font Data

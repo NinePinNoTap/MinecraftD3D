@@ -15,7 +15,7 @@ Font::~Font()
 }
 
 // Initialising
-bool Font::Initialise(const char* fontFilename, int letterCount)
+bool Font::Initialise(const string fontFilename, int letterCount)
 {
 	ifstream fin;
 	int i;
@@ -74,24 +74,16 @@ void Font::Shutdown()
 }
 
 // Building
-void Font::BuildVertexArray(void* vertices, char* sentence, float drawX, float drawY)
+void Font::BuildVertexArray(VertexData* vertexData, string sentence, float drawX, float drawY)
 {
-	VertexData* vertexPtr;
-	int numLetters;
 	int index;
 	int letter;
-
-	// Coerce the vertices into a VertexType structure
-	vertexPtr = (VertexData*)vertices;
-
-	// Get the number of letters in the sentence
-	numLetters = (int)strlen(sentence);
 
 	// Initialise the index to the vertex array
 	index = 0;
 
 	// Draw each letter onto a quad
-	for (int i = 0; i<numLetters; i++)
+	for (int i = 0; i<sentence.length(); i++)
 	{
 		letter = ((int)sentence[i]) - 32;
 
@@ -103,29 +95,29 @@ void Font::BuildVertexArray(void* vertices, char* sentence, float drawX, float d
 		else
 		{
 			// First triangle in quad.
-			vertexPtr[index].position = D3DXVECTOR3(drawX, drawY, 0.0f);  // Top left
-			vertexPtr[index].texture = D3DXVECTOR2(Font_[letter].left, 0.0f);
+			vertexData[index].position = D3DXVECTOR3(drawX, drawY, 0.0f);  // Top left
+			vertexData[index].texture = D3DXVECTOR2(Font_[letter].left, 0.0f);
 			index++;
 
-			vertexPtr[index].position = D3DXVECTOR3((drawX + Font_[letter].size), (drawY - 16), 0.0f);  // Bottom right
-			vertexPtr[index].texture = D3DXVECTOR2(Font_[letter].right, 1.0f);
+			vertexData[index].position = D3DXVECTOR3((drawX + Font_[letter].size), (drawY - 16), 0.0f);  // Bottom right
+			vertexData[index].texture = D3DXVECTOR2(Font_[letter].right, 1.0f);
 			index++;
 
-			vertexPtr[index].position = D3DXVECTOR3(drawX, (drawY - 16), 0.0f);  // Bottom left
-			vertexPtr[index].texture = D3DXVECTOR2(Font_[letter].left, 1.0f);
+			vertexData[index].position = D3DXVECTOR3(drawX, (drawY - 16), 0.0f);  // Bottom left
+			vertexData[index].texture = D3DXVECTOR2(Font_[letter].left, 1.0f);
 			index++;
 
 			// Second triangle in quad.
-			vertexPtr[index].position = D3DXVECTOR3(drawX, drawY, 0.0f);  // Top left
-			vertexPtr[index].texture = D3DXVECTOR2(Font_[letter].left, 0.0f);
+			vertexData[index].position = D3DXVECTOR3(drawX, drawY, 0.0f);  // Top left
+			vertexData[index].texture = D3DXVECTOR2(Font_[letter].left, 0.0f);
 			index++;
 
-			vertexPtr[index].position = D3DXVECTOR3(drawX + Font_[letter].size, drawY, 0.0f);  // Top right
-			vertexPtr[index].texture = D3DXVECTOR2(Font_[letter].right, 0.0f);
+			vertexData[index].position = D3DXVECTOR3(drawX + Font_[letter].size, drawY, 0.0f);  // Top right
+			vertexData[index].texture = D3DXVECTOR2(Font_[letter].right, 0.0f);
 			index++;
 
-			vertexPtr[index].position = D3DXVECTOR3((drawX + Font_[letter].size), (drawY - 16), 0.0f);  // Bottom right
-			vertexPtr[index].texture = D3DXVECTOR2(Font_[letter].right, 1.0f);
+			vertexData[index].position = D3DXVECTOR3((drawX + Font_[letter].size), (drawY - 16), 0.0f);  // Bottom right
+			vertexData[index].texture = D3DXVECTOR2(Font_[letter].right, 1.0f);
 			index++;
 
 			// Update the x location for drawing by the size of the letter and one pixel
@@ -136,34 +128,33 @@ void Font::BuildVertexArray(void* vertices, char* sentence, float drawX, float d
 	return;
 }
 
-float Font::GetRenderSize(char* text)
+float Font::GetRenderSize(string text)
 {
-	int LetterID;
-	float Total;
+	int letterID;
+	float totalWidth;
 	int Length;
 	
 	// Initialise vars
-	Total = 0;
-	Length = (int)strlen(text);
+	totalWidth = 0;
 
 	// Loop through the sentence and calculate width
-	for (int i = 0; i < Length; i++)
+	for (int i = 0; i < text.length(); i++)
 	{
 		// Convert to char to ascii ID
-		LetterID = ((int)text[i]) - 32;
+		letterID = ((int)text[i]) - 32;
 
 		// If the letter is a space
-		if (LetterID == 0)
+		if (letterID == 0)
 		{
 			// Adjust accordingly
-			Total += 3.0f;
+			totalWidth += 3.0f;
 		}
 		else
 		{
 			// Adjust by the width of the letter
-			Total += (Font_[LetterID].size + 1);
+			totalWidth += (Font_[letterID].size + 1);
 		}
 	}
 
-	return Total;
+	return totalWidth;
 }

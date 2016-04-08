@@ -20,7 +20,10 @@ bool TerrainFactory::CreateTerrain(Rect3D terrainSize, Vector2 textureRepeat, in
 
 	// Create the model
 	modelData = new VertexData[terrainVertices];
-	if (!modelData) { return false; }
+	if (!modelData)
+	{
+		return false;
+	}
 
 	// Calculate texture tiling
 	float uW = (textureRepeat.x / terrainSize.width);
@@ -137,14 +140,20 @@ bool TerrainFactory::BuildModelFromModelData(Rect3D Terrain, VertexData* modelDa
 
 	// Create the vertex array
 	terrainMesh = new VertexData[vertexCount];
-	if (!terrainMesh) { return false; }
+	if (!terrainMesh)
+	{
+		return false;
+	}
 
 	// Set the index count to the same as the vertex count
 	indexCount = vertexCount;
 
 	// Create the index array
 	Indices = new unsigned long[indexCount];
-	if (!Indices) { return false; }
+	if (!Indices)
+	{
+		return false;
+	}
 
 	// Load the terrain model with the height map terrain data.
 	index = 0;
@@ -234,7 +243,10 @@ bool TerrainFactory::CalculateTerrainNormals(Rect3D terrainSize, VertexData* mod
 
 	// Create a temporary array to hold the un-normalized normal vectors.
 	Normals = new Vector3[(terrainSize.height - 1) * (terrainSize.width - 1)];
-	if (!Normals) { return false; }
+	if (!Normals)
+	{
+		return false;
+	}
 
 	// Go through all the faces in the mesh and calculate their normals
 	for (int j = 0; j<(terrainSize.height - 1); j++)

@@ -5,11 +5,7 @@ GameObject::GameObject()
 {
 	// Initialise the pointers
 	Model_ = 0;
-
-	// Initialise the shader
 	Shader_ = 0;
-
-	// Initialise default transforms
 	Transform_ = 0;
 
 	// Initialise default flags
@@ -49,15 +45,8 @@ bool GameObject::Initialise(const char* filename)
 	// Create Model
 	//==============
 
-	Model_ = new Model;
+	AssetManager::Instance()->LoadModel(&Model_, filename);
 	if (!Model_)
-	{
-		return false;
-	}
-
-	// Load Model
-	Result_ = objLoader.LoadModel(filename, *Model_);
-	if (!Result_)
 	{
 		return false;
 	}
@@ -160,6 +149,9 @@ bool GameObject::SendModelToPipeline(Mesh3D* objMesh)
 
 	// Set the type of primitive that should be rendered from this vertex buffer
 	DirectXManager::Instance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	vertexBuffer = 0;
+	indexBuffer = 0;
 
 	return true;
 }

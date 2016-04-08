@@ -19,7 +19,6 @@ public:
 	template <class T>
 	bool BuildBuffer()
 	{
-		HRESULT Result_;
 		D3D11_BUFFER_DESC bufferDesc;
 
 		// Define the buffer description
@@ -31,8 +30,8 @@ public:
 		bufferDesc.StructureByteStride = 0;
 
 		// Create the buffer
-		Result_ = DirectXManager::Instance()->GetDevice()->CreateBuffer(&bufferDesc, 0, &Buffer_);
-		if (FAILED(Result_))
+		result = DirectXManager::Instance()->GetDevice()->CreateBuffer(&bufferDesc, 0, &Buffer_);
+		if (FAILED(result))
 		{
 			return false;
 		}
@@ -60,7 +59,7 @@ public:
 
 private:
 	ID3D11Buffer* Buffer_;
-	HRESULT Result_;
+	HRESULT result;
 };
 
 

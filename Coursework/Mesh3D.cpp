@@ -26,7 +26,7 @@ bool Mesh3D::InitialiseBuffers()
 	D3D11_BUFFER_DESC indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData;
 	D3D11_SUBRESOURCE_DATA indexData;
-	HRESULT Result_;
+	HRESULT result;
 
 	// Set up the description of the vertex buffer
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;

@@ -60,24 +60,26 @@ void Text::Shutdown()
 }
 
 // Text Generation
-void Text::CreateText(char* text, Vector2 position, D3DXVECTOR4 colour, Alignment align)
+void Text::CreateText(string text, Vector2 position, D3DXVECTOR4 colour, Alignment align)
 {
 	Material* createdMaterial = 0;
 
 	// Create the sentence
-	SentenceType tempSentence;
+	SentenceType sentence;
 
 	// Set sentence properties
-	tempSentence.ID = Sentences_.size();
-	tempSentence.text = text;
-	tempSentence.position = position;
-	tempSentence.align = align;
+	sentence.ID = Sentences_.size();
+	sentence.text = text;
+	sentence.position = position;
+	sentence.align = align;
+	sentence.value = 0;
+	sentence.valueSet = false;
 
 	//==============
 	// Create Model
 	//==============
 
-	Result_ = BuildSentence(tempSentence);
+	Result_ = BuildSentence(sentence);
 	if (!Result_)
 	{
 		return;
@@ -99,10 +101,13 @@ void Text::CreateText(char* text, Vector2 position, D3DXVECTOR4 colour, Alignmen
 	Model_->AddMaterial(createdMaterial);
 
 	// Add to the array
-	Sentences_.push_back(tempSentence);
+	Sentences_.push_back(sentence);
+
+	// Clean Up
+	createdMaterial = 0;
 }
 
-bool Text::SetText(int ID, char* text)
+bool Text::SetText(int ID, string text)
 {
 	// Update text
 	Sentences_[ID].text = text;
@@ -117,27 +122,21 @@ bool Text::SetText(int ID, char* text)
 	return true;
 }
 
-bool Text::SetText(int ID, char* text, float value)
+bool Text::SetValue(int ID, float value)
 {
-	int TextLength;
-	char* TextToDisplay;
+	// Update text
+	Sentences_[ID].value = value;
 
-	// Calculate how big the array needs to be
-	TextLength = strlen(text) + ToStr(value).length();
+	// Flag we have set the value
+	Sentences_[ID].valueSet = true;
 
-	// Create the array to store the text
-	TextToDisplay = new char[TextLength];
-
-	// Add the data to the array
-	strcpy(TextToDisplay, text);
-	strcat(TextToDisplay, ToStr(value).c_str());
-
-	// Update the text
-	Result_ = SetText(ID, TextToDisplay);
+	// Rebuild sentence with new information
+	Result_ = BuildSentence(Sentences_[ID]);
 	if (!Result_)
 	{
 		return false;
 	}
+
 
 	return true;
 }
@@ -170,23 +169,17 @@ bool Text::Render()
 		return true;
 	}
 
-	Mesh3D* objMesh;
-	Material* objMaterial;
-
 	// Look through sentences and render them
 	for (unsigned int i = 0; i < Sentences_.size(); i++)
 	{
 		PrepareSentence(i);
 
-		objMesh = Model_->GetMesh(i);
-		objMaterial = Model_->GetMaterial(i);
-
-		Result_ = Shader_->Prepare(objMesh, objMaterial);
+		Result_ = Shader_->Prepare(Model_->GetMesh(i), Model_->GetMaterial(i));
 		if (!Result_)
 		{
 			return false;
 		}
-		Shader_->Render(objMesh->GetIndexCount());
+		Shader_->Render(Model_->GetMesh(i)->GetIndexCount());
 	}
 
 	return true;
@@ -198,11 +191,28 @@ bool Text::BuildSentence(SentenceType sentence)
 	VertexData* textMesh;
 	unsigned long* indices;
 	float drawX, drawY;
-	HRESULT Result_;
+	HRESULT result;
 	int renderLength, vertexCount, indexCount;
+	string finalText, convertedValue;
+
+	// Define final output
+	finalText = sentence.text;
+
+	// Add a value if we have specified
+	if (sentence.valueSet)
+	{
+		// Convert value and remove trailing characters
+		convertedValue = to_string(sentence.value);
+		convertedValue.erase(convertedValue.find_last_not_of('0') + 1, std::string::npos);
+		if (convertedValue[convertedValue.size() - 1] == '.')
+		{
+			convertedValue.erase(convertedValue.end() - 1);
+		}
+		finalText += convertedValue;
+	}
 
 	// Get the number of letters in the sentence.
-	numLetters = (int)strlen(sentence.text);
+	numLetters = finalText.length();
 
 	// Calculate mesh counters
 	vertexCount = 6 * numLetters;
@@ -227,7 +237,7 @@ bool Text::BuildSentence(SentenceType sentence)
 	drawY = (float)((WindowResolution_.height / 2) - sentence.position.y);
 
 	// Calculate how big the sentence will be to draw on screen
-	renderLength = Font_->GetRenderSize(sentence.text);
+	renderLength = Font_->GetRenderSize(finalText);
 
 	// Adjust starting draw position based on alignment
 	if (sentence.align == CENTRE)
@@ -240,7 +250,7 @@ bool Text::BuildSentence(SentenceType sentence)
 	}
 
 	// Use the font class to build the vertex array from the sentence text and sentence draw location.
-	Font_->BuildVertexArray((void*)textMesh, sentence.text, drawX, drawY);
+	Font_->BuildVertexArray(textMesh, finalText, drawX, drawY);
 
 	// Create a mesh for the text
 	Mesh3D* createdMesh = new Mesh3D;
@@ -255,6 +265,11 @@ bool Text::BuildSentence(SentenceType sentence)
 
 	// Update or add mesh
 	Model_->UpdateMesh(sentence.ID, createdMesh);
+
+	// Cleanup
+	textMesh = 0;
+	indices = 0;
+	createdMesh = 0;
 
 	return true;
 }
@@ -281,6 +296,10 @@ bool Text::PrepareSentence(int index)
 
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles
 	DirectXManager::Instance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// Cleanup
+	vertexBuffer = 0;
+	indexBuffer = 0;
 
 	return true;
 }
