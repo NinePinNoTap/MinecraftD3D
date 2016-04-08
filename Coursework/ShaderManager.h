@@ -24,6 +24,7 @@
 #include "FontShader.h"
 #include "InstancedLightShader.h"
 #include "LightShader.h"
+#include "OceanShader.h"
 #include "SkyShader.h"
 #include "TerrainReflectionShader.h"
 #include "TerrainShader.h"
@@ -52,7 +53,7 @@ public:
 	MatrixBuffer GetMatrixBuffer() { return MatrixBuffer_; }
 	
 	// Shaders
-	bool OceanRender(Ocean* ocean, Texture* refraction, Texture* reflection);
+	//bool OceanRender(Ocean* ocean, Texture* refraction, Texture* reflection);
 	bool TextureRender(ParticleSystem* particles);
 	
 	GameShader* GetShader(string keyName)
@@ -73,7 +74,7 @@ private:
 	FontShader* FontShader_;
 	InstancedLightShader* InstancedLightShader_;
 	LightShader* LightShader_;
-	GameShader* OceanShader_;
+	OceanShader* OceanShader_;
 	SkyShader* SkySphereShader_;
 	TerrainShader* TerrainShader_;
 	TerrainReflectionShader* TerrainReflectionShader_;

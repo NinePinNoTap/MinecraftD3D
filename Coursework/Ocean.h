@@ -27,6 +27,7 @@ public:
 
 	// Frame
 	bool Frame();
+	bool Render();
 
 	// Setter
 	void ToggleTime(bool);

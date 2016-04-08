@@ -1,4 +1,5 @@
 #include "Ocean.h"
+#include "AssetManager.h"
 
 Ocean::Ocean() : GameObject()
 {
@@ -16,6 +17,8 @@ Ocean::~Ocean()
 bool Ocean::Initialise(string textureFilename, Rect3D waterResolution)
 {
 	PrimitiveFactory primitiveFactory;
+	Texture* refractionTexture;
+	Texture* reflectionTexture;
 
 	// Initialise water variables
 	WaterHeight_ = waterResolution.depth;
@@ -50,12 +53,19 @@ bool Ocean::Initialise(string textureFilename, Rect3D waterResolution)
 	// Create Material
 	//=================
 
+	// Retrieve refraction and reflection texture pointers
+	AssetManager::Instance()->LoadTexture(&refractionTexture, "RefractionTexture");
+	AssetManager::Instance()->LoadTexture(&reflectionTexture, "ReflectionTexture");
+
+	// Create material
 	Material* newMaterial = new Material;
 	Result_ = newMaterial->SetNormalTexture(textureFilename);
 	if (!Result_)
 	{
 		return false;
 	}
+	newMaterial->SetTexture("RefractionTexture", refractionTexture);
+	newMaterial->SetTexture("ReflectionTexture", reflectionTexture);
 	Model_->AddMaterial(newMaterial);
 
 	//==================
@@ -75,6 +85,12 @@ bool Ocean::Initialise(string textureFilename, Rect3D waterResolution)
 	Frame_ = 0;
 	IsReflectable_ = false;
 	IsActive_ = true;
+	SetShader("ocean");
+
+	// Clean Up
+	newMaterial = 0;
+	refractionTexture = 0;
+	reflectionTexture = 0;
 
 	return true;
 }
@@ -110,6 +126,37 @@ bool Ocean::Frame()
 	Frame_ += WaveSpeed_;
 
 	return true;
+}
+
+bool Ocean::Render()
+{
+	// Make sure the object is active
+	if (!IsActive_)
+		return true;
+
+	// Make sure we have a shader to use
+	if (!Shader_)
+		return true;
+
+	if (!Model_)
+		return true;
+
+	// Render the model
+	for (int i = 0; i < Model_->GetMeshCount(); i++)
+	{
+		// Make sure the mesh is active for it to be rendered
+		if (Model_->GetMesh(i)->IsActive())
+		{
+			// Send model to pipeline
+			SendModelToPipeline(Model_->GetMesh(i));
+
+			// Send material to shader
+			Shader_->Prepare(Model_->GetMesh(i), Model_->GetMaterial(i), Transform_);
+
+			// Render Object
+			Shader_->Render(Model_->GetMesh(i)->GetIndexCount());
+		}
+	}
 }
 
 bool Ocean::SendModelToPipeline(Mesh3D* objMesh)

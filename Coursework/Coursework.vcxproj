@@ -107,6 +107,7 @@
     <ClCompile Include="Mesh3D.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
+    <ClCompile Include="OceanShader.cpp" />
     <ClCompile Include="PerformanceManager.cpp" />
     <ClCompile Include="PerlinNoiseGenerator.cpp" />
     <ClCompile Include="PrimitiveFactory.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="InstancedLightShader.h" />
     <ClInclude Include="Mesh3D.h" />
     <ClInclude Include="OBJLoader.h" />
+    <ClInclude Include="OceanShader.h" />
     <ClInclude Include="PrimitiveFactory.h" />
     <ClInclude Include="ColourShader.h" />
     <ClInclude Include="CloudShader.h" />

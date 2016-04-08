@@ -251,6 +251,9 @@
     <ClCompile Include="InstancedGameObject.cpp">
       <Filter>Framework\Graphics\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="OceanShader.cpp">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h">
@@ -444,6 +447,9 @@
     </ClInclude>
     <ClInclude Include="InstancedGameObject.h">
       <Filter>Framework\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="OceanShader.h">
+      <Filter>Framework\Shader\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

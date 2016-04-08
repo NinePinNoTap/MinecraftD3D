@@ -43,6 +43,14 @@ bool MainScene::Initialise(HWND hwnd)
 	Camera::Instance()->AllowFlying(true);
 	Camera::Instance()->SetSpeed(0.5f);
 
+	//============================
+	// Initialise Render Textures
+	//============================
+
+	AssetManager::Instance()->LoadTexture(&RenderTexture_, "RenderTexture", Rect2D(windowWidth, windowHeight));
+	AssetManager::Instance()->LoadTexture(&ReflectionTexture_, "ReflectionTexture", Rect2D(windowWidth, windowHeight));
+	AssetManager::Instance()->LoadTexture(&RefractionTexture_, "RefractionTexture", Rect2D(windowWidth, windowHeight));
+
 	//=======================
 	// Initialise the Clouds
 	//=======================
@@ -101,14 +109,6 @@ bool MainScene::Initialise(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialise the particle WindowManager.", L"Error", MB_OK);
 		return false;
 	}
-
-	//============================
-	// Initialise Render Textures
-	//============================
-
-	AssetManager::Instance()->LoadTexture(&RenderTexture_, "RenderTexture", Rect2D(windowWidth, windowHeight));
-	AssetManager::Instance()->LoadTexture(&ReflectionTexture_, "ReflectionTexture", Rect2D(windowWidth, windowHeight));
-	AssetManager::Instance()->LoadTexture(&RefractionTexture_, "RefractionTexture", Rect2D(windowWidth, windowHeight));
 
 	//=======================
 	// Initialise 2D Bitmaps
@@ -504,15 +504,15 @@ bool MainScene::Render()
 	// Render Refraction To Texture
 	//==============================
 
-	//Result_ = RenderRefraction();
-	//if (!Result_) { return false; }
+	Result_ = RenderRefraction();
+	if (!Result_) { return false; }
 
 	//==============================
 	// Render Reflection To Texture
 	//==============================
 
-	//Result_ = RenderReflection();
-	//if (!Result_) { return false; }
+	Result_ = RenderReflection();
+	if (!Result_) { return false; }
 
 	//=============================
 	// Render Refraction To Screen
@@ -576,7 +576,7 @@ bool MainScene::RenderScene(bool ShowText)
 	DirectXManager::Instance() -> EnableSecondBlendState();
 
 	// Render the clouds
-	//Clouds_->Render();
+	Clouds_->Render();
 
 	// Enable culling and the z buffer
 	DirectXManager::Instance() -> ToggleAlphaBlending(false);
@@ -600,6 +600,11 @@ bool MainScene::RenderScene(bool ShowText)
 	// Render the Ocean 
 	//==================
 
+	Result_ = Ocean_->Render();
+	if (!Result_)
+	{
+		return false;
+	}
 	//Result_ = ShaderManager::Instance()->OceanRender(Ocean_, RefractionTexture_, ReflectionTexture_);
 	//if (!Result_) { return false; }
 
@@ -785,7 +790,6 @@ bool MainScene::RenderReflection()
 	DirectXManager::Instance() -> ToggleZBuffer(false);
 
 	// Render the sky sphere
-	//Result_ = ShaderManager::Instance()->SkyRender(SkySphere_);
 	SkySphere_->Render();
 	if (!Result_)
 	{
@@ -799,7 +803,6 @@ bool MainScene::RenderReflection()
 	DirectXManager::Instance() -> EnableSecondBlendState();
 
 	// Render the clouds
-	//Result_ = ShaderManager::Instance()->CloudRender(Clouds_);
 	Clouds_->Render();
 	if (!Result_)
 	{
@@ -835,9 +838,9 @@ bool MainScene::RenderReflection()
 				return false;
 			}
 		}
-	}
+	}*/
 
-	Chunk_->Render();*/
+	Chunk_->Render();
 
 	//====================
 	// Render the Terrain
