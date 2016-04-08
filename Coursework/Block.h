@@ -40,13 +40,15 @@ private:
 	void HandleNeighbours();
 	bool CheckNeighbour(int i);
 
+	// Block Properties
 	string BlockName_;
 	BlockType BlockType_;
 	D3DXVECTOR3 Position_;
 	D3DXVECTOR2 TextureOffset_;
-	D3DXVECTOR3 TotalTextures_;
+	D3DXVECTOR2 TotalTextures_;
 	bool IsSolid_;
 	bool IsActive_;
 
+	// Neighbours
 	Block* NeighbourBlocks_[6];
 };

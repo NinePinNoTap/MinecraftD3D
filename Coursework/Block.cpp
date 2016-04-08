@@ -70,7 +70,8 @@ void Block::CopyFrom(Block& block)
 	BlockName_ = block.BlockName_;
 	BlockType_ = block.BlockType_;
 	TextureOffset_ = block.TextureOffset_;
-	IsSolid_ = block.BlockType_;
+	TotalTextures_ = block.TotalTextures_;
+	IsSolid_ = block.IsSolid_;
 	IsActive_ = true;
 }
 
@@ -135,7 +136,7 @@ InstanceData Block::GetInstance()
 	InstanceData instanceData;
 	instanceData.position = Position_;
 	instanceData.textureOffset = TextureOffset_;
-	instanceData.textureTotal = D3DXVECTOR2(4, 3);
+	instanceData.textureTotal = TotalTextures_;
 
 	return instanceData;
 }
