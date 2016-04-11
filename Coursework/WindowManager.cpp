@@ -84,13 +84,23 @@ void WindowManager::InitialiseWindows(int& screenWidth, int& screenHeight)
 	}
 	else
 	{
-		// If windowed then set it to 800x600 resolution.
+		// Set to default window resolution
 		screenWidth = SCREEN_WIDTH;
 		screenHeight = SCREEN_HEIGHT;
 
-		// Place the window in the middle of the screen.
+		// Place the window in the middle of the active window space (top of screen to top of taskbar)
 		screenPosition.x = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
 		screenPosition.y = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
+
+		// Get size of the task bar
+		RECT rect;
+		HWND taskBar = FindWindow(L"Shell_traywnd", NULL);
+		if (taskBar && GetWindowRect(taskBar, &rect))
+		{
+			// Move the window up
+			float taskbarHeight = (rect.bottom - rect.top);
+			screenPosition.y -= (taskbarHeight / 2);
+		}
 	}
 
 	// Create the window with the screen settings and get the handle to it.

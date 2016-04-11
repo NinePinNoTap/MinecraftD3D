@@ -36,7 +36,7 @@ const float CAMERA_SENSITIVITY  = 10.0f;
 //===============
 
 // How big the block model is
-const int BLOCK_SIZE = 2;
+const int BLOCK_SIZE = 1;
 
 // How many blocks in a chunk
 const int NO_OF_BLOCKS_WIDTH = 16;
