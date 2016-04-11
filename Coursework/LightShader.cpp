@@ -43,22 +43,15 @@ bool LightShader::Initialise(HWND hwnd)
 	return true;
 }
 
-bool LightShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+bool LightShader::Prepare(Material* objMaterial, Transform* objTransform)
 {
-	// Model Properties
-	if (!objMesh)
-	{
-		MessageBox(NULL, L"No Model Attached - Light", L"Error", MB_OK);
-		return false;
-	}
 	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Light", L"Error", MB_OK);
 		return false;
 	}
 
-	int indexCount = objMesh->GetIndexCount();
-	ID3D11ShaderResourceView* texture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* baseTexture = objMaterial->GetBaseTexture();
 
 	// Create camera buffer
 	CameraBuffer cameraBuffer;
@@ -83,8 +76,8 @@ bool LightShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* obj
 	objTransform->GetWorldMatrix(matrixBuffer.world);
 	TransposeMatrix(matrixBuffer);
 
-	// Pass the texture to the shader
-	SendTextureToShader(0, texture);
+	// Pass the baseTexture to the shader
+	SendTextureToShader(0, baseTexture);
 
 	// Update Buffers
 	UpdateBuffer(VertexShader, 0, matrixBuffer);

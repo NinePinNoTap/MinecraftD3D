@@ -33,29 +33,22 @@ bool TextureShader::Initialise(HWND hwnd)
 	Result_ = BuildShader(hwnd);
 	if (!Result_)
 	{
-		OutputToDebug("Could not initialise texture shader.");
+		OutputToDebug("Could not initialise baseTexture shader.");
 		return false;
 	}
 
 	return true;
 }
 
-bool TextureShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+bool TextureShader::Prepare(Material* objMaterial, Transform* objTransform)
 {
-	// Model Properties
-	if (!objMesh)
-	{
-		MessageBox(NULL, L"No Model Attached - Texture", L"Error", MB_OK);
-		return false;
-	}
 	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Texture", L"Error", MB_OK);
 		return false;
 	}
 
-	int indexCount = objMesh->GetIndexCount();
-	ID3D11ShaderResourceView* texture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* baseTexture = objMaterial->GetBaseTexture();
 
 	// Create the world matrix for the model
 	MatrixBuffer matrixBuffer = ShaderManager::Instance()->GetMatrixBuffer();
@@ -66,8 +59,8 @@ bool TextureShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* o
 	UpdateBuffer(VertexShader, 0, matrixBuffer);
 	SendBuffersToShader();
 
-	// Pass the texture into the shader
-	SendTextureToShader(0, texture);
+	// Pass the baseTexture into the shader
+	SendTextureToShader(0, baseTexture);
 
 	return true;
 }

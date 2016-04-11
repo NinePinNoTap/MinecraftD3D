@@ -143,6 +143,8 @@ void VoxelTerrain::GenerateTerrain()
 	// Generate a random seed for the noise to use
 	perlinNoise.SetSeed(rand() % 10000);
 
+	int workArea = TERRAIN_HEIGHT - TERRAIN_BASE_HEIGHT;
+
 	for (int x = 0; x < TERRAIN_WIDTH; x++)
 	{
 		for (int z = 0; z < TERRAIN_DEPTH; z++)
@@ -151,27 +153,35 @@ void VoxelTerrain::GenerateTerrain()
 			double b = (double)x / (double)TERRAIN_DEPTH * 2;
 
 			float noise = perlinNoise.CreateNoise(a, b, 0.8f);
-			float height = floor(TERRAIN_HEIGHT * noise);
-			// NEED A BASE HEIGHT VARIABLE HERE SO NOISE IS CREATED ON TOP OF THE GROUND LEVEL
+			float height = floor(workArea * noise);
+			height += TERRAIN_BASE_HEIGHT;
 
 			// Loop through y dimension
 			for (int y = height; y >= 0; y--)
 			{
-				if (y > height - 10)
+				if (y < 10)
 				{
-					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
+					int r = rand() % 50;
+					if (r < 3)
+					{
+						GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("diamond"));
+					}
+					else
+					{
+						GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
+					}
 				}
-				else if (y > height - 32)
-				{
-					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
-				}
-				else if (y > height - 40)
+				else if (y < 32)
 				{
 					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
 				}
-				else if (y > height - 60)
+				else if (y < 40)
 				{
-					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("diamond"));
+					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
+				}
+				else
+				{
+					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
 				}
 			}
 		}

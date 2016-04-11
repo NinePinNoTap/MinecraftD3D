@@ -45,22 +45,15 @@ bool InstancedLightShader::Initialise(HWND hwnd)
 	return true;
 }
 
-bool InstancedLightShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+bool InstancedLightShader::Prepare(Material* objMaterial, Transform* objTransform)
 {
-	// Model Properties
-	if (!objMesh)
-	{
-		MessageBox(NULL, L"No Model Attached - InstancedLight", L"Error", MB_OK);
-		return false;
-	}
 	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached -  InstancedLight", L"Error", MB_OK);
 		return false;
 	}
 
-	int indexCount = objMesh->GetIndexCount();
-	ID3D11ShaderResourceView* texture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* baseTexture = objMaterial->GetBaseTexture();
 
 	// Create camera buffer
 	CameraBuffer cameraBuffer;
@@ -85,14 +78,15 @@ bool InstancedLightShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Trans
 	objTransform->GetWorldMatrix(matrixBuffer.world);
 	TransposeMatrix(matrixBuffer);
 
-	// Pass the texture to the shader
-	SendTextureToShader(0, texture);
+	// Pass the baseTexture to the shader
+	SendTextureToShader(0, baseTexture);
 
 	// Update Buffers
 	UpdateBuffer(VertexShader, 0, matrixBuffer);
 	UpdateBuffer(VertexShader, 1, cameraBuffer);
 	UpdateBuffer(VertexShader, 2, lightPositionBuffer);
 	UpdateBuffer(PixelShader, 0, lightBuffer);
+
 	SendBuffersToShader();
 
 	return true;

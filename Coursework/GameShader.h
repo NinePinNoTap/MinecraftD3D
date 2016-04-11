@@ -33,7 +33,7 @@ public:
 	void Render(int vertexCount, int instanceCount);
 
 	// Rendering
-	virtual bool Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform = 0);
+	virtual bool Prepare(Material* objMaterial, Transform* objTransform = 0);
 
 	// Shader Data Management
 	void AddShader(string shaderName);

@@ -38,21 +38,13 @@ bool ColourShader::Initialise(HWND hwnd)
 	return true;
 }
 
-bool ColourShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+bool ColourShader::Prepare(Material* objMaterial, Transform* objTransform)
 {
-	// Model Properties
-	if (!objMesh)
-	{
-		MessageBox(NULL, L"No Model Attached - Colour", L"Error", MB_OK);
-		return false;
-	}
 	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Colour", L"Error", MB_OK);
 		return false;
 	}
-
-	int indexCount = objMesh->GetIndexCount();
 
 	// Create the world matrix for the model
 	MatrixBuffer matrixBuffer = ShaderManager::Instance()->GetMatrixBuffer();

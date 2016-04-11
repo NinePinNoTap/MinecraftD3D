@@ -41,14 +41,8 @@ bool FontShader::Initialise(HWND hwnd)
 	return true;
 }
 
-bool FontShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+bool FontShader::Prepare(Material* objMaterial, Transform* objTransform)
 {
-	// Model Properties
-	if (!objMesh)
-	{
-		MessageBox(NULL, L"No Model Attached - Font", L"Error", MB_OK);
-		return false;
-	}
 	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Font", L"Error", MB_OK);
@@ -56,8 +50,7 @@ bool FontShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objT
 	}
 
 	// Model Properties
-	int indexCount = objMesh->GetIndexCount();
-	ID3D11ShaderResourceView* texture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* baseTexture = objMaterial->GetBaseTexture();
 
 	// Create the pixel buffer
 	PixelBuffer pixelBuffer;
@@ -72,8 +65,8 @@ bool FontShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objT
 	UpdateBuffer(PixelShader, 0, pixelBuffer);
 	SendBuffersToShader();
 
-	// Pass the texture to the shader
-	SendTextureToShader(0, texture);
+	// Pass the baseTexture to the shader
+	SendTextureToShader(0, baseTexture);
 
 	return true;
 }

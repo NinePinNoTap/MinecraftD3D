@@ -43,22 +43,15 @@ bool FireShader::Initialise(HWND hwnd)
 	return true;
 }
 
-bool FireShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+bool FireShader::Prepare(Material* objMaterial, Transform* objTransform)
 {
-	// Model Properties
-	if (!objMesh)
-	{
-		MessageBox(NULL, L"No Model Attached - Fire", L"Error", MB_OK);
-		return false;
-	}
 	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Fire", L"Error", MB_OK);
 		return false;
 	}
 
-	int indexCount = objMesh->GetIndexCount();
-	ID3D11ShaderResourceView* fireTexture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* baseTexture = objMaterial->GetBaseTexture();
 	ID3D11ShaderResourceView* noiseTexture = objMaterial->GetNoiseTexture();
 	ID3D11ShaderResourceView* alphaTexture = objMaterial->GetAlphaTexture();
 
@@ -88,8 +81,8 @@ bool FireShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objT
 	UpdateBuffer(PixelShader, 0, distortionBuffer);
 	SendBuffersToShader();
 
-	// Send textures
-	SendTextureToShader(0, fireTexture);
+	// Send baseTextures
+	SendTextureToShader(0, baseTexture);
 	SendTextureToShader(1, noiseTexture);
 	SendTextureToShader(2, alphaTexture);
 

@@ -174,7 +174,7 @@ bool Text::Render()
 	{
 		PrepareSentence(i);
 
-		Result_ = Shader_->Prepare(Model_->GetMesh(i), Model_->GetMaterial(i));
+		Result_ = Shader_->Prepare(Model_->GetMaterial(i));
 		if (!Result_)
 		{
 			return false;

@@ -36,7 +36,7 @@ const float CAMERA_SENSITIVITY  = 10.0f;
 //===============
 
 // How big the block model is
-const int BLOCK_SIZE = 1;
+const int BLOCK_SIZE = 2;
 
 // How many blocks in a chunk
 const int NO_OF_BLOCKS_WIDTH = 16;
@@ -44,9 +44,9 @@ const int NO_OF_BLOCKS_HEIGHT = 16;
 const int NO_OF_BLOCKS_DEPTH = 16;
 
 // How many chunks in a terrain
-const int NO_OF_CHUNKS_WIDTH = 8;
-const int NO_OF_CHUNKS_HEIGHT = 4;
-const int NO_OF_CHUNKS_DEPTH = 8;
+const int NO_OF_CHUNKS_WIDTH = 12;
+const int NO_OF_CHUNKS_HEIGHT = 12;
+const int NO_OF_CHUNKS_DEPTH = 12;
 
 // Total size of a chunk dimension
 const int CHUNK_WIDTH = NO_OF_BLOCKS_WIDTH * BLOCK_SIZE;
@@ -54,9 +54,12 @@ const int CHUNK_HEIGHT = NO_OF_BLOCKS_HEIGHT * BLOCK_SIZE;
 const int CHUNK_DEPTH = NO_OF_BLOCKS_DEPTH * BLOCK_SIZE;
 
 // Total size of a terrain dimension
-const int TERRAIN_WIDTH = CHUNK_WIDTH * NO_OF_CHUNKS_WIDTH;
-const int TERRAIN_HEIGHT = CHUNK_HEIGHT * NO_OF_CHUNKS_HEIGHT;
-const int TERRAIN_DEPTH = CHUNK_DEPTH * NO_OF_CHUNKS_DEPTH;
+const int TERRAIN_WIDTH = NO_OF_CHUNKS_WIDTH * NO_OF_CHUNKS_WIDTH;
+const int TERRAIN_HEIGHT = NO_OF_CHUNKS_HEIGHT * NO_OF_CHUNKS_HEIGHT;
+const int TERRAIN_DEPTH = NO_OF_CHUNKS_DEPTH * NO_OF_CHUNKS_DEPTH;
+
+// Base number of blocks 
+const int TERRAIN_BASE_HEIGHT = 32;
 
 // Global size of the terrain
 const int TERRAIN_VOLUME = NO_OF_BLOCKS_WIDTH * NO_OF_BLOCKS_HEIGHT * NO_OF_BLOCKS_DEPTH;

@@ -151,7 +151,7 @@ bool Ocean::Render()
 			SendModelToPipeline(Model_->GetMesh(i));
 
 			// Send material to shader
-			Shader_->Prepare(Model_->GetMesh(i), Model_->GetMaterial(i), Transform_);
+			Shader_->Prepare(Model_->GetMaterial(i), Transform_);
 
 			// Render Object
 			Shader_->Render(Model_->GetMesh(i)->GetIndexCount());

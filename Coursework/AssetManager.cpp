@@ -68,6 +68,7 @@ void AssetManager::LoadAudio(AudioClip** audioClip, std::string filename, bool i
 	Result_ = loadedClip->LoadFile(audioFilePath, is3D);
 	if (!Result_)
 	{
+		OutputToDebug("Could not load (AUDIO) : " + filename);
 		audioClip = 0;
 		return;
 	}
@@ -77,16 +78,18 @@ void AssetManager::LoadAudio(AudioClip** audioClip, std::string filename, bool i
 
 	*audioClip = loadedClip;
 
+	OutputToDebug("Loaded (AUDIO) : " + filename);
+
 	return;
 }
 
-void AssetManager::LoadFont(Font** font, std::string fontFilename, int letterCount)
+void AssetManager::LoadFont(Font** font, std::string filename, int letterCount)
 {
 	// Check if the font already exists
-	if (FontDatabase_.count(fontFilename))
+	if (FontDatabase_.count(filename))
 	{
 		// Don't continue
-		*font = FontDatabase_[fontFilename];
+		*font = FontDatabase_[filename];
 		return;
 	}
 
@@ -95,7 +98,7 @@ void AssetManager::LoadFont(Font** font, std::string fontFilename, int letterCou
 	//===============
 
 	// Construct filename path to txt
-	std::string txtPath = FONT_DIR + fontFilename + ".txt";
+	std::string txtPath = FONT_DIR + filename + ".txt";
 	const char* txtFilePath = txtPath.c_str();
 
 	// Create Font
@@ -103,15 +106,18 @@ void AssetManager::LoadFont(Font** font, std::string fontFilename, int letterCou
 	Result_ = loadedFont->Initialise(txtFilePath, letterCount);
 	if (!Result_)
 	{
+		OutputToDebug("Could not load (FONT) : " + filename);
 		*font = 0;
 		return;
 	}
 
 	// Add to map
-	FontDatabase_[fontFilename] = loadedFont;
+	FontDatabase_[filename] = loadedFont;
 	
 	// Set font and return
 	*font = loadedFont;
+
+	OutputToDebug("Loaded (FONT) : " + filename);
 
 	return;
 }
@@ -168,11 +174,14 @@ void AssetManager::LoadModel(Model** model, std::string filename)
 	{
 		*model = loadedModel;
 
+		OutputToDebug("Loaded (MODEL) : " + filename);
+
 		// Add to the map
 		ModelDatabase_[filename] = loadedModel;
 	}
 	else
 	{
+		OutputToDebug("Could not load (MODEL) : " + filename);
 		*model = 0;
 	}
 
@@ -195,9 +204,7 @@ void AssetManager::LoadTexture(Texture** texture, std::string filename)
 	if (!Result_)
 	{
 		*texture = 0;
-		OutputToDebug("Could not load : ");
-		OutputToDebug(filename);
-		OutputToDebug("\n");
+		OutputToDebug("Could not load (TEXTURE) : " + filename);
 		return;
 	}
 
@@ -205,6 +212,8 @@ void AssetManager::LoadTexture(Texture** texture, std::string filename)
 	TextureDatabase_[filename] = loadedTexture;
 
 	*texture = loadedTexture;
+
+	OutputToDebug("Loaded (TEXTURE) : " + filename);
 
 	return;
 }
@@ -242,4 +251,6 @@ void AssetManager::LoadTexture(Texture** texture, string keyName, Rect2D texture
 
 	// Return it
 	*texture = createdTexture;
+
+	OutputToDebug("Created (TEXTURE) : " + keyName);
 }

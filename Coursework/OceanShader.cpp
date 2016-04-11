@@ -46,22 +46,15 @@ bool OceanShader::Initialise(HWND hwnd)
 	return true;
 }
 
-bool OceanShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+bool OceanShader::Prepare(Material* objMaterial, Transform* objTransform)
 {
-	// Model Properties
-	if (!objMesh)
-	{
-		MessageBox(NULL, L"No Model Attached - Clouds", L"Error", MB_OK);
-		return false;
-	}
 	if (!objMaterial)
 	{
-		MessageBox(NULL, L"No Material Attached - Clouds", L"Error", MB_OK);
+		MessageBox(NULL, L"No Material Attached - Ocean", L"Error", MB_OK);
 		return false;
 	}
 
 	// Retrieve variables for rendering
-	int indexCount = objMesh->GetIndexCount();
 	ID3D11ShaderResourceView* refractionTexture = objMaterial->GetTexture("RefractionTexture")->GetTexture();
 	ID3D11ShaderResourceView* reflectionTexture = objMaterial->GetTexture("ReflectionTexture")->GetTexture();
 	ID3D11ShaderResourceView* normalTexture = objMaterial->GetNormalTexture();
@@ -108,7 +101,7 @@ bool OceanShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* obj
 	objTransform->GetWorldMatrix(matrixBuffer.world);
 	TransposeMatrix(matrixBuffer);
 
-	// Pass the textures to the shader
+	// Pass the baseTextures to the shader
 	SendTextureToShader(0, refractionTexture);
 	SendTextureToShader(1, reflectionTexture);
 	SendTextureToShader(2, normalTexture);

@@ -41,14 +41,8 @@ bool CloudShader::Initialise(HWND hwnd)
 	return true;
 }
 
-bool CloudShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+bool CloudShader::Prepare(Material* objMaterial, Transform* objTransform)
 {
-	// Model Properties
-	if (!objMesh)
-	{
-		MessageBox(NULL, L"No Model Attached - Clouds", L"Error", MB_OK);
-		return false;
-	}
 	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Clouds", L"Error", MB_OK);
@@ -56,8 +50,7 @@ bool CloudShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* obj
 	}
 
 	// Model Properties
-	int indexCount = objMesh->GetIndexCount();
-	ID3D11ShaderResourceView* cloudTexture = objMaterial->GetTexture("BaseTexture")->GetTexture();
+	ID3D11ShaderResourceView* baseTexture = objMaterial->GetTexture("BaseTexture")->GetTexture();
 	ID3D11ShaderResourceView* perturbTexture = objMaterial->GetTexture("PerturbTexture")->GetTexture();
 
 	// Create matrix buffer
@@ -78,7 +71,7 @@ bool CloudShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* obj
 	SendBuffersToShader();
 
 	// Send Textures
-	SendTextureToShader(0, cloudTexture);
+	SendTextureToShader(0, baseTexture);
 	SendTextureToShader(1, perturbTexture);
 
 	return true;

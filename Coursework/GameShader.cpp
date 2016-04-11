@@ -164,7 +164,7 @@ void GameShader::Render(int vertexCount, int instanceCount)
 	return;
 }
 
-bool GameShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+bool GameShader::Prepare(Material* objMaterial, Transform* objTransform)
 {
 	return true;
 }

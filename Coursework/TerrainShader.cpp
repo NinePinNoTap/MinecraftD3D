@@ -42,14 +42,8 @@ bool TerrainShader::Initialise(HWND hwnd)
 	return true;
 }
 
-bool TerrainShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* objTransform)
+bool TerrainShader::Prepare(Material* objMaterial, Transform* objTransform)
 {
-	// Model Properties
-	if (!objMesh)
-	{
-		MessageBox(NULL, L"No Model Attached - Terrain", L"Error", MB_OK);
-		return false;
-	}
 	if (!objMaterial)
 	{
 		MessageBox(NULL, L"No Material Attached - Terrain", L"Error", MB_OK);
@@ -57,8 +51,7 @@ bool TerrainShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* o
 	}
 
 	// Retrieve variables for rendering
-	int indexCount = objMesh->GetIndexCount();
-	ID3D11ShaderResourceView* colorTexture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* baseTexture = objMaterial->GetBaseTexture();
 	ID3D11ShaderResourceView* normalTexture = objMaterial->GetNormalTexture();
 
 	// Create the light buffer
@@ -76,8 +69,8 @@ bool TerrainShader::Prepare(Mesh3D* objMesh, Material* objMaterial, Transform* o
 	objTransform->GetWorldMatrix(matrixBuffer.world);
 	TransposeMatrix(matrixBuffer);
 
-	// Pass the textures to the shaders
-	SendTextureToShader(0, colorTexture);
+	// Pass the baseTextures to the shaders
+	SendTextureToShader(0, baseTexture);
 	SendTextureToShader(1, normalTexture);
 
 	// Update Buffers
