@@ -451,6 +451,9 @@
     <ClInclude Include="OceanShader.h">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="Noise.h">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shaders\cloud.ps">

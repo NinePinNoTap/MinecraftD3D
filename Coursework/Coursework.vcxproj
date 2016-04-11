@@ -147,6 +147,7 @@
     <ClInclude Include="InstancedGameObject.h" />
     <ClInclude Include="InstancedLightShader.h" />
     <ClInclude Include="Mesh3D.h" />
+    <ClInclude Include="Noise.h" />
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="OceanShader.h" />
     <ClInclude Include="PrimitiveFactory.h" />

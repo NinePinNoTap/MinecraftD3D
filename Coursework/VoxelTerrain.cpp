@@ -1,5 +1,19 @@
 #include "VoxelTerrain.h"
 
+
+float stoneBaseHeight = -24;
+float stoneBaseNoise = 0.05f;
+float stoneBaseNoiseHeight = 4;
+
+float stoneMountainHeight = 48;
+float stoneMountainFrequency = 0.008f;
+float stoneMinHeight = -12;
+
+float dirtBaseHeight = 1;
+float dirtNoise = 0.04f;
+float dirtNoiseHeight = 3;
+
+
 VoxelTerrain::VoxelTerrain()
 {
 	TerrainChunks_ = 0;
@@ -136,6 +150,14 @@ void VoxelTerrain::SetBlockNeighbours(int x, int y, int z)
 	blockCurrent->SetNeighbour(Direction::Backward, GetBlock(x, y, z - 1));
 }
 
+#include "Noise.h"
+using namespace SimplexNoise;
+
+static int GetNoise(int x, int y, int z, float scale, int max)
+{
+	return floor ((Noise::Generate(x * scale, y * scale, z * scale) + 1.0f) * (max / 2.0f));
+}
+
 void VoxelTerrain::GenerateTerrain()
 {
 	PerlinNoiseGenerator perlinNoise;
@@ -149,41 +171,71 @@ void VoxelTerrain::GenerateTerrain()
 	{
 		for (int z = 0; z < TERRAIN_DEPTH; z++)
 		{
-			double a = (double)z / (double)TERRAIN_WIDTH * 2;
-			double b = (double)x / (double)TERRAIN_DEPTH * 2;
+			int stoneHeight = floor(stoneBaseHeight);
+			stoneHeight += TERRAIN_BASE_HEIGHT;
+			stoneHeight += GetNoise(x, 0, z, stoneMountainFrequency, floor(stoneMountainHeight));
 
-			float noise = perlinNoise.CreateNoise(a, b, 0.8f);
-			float height = floor(workArea * noise);
-			height += TERRAIN_BASE_HEIGHT;
+			if (stoneHeight < stoneMinHeight)
+				stoneHeight = floor(stoneMinHeight);
 
-			// Loop through y dimension
-			for (int y = height; y >= 0; y--)
+			stoneHeight += GetNoise(x, 0, z, stoneBaseNoise, floor(stoneBaseNoiseHeight));
+
+			int dirtHeight = stoneHeight + floor(dirtBaseHeight);
+			dirtHeight += GetNoise(x, 100, z, dirtNoise, floor(dirtNoiseHeight));
+
+			for (int y = 0; y < TERRAIN_HEIGHT; y++)
 			{
-				if (y < 10)
-				{
-					int r = rand() % 50;
-					if (r < 3)
-					{
-						GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("diamond"));
-					}
-					else
-					{
-						GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
-					}
-				}
-				else if (y < 32)
+				if (y <= stoneHeight)
 				{
 					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
 				}
-				else if (y < 40)
-				{
-					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
-				}
-				else
+				else if (y <= dirtHeight)
 				{
 					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
 				}
+				else
+				{
+					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("air"));
+				}
+
 			}
+
+
+			//double a = (double)z / (double)TERRAIN_WIDTH * 2;
+			//double b = (double)x / (double)TERRAIN_DEPTH * 2;
+
+			//float noise = perlinNoise.CreateNoise(a, b, 0.8f);
+			//float height = floor(workArea * noise);
+			//height += TERRAIN_BASE_HEIGHT;
+
+			//// Loop through y dimension
+			//for (int y = height; y >= 0; y--)
+			//{
+			//	if (y < 10)
+			//	{
+			//		int r = rand() % 50;
+			//		if (r < 3)
+			//		{
+			//			GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("diamond"));
+			//		}
+			//		else
+			//		{
+			//			GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
+			//		}
+			//	}
+			//	else if (y < 32)
+			//	{
+			//		GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
+			//	}
+			//	else if (y < 40)
+			//	{
+			//		GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
+			//	}
+			//	else
+			//	{
+			//		GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
+			//	}
+			//}
 		}
 	}
 }
