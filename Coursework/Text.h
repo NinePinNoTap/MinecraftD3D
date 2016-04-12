@@ -25,7 +25,7 @@ public:
 		int ID;
 		string text;
 		float value;
-		bool valueSet;
+		bool useValue;
 		Vector2 position;
 		Alignment align;
 	};
@@ -52,6 +52,7 @@ public:
 	bool SetValue(int ID, float value);
 	bool SetPosition(int ID, Vector2 position);
 	void SetColour(int ID, D3DXVECTOR4 colour);
+	void DisableValue(int ID);
 
 private:
 	bool BuildSentence(SentenceType sentence);

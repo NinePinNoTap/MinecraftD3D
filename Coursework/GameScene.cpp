@@ -1,18 +1,18 @@
-#include "Scene3D.h"
+#include "GameScene.h"
 
-Scene3D::Scene3D()
+GameScene::GameScene()
 {
 	// Initialise pointers
 	Text_ = 0;
 }
 
-Scene3D::~Scene3D()
+GameScene::~GameScene()
 {
 
 }
 
 // Shutdown
-void Scene3D::ShutdownGameObjects()
+void GameScene::ShutdownGameObjects()
 {
 	// Shutdown each gameobject
 	for each (GameObject* obj in Objects_)
@@ -26,7 +26,7 @@ void Scene3D::ShutdownGameObjects()
 	Objects_.clear();
 }
 
-void Scene3D::SetShaderManager2DVars()
+void GameScene::SetShaderManager2DVars()
 {
 	//==============================================
 	// Send 2D Rendering Matrices to Shader Manager

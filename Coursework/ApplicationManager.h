@@ -7,10 +7,10 @@
 #include "DirectXManager.h"
 #include "DirectSound.h"
 #include "Light.h"
-#include "MainScene.h"
+#include "MinecraftScene.h"
 #include "PerformanceManager.h"
-#include "Scene3D.h"
-#include "SceneLoadingScreen.h"
+#include "GameScene.h"
+#include "LoadingScene.h"
 #include "ShaderManager.h"
 #include "ViewFrustumManager.h"
 
@@ -58,8 +58,8 @@ private:
 	ViewFrustumManager* ViewFrustumManager_;
 	
 	// Scenes
-	MainScene* MainScene_;
-	SceneLoadingScreen* SceneLoading_;
+	MinecraftScene* MinecraftScene_;
+	LoadingScene* SceneLoading_;
 	std::thread LoadingScreenThread_;
 
 	// Global Objects
@@ -67,7 +67,7 @@ private:
 	Light* Light_;
 
 	// Scene Switching
-	Scene3D* CurrentScene_;
+	GameScene* CurrentScene_;
 	SceneState NewScene_;
 	bool ChangeScene_;
 };

@@ -1,16 +1,16 @@
-#include "SceneLoadingScreen.h"
+#include "LoadingScene.h"
 #include "WindowManager.h"
 
-SceneLoadingScreen::SceneLoadingScreen() : Scene3D()
+LoadingScene::LoadingScene() : GameScene()
 {
 	Background_ = 0;
 }
-SceneLoadingScreen::~SceneLoadingScreen()
+LoadingScene::~LoadingScene()
 {
 
 }
 
-bool SceneLoadingScreen::Initialise()
+bool LoadingScene::Initialise()
 {
 	int windowWidth;
 	int windowHeight;
@@ -57,15 +57,13 @@ bool SceneLoadingScreen::Initialise()
 	LoadingText_->CreateText("Load Time : ", Vector2(windowWidth - 25, windowHeight - 25), WHITE, RIGHT);
 	LoadingProgress_ = timeGetTime();
 
+	// Initialise Flags
+	SceneCanSwitch_ = false;
+
 	return true;
 }
 
-void SceneLoadingScreen::Reset()
-{
-	return;
-}
-
-void SceneLoadingScreen::Shutdown()
+void LoadingScene::Shutdown()
 {
 	if (Background_)
 	{
@@ -74,16 +72,26 @@ void SceneLoadingScreen::Shutdown()
 	}
 }
 
-bool SceneLoadingScreen::Frame()
+bool LoadingScene::Frame()
 {
-	LoadingText_->SetValue(0, (timeGetTime() - LoadingProgress_) / 1000);
+	if (SceneCanSwitch_)
+	{
+		if (InputManager::Instance()->GetKeyDown(VK_SPACE))
+		{
+			ApplicationManager::Instance()->SetScene(MAIN);
+		}
+	}
+	else
+	{
+		LoadingText_->SetValue(0, (timeGetTime() - LoadingProgress_) / 1000);
+	}
 
 	Render();
 
 	return true;
 }
 
-void SceneLoadingScreen::Render()
+void LoadingScene::Render()
 {
 	DirectXManager::Instance()->BeginScene();
 
@@ -102,8 +110,18 @@ void SceneLoadingScreen::Render()
 	DirectXManager::Instance()->EndScene();
 }
 
+void LoadingScene::Reset()
+{
+	return;
+}
 
-void SceneLoadingScreen::GenerateMatrices()
+void LoadingScene::SetSceneLoaded()
+{
+	SceneCanSwitch_ = true;
+	LoadingText_->SetText(0, "Press SPACE to continue");
+}
+
+void LoadingScene::GenerateMatrices()
 {
 	//===============================================
 	// Generate World/Ortho/Projection/View Matrices
@@ -118,7 +136,7 @@ void SceneLoadingScreen::GenerateMatrices()
 	DirectXManager::Instance()->GetOrthoMatrix(OrthoMatrix_);
 }
 
-void SceneLoadingScreen::SetShaderManagerVars()
+void LoadingScene::SetShaderManagerVars()
 {
 	return;
 }

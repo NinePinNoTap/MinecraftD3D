@@ -1,9 +1,9 @@
-#include "MainScene.h"
+#include "MinecraftScene.h"
 #include "ApplicationManager.h"
 #include "PerformanceManager.h"
 #include "WindowManager.h"
 
-MainScene::MainScene() : Scene3D()
+MinecraftScene::MinecraftScene() : GameScene()
 {
 	// Initialise pointers
 	Clouds_ = 0;
@@ -15,16 +15,15 @@ MainScene::MainScene() : Scene3D()
 	RenderTexture_ = 0;
 	Sprite_ = 0;
 	SkySphere_ = 0;
-	Terrain_ = 0;
 	Ocean_ = 0;
 	Chunk_ = 0;
 }
 
-MainScene::~MainScene()
+MinecraftScene::~MinecraftScene()
 {
 }
 
-bool MainScene::Initialise(HWND hwnd)
+bool MinecraftScene::Initialise(HWND hwnd)
 {
 	int windowWidth;
 	int windowHeight;
@@ -149,22 +148,6 @@ bool MainScene::Initialise(HWND hwnd)
 	AssetManager::Instance()->LoadAudio(&AmbientSound_, "ambience");
 	AmbientSound_->SetVolume(1.0f);
 
-	//========================
-	// Initialise the Terrain
-	//========================
-
-	Terrain_ = new Terrain;
-	if (!Terrain_)
-	{
-		return false;
-	}
-	Result_ = Terrain_->Initialise(Rect3D(512, 512), TerrainType::PERLIN, "sand_real.dds", "sand_real_normal.dds", Vector2(5, 5), 1.0f, 0.5f);
-	if (!Result_)
-	{
-		MessageBox(hwnd, L"Could not initialise the terrain object.", L"Error", MB_OK);
-		return false;
-	}
-
 	//=================
 	// Initialise Text
 	//=================
@@ -190,10 +173,10 @@ bool MainScene::Initialise(HWND hwnd)
 	Text_->CreateText("Rotation Z :", Vector2(10, 150), BLACK); // Rotation Z
 
 	Text_->CreateText("CONTROLS", Vector2(windowWidth - 10, 10), BLACK, RIGHT);
-	Text_->CreateText("[1] - Toggle Wireframe", Vector2(windowWidth - 10, 30), BLACK, RIGHT);
-	Text_->CreateText("[2] - Toggle Time", Vector2(windowWidth - 10, 50), BLACK, RIGHT);
-	Text_->CreateText("[BACKSPACE] - Reset Camera", Vector2(windowWidth - 10, 70), BLACK, RIGHT);
-	Text_->CreateText("[ESC] - Quit", Vector2(windowWidth - 10, 110), BLACK, RIGHT);
+	Text_->CreateText("Toggle Wireframe [1]", Vector2(windowWidth - 10, 30), BLACK, RIGHT);
+	Text_->CreateText("Toggle Time [2]", Vector2(windowWidth - 10, 50), BLACK, RIGHT);
+	Text_->CreateText("Reset Camera [BACKSPACE]", Vector2(windowWidth - 10, 70), BLACK, RIGHT);
+	Text_->CreateText("Quit [ESC]", Vector2(windowWidth - 10, 110), BLACK, RIGHT);
 
 	Chunk_ = new VoxelTerrain;
 	Chunk_->Initialise();
@@ -209,7 +192,7 @@ bool MainScene::Initialise(HWND hwnd)
 	return true;
 }
 
-void MainScene::Shutdown()
+void MinecraftScene::Shutdown()
 {
 	//===================
 	// Shut down objects
@@ -273,13 +256,6 @@ void MainScene::Shutdown()
 		SkySphere_ = 0;
 	}
 
-	if (Terrain_)
-	{
-		Terrain_ -> Shutdown();
-		delete Terrain_;
-		Terrain_ = 0;
-	}
-
 	if (Text_)
 	{
 		Text_ -> Shutdown();
@@ -297,7 +273,7 @@ void MainScene::Shutdown()
 	return;
 }
 
-void MainScene::Reset()
+void MinecraftScene::Reset()
 {
 	//=========================================
 	// Reset objects back to their start state
@@ -325,17 +301,17 @@ void MainScene::Reset()
 	AmbientSound_->Play(true);
 }
 
-bool MainScene::Frame()
+bool MinecraftScene::Frame()
 {
 	// Handle user InputManager
-	Result_ = UserInputManager();
+	Result_ = HandleInput();
 	if (!Result_)
 	{
 		return false;
 	}
 
 	// Handle frame updates
-	Result_ = UpdateObjects();
+	Result_ = HandleObjects();
 	if (!Result_)
 	{
 		return false;
@@ -351,7 +327,7 @@ bool MainScene::Frame()
 	return true;
 }
 
-bool MainScene::UpdateObjects()
+bool MinecraftScene::HandleObjects()
 {
 	//=====================
 	// Set Camera Position
@@ -383,7 +359,7 @@ bool MainScene::UpdateObjects()
 	// Update WindowManager Information
 	//===========================
 
-	Result_ = UpdateText();
+	Result_ = HandleText();
 	if (!Result_)
 	{
 		return false;
@@ -405,7 +381,7 @@ bool MainScene::UpdateObjects()
 	return true;
 }
 
-bool MainScene::UpdateText()
+bool MinecraftScene::HandleText()
 {
 	//===========================
 	// Update System Information
@@ -438,7 +414,7 @@ bool MainScene::UpdateText()
 	return true;
 }
 
-bool MainScene::UserInputManager()
+bool MinecraftScene::HandleInput()
 {
 	//====================
 	// Escape ApplicationManager
@@ -498,51 +474,37 @@ bool MainScene::UserInputManager()
 	return true;
 }
 
-bool MainScene::Render()
+bool MinecraftScene::Render()
 {
 	//==============================
 	// Render Refraction To Texture
 	//==============================
 
-	Result_ = RenderRefraction();
-	if (!Result_) { return false; }
+	//Result_ = RenderRefraction();
+	//if (!Result_) { return false; }
 
-	//==============================
-	// Render Reflection To Texture
-	//==============================
+	////==============================
+	//// Render Reflection To Texture
+	////==============================
 
-	Result_ = RenderReflection();
-	if (!Result_) { return false; }
+	//Result_ = RenderReflection();
+	//if (!Result_) { return false; }
 
-	//=============================
-	// Render Refraction To Screen
-	//=============================
+	//==============
+	// Render Scene
+	//==============
 
-	if (IsUnderwater_)
+	// Render the scene normally to the screen
+	Result_ = RenderScene(!DirectXManager::Instance()->GetWireframeStatus());
+	if (!Result_)
 	{
-		// Render with post processing to the screen
-		Result_ = RenderWithPostProcessing();
-		if (!Result_)
-		{
-			return false;
-		}
-	}
-	else
-	{
-		bool WireframeStatus = DirectXManager::Instance() -> GetWireframeStatus();
-
-		// Render the scene normally to the screen
-		Result_ = RenderScene(!WireframeStatus);
-		if (!Result_)
-		{
-			return false;
-		}
+		return false;
 	}
 
 	return true;
 }
 
-bool MainScene::RenderScene(bool ShowText)
+bool MinecraftScene::RenderScene(bool ShowText)
 {
 	// Begin rendering
 	DirectXManager::Instance() -> BeginScene();
@@ -600,11 +562,11 @@ bool MainScene::RenderScene(bool ShowText)
 	// Render the Ocean 
 	//==================
 
-	Result_ = Ocean_->Render();
+	/*Result_ = Ocean_->Render();
 	if (!Result_)
 	{
 		return false;
-	}
+	}*/
 	//Result_ = ShaderManager::Instance()->OceanRender(Ocean_, RefractionTexture_, ReflectionTexture_);
 	//if (!Result_) { return false; }
 
@@ -643,7 +605,7 @@ bool MainScene::RenderScene(bool ShowText)
 	//=============
 
 	// Only rain on the screen if is night time and we arent underwater
-	if (NightTimeMode_ && !IsUnderwater_)
+	if (NightTimeMode_)
 	{
 		// Turn on alpha blending
 		DirectXManager::Instance() -> ToggleAlphaBlending(true);
@@ -660,7 +622,7 @@ bool MainScene::RenderScene(bool ShowText)
 	}
 
 	// Check if we are underwater, if not don't render text
-	if (!IsUnderwater_ && ShowText)
+	if (ShowText)
 	{
 		Result_ = RenderText();
 		if (!Result_)
@@ -675,58 +637,7 @@ bool MainScene::RenderScene(bool ShowText)
 	return true;
 }
 
-bool MainScene::RenderWithPostProcessing()
-{
-	// Render the scene to the scene texture
-	Result_ = RenderToTexture();
-	if (!Result_)
-	{
-		return false;
-	}
-
-	// Begin rendering
-	DirectXManager::Instance() -> BeginScene();
-
-	// Turn off the Z buffer
-	DirectXManager::Instance() -> ToggleZBuffer(false);
-
-	//==============================================
-	// Generate Matrices and Send To Shader Manager
-	//==============================================
-
-	GenerateMatrices();
-
-	SetShaderManager2DVars();
-
-	//===================================
-	// Render Scene with Post Processing
-	//===================================
-
-	// Check if wireframe mode is active
-	bool WireframeStatus = DirectXManager::Instance() -> GetWireframeStatus();
-	if (WireframeStatus)
-	{
-		// Temporarily disable it so can render wireframe mode underwater
-		DirectXManager::Instance() -> ToggleWireframe(false);
-	}
-
-	// Reset wireframe status back to previous setting
-	DirectXManager::Instance() -> ToggleWireframe(WireframeStatus);
-
-	// Render the screens text
-	Result_ = RenderText();
-	if (!Result_)
-	{
-		return false;
-	}
-
-	// Stop rendering
-	DirectXManager::Instance() -> EndScene();
-
-	return true;
-}
-
-bool MainScene::RenderRefraction()
+bool MinecraftScene::RenderRefraction()
 {
 	// Render to the refraction texture
 	RefractionTexture_ -> SetRenderTarget();
@@ -758,7 +669,7 @@ bool MainScene::RenderRefraction()
 	return true;
 }
 
-bool MainScene::RenderReflection()
+bool MinecraftScene::RenderReflection()
 {
 	D3DXVECTOR3 ReflectedCameraPosition;
 
@@ -863,7 +774,7 @@ bool MainScene::RenderReflection()
 	return true;
 }
 
-bool MainScene::RenderToTexture(bool ShowText)
+bool MinecraftScene::RenderToTexture(bool ShowText)
 {
 	// Render to the scene texture
 	RenderTexture_ -> SetRenderTarget();
@@ -882,7 +793,7 @@ bool MainScene::RenderToTexture(bool ShowText)
 	return true;
 }
 
-bool MainScene::RenderText()
+bool MinecraftScene::RenderText()
 {
 	//==============================================
 	// Generate Matrices and Send To Shader Manager
@@ -915,7 +826,7 @@ bool MainScene::RenderText()
 	return true;
 }
 
-void MainScene::GenerateMatrices()
+void MinecraftScene::GenerateMatrices()
 {
 	//===============================================
 	// Generate World/Ortho/Projection/View Matrices
@@ -932,7 +843,7 @@ void MainScene::GenerateMatrices()
 	DirectXManager::Instance() -> GetOrthoMatrix(OrthoMatrix_);
 }
 
-void MainScene::SetShaderManagerVars()
+void MinecraftScene::SetShaderManagerVars()
 {
 	//==================================================
 	// Send Normal Rendering Matrices to Shader Manager
@@ -944,7 +855,7 @@ void MainScene::SetShaderManagerVars()
 	ShaderManager::Instance()->SetReflectionViewMatrix(ReflectionViewMatrix_);
 }
 
-void MainScene::SetShaderManagerReflectionVars()
+void MinecraftScene::SetShaderManagerReflectionVars()
 {
 	//======================================================
 	// Send Reflection Rendering Matrices to Shader Manager

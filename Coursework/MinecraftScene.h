@@ -11,21 +11,20 @@
 #include "ParticleSystem.h"
 #include "Texture.h"
 #include "ShaderManager.h"
-#include "Scene3D.h"
+#include "GameScene.h"
 #include "AudioClip.h"
 #include "Sprite.h"
 #include "SkySphere.h"
-#include "Terrain.h"
 #include "Text.h"
 #include "Ocean.h"
 #include "Model.h"
 #include "VoxelTerrain.h"
 
-class MainScene : public Scene3D
+class MinecraftScene : public GameScene
 {
 public:
-	MainScene();
-	~MainScene();
+	MinecraftScene();
+	~MinecraftScene();
 
 	bool Initialise(HWND hwnd);
 	void Shutdown();
@@ -34,15 +33,14 @@ public:
 	void Reset();
 
 private:
-	bool UpdateObjects();
-	bool UpdateText();
-	bool UserInputManager();
+	bool HandleObjects();
+	bool HandleText();
+	bool HandleInput();
 
 	bool Render();
 	bool RenderRefraction();
 	bool RenderReflection();
 	bool RenderToTexture(bool ShowText = true);
-	bool RenderWithPostProcessing();
 	bool RenderScene(bool ShowText = true);
 	bool RenderText();
 
@@ -62,7 +60,6 @@ private:
 	ParticleSystem* ParticleSystem_;
 	Sprite* Sprite_;
 	SkySphere* SkySphere_;
-	Terrain* Terrain_;
 	Texture* RenderTexture_;
 	Texture* RefractionTexture_;
 	Texture* ReflectionTexture_;

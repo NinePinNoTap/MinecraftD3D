@@ -11,11 +11,11 @@
 #include "AudioClip.h"
 #include "Text.h"
 
-class Scene3D
+class GameScene
 {
 public:
-	Scene3D();
-	~Scene3D();
+	GameScene();
+	~GameScene();
 
 	// Shutdown
 	virtual void Shutdown() = 0;

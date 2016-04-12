@@ -17,7 +17,7 @@ ApplicationManager::ApplicationManager()
 	DirectSound_ = 0;
 	InputManager_ = 0;
 	Light_ = 0;
-	MainScene_ = 0;
+	MinecraftScene_ = 0;
 	ShaderManager_ = 0;
 	PerformanceManager_ = 0;
 	SceneLoading_ = 0;
@@ -159,7 +159,7 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	//===================
 
 	// Loading Screen
-	SceneLoading_ = new SceneLoadingScreen;
+	SceneLoading_ = new LoadingScene;
 	Result_ = SceneLoading_->Initialise();
 	if (!Result_)
 	{
@@ -174,8 +174,8 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	LoadingScreenThread_ = std::thread(LoadingScreenUpdater);     // spawn new thread that calls foo()
 
 	// Inside the Painting
-	MainScene_ = new MainScene;
-	Result_ = MainScene_->Initialise(hwnd);
+	MinecraftScene_ = new MinecraftScene;
+	Result_ = MinecraftScene_->Initialise(hwnd);
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the inside scene", L"Error", MB_OK);
@@ -184,7 +184,7 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 		
 	// Set Default Scene
 	SetScene(MAIN);
-	CurrentScene_ = MainScene_;
+	CurrentScene_ = MinecraftScene_;
 
 	return true;
 }
@@ -195,11 +195,11 @@ void ApplicationManager::Shutdown()
 	// Shutdown Scenes
 	//=================
 
-	if (MainScene_)
+	if (MinecraftScene_)
 	{
-		MainScene_ -> Shutdown();
-		delete MainScene_;
-		MainScene_ = 0;
+		MinecraftScene_ -> Shutdown();
+		delete MinecraftScene_;
+		MinecraftScene_ = 0;
 	}
 
 	if (SceneLoading_)
@@ -297,7 +297,7 @@ void ApplicationManager::UpdateScene()
 	switch (NewScene_)
 	{
 		case MAIN:
-			CurrentScene_ = MainScene_;
+			CurrentScene_ = MinecraftScene_;
 			LoadingScreenThread_.join();
 			break;
 

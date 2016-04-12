@@ -86,15 +86,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MainScene.cpp">
-      <Filter>Scene\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene3D.cpp">
-      <Filter>Scene\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneLoadingScreen.cpp">
-      <Filter>Scene\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="AudioTrigger.cpp">
       <Filter>Framework\Audio</Filter>
     </ClCompile>
@@ -254,6 +245,15 @@
     <ClCompile Include="OceanShader.cpp">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>Scene\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="MinecraftScene.cpp">
+      <Filter>Scene\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadingScene.cpp">
+      <Filter>Scene\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h">
@@ -265,23 +265,14 @@
     <ClInclude Include="Interpolator.h">
       <Filter>Framework\System</Filter>
     </ClInclude>
-    <ClInclude Include="Scene3D.h">
-      <Filter>Scene\Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="DirectSound.h">
       <Filter>Framework\Audio</Filter>
     </ClInclude>
     <ClInclude Include="AudioTrigger.h">
       <Filter>Framework\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="SceneLoadingScreen.h">
-      <Filter>Scene\Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="Utilities.h">
       <Filter>Framework\System</Filter>
-    </ClInclude>
-    <ClInclude Include="MainScene.h">
-      <Filter>Scene\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="ShaderManager.h">
       <Filter>Framework\Manager</Filter>
@@ -450,6 +441,15 @@
     </ClInclude>
     <ClInclude Include="OceanShader.h">
       <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>Scene\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="MinecraftScene.h">
+      <Filter>Scene\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadingScene.h">
+      <Filter>Scene\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

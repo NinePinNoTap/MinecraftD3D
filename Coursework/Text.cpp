@@ -73,7 +73,7 @@ void Text::CreateText(string text, Vector2 position, D3DXVECTOR4 colour, Alignme
 	sentence.position = position;
 	sentence.align = align;
 	sentence.value = 0;
-	sentence.valueSet = false;
+	sentence.useValue = false;
 
 	//==============
 	// Create Model
@@ -128,7 +128,7 @@ bool Text::SetValue(int ID, float value)
 	Sentences_[ID].value = value;
 
 	// Flag we have set the value
-	Sentences_[ID].valueSet = true;
+	Sentences_[ID].useValue = true;
 
 	// Rebuild sentence with new information
 	Result_ = BuildSentence(Sentences_[ID]);
@@ -158,6 +158,11 @@ bool Text::SetPosition(int ID, Vector2 position)
 void Text::SetColour(int ID, D3DXVECTOR4 colour)
 {
 	Model_->GetMaterial(ID)->SetVector4("BaseColour", colour);
+}
+
+void Text::DisableValue(int ID)
+{
+	Sentences_[ID].useValue = false;
 }
 
 // Frame
@@ -199,7 +204,7 @@ bool Text::BuildSentence(SentenceType sentence)
 	finalText = sentence.text;
 
 	// Add a value if we have specified
-	if (sentence.valueSet)
+	if (sentence.useValue)
 	{
 		// Convert value and remove trailing characters
 		convertedValue = to_string(sentence.value);

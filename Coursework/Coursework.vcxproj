@@ -111,8 +111,8 @@
     <ClCompile Include="PerformanceManager.cpp" />
     <ClCompile Include="PerlinNoiseGenerator.cpp" />
     <ClCompile Include="PrimitiveFactory.cpp" />
-    <ClCompile Include="Scene3D.cpp" />
-    <ClCompile Include="SceneLoadingScreen.cpp" />
+    <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="ApplicationManager.cpp" />
     <ClCompile Include="SkyShader.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -126,7 +126,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="MainScene.cpp" />
+    <ClCompile Include="MinecraftScene.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="SkySphere.cpp" />
     <ClCompile Include="ViewFrustumManager.cpp" />
@@ -183,13 +183,13 @@
     <ClInclude Include="VertexData.h" />
     <ClInclude Include="PerformanceManager.h" />
     <ClInclude Include="PerlinNoiseGenerator.h" />
-    <ClInclude Include="SceneLoadingScreen.h" />
+    <ClInclude Include="LoadingScene.h" />
     <ClInclude Include="ApplicationManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="Scene3D.h" />
-    <ClInclude Include="MainScene.h" />
+    <ClInclude Include="GameScene.h" />
+    <ClInclude Include="MinecraftScene.h" />
     <ClInclude Include="ShaderBuffers.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Utilities.h" />

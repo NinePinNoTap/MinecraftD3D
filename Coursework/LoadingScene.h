@@ -2,25 +2,27 @@
 
 #include "Sprite.h"
 #include "DirectXManager.h"
-#include "Scene3D.h"
+#include "GameScene.h"
 #include "ShaderManager.h"
 
-class SceneLoadingScreen : public Scene3D
+class LoadingScene : public GameScene
 {
 public:
-	SceneLoadingScreen();
-	~SceneLoadingScreen();
+	LoadingScene();
+	~LoadingScene();
 
 	// Initialising
 	bool Initialise();
-
-	void Reset();
 
 	// Shutdown
 	void Shutdown();
 
 	// Frame
 	bool Frame();
+
+	// Setters
+	void Reset();
+	void SetSceneLoaded();
 
 private:
 	void Render();
@@ -33,6 +35,7 @@ private:
 	Sprite* BarMask_;
 	int LoadingProgress_;
 	Text* LoadingText_;
+	bool SceneCanSwitch_;
 };
 
 
