@@ -21,6 +21,7 @@ public:
 	void Run();
 
 	Rect2D GetWindowResolution();
+	HWND GetHWND() { return HWND_; }
 
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 

@@ -57,7 +57,12 @@ bool FontShader::Prepare(Material* objMaterial, Transform* objTransform)
 	pixelBuffer.pixelColor = objMaterial->GetVector4("BaseColour");
 
 	// Create matrix buffer
+	D3DXMATRIX baseView, orthoMatrix;
+	Camera::Instance()->Get2DViewMatrix(baseView);
+	DirectXManager::Instance()->GetOrthoMatrix(orthoMatrix);
 	MatrixBuffer matrixBuffer = ShaderManager::Instance()->GetMatrixBuffer();
+	matrixBuffer.view = baseView;
+	matrixBuffer.projection = orthoMatrix;
 	TransposeMatrix(matrixBuffer);
 
 	// Update Buffers

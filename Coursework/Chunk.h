@@ -7,7 +7,6 @@
 #include "Constants.h"
 #include "InstancedGameObject.h"
 #include "ShaderManager.h"
-#include "Transform.h"
 
 class Chunk
 {
@@ -17,13 +16,13 @@ public:
 
 	// Initiailise
 	void Initialise(int x, int y, int z);
+	void Generate();
 
 	// Shutdown
 	void Shutdown();
 
 	// Chunk Management
-	void GenerateBlankChunk();
-	void Build();
+	void RefreshVisible();
 
 	// Frame
 	void Frame();
@@ -33,23 +32,33 @@ public:
 	void SetBlocks(string blockName);
 
 	// Getters
-	bool IsVisible();
-
-	D3DXVECTOR3 GetID()
+	inline bool IsVisible()
 	{
-		return ChunkID_;
+		return IsVisible_;
 	}
-
-	Block* GetBlock(int x, int y, int z)
+	inline D3DXVECTOR3 GetPosition()
 	{
-		return &Chunk_[x][y][z];
+		return Position_;
+	}
+	inline Block* GetBlock(int x, int y, int z)
+	{
+		// Make sure we are trying to access a valid node
+		if (RangeCheck(x, 0, CHUNK_BLOCKS) && RangeCheck(y, 0, CHUNK_BLOCKS) && RangeCheck(z, 0, CHUNK_BLOCKS))
+		{
+			return &Blocks_[x][y][z];
+		}
+
+		return 0;
 	}
 
 private:
-	
-	Block*** Chunk_;
-	bool IsVisible_;
-	D3DXVECTOR3 ChunkID_;
+	void GenerateBlankChunk();
+
 	D3DXVECTOR3 Position_;
 	InstancedGameObject* ChunkBlock_;
+
+	Block*** Blocks_;
+
+	bool IsVisible_;
+	bool IsGenerated_;
 };

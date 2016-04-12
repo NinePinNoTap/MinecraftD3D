@@ -280,8 +280,8 @@ void MinecraftScene::Reset()
 	//=========================================
 
 	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
-	Camera::Instance()->SetStartPosition(-2, 9, -13);
-	Camera::Instance()->SetStartRotation(37, 3, 0);
+	Camera::Instance()->SetStartPosition(0, 0, 0);
+	Camera::Instance()->SetStartRotation(0, 0, 0);
 	Camera::Instance()->AllowFlying(true);
 	Camera::Instance()->SetSpeed(0.5f);
 

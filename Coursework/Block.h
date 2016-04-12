@@ -24,6 +24,7 @@ public:
 	// Frame
 	void Refresh();
 
+	// Functionality
 	void CopyFrom(Block& block);
 
 	// Setters
@@ -35,6 +36,7 @@ public:
 	InstanceData GetInstance();
 	bool IsSolid();
 	bool IsActive();
+
 
 private:
 	void HandleNeighbours();

@@ -318,8 +318,13 @@ string GetKey(float x, float y, float z)
 {
 	string key;
 
-	// X Y Z
+	// Format: X Y Z
 	key = to_string(x) + " " + to_string(y) + " " + to_string(z);
 
 	return key;
+}
+
+int GetIndex(int i, int j, int k, int maxJ, int maxK)
+{
+	return (i*maxJ + j)*maxK + k;
 }

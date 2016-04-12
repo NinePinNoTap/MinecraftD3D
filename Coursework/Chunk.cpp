@@ -2,7 +2,7 @@
 
 Chunk::Chunk()
 {
-	Chunk_ = 0;
+	Blocks_ = 0;
 	ChunkBlock_ = 0;
 }
 
@@ -12,14 +12,11 @@ Chunk::~Chunk()
 
 void Chunk::Initialise(int x, int y, int z)
 {
-	// Store the ID of the chunk
-	ChunkID_ = D3DXVECTOR3(x, y, z);
-
 	//==================
 	// Create Transform
 	//==================
 
-	Position_ = D3DXVECTOR3(CHUNK_WIDTH * x, CHUNK_HEIGHT * y, CHUNK_DEPTH * z);
+	Position_ = D3DXVECTOR3(x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE);
 
 	//================
 	// Generate Chunk
@@ -40,58 +37,87 @@ void Chunk::Initialise(int x, int y, int z)
 	//==================
 
 	IsVisible_ = true;
+	IsGenerated_ = false;
+}
+
+void Chunk::Generate()
+{
+	if (IsGenerated_)
+	{
+		// Get filename
+		string chunkFilename = GetKey(Position_.x, Position_.y, Position_.z);
+
+		// Load data from file
+		FILE* pFile = fopen(chunkFilename.c_str(), "rb");
+
+		if (pFile != NULL)
+		{
+			fread(this, sizeof(Chunk), 1, pFile);
+			fclose(pFile);
+		}
+		else
+		{
+			// No file loaded so generate again
+		}
+	}
+	else
+	{
+		// Generate new chunk
+		GenerateBlankChunk();
+	}
 }
 
 void Chunk::Shutdown()
 {
 	// Delete the blocks
-	for (int x = 0; x < NO_OF_BLOCKS_WIDTH; x++)
+	for (int x = 0; x < CHUNK_BLOCKS; x++)
 	{
 		// Loop through y dimension
-		for (int y = 0; y < NO_OF_BLOCKS_HEIGHT; y++)
+		for (int y = 0; y < CHUNK_BLOCKS; y++)
 		{
-			delete[] Chunk_[x][y];
+			delete[] Blocks_[x][y];
 		}
 
-		delete[] Chunk_[x];
+		delete[] Blocks_[x];
 	}
 
-	delete[] Chunk_;
+	delete[] Blocks_;
 }
 
-void Chunk::Build()
+void Chunk::RefreshVisible()
 {
 	// Loop through x dimension
-	for (int x = 0; x < NO_OF_BLOCKS_WIDTH; x++)
+	for (int x = 0; x < CHUNK_BLOCKS; x++)
 	{
 		// Loop through y dimension
-		for (int y = 0; y < NO_OF_BLOCKS_HEIGHT; y++)
+		for (int y = 0; y < CHUNK_BLOCKS; y++)
 		{
 			// Loop through z dimension
-			for (int z = 0; z < NO_OF_BLOCKS_DEPTH; z++)
+			for (int z = 0; z < CHUNK_BLOCKS; z++)
 			{
-				Chunk_[x][y][z].Refresh();
+				Blocks_[x][y][z].Refresh();
 			}
 		}
 	}
 
 	// Loop through x dimension
-	for (int x = 0; x < NO_OF_BLOCKS_WIDTH; x++)
+	for (int x = 0; x < CHUNK_BLOCKS; x++)
 	{
 		// Loop through y dimension
-		for (int y = 0; y < NO_OF_BLOCKS_HEIGHT; y++)
+		for (int y = 0; y < CHUNK_BLOCKS; y++)
 		{
 			// Loop through z dimension
-			for (int z = 0; z < NO_OF_BLOCKS_DEPTH; z++)
+			for (int z = 0; z < CHUNK_BLOCKS; z++)
 			{
-				if (Chunk_[x][y][z].IsActive() && Chunk_[x][y][z].IsSolid())
+				if (Blocks_[x][y][z].IsActive() && Blocks_[x][y][z].IsSolid())
 				{
-					ChunkBlock_->AddInstance(Chunk_[x][y][z].GetInstance());
+					ChunkBlock_->AddInstance(Blocks_[x][y][z].GetInstance());
 				}
 			}
 		}
 	}
 
+	// Compile the instance data to buffer
 	ChunkBlock_->RebuildInstanceBuffer();
 }
 
@@ -116,16 +142,16 @@ void Chunk::Render()
 void Chunk::SetBlocks(string blockName)
 {
 	// Loop through x dimension
-	for (int x = 0; x < NO_OF_BLOCKS_WIDTH; x++)
+	for (int x = 0; x < CHUNK_BLOCKS; x++)
 	{
 		// Loop through y dimension
-		for (int y = 0; y < NO_OF_BLOCKS_HEIGHT; y++)
+		for (int y = 0; y < CHUNK_BLOCKS; y++)
 		{
 			// Loop through z dimension
-			for (int z = 0; z < NO_OF_BLOCKS_DEPTH; z++)
+			for (int z = 0; z < CHUNK_BLOCKS; z++)
 			{
 				// Store it
-				Chunk_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock(blockName));
+				Blocks_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock(blockName));
 			}
 		}
 	}
@@ -137,36 +163,30 @@ void Chunk::GenerateBlankChunk()
 	float xPos, yPos, zPos;
 
 	// Create the 3D array to store blocks in chunk
-	Chunk_ = new Block**[NO_OF_BLOCKS_WIDTH];
+	Blocks_ = new Block**[CHUNK_BLOCKS];
 
 	// Loop through x dimension
-	for(int x = 0; x < NO_OF_BLOCKS_WIDTH; x++)
+	for(int x = 0; x < CHUNK_BLOCKS; x++)
 	{
-		Chunk_[x] = new Block*[NO_OF_BLOCKS_HEIGHT];
+		Blocks_[x] = new Block*[CHUNK_BLOCKS];
 
 		// Loop through y dimension
-		for (int y = 0; y < NO_OF_BLOCKS_HEIGHT; y++)
+		for (int y = 0; y < CHUNK_BLOCKS; y++)
 		{
-			Chunk_[x][y] = new Block[NO_OF_BLOCKS_DEPTH];
+			Blocks_[x][y] = new Block[CHUNK_BLOCKS];
 
 			// Loop through z dimension
-			for (int z = 0; z < NO_OF_BLOCKS_DEPTH; z++)
+			for (int z = 0; z < CHUNK_BLOCKS; z++)
 			{
 				// Define position of the block
-				xPos = Position_.x + (x * BLOCK_SIZE) - (CHUNK_WIDTH / 2);
-				yPos = Position_.y + (y * BLOCK_SIZE) - (CHUNK_HEIGHT / 2);
-				zPos = Position_.z + (z * BLOCK_SIZE) - (CHUNK_DEPTH / 2);
+				xPos = Position_.x + (x * BLOCK_SIZE);
+				yPos = Position_.y + (y * BLOCK_SIZE);
+				zPos = Position_.z + (z * BLOCK_SIZE);
 				
 				// Store it
-				Chunk_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock("air"));
-				Chunk_[x][y][z].SetPosition(xPos, yPos, zPos);
+				Blocks_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock("air"));
+				Blocks_[x][y][z].SetPosition(xPos, yPos, zPos);
 			}
 		}
 	}
-}
-
-// Getters
-bool Chunk::IsVisible()
-{
-	return IsVisible_;
 }
