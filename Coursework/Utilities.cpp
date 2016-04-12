@@ -313,3 +313,13 @@ void CalculateTangentBinormal(VertexData vertex1, VertexData vertex2, VertexData
 
 	return;
 }
+
+string GetKey(float x, float y, float z)
+{
+	string key;
+
+	// X Y Z
+	key = to_string(x) + " " + to_string(y) + " " + to_string(z);
+
+	return key;
+}

@@ -4,6 +4,8 @@
 #include "Constants.h"
 #include "BlockManager.h"
 
+#include <map>
+
 class VoxelTerrain
 {
 public:
@@ -25,5 +27,5 @@ private:
 	Block* GetBlock(int x, int y, int z);
 
 	BlockManager* BlockManager_;
-	Chunk**** TerrainChunks_;
+	map<string, Chunk> ChunkMap_;
 };

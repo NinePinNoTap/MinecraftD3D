@@ -72,3 +72,6 @@ void CalculateTangentBinormal(VertexData vertex1, VertexData vertex2, VertexData
 
 // Calculates a hard normal for a face
 void CalculateHardNormal(D3DXVECTOR3 tangent, D3DXVECTOR3 binormal, D3DXVECTOR3& normal);
+
+// Convert a D3DXVECTOR3 into a string
+string GetKey(float x, float y, float z);

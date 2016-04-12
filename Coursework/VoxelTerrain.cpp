@@ -2,7 +2,6 @@
 
 VoxelTerrain::VoxelTerrain()
 {
-	TerrainChunks_ = 0;
 }
 
 VoxelTerrain::~VoxelTerrain()
@@ -32,37 +31,26 @@ void VoxelTerrain::Initialise()
 
 void VoxelTerrain::Frame()
 {
-	// Loop through x dimension
-	for (int i = 0; i < NO_OF_CHUNKS_WIDTH; i++)
+	// Look through terrain
+	typedef std::map<std::string, Chunk>::iterator it_type;
+	for (it_type iterator = ChunkMap_.begin(); iterator != ChunkMap_.end(); iterator++)
 	{
-		// Loop through y dimension
-		for (int j = 0; j < NO_OF_CHUNKS_HEIGHT; j++)
-		{
-			// Loop through z dimension
-			for (int k = 0; k < NO_OF_CHUNKS_DEPTH; k++)
-			{
-				TerrainChunks_[i][j][k]->Frame();
-			}
-		}
+		// Update chunk
+		iterator->second.Frame();
 	}
 }
 
 void VoxelTerrain::Render()
 {
-	// Loop through x dimension
-	for (int i = 0; i < NO_OF_CHUNKS_WIDTH; i++)
+	// Loop through terrain and render active chunks
+	typedef std::map<std::string, Chunk>::iterator it_type;
+	for (it_type iterator = ChunkMap_.begin(); iterator != ChunkMap_.end(); iterator++)
 	{
-		// Loop through y dimension
-		for (int j = 0; j < NO_OF_CHUNKS_HEIGHT; j++)
+		// Check if the chunk is active
+		if (iterator->second.IsVisible())
 		{
-			// Loop through z dimension
-			for (int k = 0; k < NO_OF_CHUNKS_DEPTH; k++)
-			{	
-				if (TerrainChunks_[i][j][k]->IsVisible())
-				{
-					TerrainChunks_[i][j][k]->Render();
-				}
-			}
+			// Render it
+			iterator->second.Render();
 		}
 	}
 }
@@ -73,24 +61,17 @@ void VoxelTerrain::CreateChunks()
 	// Create 3D array to represent world
 	//====================================
 
-	// Create x dimension
-	TerrainChunks_ = new Chunk***[NO_OF_CHUNKS_WIDTH];
-
-	for (int x = 0; x < NO_OF_CHUNKS_WIDTH; x++)
+	for (int x = 0; x < 2; x++)
 	{
-		// Create y dimension
-		TerrainChunks_[x] = new Chunk**[NO_OF_CHUNKS_HEIGHT];
-
-		for (int y = 0; y < NO_OF_CHUNKS_HEIGHT; y++)
+		for (int y = 0; y < 2; y++)
 		{
-			// Create z dimension
-			TerrainChunks_[x][y] = new Chunk*[NO_OF_CHUNKS_DEPTH];
-
-			for (int z = 0; z < NO_OF_CHUNKS_DEPTH; z++)
+			for (int z = 0; z < 2; z++)
 			{
-				// Store chunk
-				TerrainChunks_[x][y][z] = new Chunk;
-				TerrainChunks_[x][y][z]->Initialise(x, y, z);
+				Chunk chunk;
+				chunk.Initialise(x, y, z);
+				chunk.SetBlocks("air");
+
+				ChunkMap_[GetKey(x, y, z)] = chunk;
 			}
 		}
 	}
@@ -141,7 +122,7 @@ void VoxelTerrain::GenerateTerrain()
 	PerlinNoiseGenerator perlinNoise;
 
 	// Generate a random seed for the noise to use
-	perlinNoise.SetSeed(rand() % 10000);
+	perlinNoise.SetSeed(rand() % 10000 + rand() % 10000);
 
 	int workArea = TERRAIN_HEIGHT - TERRAIN_BASE_HEIGHT;
 
@@ -190,15 +171,13 @@ void VoxelTerrain::GenerateTerrain()
 
 void VoxelTerrain::RefreshTerrain()
 {
-	for (int x = 0; x < NO_OF_CHUNKS_WIDTH; x++)
+	typedef std::map<std::string, Chunk>::iterator it_type;
+	for (it_type iterator = ChunkMap_.begin(); iterator != ChunkMap_.end(); iterator++)
 	{
-		for (int y = 0; y < NO_OF_CHUNKS_HEIGHT; y++)
-		{
-			for (int z = 0; z < NO_OF_CHUNKS_DEPTH; z++)
-			{
-				TerrainChunks_[x][y][z]->Build();
-			}
-		}
+		iterator->second.Build();
+		// iterator->first = key
+		// iterator->second = value
+		// Repeat if you also want to iterate through the second map.
 	}
 }
 
@@ -229,6 +208,14 @@ Block* VoxelTerrain::GetBlock(int x, int y, int z)
 	chunkX = (x - coordX) / NO_OF_BLOCKS_WIDTH;
 	chunkY = (y - coordY) / NO_OF_BLOCKS_HEIGHT;
 	chunkZ = (z - coordZ) / NO_OF_BLOCKS_DEPTH;
+		
+	// Create a lookup key
+	string chunkKey = GetKey(chunkX, chunkY, chunkZ);
 
-	return TerrainChunks_[chunkX][chunkY][chunkZ]->GetBlock(coordX, coordY, coordZ);
+	if (ChunkMap_.count(chunkKey))
+	{
+		return ChunkMap_[chunkKey].GetBlock(coordX, coordY, coordZ);
+	}
+
+	return 0;
 }

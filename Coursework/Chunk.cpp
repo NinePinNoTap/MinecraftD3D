@@ -4,7 +4,6 @@ Chunk::Chunk()
 {
 	Chunk_ = 0;
 	ChunkBlock_ = 0;
-	Transform_ = 0;
 }
 
 Chunk::~Chunk()
@@ -20,8 +19,7 @@ void Chunk::Initialise(int x, int y, int z)
 	// Create Transform
 	//==================
 
-	Transform_ = new Transform;
-	Transform_->SetPosition(CHUNK_WIDTH * x, CHUNK_HEIGHT * y, CHUNK_DEPTH * z);
+	Position_ = D3DXVECTOR3(CHUNK_WIDTH * x, CHUNK_HEIGHT * y, CHUNK_DEPTH * z);
 
 	//================
 	// Generate Chunk
@@ -115,15 +113,28 @@ void Chunk::Render()
 	ChunkBlock_->Render();
 }
 
+void Chunk::SetBlocks(string blockName)
+{
+	// Loop through x dimension
+	for (int x = 0; x < NO_OF_BLOCKS_WIDTH; x++)
+	{
+		// Loop through y dimension
+		for (int y = 0; y < NO_OF_BLOCKS_HEIGHT; y++)
+		{
+			// Loop through z dimension
+			for (int z = 0; z < NO_OF_BLOCKS_DEPTH; z++)
+			{
+				// Store it
+				Chunk_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock(blockName));
+			}
+		}
+	}
+}
+
 // Terrain Generation
 void Chunk::GenerateBlankChunk()
 {
-	D3DXVECTOR3 chunkPosition;
-	Block airBlock;
 	float xPos, yPos, zPos;
-
-	// Retrieve start position of the chunk
-	chunkPosition = GetTransform()->GetPosition();
 
 	// Create the 3D array to store blocks in chunk
 	Chunk_ = new Block**[NO_OF_BLOCKS_WIDTH];
@@ -142,16 +153,13 @@ void Chunk::GenerateBlankChunk()
 			for (int z = 0; z < NO_OF_BLOCKS_DEPTH; z++)
 			{
 				// Define position of the block
-				xPos = chunkPosition.x + (x * BLOCK_SIZE) - (CHUNK_WIDTH / 2);
-				yPos = chunkPosition.y + (y * BLOCK_SIZE) - (CHUNK_HEIGHT / 2);
-				zPos = chunkPosition.z + (z * BLOCK_SIZE) - (CHUNK_DEPTH / 2);
-
-				// Define base block
-				airBlock.CopyFrom(BlockManager::Instance()->GetBlock("air"));
-				airBlock.SetPosition(xPos, yPos, zPos);
-
+				xPos = Position_.x + (x * BLOCK_SIZE) - (CHUNK_WIDTH / 2);
+				yPos = Position_.y + (y * BLOCK_SIZE) - (CHUNK_HEIGHT / 2);
+				zPos = Position_.z + (z * BLOCK_SIZE) - (CHUNK_DEPTH / 2);
+				
 				// Store it
-				Chunk_[x][y][z] = airBlock;
+				Chunk_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock("air"));
+				Chunk_[x][y][z].SetPosition(xPos, yPos, zPos);
 			}
 		}
 	}
@@ -161,9 +169,4 @@ void Chunk::GenerateBlankChunk()
 bool Chunk::IsVisible()
 {
 	return IsVisible_;
-}
-
-Transform* Chunk::GetTransform()
-{
-	return Transform_;
 }
