@@ -157,9 +157,9 @@ void VoxelTerrain::GenerateTerrain()
 			height += TERRAIN_BASE_HEIGHT;
 
 			// Loop through y dimension
-			for (int y = height; y >= 0; y--)
+			for (int y = 0; y < height; y++)
 			{
-				if (y < 10)
+				if (y < 8)
 				{
 					int r = rand() % 50;
 					if (r < 3)
@@ -171,11 +171,11 @@ void VoxelTerrain::GenerateTerrain()
 						GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
 					}
 				}
-				else if (y < 32)
+				else if (y < 12)
 				{
 					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
 				}
-				else if (y < 40)
+				else if (y < 16)
 				{
 					GetBlock(x, y, z)->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
 				}

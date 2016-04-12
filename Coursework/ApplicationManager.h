@@ -16,7 +16,7 @@
 
 enum SceneState
 {
-	MAIN,
+	GAME,
 	LOADING
 };
 
@@ -59,7 +59,7 @@ private:
 	
 	// Scenes
 	MinecraftScene* MinecraftScene_;
-	LoadingScene* SceneLoading_;
+	LoadingScene* LoadingScene_;
 	std::thread LoadingScreenThread_;
 
 	// Global Objects

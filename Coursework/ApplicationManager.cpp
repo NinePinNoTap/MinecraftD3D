@@ -20,7 +20,7 @@ ApplicationManager::ApplicationManager()
 	MinecraftScene_ = 0;
 	ShaderManager_ = 0;
 	PerformanceManager_ = 0;
-	SceneLoading_ = 0;
+	LoadingScene_ = 0;
 }
 
 ApplicationManager::ApplicationManager(const ApplicationManager& other)
@@ -154,13 +154,12 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	ViewFrustumManager_ = new ViewFrustumManager;
 
-	//===================
-	// Initialise Scenes
-	//===================
+	//===========================
+	// Initialise Loading Screen
+	//===========================
 
-	// Loading Screen
-	SceneLoading_ = new LoadingScene;
-	Result_ = SceneLoading_->Initialise();
+	LoadingScene_ = new LoadingScene;
+	Result_ = LoadingScene_->Initialise();
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the loading screen", L"Error", MB_OK);
@@ -169,11 +168,15 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	// Set starting scene as loading and render it
 	SetScene(LOADING);
-	//Frame();
 
-	LoadingScreenThread_ = std::thread(LoadingScreenUpdater);     // spawn new thread that calls foo()
+	// Create a thread to keep the application rendering until we have finished loading
+	LoadingScreenThread_ = std::thread(LoadingScreenUpdater);
 
-	// Inside the Painting
+
+	//=================
+	// Initialise Game
+	//=================
+	
 	MinecraftScene_ = new MinecraftScene;
 	Result_ = MinecraftScene_->Initialise(hwnd);
 	if (!Result_)
@@ -181,10 +184,9 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 		MessageBox(hwnd, L"Could not initialise the inside scene", L"Error", MB_OK);
 		return false;
 	}
-		
-	// Set Default Scene
-	SetScene(MAIN);
-	CurrentScene_ = MinecraftScene_;
+
+	// Switch once we have loaded
+	SetScene(GAME);
 
 	return true;
 }
@@ -202,11 +204,11 @@ void ApplicationManager::Shutdown()
 		MinecraftScene_ = 0;
 	}
 
-	if (SceneLoading_)
+	if (LoadingScene_)
 	{
-		SceneLoading_->Shutdown();
-		delete SceneLoading_;
-		SceneLoading_ = 0;
+		LoadingScene_->Shutdown();
+		delete LoadingScene_;
+		LoadingScene_ = 0;
 	}
 
 	//=====================
@@ -296,13 +298,13 @@ void ApplicationManager::UpdateScene()
 	// Check which scene to change to
 	switch (NewScene_)
 	{
-		case MAIN:
-			CurrentScene_ = MinecraftScene_;
+		case GAME:
 			LoadingScreenThread_.join();
+			CurrentScene_ = MinecraftScene_;
 			break;
 
 		case LOADING:
-			CurrentScene_ = SceneLoading_;
+			CurrentScene_ = LoadingScene_;
 			break;
 	}
 

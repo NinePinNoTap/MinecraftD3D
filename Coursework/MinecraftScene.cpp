@@ -432,7 +432,7 @@ bool MinecraftScene::HandleInput()
 
 	if (InputManager::Instance() -> GetKeyDown(VK_HOME))
 	{
-		ApplicationManager::Instance()->SetScene(MAIN);
+		ApplicationManager::Instance()->SetScene(GAME);
 		AmbientSound_->Stop();
 	}
 

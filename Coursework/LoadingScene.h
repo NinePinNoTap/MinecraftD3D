@@ -22,7 +22,6 @@ public:
 
 	// Setters
 	void Reset();
-	void SetSceneLoaded();
 
 private:
 	void Render();
@@ -35,7 +34,6 @@ private:
 	Sprite* BarMask_;
 	int LoadingProgress_;
 	Text* LoadingText_;
-	bool SceneCanSwitch_;
 };
 
 

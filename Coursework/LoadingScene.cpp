@@ -57,9 +57,6 @@ bool LoadingScene::Initialise()
 	LoadingText_->CreateText("Load Time : ", Vector2(windowWidth - 25, windowHeight - 25), WHITE, RIGHT);
 	LoadingProgress_ = timeGetTime();
 
-	// Initialise Flags
-	SceneCanSwitch_ = false;
-
 	return true;
 }
 
@@ -74,17 +71,7 @@ void LoadingScene::Shutdown()
 
 bool LoadingScene::Frame()
 {
-	if (SceneCanSwitch_)
-	{
-		if (InputManager::Instance()->GetKeyDown(VK_SPACE))
-		{
-			ApplicationManager::Instance()->SetScene(MAIN);
-		}
-	}
-	else
-	{
-		LoadingText_->SetValue(0, (timeGetTime() - LoadingProgress_) / 1000);
-	}
+	LoadingText_->SetValue(0, (timeGetTime() - LoadingProgress_) / 1000);
 
 	Render();
 
@@ -113,12 +100,6 @@ void LoadingScene::Render()
 void LoadingScene::Reset()
 {
 	return;
-}
-
-void LoadingScene::SetSceneLoaded()
-{
-	SceneCanSwitch_ = true;
-	LoadingText_->SetText(0, "Press SPACE to continue");
 }
 
 void LoadingScene::GenerateMatrices()
