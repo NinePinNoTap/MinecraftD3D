@@ -63,7 +63,7 @@ void Chunk::Generate()
 	else
 	{
 		// Generate new chunk
-		GenerateBlankChunk();
+		GenerateChunk();
 	}
 }
 
@@ -186,6 +186,64 @@ void Chunk::GenerateBlankChunk()
 				// Store it
 				Blocks_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock("air"));
 				Blocks_[x][y][z].SetPosition(xPos, yPos, zPos);
+			}
+		}
+	}
+}
+
+void Chunk::GenerateChunk()
+{
+	PerlinNoiseGenerator perlinNoise;
+
+	// Generate a random seed for the noise to use
+	perlinNoise.SetSeed(100);
+	
+	for (int x = Position_.x; x < Position_.x + CHUNK_BLOCKS; x++)
+	{
+		for (int z = Position_.z; z < Position_.z + CHUNK_BLOCKS; z++)
+		{
+			double a = (double)z / (double)CHUNK_BLOCKS;
+			double b = (double)x / (double)CHUNK_BLOCKS;
+	
+			float noise = perlinNoise.CreateNoise(a, b, 0.8f);
+			float height = floor(CHUNK_BLOCKS * noise);
+	
+			// Loop through y dimension
+			for (int y = Position_.y; y < Position_.y + height; y++)
+			{	
+				Block* currentBlock = GetBlock(x - Position_.x, y - Position_.y, z - Position_.z);
+
+				if (y < 3)
+				{
+					int r = rand() % 50;
+					if (r < 3)
+					{
+						currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("diamond"));
+					}
+					else
+					{
+						currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
+					}
+				}
+				else if (y < 4)
+				{
+					currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
+				}
+				else if (y < 11)
+				{
+					currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
+				}
+				else if (y < 16)
+				{
+					currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
+				}
+				else
+				{
+					currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("air"));
+				}
+
+				// Clean Up
+				currentBlock = 0;
 			}
 		}
 	}

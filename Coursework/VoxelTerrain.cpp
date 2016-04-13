@@ -8,7 +8,6 @@ VoxelTerrain::~VoxelTerrain()
 {
 }
 
-#include "WindowManager.h"
 void VoxelTerrain::Initialise()
 {
 	//======================
@@ -17,13 +16,6 @@ void VoxelTerrain::Initialise()
 
 	BlockManager_ = new BlockManager;
 	BlockManager_->Initialise();
-
-	In = new Text;
-	In->Initialise(WindowManager::Instance()->GetHWND(), "shruti", "shruti.dds", 95);
-	In->CreateText("Inside Chunk", Vector2(200, 200), YELLOW, Alignment::CENTRE);
-	Out = new Text;
-	Out->Initialise(WindowManager::Instance()->GetHWND(), "shruti", "shruti.dds", 95);
-	Out->CreateText("Outside Chunk", Vector2(200, 20), YELLOW, Alignment::CENTRE);
 
 	//=================
 	// Generate Chunks
@@ -39,16 +31,54 @@ void VoxelTerrain::Initialise()
 
 void VoxelTerrain::Frame()
 {
-	//==============
-	// Update Chunk
-	//==============
+	//======================
+	// Update Active Chunks
+	//======================
 
-	typedef std::map<std::string, Chunk>::iterator it_type;
 	for (it_type iterator = ChunkMap_.begin(); iterator != ChunkMap_.end(); iterator++)
 	{
 		// Update chunk
-		iterator->second.Frame();
+		iterator->second->Frame();
 	}
+
+	// Get the position of the camera
+	D3DXVECTOR3 cameraPos = Camera::Instance()->GetTransform()->GetPosition();
+
+	Chunk* currentChunk = GetChunk(cameraPos.x, cameraPos.y, cameraPos.z);
+	// Find the chunk we are in
+	if (currentChunk)
+	{
+		// We are in a chunk
+		// Check if it active
+		// If active then continue
+		// If not make it active, pull from file etc
+		currentChunk = 0;
+	}
+	else
+	{
+		// Create a new chunk
+		OutputToDebug("New chunk found - Please generate me");
+
+		// Calculate chunk index
+		float chunkX = cameraPos.x / (float)CHUNK_SIZE;
+		float chunkY = cameraPos.y / (float)CHUNK_SIZE;
+		float chunkZ = cameraPos.z / (float)CHUNK_SIZE;
+
+		chunkX = floor(chunkX);
+		chunkY = floor(chunkY);
+		chunkZ = floor(chunkZ);
+
+		// Create Chunk
+		currentChunk = new Chunk;
+		currentChunk->Initialise(chunkX, chunkY, chunkZ);
+		currentChunk->SetBlocks("air");
+		currentChunk->Generate();
+		currentChunk->RefreshVisible();
+
+		// Add Chunk to Map
+		ChunkMap_[GetKey(chunkX, chunkY, chunkZ)] = currentChunk;
+	}
+
 }
 
 void VoxelTerrain::Render()
@@ -57,31 +87,14 @@ void VoxelTerrain::Render()
 	// Render Chunk
 	//==============
 
-	typedef std::map<std::string, Chunk>::iterator it_type;
 	for (it_type iterator = ChunkMap_.begin(); iterator != ChunkMap_.end(); iterator++)
 	{
 		// Check if the chunk is active
-		if (iterator->second.IsVisible())
+		if (iterator->second->IsVisible())
 		{
 			// Render it
-			iterator->second.Render();
+			iterator->second->Render();
 		}
-	}
-
-	Chunk* chunk = GetChunk(Camera::Instance()->GetTransform()->GetPosition().x,
-		Camera::Instance()->GetTransform()->GetPosition().y,
-		Camera::Instance()->GetTransform()->GetPosition().z);
-
-	if (chunk)
-	{
-		In->Render();
-		//OutputToDebug("Found an old chunk");
-	}
-	else
-	{
-		Out->Render();
-		// Create a new chunk
-		//OutputToDebug("New chunk found");
 	}
 }
 
@@ -94,11 +107,17 @@ void VoxelTerrain::CreateChunks()
 		{
 			for (int z = 0; z < 1; z++)
 			{
-				Chunk chunk;
-				chunk.Initialise(x,y,z);
-				chunk.SetBlocks("air");
+				// Get a key for the chunk
+				string chunkKey = GetKey(x, y, z);
 
-				ChunkMap_[GetKey(x,y,z)] = chunk;
+				// Create the chunk
+				Chunk* chunk = new Chunk;
+				chunk -> Initialise(x,y,z);
+				chunk -> SetBlocks("air");
+				chunk -> Generate();
+
+				// Store chunk in map
+				ChunkMap_[GetKey(x, y, z)] = chunk;
 			}
 		}
 	}
@@ -107,18 +126,15 @@ void VoxelTerrain::CreateChunks()
 void VoxelTerrain::LinkBlocks()
 {
 	// Loop through active chunks
-	typedef std::map<std::string, Chunk>::iterator it_type;
 	for (it_type iterator = ChunkMap_.begin(); iterator != ChunkMap_.end(); iterator++)
 	{
 		int chunkX, chunkY, chunkZ;
 		int blockX, blockY, blockZ;
 
 		// Get current chunk
-		chunkX = iterator->second.GetPosition().x;
-		chunkY = iterator->second.GetPosition().y;
-		chunkZ = iterator->second.GetPosition().z;
-
-		iterator->second.SetBlocks("dirt");
+		chunkX = iterator->second->GetPosition().x;
+		chunkY = iterator->second->GetPosition().y;
+		chunkZ = iterator->second->GetPosition().z;
 
 		// Loop through blocks in chunk
 		for (int x = 0; x < CHUNK_BLOCKS; x++)
@@ -132,19 +148,17 @@ void VoxelTerrain::LinkBlocks()
 					blockY = chunkY + y;
 					blockZ = chunkZ + z;
 
+					// Config the block neighbours
 					SetBlockNeighbours(blockX, blockY, blockZ);
 				}
 			}
 		}
 	}
 
-
-
-
 	////===============================================
 	//// Link each block to its surrounding neighbours
 	////===============================================
-
+	//
 	//for (int x = 0; x < TERRAIN_WIDTH; x++)
 	//{
 	//	for (int y = 0; y < TERRAIN_HEIGHT; y++)
@@ -188,18 +202,18 @@ void VoxelTerrain::GenerateTerrain()
 
 	//// Generate a random seed for the noise to use
 	//perlinNoise.SetSeed(100);
-
+	//
 	//for (int x = 0; x < TERRAIN_WIDTH; x++)
 	//{
 	//	for (int z = 0; z < TERRAIN_DEPTH; z++)
 	//	{
 	//		double a = (double)z / (double)TERRAIN_WIDTH * 2;
 	//		double b = (double)x / (double)TERRAIN_DEPTH * 2;
-
+	//
 	//		float noise = perlinNoise.CreateNoise(a, b, 0.8f);
 	//		float height = floor(noise);
 	//		//height += TERRAIN_BASE_HEIGHT;
-
+	//
 	//		// Loop through y dimension
 	//		for (int y = 0; y < height; y++)
 	//		{
@@ -207,7 +221,7 @@ void VoxelTerrain::GenerateTerrain()
 	//			{
 	//				continue;
 	//			}
-
+	//
 	//			if (y < 8)
 	//			{
 	//				int r = rand() % 50;
@@ -243,10 +257,9 @@ void VoxelTerrain::RefreshTerrain()
 	// Refresh Visible Blocks
 	//========================
 
-	typedef std::map<std::string, Chunk>::iterator it_type;
 	for (it_type iterator = ChunkMap_.begin(); iterator != ChunkMap_.end(); iterator++)
 	{
-		iterator->second.RefreshVisible();
+		iterator->second->RefreshVisible();
 	}
 }
 
@@ -267,7 +280,7 @@ Chunk* VoxelTerrain::GetChunk(int x, int y, int z)
 	// Try and get chunk from map
 	if (ChunkMap_.count(GetKey(chunkX, chunkY, chunkZ)))
 	{
-		return &ChunkMap_[GetKey(chunkX, chunkY, chunkZ)];
+		return ChunkMap_[GetKey(chunkX, chunkY, chunkZ)];
 	}
 
 	return 0;
