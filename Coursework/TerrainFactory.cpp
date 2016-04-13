@@ -70,7 +70,7 @@ bool TerrainFactory::CreateTerrainWithPerlinNoise(const Rect3D terrainSize, Vect
 	int index;
 	float noise;
 	D3DXVECTOR3 tempVertex;
-	PerlinNoiseGenerator NoiseGen;
+	PerlinNoise NoiseGen;
 	VertexData* modelData;
 
 	//===============================

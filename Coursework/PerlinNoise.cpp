@@ -1,6 +1,6 @@
-#include "PerlinNoiseGenerator.h"
+#include "PerlinNoise.h"
 
-PerlinNoiseGenerator::PerlinNoiseGenerator()
+PerlinNoise::PerlinNoise()
 {
 	// Initialize the permutation vector with the reference values
 	HashMap_ = {
@@ -22,11 +22,11 @@ PerlinNoiseGenerator::PerlinNoiseGenerator()
 	HashMap_.insert(HashMap_.end(), HashMap_.begin(), HashMap_.end());
 }
 
-PerlinNoiseGenerator::~PerlinNoiseGenerator()
+PerlinNoise::~PerlinNoise()
 {
 }
 
-void PerlinNoiseGenerator::SetSeed(int Seed)
+void PerlinNoise::SetSeed(int Seed)
 {
 	// Initialize a random engine with seed
 	std::default_random_engine engine(Seed);
@@ -35,7 +35,7 @@ void PerlinNoiseGenerator::SetSeed(int Seed)
 	std::shuffle(HashMap_.begin(), HashMap_.end(), engine);
 }
 
-double PerlinNoiseGenerator::CreateNoise(double x, double y, double z)
+double PerlinNoise::CreateNoise(double x, double y, double z)
 {
 	// Find the unit cube that contains the point
 	int X = (int)floor(x) & 255;
@@ -65,17 +65,17 @@ double PerlinNoiseGenerator::CreateNoise(double x, double y, double z)
 	return (res + 1.0) / 2.0;
 }
 
-double PerlinNoiseGenerator::Fade(double t)
+double PerlinNoise::Fade(double t)
 {
 	return t * t * t * (t * (t * 6 - 15) + 10);
 }
 
-double PerlinNoiseGenerator::Lerp(double t, double a, double b)
+double PerlinNoise::Lerp(double t, double a, double b)
 {
 	return a + t * (b - a);
 }
 
-double PerlinNoiseGenerator::Gradient(int hash, double x, double y, double z)
+double PerlinNoise::Gradient(int hash, double x, double y, double z)
 {
 	int h = hash & 15;
 

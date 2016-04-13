@@ -83,6 +83,9 @@
     <Filter Include="Framework\Shader\HLSL Shader Files\InstancedLight">
       <UniqueIdentifier>{4d195ff8-fa6e-4655-9273-fcca63fd7607}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Noise">
+      <UniqueIdentifier>{450adb5e-10df-4614-a8fd-2434304b7da3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -142,9 +145,6 @@
     </ClCompile>
     <ClCompile Include="AssetManager.cpp">
       <Filter>Framework\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="PerlinNoiseGenerator.cpp">
-      <Filter>Framework\System</Filter>
     </ClCompile>
     <ClCompile Include="AudioClip.cpp">
       <Filter>Framework\Audio</Filter>
@@ -254,6 +254,9 @@
     <ClCompile Include="LoadingScene.cpp">
       <Filter>Scene\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="PerlinNoise.cpp">
+      <Filter>Framework\Noise</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h">
@@ -321,9 +324,6 @@
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Framework\Graphics\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="PerlinNoiseGenerator.h">
-      <Filter>Framework\System</Filter>
     </ClInclude>
     <ClInclude Include="Vector2.h">
       <Filter>Framework\System\Data</Filter>
@@ -450,6 +450,9 @@
     </ClInclude>
     <ClInclude Include="LoadingScene.h">
       <Filter>Scene\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="PerlinNoise.h">
+      <Filter>Framework\Noise</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

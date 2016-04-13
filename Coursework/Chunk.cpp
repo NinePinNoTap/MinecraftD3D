@@ -189,7 +189,7 @@ void Chunk::GenerateBlankChunk()
 
 void Chunk::GenerateChunk()
 {
-	PerlinNoiseGenerator perlinNoise;
+	PerlinNoise perlinNoise;
 
 	// Generate a random seed for the noise to use
 	perlinNoise.SetSeed(100);
@@ -198,10 +198,10 @@ void Chunk::GenerateChunk()
 	{
 		for (int z = Position_.z; z < Position_.z + CHUNK_BLOCKS; z++)
 		{
-			double a = (double)z / (double)CHUNK_BLOCKS;
-			double b = (double)x / (double)CHUNK_BLOCKS;
+			double a = (double)z / (double)10;
+			double b = (double)x / (double)10;
 	
-			float noise = perlinNoise.CreateNoise(a, b, 0.8f);
+			float noise = perlinNoise.CreateNoise(a, b, 0.0f);
 			float height = floor(CHUNK_BLOCKS * noise);
 	
 			// Loop through y dimension

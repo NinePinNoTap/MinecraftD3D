@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Model.h"
-#include "PerlinNoiseGenerator.h"
+#include "PerlinNoise.h"
 #include "Rect.h"
 #include "Vector2.h"
 #include "Vector3.h"

@@ -1,16 +1,16 @@
-#ifndef _PERLINNOISEGENERATOR_H
-#define _PERLINNOISEGENERATOR_H
+#ifndef _PerlinNoise_H
+#define _PerlinNoise_H
 
 #include <iostream>
 #include <cmath>
 #include <random>
 #include <algorithm>
 
-class PerlinNoiseGenerator
+class PerlinNoise
 {
 public:
-	PerlinNoiseGenerator();
-	~PerlinNoiseGenerator();
+	PerlinNoise();
+	~PerlinNoise();
 
 	// Generate a new hash map
 	void SetSeed(int Seed = -1);
