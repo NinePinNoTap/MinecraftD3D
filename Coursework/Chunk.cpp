@@ -36,7 +36,7 @@ void Chunk::Initialise(int x, int y, int z)
 	// Initialise Flags
 	//==================
 
-	IsVisible_ = true;
+	IsVisible_ = false;
 	IsGenerated_ = false;
 }
 
@@ -44,26 +44,34 @@ void Chunk::Generate()
 {
 	if (IsGenerated_)
 	{
-		// Get filename
-		string chunkFilename = GetKey(Position_.x, Position_.y, Position_.z);
-
-		// Load data from file
-		FILE* pFile = fopen(chunkFilename.c_str(), "rb");
-
-		if (pFile != NULL)
+		if (IsVisible_)
 		{
-			fread(this, sizeof(Chunk), 1, pFile);
-			fclose(pFile);
 		}
 		else
 		{
-			// No file loaded so generate again
+			// Get filename
+			string chunkFilename = GetKey(Position_.x, Position_.y, Position_.z);
+
+			// Load data from file
+			FILE* pFile = fopen(chunkFilename.c_str(), "rb");
+
+			if (pFile != NULL)
+			{
+				fread(this, sizeof(Chunk), 1, pFile);
+				fclose(pFile);
+			}
+			else
+			{
+				// No file loaded so generate again
+			}
 		}
 	}
 	else
 	{
 		// Generate new chunk
 		GenerateChunk();
+		IsGenerated_ = true;
+		IsVisible_ = true;
 	}
 }
 
@@ -96,19 +104,7 @@ void Chunk::RefreshVisible()
 			for (int z = 0; z < CHUNK_BLOCKS; z++)
 			{
 				Blocks_[x][y][z].Refresh();
-			}
-		}
-	}
 
-	// Loop through x dimension
-	for (int x = 0; x < CHUNK_BLOCKS; x++)
-	{
-		// Loop through y dimension
-		for (int y = 0; y < CHUNK_BLOCKS; y++)
-		{
-			// Loop through z dimension
-			for (int z = 0; z < CHUNK_BLOCKS; z++)
-			{
 				if (Blocks_[x][y][z].IsActive() && Blocks_[x][y][z].IsSolid())
 				{
 					ChunkBlock_->AddInstance(Blocks_[x][y][z].GetInstance());

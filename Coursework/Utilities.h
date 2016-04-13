@@ -76,5 +76,11 @@ void CalculateHardNormal(D3DXVECTOR3 tangent, D3DXVECTOR3 binormal, D3DXVECTOR3&
 // Convert a D3DXVECTOR3 into a string
 string GetKey(float x, float y, float z);
 
-// Get Index
+// Get index within a 3D array
 int GetIndex(int i, int j, int k, int maxJ, int maxK);
+
+// Outputs a delay in MS
+void OutputTimeDelay(string dataName, float before, float after);
+
+// Gets rid of trailing zero
+void TrimString(string& str);

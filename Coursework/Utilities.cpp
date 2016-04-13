@@ -328,3 +328,23 @@ int GetIndex(int i, int j, int k, int maxJ, int maxK)
 {
 	return (i*maxJ + j)*maxK + k;
 }
+
+void OutputTimeDelay(string dataName, float before, float after)
+{
+	float totalTime = after - before;
+	totalTime /= 1000.0f;
+
+	string output = to_string(totalTime);
+	TrimString(output);
+
+	OutputToDebug(dataName + " : " + output + "ms");
+}
+
+void TrimString(string& string)
+{
+	string.erase(string.find_last_not_of('0') + 1, std::string::npos);
+	if (string[string.size() - 1] == '.')
+	{
+		string.erase(string.end() - 1);
+	}
+}
