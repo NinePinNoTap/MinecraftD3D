@@ -84,3 +84,6 @@ void OutputTimeDelay(string dataName, float before, float after);
 
 // Gets rid of trailing zero
 void TrimString(string& str);
+
+// Rounds vector nearest whole number
+void RoundVector3(D3DXVECTOR3& vector);

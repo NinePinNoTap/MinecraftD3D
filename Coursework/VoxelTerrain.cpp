@@ -28,68 +28,77 @@ void VoxelTerrain::Initialise()
 
 void VoxelTerrain::Frame()
 {
-	//======================
-	// Update Active Chunks
-	//======================
+	// Update active chunks
+	HandleChunks();
+
+	// Create chunks
+	HandleChunkGeneration();
+}
+
+void VoxelTerrain::HandleChunks()
+{
+	//================
+	// Update Chunks
+	//================
 
 	for (it_type iterator = ChunkMap_.begin(); iterator != ChunkMap_.end(); iterator++)
 	{
-		// Update chunk
-		iterator->second->Frame();
+		// Make sure it's active
+		if (iterator->second)
+		{
+			iterator->second->Frame();
+
+			// NEED SOME CHUNKS FOR DELETING IF OUT OF RANGE
+		}
 	}
+}
 
-	//==================
-	// Chunk Generation
-	//==================
+void VoxelTerrain::HandleChunkGeneration()
+{
+	D3DXVECTOR3 offsetPosition;
+	D3DXMATRIX rotationMatrix;
 
-	// Check if enough time has elapsed
-	if ((timeGetTime() - LastChunkCheck_) < UpdateDelay_)
+	// Calculate current chunk we are in
+	D3DXVECTOR3 chunkIndex =
 	{
-		return;
-	}
+		floor(Camera::Instance()->GetTransform()->GetPosition().x / (float)CHUNK_SIZE),
+		floor(Camera::Instance()->GetTransform()->GetPosition().y / (float)CHUNK_SIZE),
+		floor(Camera::Instance()->GetTransform()->GetPosition().z / (float)CHUNK_SIZE)
+	};
 
-	// Get the position of the camera
-	D3DXVECTOR3 cameraPos = Camera::Instance()->GetTransform()->GetPosition();
+	//====================
+	// Progression Checks
+	//====================
 
-	// Calculate chunk index
-	D3DXVECTOR3 chunkIndex = { floor(cameraPos.x / (float)CHUNK_SIZE),
-							   floor(cameraPos.y / (float)CHUNK_SIZE),
-							   floor(cameraPos.z / (float)CHUNK_SIZE) };
-
-	// Check if we have moved from the last chunk
+	// Check for movement
 	if (chunkIndex == LastChunkPos_)
 	{
+		// No change
 		return;
-	}
-
-	// Get the current chunk we are now in
-	Chunk* currentChunk = GetChunk(cameraPos.x, cameraPos.y, cameraPos.z);
-	// Find the chunk we are in
-	if (currentChunk)
-	{
-		// We are in a chunk
-		// Check if it active
-		// If active then continue
-		// If not make it active, pull from file etc
-		currentChunk = 0;
 	}
 	else
 	{
-		// Check if the chun is already on the build list
-		if (BuildList_.empty())
-		{
-			OutputToDebug("New chunk found - Please generate me");
+		// Store current chunk
+		LastChunkPos_ = chunkIndex;
+	}
 
-			// Add to build list
-			BuildList_.push_back(chunkIndex);
-		}
-		else if (find(BuildList_.begin(), BuildList_.end(), chunkIndex) == BuildList_.end())
-		{
-			OutputToDebug("New chunk found - Please generate me");
+	//================
+	// Chunk Building
+	//================
 
-			// Add to build list
-			BuildList_.push_back(chunkIndex);
-		}
+	// Build current chunk
+	TryBuildChunk(chunkIndex);
+
+	// Build chunks around us
+	for (int i = 0; i < 9; i++)
+	{
+		// Rotate forward vector by angle
+		D3DXMatrixRotationYawPitchRoll(&rotationMatrix, D3DXToRadian(i * 45), 0, 0);
+		D3DXVec3TransformCoord(&offsetPosition, &FORWARD_VECTOR, &rotationMatrix);
+		RoundVector3(offsetPosition);
+
+		// Calculate new chunk index
+		TryBuildChunk(chunkIndex + offsetPosition);
 	}
 }
 
@@ -156,6 +165,33 @@ void VoxelTerrain::SetBlockNeighbours(int x, int y, int z)
 	blockCurrent->SetNeighbour(Direction::Backward, GetBlock(x, y, z - 1));
 }
 
+void VoxelTerrain::TryBuildChunk(D3DXVECTOR3 index)
+{
+	string chunkKey;
+	
+	// Generate a key for the chunk
+	chunkKey = GetKey(index.x, index.y, index.z);
+
+	// Search for the chunk
+	it_type iterator = ChunkMap_.find(chunkKey);
+	if (iterator == ChunkMap_.end())
+	{
+		// Couldn't find the chunk so check if its currently in the build list
+		if (find(BuildList_.begin(), BuildList_.end(), index) == BuildList_.end())
+		{
+			OutputToDebug("New Chunk Found : " + chunkKey);
+
+			// Add to build list
+			BuildList_.push_back(index);
+		}
+	}
+	else
+	{
+		// Chunk was found in the map
+		// We should look to load it
+	}
+}
+
 void VoxelTerrain::BuildChunks()
 {
 	while (true)
@@ -167,7 +203,7 @@ void VoxelTerrain::BuildChunks()
 		}
 
 		// Get current working chunk
-		D3DXVECTOR3 chunkIndex = BuildList_[0];
+		D3DXVECTOR3 chunkIndex = BuildList_.front();
 
 		// Get time before build started
 		float tBefore = timeGetTime();
@@ -182,7 +218,7 @@ void VoxelTerrain::BuildChunks()
 		currentChunk->Generate();
 		
 		// Update block visibility
-		LinkBlocks(currentChunk); // Causing time delays -- Better way?
+		//LinkBlocks(currentChunk); // Causing time delays -- Better way?
 		currentChunk->RefreshVisible();
 
 		// Add Chunk to Map

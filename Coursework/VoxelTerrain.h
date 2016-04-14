@@ -9,6 +9,14 @@
 
 typedef std::map<std::string, Chunk*>::iterator it_type;
 
+static D3DXVECTOR3 DIRECTION_OFFSETS[9] = {
+	{ 0, 0, 0 }, // Centre
+	{ -1, 0, 0 }, { 1, 0, 0 }, // Left / Right
+	{ 0, 0, 1 }, { 0, 0, -1 }, // Forward / Backward
+	{ -1, 0, 1 }, { 1, 0, 1 }, // Forward Left / Right
+	{ -1, 0, -1 }, { 1, 0, -1 }, // Backward Left / Right
+};
+
 class VoxelTerrain
 {
 public:
@@ -27,7 +35,11 @@ public:
 	void SetChunkCount(int chunkCount = 1) { }
 
 private:
+	void TryBuildChunk(D3DXVECTOR3 index);
 	void BuildChunks();
+
+	void HandleChunks();
+	void HandleChunkGeneration();
 
 	void LinkBlocks(Chunk* chunk);
 	void SetBlockNeighbours(int x, int y, int z);

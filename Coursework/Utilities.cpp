@@ -348,3 +348,10 @@ void TrimString(string& string)
 		string.erase(string.end() - 1);
 	}
 }
+
+void RoundVector3(D3DXVECTOR3& vector)
+{
+	vector.x = round(vector.x);
+	vector.y = round(vector.y);
+	vector.z = round(vector.z);
+}
