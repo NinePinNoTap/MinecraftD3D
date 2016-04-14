@@ -22,10 +22,9 @@ void VoxelTerrain::Initialise()
 	//==========================
 
 	BuildThread_ = thread(&VoxelTerrain::BuildChunks, this);
-	UpdateDelay_ = 3;
-	LastChunkCheck_ = 0;
 }
 
+// Frame
 void VoxelTerrain::Frame()
 {
 	// Update active chunks
@@ -35,6 +34,24 @@ void VoxelTerrain::Frame()
 	HandleChunkGeneration();
 }
 
+void VoxelTerrain::Render()
+{
+	//==============
+	// Render Chunk
+	//==============
+
+	for (it_type iterator = ChunkMap_.begin(); iterator != ChunkMap_.end(); iterator++)
+	{
+		// Check if the chunk is active
+		if (iterator->second->IsVisible())
+		{
+			// Render it
+			iterator->second->Render();
+		}
+	}
+}
+
+// Handlers
 void VoxelTerrain::HandleChunks()
 {
 	//================
@@ -47,6 +64,12 @@ void VoxelTerrain::HandleChunks()
 		if (iterator->second)
 		{
 			iterator->second->Frame();
+
+			if (!iterator->second->IsVisible())
+			{
+				// Remove
+				//iterator->second = 0;
+			}
 
 			// NEED SOME CHUNKS FOR DELETING IF OUT OF RANGE
 		}
@@ -99,23 +122,6 @@ void VoxelTerrain::HandleChunkGeneration()
 
 		// Calculate new chunk index
 		TryBuildChunk(chunkIndex + offsetPosition);
-	}
-}
-
-void VoxelTerrain::Render()
-{
-	//==============
-	// Render Chunk
-	//==============
-
-	for (it_type iterator = ChunkMap_.begin(); iterator != ChunkMap_.end(); iterator++)
-	{
-		// Check if the chunk is active
-		if (iterator->second->IsVisible())
-		{
-			// Render it
-			iterator->second->Render();
-		}
 	}
 }
 
@@ -205,9 +211,6 @@ void VoxelTerrain::BuildChunks()
 		// Get current working chunk
 		D3DXVECTOR3 chunkIndex = BuildList_.front();
 
-		// Get time before build started
-		float tBefore = timeGetTime();
-
 		//================
 		// Generate Chunk
 		//================
@@ -216,17 +219,9 @@ void VoxelTerrain::BuildChunks()
 		Chunk* currentChunk = new Chunk;
 		currentChunk->Initialise(chunkIndex.x, chunkIndex.y, chunkIndex.z);
 		currentChunk->Generate();
-		
-		// Update block visibility
-		//LinkBlocks(currentChunk); // Causing time delays -- Better way?
-		currentChunk->RefreshVisible();
 
 		// Add Chunk to Map
 		ChunkMap_[GetKey(chunkIndex.x, chunkIndex.y, chunkIndex.z)] = currentChunk;
-
-		// DEBUGGING PURPOSES
-		OutputToDebug(GetKey(chunkIndex.x, chunkIndex.y, chunkIndex.z));
-		OutputTimeDelay("Generation Time ", tBefore, timeGetTime());
 
 		// Clean Up
 		currentChunk = 0;
@@ -259,28 +254,28 @@ Chunk* VoxelTerrain::GetChunk(int x, int y, int z)
 
 Block* VoxelTerrain::GetBlock(int x, int y, int z)
 {
-	Chunk* chunk = 0;
-	Block* block = 0;
+	Chunk* currentChunk = 0;
+	Block* currentBlock = 0;
 	int blockX, blockY, blockZ;
 
 	// Try and get chunk
-	chunk = GetChunk(x, y, z);
-	if (!chunk)
+	currentChunk = GetChunk(x, y, z);
+	if (!currentChunk)
 	{
 		return 0;
 	}
 
 	// Calculate block index
-	blockX = x - chunk->GetPosition().x;
-	blockY = y - chunk->GetPosition().y;
-	blockZ = z - chunk->GetPosition().z;
+	blockX = x - currentChunk->GetPosition().x;
+	blockY = y - currentChunk->GetPosition().y;
+	blockZ = z - currentChunk->GetPosition().z;
 
 	// Try and get block
-	block = chunk->GetBlock(blockX, blockY, blockZ);
-	if (!block)
+	currentBlock = currentChunk->GetBlock(blockX, blockY, blockZ);
+	if (!currentBlock)
 	{
 		return 0;
 	}
 
-	return block;
+	return currentBlock;
 }

@@ -238,9 +238,18 @@ void Chunk::GenerateChunk()
 					currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("air"));
 				}
 
+				// Create instance 
+				if (currentBlock->IsActive() && currentBlock->IsSolid())
+				{
+					ChunkBlock_->AddInstance(currentBlock->GetInstance());
+				}
+
 				// Clean Up
 				currentBlock = 0;
 			}
 		}
 	}
+
+	// Generate initial visuals
+	ChunkBlock_->RebuildInstanceBuffer();
 }

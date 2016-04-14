@@ -55,7 +55,5 @@ private:
 	thread BuildThread_;
 
 	// Chunk Updating
-	float UpdateDelay_;
-	DWORD LastChunkCheck_;
 	D3DXVECTOR3 LastChunkPos_;
 };
