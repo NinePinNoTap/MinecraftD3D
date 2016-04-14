@@ -122,10 +122,10 @@ void InstancedGameObject::RebuildInstanceBuffer()
 		return;
 	}
 
-	// Delete Instance Buffer
+	// Check if we have already created instances
 	if (InstanceBuffer_)
 	{
-		delete InstanceBuffer_;
+		InstanceBuffer_->Release();
 		InstanceBuffer_ = 0;
 	}
 

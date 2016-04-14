@@ -41,6 +41,7 @@ private:
 	void HandleChunks();
 	void HandleChunkGeneration();
 
+	void UpdateWorld();
 	void LinkBlocks(Chunk* chunk);
 	void SetBlockNeighbours(int x, int y, int z);
 
@@ -56,4 +57,6 @@ private:
 
 	// Chunk Updating
 	D3DXVECTOR3 LastChunkPos_;
+	thread UpdateThread_;
+	bool NeedsUpdating_;
 };

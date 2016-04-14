@@ -22,6 +22,8 @@ void VoxelTerrain::Initialise()
 	//==========================
 
 	BuildThread_ = thread(&VoxelTerrain::BuildChunks, this);
+	UpdateThread_ = thread(&VoxelTerrain::UpdateWorld, this);
+	NeedsUpdating_ = false;
 }
 
 // Frame
@@ -226,6 +228,32 @@ void VoxelTerrain::BuildChunks()
 		// Clean Up
 		currentChunk = 0;
 		BuildList_.erase(BuildList_.begin());
+		NeedsUpdating_ = true;
+	}
+}
+
+void VoxelTerrain::UpdateWorld()
+{
+	while (true)
+	{
+		if (!NeedsUpdating_)
+		{
+			continue;
+		}
+
+		// Loop through chunks and refresh visibility
+		for (it_type iterator = ChunkMap_.begin(); iterator != ChunkMap_.end(); iterator++)
+		{
+			// Make sure it's active
+			if (iterator->second)
+			{
+				LinkBlocks(iterator->second);
+				iterator->second->RefreshVisible();
+			}
+		}
+
+		// Unflag
+		NeedsUpdating_ = false;
 	}
 }
 
