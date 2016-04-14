@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "PerformanceManager.h"
 
 Camera::Camera() : GameObject()
 {
@@ -106,7 +107,7 @@ bool Camera::Frame()
 	}
 
 	// Apply velocities to the camera
-	Transform_->Move(Velocity_);
+	Transform_->Move(Velocity_ * (PerformanceManager::Instance()->GetDeltaTime()));
 
 	//========================
 	// Center Mouse On Screen

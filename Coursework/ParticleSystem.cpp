@@ -81,7 +81,7 @@ void ParticleSystem::Shutdown()
 bool ParticleSystem::Frame()
 {
 	// Increment the frame time
-	AccumulatedTime_ += PerformanceManager::Instance()->GetTime() / 1000.0f;
+	AccumulatedTime_ += PerformanceManager::Instance()->GetDeltaTime() / 1000.0f;
 
 	// Check if it is time to emit a new particle or not
 	if (AccumulatedTime_ > (1000.0f / ParticlesPerSecond_))
@@ -142,8 +142,7 @@ void ParticleSystem::UpdateParticles()
 	float frameTime;
 
 	// Get delta time
-	frameTime = PerformanceManager::Instance()->GetTime() / 1000.0f;;
-	OutputToDebug(to_string(frameTime));
+	frameTime = PerformanceManager::Instance()->GetDeltaTime() / 1000.0f;
 
 	// Update all particles
 	for (std::list<ParticleType>::iterator it = ParticleList_.begin(); it != ParticleList_.end(); it++)

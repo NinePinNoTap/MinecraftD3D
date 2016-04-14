@@ -109,8 +109,10 @@ void Transform::Rotate(float x, float y, float z)
 	Rotation_.y += y;
 	Rotation_.z += z;
 
+	// Clamp looking up and down
+	Clamp(Rotation_.x, -89, 90);
+
 	// Keep rotation values between 0 and 360
-	Wrap(Rotation_.x, 0, 360);
 	Wrap(Rotation_.y, 0, 360);
 	Wrap(Rotation_.z, 0, 360);
 }
@@ -136,8 +138,8 @@ void Transform::RotateX(float x)
 {
 	Rotation_.x += x;
 
-	// Make sure rotation is between 0 and 360
-	Wrap(Rotation_.x, 0, 360);
+	// Clamp looking up and down
+	Clamp(Rotation_.x, -89, 90);
 }
 
 void Transform::RotateY(float y)

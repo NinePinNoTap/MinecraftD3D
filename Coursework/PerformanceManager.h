@@ -21,7 +21,7 @@ public:
 	// Getters
 	int GetFPS();
 	int GetUsage();
-	float GetTime();
+	float GetDeltaTime();
 
 private:
 	// FPS

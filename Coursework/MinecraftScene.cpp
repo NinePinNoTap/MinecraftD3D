@@ -40,7 +40,7 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	Camera::Instance()->SetStartPosition(-2, 9, -13);
 	Camera::Instance()->SetStartRotation(37, 3, 0);
 	Camera::Instance()->AllowFlying(true);
-	Camera::Instance()->SetSpeed(0.5f);
+	Camera::Instance()->SetSpeed(4.317f);
 
 	//============================
 	// Initialise Render Textures
@@ -283,7 +283,7 @@ void MinecraftScene::Reset()
 	Camera::Instance()->SetStartPosition(0, 0, 0);
 	Camera::Instance()->SetStartRotation(0, 0, 0);
 	Camera::Instance()->AllowFlying(true);
-	Camera::Instance()->SetSpeed(0.5f);
+	Camera::Instance()->SetSpeed(4.137f);
 
 	Light::Instance()->GetTransform()->SetPosition(-3500.0f, 9900.0f, 2100.0f);
 	Light::Instance()->SetAmbientColor(0.5f, 0.5f, 0.5f, 1.0f);

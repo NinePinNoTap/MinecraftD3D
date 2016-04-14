@@ -55,7 +55,7 @@ void PerformanceManager::Initialise()
 	// Find out how many times the frequency counter ticks every millisecond
 	TicksPerMs_ = (float)(Frequency_ / 1000);
 
-	// Get the WindowManager time
+	// Get the system time
 	QueryPerformanceCounter((LARGE_INTEGER*)&TimerStart_);
 }
 
@@ -66,6 +66,8 @@ void PerformanceManager::Shutdown()
 		PdhCloseQuery(QueryHandle_);
 	}
 }
+
+#include "Utilities.h"
 
 bool PerformanceManager::Frame()
 {
@@ -123,7 +125,7 @@ bool PerformanceManager::Frame()
 	FrameTime_ = timeDifference / TicksPerMs_;
 
 	// Restart the timer.
-	TimerStart_ = (unsigned long)currentTime;
+	QueryPerformanceCounter((LARGE_INTEGER*)&TimerStart_);
 
 	return true;
 }
@@ -144,7 +146,7 @@ int PerformanceManager::GetFPS()
 	return FPS_;
 }
 
-float PerformanceManager::GetTime()
+float PerformanceManager::GetDeltaTime()
 {
-	return FrameTime_;
+	return FrameTime_ / 1000.0f;
 }
