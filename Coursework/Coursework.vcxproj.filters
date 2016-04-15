@@ -257,6 +257,9 @@
     <ClCompile Include="PerlinNoise.cpp">
       <Filter>Framework\Noise</Filter>
     </ClCompile>
+    <ClCompile Include="SimplexNoise.cpp">
+      <Filter>Framework\Noise</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h">
@@ -452,6 +455,9 @@
       <Filter>Scene\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="PerlinNoise.h">
+      <Filter>Framework\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="SimplexNoise.h">
       <Filter>Framework\Noise</Filter>
     </ClInclude>
   </ItemGroup>

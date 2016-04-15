@@ -114,6 +114,7 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="ApplicationManager.cpp" />
+    <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="SkyShader.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TerrainFactory.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="CloudShader.h" />
     <ClInclude Include="FireShader.h" />
     <ClInclude Include="LightShader.h" />
+    <ClInclude Include="SimplexNoise.h" />
     <ClInclude Include="SkyShader.h" />
     <ClInclude Include="TerrainShader.h" />
     <ClInclude Include="TerrainReflectionShader.h" />
