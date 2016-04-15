@@ -44,27 +44,7 @@ void Chunk::Generate()
 {
 	if (IsGenerated_)
 	{
-		if (IsVisible_)
-		{
-		}
-		else
-		{
-			// Get filename
-			string chunkFilename = GetKey(Position_.x, Position_.y, Position_.z);
-
-			// Load data from file
-			FILE* pFile = fopen(chunkFilename.c_str(), "rb");
-
-			if (pFile != NULL)
-			{
-				fread(this, sizeof(Chunk), 1, pFile);
-				fclose(pFile);
-			}
-			else
-			{
-				// No file loaded so generate again
-			}
-		}
+		
 	}
 	else
 	{
@@ -120,7 +100,19 @@ void Chunk::RefreshVisible()
 // Frame
 void Chunk::Frame()
 {
-	// Check distance to player
+	//float distanceAway;
+
+	//// Check distance to player
+	//distanceAway = Distance(Camera::Instance()->GetTransform()->GetPosition(), Position_);
+	//if (distanceAway > 30)
+	//{
+	//	IsVisible_ = false;
+	//}
+	//else if (distanceAway < 20)
+	//{
+	//	IsVisible_ = true;
+	//}
+
 	// Set IsActive based on that
 	// We need Neighbours for chunks as well
 }
@@ -189,67 +181,126 @@ void Chunk::GenerateBlankChunk()
 
 void Chunk::GenerateChunk()
 {
-	PerlinNoise perlinNoise;
-
-	// Generate a random seed for the noise to use
-	perlinNoise.SetSeed(100);
-	
+	// Loop through chunk
 	for (int x = Position_.x; x < Position_.x + CHUNK_BLOCKS; x++)
 	{
 		for (int z = Position_.z; z < Position_.z + CHUNK_BLOCKS; z++)
 		{
-			double a = (double)z / (double)10;
-			double b = (double)x / (double)10;
-	
-			float noise = perlinNoise.CreateNoise(a, b, 0.0f);
-			float height = floor(CHUNK_BLOCKS * noise);
-	
-			// Loop through y dimension
-			for (int y = Position_.y; y < Position_.y + height; y++)
-			{	
-				Block* currentBlock = GetBlock(x - Position_.x, y - Position_.y, z - Position_.z);
-
-				if (y < 3)
-				{
-					int r = rand() % 50;
-					if (r < 3)
-					{
-						currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("diamond"));
-					}
-					else
-					{
-						currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
-					}
-				}
-				else if (y < 4)
-				{
-					currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
-				}
-				else if (y < 11)
-				{
-					currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
-				}
-				else if (y < 16)
-				{
-					currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
-				}
-				else
-				{
-					currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("air"));
-				}
-
-				// Create instance 
-				if (currentBlock->IsActive() && currentBlock->IsSolid())
-				{
-					ChunkBlock_->AddInstance(currentBlock->GetInstance());
-				}
-
-				// Clean Up
-				currentBlock = 0;
-			}
+			GenerateColumn(x, z);
 		}
 	}
 
 	// Generate initial visuals
 	ChunkBlock_->RebuildInstanceBuffer();
+}
+
+#include "SimplexNoise.h"
+
+float stoneBaseHeight = -24;
+float stoneBaseNoise = 0.05f;
+float stoneBaseNoiseHeight = 4;
+
+float stoneMountainHeight = 48;
+float stoneMountainFrequency = 0.008f;
+float stoneMinHeight = -12;
+
+float dirtBaseHeight = 1;
+float dirtNoise = 0.04f;
+float dirtNoiseHeight = 3;
+
+float caveFrequency = 0.025f;
+int caveSize = 7;
+
+static int GetNoise(int x, int y, int z, float scale, int max)
+{
+	return floor((SimplexNoise::Noise(x * scale, y * scale, z * scale) + 1.0f) * (max / 2.0f));
+}
+
+void Chunk::GenerateColumn(int x, int z)
+{
+	//PerlinNoise perlinNoise;
+
+	//// Calculate noise factors
+	//double a = (double)z / (double)10;
+	//double b = (double)x / (double)10;
+
+	//float noise = perlinNoise.CreateNoise(a, b, 0.0f);
+	//float height = floor(CHUNK_BLOCKS * noise);
+
+	int stoneHeight = floor(stoneBaseHeight);
+	stoneHeight += GetNoise(x, 0, z, stoneMountainFrequency, floor(stoneMountainHeight));
+
+	if (stoneHeight < stoneMinHeight)
+		stoneHeight = floor(stoneMinHeight);
+
+	stoneHeight += GetNoise(x, 0, z, stoneBaseNoise, floor(stoneBaseNoiseHeight));
+
+	int dirtHeight = stoneHeight + floor(dirtBaseHeight);
+	dirtHeight += GetNoise(x, 100, z, dirtNoise, floor(dirtNoiseHeight));
+
+	// Loop through y dimension
+	for (int y = Position_.y; y < Position_.y + CHUNK_SIZE; y++)
+	{
+		Block* currentBlock = GetBlock(x - Position_.x, y - Position_.y, z - Position_.z);
+
+		//Get a value to base cave generation on
+		int caveChance = GetNoise(x, y, z, caveFrequency, 100);
+
+		if (y <= stoneHeight && caveSize < caveChance)
+		{
+			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
+		}
+		else if (y <= dirtHeight && caveSize < caveChance)
+		{
+			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
+		}
+		else
+		{
+			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("air"));
+		}
+
+		// Create instance 
+		if (currentBlock->IsActive() && currentBlock->IsSolid())
+		{
+			ChunkBlock_->AddInstance(currentBlock->GetInstance());
+		}
+
+		//if (y < 3)
+		//{
+		//	int r = rand() % 50;
+		//	if (r < 3)
+		//	{
+		//		currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("diamond"));
+		//	}
+		//	else
+		//	{
+		//		currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
+		//	}
+		//}
+		//else if (y < 4)
+		//{
+		//	currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
+		//}
+		//else if (y < 11)
+		//{
+		//	currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
+		//}
+		//else if (y < 16)
+		//{
+		//	currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
+		//}
+		//else
+		//{
+		//	currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("air"));
+		//}
+		//
+		//// Create instance 
+		//if (currentBlock->IsActive() && currentBlock->IsSolid())
+		//{
+		//	ChunkBlock_->AddInstance(currentBlock->GetInstance());
+		//}
+
+		// Clean Up
+		currentBlock = 0;
+	}
 }

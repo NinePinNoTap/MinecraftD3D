@@ -131,6 +131,10 @@ void VoxelTerrain::LinkBlocks(Chunk* chunk)
 {
 	D3DXVECTOR3 blockPos;
 
+	// IMPROVE PERFORMANCE HERE ----------------
+	// ONLY UPDATE OUTER BLOCKS NEIGHBOURS
+	// 0 && 15 ON EACH AXIS
+
 	// Loop through blocks in chunk
 	for (int x = 0; x < CHUNK_BLOCKS; x++)
 	{
@@ -254,6 +258,8 @@ void VoxelTerrain::UpdateWorld()
 
 		// Unflag
 		NeedsUpdating_ = false;
+
+		OutputToDebug("The World is Clean");
 	}
 }
 
