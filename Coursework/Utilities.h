@@ -94,3 +94,4 @@ void RoundVector(D3DXVECTOR3& vector);
 
 // Generates 3D simplex noise
 int GetNoise(int x, int y, int z, float scale, int max);
+int GetNoise(int x, int y, int z, float scale, int max, float power);

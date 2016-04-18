@@ -376,3 +376,15 @@ int GetNoise(int x, int y, int z, float scale, int max)
 {
 	return floor((SimplexNoise::Noise(x * scale, y * scale, z * scale) + 1.0f) * (max / 2.0f));
 }
+
+int GetNoise(int x, int y, int z, float scale, int max, float power)
+{
+	// Generate noise value
+	float noise = (SimplexNoise::Noise(x / scale, y / scale, z / scale) + 1.0f) * (max / 2.0f);
+
+
+	if (power != 1)
+		noise = pow(noise, power);
+
+	return floor(noise);
+}
