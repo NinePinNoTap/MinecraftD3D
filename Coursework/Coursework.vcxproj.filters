@@ -86,6 +86,9 @@
     <Filter Include="Framework\Noise">
       <UniqueIdentifier>{450adb5e-10df-4614-a8fd-2434304b7da3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\VoxelTerrain\Managers">
+      <UniqueIdentifier>{5eba4f86-008d-4b9c-ac78-3defc8dfa236}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -197,9 +200,6 @@
     <ClCompile Include="Chunk.cpp">
       <Filter>Scene\VoxelTerrain</Filter>
     </ClCompile>
-    <ClCompile Include="VoxelTerrain.cpp">
-      <Filter>Scene\VoxelTerrain</Filter>
-    </ClCompile>
     <ClCompile Include="ViewFrustumManager.cpp">
       <Filter>Framework\Manager</Filter>
     </ClCompile>
@@ -226,9 +226,6 @@
     </ClCompile>
     <ClCompile Include="TextureShader.cpp">
       <Filter>Framework\Shader\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="BlockManager.cpp">
-      <Filter>Scene\VoxelTerrain</Filter>
     </ClCompile>
     <ClCompile Include="Ocean.cpp">
       <Filter>Scene\GameObjects</Filter>
@@ -259,6 +256,15 @@
     </ClCompile>
     <ClCompile Include="SimplexNoise.cpp">
       <Filter>Framework\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="VoxelWorld.cpp">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldChunk.cpp">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockManager.cpp">
+      <Filter>Scene\VoxelTerrain\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -391,9 +397,6 @@
     <ClInclude Include="Transform.h">
       <Filter>Framework\Graphics\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="VoxelTerrain.h">
-      <Filter>Scene\VoxelTerrain</Filter>
-    </ClInclude>
     <ClInclude Include="Chunk.h">
       <Filter>Scene\VoxelTerrain</Filter>
     </ClInclude>
@@ -427,9 +430,6 @@
     <ClInclude Include="TextureShader.h">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="BlockManager.h">
-      <Filter>Scene\VoxelTerrain</Filter>
-    </ClInclude>
     <ClInclude Include="Ocean.h">
       <Filter>Scene\GameObjects</Filter>
     </ClInclude>
@@ -459,6 +459,18 @@
     </ClInclude>
     <ClInclude Include="SimplexNoise.h">
       <Filter>Framework\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainLayer.h">
+      <Filter>Framework\System\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="VoxelWorld.h">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldChunk.h">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockManager.h">
+      <Filter>Scene\VoxelTerrain\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

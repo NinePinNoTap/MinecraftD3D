@@ -18,7 +18,8 @@
 #include "Text.h"
 #include "Ocean.h"
 #include "Model.h"
-#include "VoxelTerrain.h"
+//#include "VoxelTerrain.h"
+#include "VoxelWorld.h"
 
 class MinecraftScene : public GameScene
 {
@@ -63,7 +64,7 @@ private:
 	Texture* RenderTexture_;
 	Texture* RefractionTexture_;
 	Texture* ReflectionTexture_;
-	VoxelTerrain* Chunk_;
+	VoxelWorld* World_;
 
 	// Flags
 	bool IsUnderwater_;

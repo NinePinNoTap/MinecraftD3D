@@ -74,6 +74,7 @@ void CalculateTangentBinormal(VertexData vertex1, VertexData vertex2, VertexData
 void CalculateHardNormal(D3DXVECTOR3 tangent, D3DXVECTOR3 binormal, D3DXVECTOR3& normal);
 
 // Convert a D3DXVECTOR3 into a string
+string GetKey(float x, float y);
 string GetKey(float x, float y, float z);
 
 // Get index within a 3D array
@@ -86,7 +87,10 @@ void OutputTimeDelay(string dataName, float before, float after);
 void TrimString(string& str);
 
 // Rounds vector nearest whole number
-void RoundVector3(D3DXVECTOR3& vector);
+void RoundVector(D3DXVECTOR2& vector);
+
+// Rounds vector nearest whole number
+void RoundVector(D3DXVECTOR3& vector);
 
 // Generates 3D simplex noise
 int GetNoise(int x, int y, int z, float scale, int max);

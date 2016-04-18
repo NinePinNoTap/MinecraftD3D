@@ -18,12 +18,6 @@ void Chunk::Initialise(int x, int y, int z)
 
 	Position_ = D3DXVECTOR3(x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE);
 
-	//================
-	// Generate Chunk
-	//================
-
-	GenerateBlankChunk();
-		
 	//===========================
 	// Create Representing Block
 	//===========================
@@ -32,27 +26,31 @@ void Chunk::Initialise(int x, int y, int z)
 	ChunkBlock_->Initialise("block.obj");
 	ChunkBlock_->SetShader("instancedlight");
 
+	//================
+	// Generate Chunk
+	//================
+
+	GenerateBlankChunk();
+
 	//==================
 	// Initialise Flags
 	//==================
 
-	IsVisible_ = false;
+	IsVisible_ = true;
 	IsGenerated_ = false;
 }
 
 void Chunk::Generate()
 {
-	if (IsGenerated_)
+	/*if (IsGenerated_)
 	{
 		
 	}
 	else
 	{
-		// Generate new chunk
-		GenerateChunk();
 		IsGenerated_ = true;
 		IsVisible_ = true;
-	}
+	}*/
 }
 
 void Chunk::Shutdown()
@@ -167,101 +165,43 @@ void Chunk::GenerateBlankChunk()
 			for (int z = 0; z < CHUNK_BLOCKS; z++)
 			{
 				// Define position of the block
-				xPos = Position_.x + (x * BLOCK_SIZE);
+				xPos = Position_.x + (x * BLOCK_SIZE) - (CHUNK_SIZE / 2);
 				yPos = Position_.y + (y * BLOCK_SIZE);
-				zPos = Position_.z + (z * BLOCK_SIZE);
-				
+				zPos = Position_.z + (z * BLOCK_SIZE) - (CHUNK_SIZE / 2);
+
 				// Store it
-				Blocks_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock("air"));
+				Blocks_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
 				Blocks_[x][y][z].SetPosition(xPos, yPos, zPos);
 			}
 		}
 	}
-}
 
-void Chunk::GenerateChunk()
-{
-	// Loop through chunk
-	for (int x = Position_.x; x < Position_.x + CHUNK_BLOCKS; x++)
+	// Loop through x dimension
+	for (int x = 0; x < CHUNK_BLOCKS; x++)
 	{
-		for (int z = Position_.z; z < Position_.z + CHUNK_BLOCKS; z++)
+		// Loop through y dimension
+		for (int y = 0; y < CHUNK_BLOCKS; y++)
 		{
-			GenerateColumn(x, z);
+			// Loop through z dimension
+			for (int z = 0; z < CHUNK_BLOCKS; z++)
+			{
+				// Set block neighbours
+				Blocks_[x][y][z].SetNeighbour(Direction::Up, GetBlock(x, y + 1, z));
+				Blocks_[x][y][z].SetNeighbour(Direction::Down, GetBlock(x, y - 1, z));
+
+				Blocks_[x][y][z].SetNeighbour(Direction::Left, GetBlock(x - 1, y, z));
+				Blocks_[x][y][z].SetNeighbour(Direction::Right, GetBlock(x + 1, y, z));
+
+				Blocks_[x][y][z].SetNeighbour(Direction::Forward, GetBlock(x, y, z + 1));
+				Blocks_[x][y][z].SetNeighbour(Direction::Backward, GetBlock(x, y, z - 1));
+
+				Blocks_[x][y][z].Refresh();
+
+				if (Blocks_[x][y][z].IsActive())
+					ChunkBlock_->AddInstance(Blocks_[x][y][z].GetInstance());
+			}
 		}
 	}
 
-	// Generate initial visuals
 	ChunkBlock_->RebuildInstanceBuffer();
-}
-
-int bedrockBaseHeight = 0;
-
-int diamondBaseHeight = 4;
-int diamondMaxHeight = 13;
-int diamondNoise = diamondMaxHeight - diamondBaseHeight;
-
-int stoneBaseHeight = 16;
-int dirtBaseHeight = 4;
-
-void Chunk::GenerateColumn(int x, int z)
-{
-	// Generate Bedrock
-	int bedrockHeight = floor(bedrockBaseHeight);
-	bedrockHeight += GetNoise(x, 0, z, 0.5f, 2);
-
-	// Generate Diamond
-	int diamondHeight = bedrockHeight + floor(diamondBaseHeight);
-	//Clamp(diamondHeight, diamondBaseHeight, 1000);
-	//diamondHeight += GetNoise(x, 0, z, 100.0f, diamondNoise);
-
-	// Generate Stone
-	int stoneHeight = floor(stoneBaseHeight);
-	//stoneHeight += GetNoise(x, 0, z, 0.008f, 12);
-	//stoneHeight += GetNoise(x, 0, z, 0.05f, 4);
-
-	int dirtHeight = stoneHeight + floor(dirtBaseHeight);
-	dirtHeight += GetNoise(x, 100, z, 0.04f, 3);
-
-	// Loop through y dimension
-	for (int y = Position_.y; y < Position_.y + CHUNK_SIZE; y++)
-	{
-		//Get a value to base cave generation on
-		int caveChance = GetNoise(x, y, z, 0.025f, 100);
-
-		Block* currentBlock = GetBlock(x - Position_.x, y - Position_.y, z - Position_.z);
-
-		if (y < bedrockHeight)
-		{
-			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("air"));
-		}
-		else if (y == bedrockHeight)
-		{
-			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("bedrock"));
-		}
-		else if (y == diamondHeight)
-		{
-			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("diamond"));
-		}
-		else if (y < stoneHeight)
-		{
-			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
-		}
-		else if (y < dirtHeight)
-		{
-			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
-		}
-		else
-		{
-			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("air"));
-		}
-
-		// Create instance 
-		if (currentBlock->IsActive() && currentBlock->IsSolid())
-		{
-			ChunkBlock_->AddInstance(currentBlock->GetInstance());
-		}
-
-		// Clean Up
-		currentBlock = 0;
-	}
 }

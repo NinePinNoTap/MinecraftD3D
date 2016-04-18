@@ -16,7 +16,7 @@ MinecraftScene::MinecraftScene() : GameScene()
 	Sprite_ = 0;
 	SkySphere_ = 0;
 	Ocean_ = 0;
-	Chunk_ = 0;
+	World_ = 0;
 }
 
 MinecraftScene::~MinecraftScene()
@@ -178,8 +178,11 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	Text_->CreateText("Reset Camera [BACKSPACE]", Vector2(windowWidth - 10, 70), BLACK, RIGHT);
 	Text_->CreateText("Quit [ESC]", Vector2(windowWidth - 10, 110), BLACK, RIGHT);
 
-	Chunk_ = new VoxelTerrain;
-	Chunk_->Initialise();
+	/*Chunk_ = new VoxelTerrain;
+	Chunk_->Initialise();*/
+
+	World_ = new VoxelWorld;
+	World_->Initialise();
 
 	//==================
 	// Initialise flags
@@ -344,7 +347,7 @@ bool MinecraftScene::HandleObjects()
 	ViewFrustumManager::Instance()->Frame();
 	Clouds_ -> Frame();
 	Ocean_->Frame();
-	Chunk_->Frame();
+	World_->Frame();
 
 	if (NightTimeMode_)
 	{
@@ -577,7 +580,8 @@ bool MinecraftScene::RenderScene(bool ShowText)
 	// Turn off back face culling
 	DirectXManager::Instance()->ToggleCulling(false);
 
-	Chunk_->Render();
+	//Chunk_->Render();
+	World_->Render();
 
 	// Render Static Models
 	for each (GameObject* gameObject in Objects_)
@@ -751,7 +755,7 @@ bool MinecraftScene::RenderReflection()
 		}
 	}*/
 
-	Chunk_->Render();
+	World_->Render();
 
 	//====================
 	// Render the Terrain

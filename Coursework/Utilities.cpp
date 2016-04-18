@@ -314,6 +314,16 @@ void CalculateTangentBinormal(VertexData vertex1, VertexData vertex2, VertexData
 	return;
 }
 
+string GetKey(float x, float y)
+{
+	string key;
+
+	// Format: X Y Z
+	key = to_string(x) + " " + to_string(y);
+
+	return key;
+}
+
 string GetKey(float x, float y, float z)
 {
 	string key;
@@ -349,7 +359,13 @@ void TrimString(string& string)
 	}
 }
 
-void RoundVector3(D3DXVECTOR3& vector)
+void RoundVector(D3DXVECTOR2& vector)
+{
+	vector.x = round(vector.x);
+	vector.y = round(vector.y);
+}
+
+void RoundVector(D3DXVECTOR3& vector)
 {
 	vector.x = round(vector.x);
 	vector.y = round(vector.y);
