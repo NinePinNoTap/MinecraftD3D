@@ -355,3 +355,8 @@ void RoundVector3(D3DXVECTOR3& vector)
 	vector.y = round(vector.y);
 	vector.z = round(vector.z);
 }
+
+int GetNoise(int x, int y, int z, float scale, int max)
+{
+	return floor((SimplexNoise::Noise(x * scale, y * scale, z * scale) + 1.0f) * (max / 2.0f));
+}

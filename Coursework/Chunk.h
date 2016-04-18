@@ -7,6 +7,7 @@
 #include "Constants.h"
 #include "InstancedGameObject.h"
 #include "ShaderManager.h"
+#include "SimplexNoise.h"
 
 class Chunk
 {

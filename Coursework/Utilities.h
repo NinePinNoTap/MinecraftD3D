@@ -87,3 +87,6 @@ void TrimString(string& str);
 
 // Rounds vector nearest whole number
 void RoundVector3(D3DXVECTOR3& vector);
+
+// Generates 3D simplex noise
+int GetNoise(int x, int y, int z, float scale, int max);

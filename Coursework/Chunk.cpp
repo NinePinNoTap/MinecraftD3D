@@ -194,8 +194,6 @@ void Chunk::GenerateChunk()
 	ChunkBlock_->RebuildInstanceBuffer();
 }
 
-#include "SimplexNoise.h"
-
 float stoneBaseHeight = -24;
 float stoneBaseNoise = 0.05f;
 float stoneBaseNoiseHeight = 4;
@@ -211,22 +209,8 @@ float dirtNoiseHeight = 3;
 float caveFrequency = 0.025f;
 int caveSize = 7;
 
-static int GetNoise(int x, int y, int z, float scale, int max)
-{
-	return floor((SimplexNoise::Noise(x * scale, y * scale, z * scale) + 1.0f) * (max / 2.0f));
-}
-
 void Chunk::GenerateColumn(int x, int z)
 {
-	//PerlinNoise perlinNoise;
-
-	//// Calculate noise factors
-	//double a = (double)z / (double)10;
-	//double b = (double)x / (double)10;
-
-	//float noise = perlinNoise.CreateNoise(a, b, 0.0f);
-	//float height = floor(CHUNK_BLOCKS * noise);
-
 	int stoneHeight = floor(stoneBaseHeight);
 	stoneHeight += GetNoise(x, 0, z, stoneMountainFrequency, floor(stoneMountainHeight));
 
