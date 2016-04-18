@@ -22,9 +22,12 @@ public:
 private:
 	void InitialiseLayers();
 	void GenerateTerrain();
-	int GenerateLayer(TerrainLayer terrainLayer, int currentHeight);
+	void GenerateColumn(int x, int z);
+	int GenerateLayer(TerrainLayer terrainLayer, int x, int z, int currentHeight);
 
 	vector<Chunk*> Chunks_;
 	vector<TerrainLayer> Layers_;
+
+	D3DXVECTOR2 ChunkID_;
 };
 

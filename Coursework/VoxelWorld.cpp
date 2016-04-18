@@ -95,15 +95,11 @@ void VoxelWorld::BuildChunksInBuildList()
 		// Generate Chunk
 		//================
 
-		// Create chunk and generate its terrain
-		WorldChunk* currentChunk = new WorldChunk;
-		currentChunk->Initialise(chunkIndex.x, chunkIndex.y, 4);
-
-		// Add Chunk to Map
-		Map_[GetKey(chunkIndex.x, chunkIndex.y)] = currentChunk;
+		// Create World Chunk and Generate Terrain
+		Map_[GetKey(chunkIndex.x, chunkIndex.y)] = new WorldChunk;
+		Map_[GetKey(chunkIndex.x, chunkIndex.y)]->Initialise(chunkIndex.x, chunkIndex.y, 4);
 
 		// Clean Up
-		currentChunk = 0;
 		BuildList_.erase(BuildList_.begin());
 	}
 }
@@ -200,7 +196,15 @@ Block* VoxelWorld::GetBlock(int x, int y, int z)
 	chunkY = y / (float)CHUNK_SIZE;
 	chunkY = floor(chunkY);
 
-	currentChunk = Map_[GetKey(chunkX, chunkZ)]->GetChunk(chunkY);
+	// Find the chunk
+	it_wc it = Map_.find(GetKey(chunkX, chunkZ));
+	if (it == Map_.end())
+	{
+		return 0;
+	}
+
+	// Get the chunk
+	currentChunk = it->second->GetChunk(chunkY);
 	if (!currentChunk)
 	{
 		return 0;

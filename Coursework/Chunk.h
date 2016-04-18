@@ -44,7 +44,7 @@ public:
 	inline Block* GetBlock(int x, int y, int z)
 	{
 		// Make sure we are trying to access a valid node
-		if (RangeCheck(x, 0, CHUNK_BLOCKS - 1) && RangeCheck(y, 0, CHUNK_BLOCKS - 1) && RangeCheck(z, 0, CHUNK_BLOCKS - 1))
+		if (RangeCheck(x, 0, CHUNK_SIZE - 1) && RangeCheck(y, 0, CHUNK_SIZE - 1) && RangeCheck(z, 0, CHUNK_SIZE - 1))
 		{
 			return &Blocks_[x][y][z];
 		}

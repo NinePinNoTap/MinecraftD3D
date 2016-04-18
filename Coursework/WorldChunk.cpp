@@ -1,5 +1,5 @@
 #include "WorldChunk.h"
-
+#include "VoxelWorld.h"
 
 WorldChunk::WorldChunk()
 {
@@ -11,6 +11,8 @@ WorldChunk::~WorldChunk()
 
 void WorldChunk::Initialise(int x, int z, int chunkCount)
 {
+	ChunkID_ = D3DXVECTOR2(x, z);
+
 	for (int i = 0; i < chunkCount; i++)
 	{
 		float tBefore = timeGetTime();
@@ -60,21 +62,56 @@ void WorldChunk::InitialiseLayers()
 
 void WorldChunk::GenerateTerrain()
 {
-	int currentHeight;
+	//int currentHeight;
 
-	// Set initial height
-	currentHeight = 0;
+	//// Set initial height
+	//currentHeight = 0;
 
-	// Loop through
-	for (unsigned int i = 0; i < Layers_.size(); i++)
+	//// Loop through
+	//for (unsigned int i = 0; i < Layers_.size(); i++)
+	//{
+	//	// Generate layers
+	//	// Need to set blocks
+	//	currentHeight += GenerateLayer(Layers_[i], currentHeight);
+	//}
+
+	for (int x = 0; x < CHUNK_SIZE; x++)
 	{
-		// Generate layers
-		// Need to set blocks
-		currentHeight += GenerateLayer(Layers_[i], currentHeight);
+		for (int z = 0; z < CHUNK_SIZE; z++)
+		{
+			GenerateColumn(x + (ChunkID_.x * CHUNK_SIZE), z + (ChunkID_.y * CHUNK_SIZE));
+		}
 	}
 }
 
-int WorldChunk::GenerateLayer(TerrainLayer terrainLayer, int currentHeight)
+void WorldChunk::GenerateColumn(int x, int z)
+{
+	Block* currentBlock;
+
+	for (int y = 0; y < Chunks_.size() * CHUNK_SIZE; y++)
+	{
+		currentBlock = VoxelWorld::Instance()->GetBlock(x, y, z);
+
+		if (y < 16)
+		{
+			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
+		}
+		else if (y < 32)
+		{
+			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
+		}
+		else if (y < 48)
+		{
+			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
+		}
+		else if (y < 64)
+		{
+			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
+		}
+	}
+}
+
+int WorldChunk::GenerateLayer(TerrainLayer terrainLayer, int x, int z, int currentHeight)
 {
 	return 0;
 }

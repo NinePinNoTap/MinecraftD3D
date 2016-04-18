@@ -35,14 +35,8 @@ const float CAMERA_SENSITIVITY  = 10.0f;
 // Voxel Terrain
 //===============
 
-// How big the block model is
-const int BLOCK_SIZE = 1;
-
-// How many blocks in a chunk
-const int CHUNK_BLOCKS = 16;
-
 // Total size of a chunk dimension
-const int CHUNK_SIZE = CHUNK_BLOCKS * BLOCK_SIZE;
+const int CHUNK_SIZE = 16;
 
 //=========
 // Colours

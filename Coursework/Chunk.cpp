@@ -56,10 +56,10 @@ void Chunk::Generate()
 void Chunk::Shutdown()
 {
 	// Delete the blocks
-	for (int x = 0; x < CHUNK_BLOCKS; x++)
+	for (int x = 0; x < CHUNK_SIZE; x++)
 	{
 		// Loop through y dimension
-		for (int y = 0; y < CHUNK_BLOCKS; y++)
+		for (int y = 0; y < CHUNK_SIZE; y++)
 		{
 			delete[] Blocks_[x][y];
 		}
@@ -73,13 +73,13 @@ void Chunk::Shutdown()
 void Chunk::RefreshVisible()
 {
 	// Loop through x dimension
-	for (int x = 0; x < CHUNK_BLOCKS; x++)
+	for (int x = 0; x < CHUNK_SIZE; x++)
 	{
 		// Loop through y dimension
-		for (int y = 0; y < CHUNK_BLOCKS; y++)
+		for (int y = 0; y < CHUNK_SIZE; y++)
 		{
 			// Loop through z dimension
-			for (int z = 0; z < CHUNK_BLOCKS; z++)
+			for (int z = 0; z < CHUNK_SIZE; z++)
 			{
 				Blocks_[x][y][z].Refresh();
 
@@ -128,13 +128,13 @@ void Chunk::Render()
 void Chunk::SetBlocks(string blockName)
 {
 	// Loop through x dimension
-	for (int x = 0; x < CHUNK_BLOCKS; x++)
+	for (int x = 0; x < CHUNK_SIZE; x++)
 	{
 		// Loop through y dimension
-		for (int y = 0; y < CHUNK_BLOCKS; y++)
+		for (int y = 0; y < CHUNK_SIZE; y++)
 		{
 			// Loop through z dimension
-			for (int z = 0; z < CHUNK_BLOCKS; z++)
+			for (int z = 0; z < CHUNK_SIZE; z++)
 			{
 				// Store it
 				Blocks_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock(blockName));
@@ -149,25 +149,25 @@ void Chunk::GenerateBlankChunk()
 	float xPos, yPos, zPos;
 
 	// Create the 3D array to store blocks in chunk
-	Blocks_ = new Block**[CHUNK_BLOCKS];
+	Blocks_ = new Block**[CHUNK_SIZE];
 
 	// Loop through x dimension
-	for(int x = 0; x < CHUNK_BLOCKS; x++)
+	for(int x = 0; x < CHUNK_SIZE; x++)
 	{
-		Blocks_[x] = new Block*[CHUNK_BLOCKS];
+		Blocks_[x] = new Block*[CHUNK_SIZE];
 
 		// Loop through y dimension
-		for (int y = 0; y < CHUNK_BLOCKS; y++)
+		for (int y = 0; y < CHUNK_SIZE; y++)
 		{
-			Blocks_[x][y] = new Block[CHUNK_BLOCKS];
+			Blocks_[x][y] = new Block[CHUNK_SIZE];
 
 			// Loop through z dimension
-			for (int z = 0; z < CHUNK_BLOCKS; z++)
+			for (int z = 0; z < CHUNK_SIZE; z++)
 			{
 				// Define position of the block
-				xPos = Position_.x + (x * BLOCK_SIZE) - (CHUNK_SIZE / 2);
-				yPos = Position_.y + (y * BLOCK_SIZE);
-				zPos = Position_.z + (z * BLOCK_SIZE) - (CHUNK_SIZE / 2);
+				xPos = Position_.x + x;
+				yPos = Position_.y + y;
+				zPos = Position_.z + z;
 
 				// Store it
 				Blocks_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
@@ -177,13 +177,13 @@ void Chunk::GenerateBlankChunk()
 	}
 
 	// Loop through x dimension
-	for (int x = 0; x < CHUNK_BLOCKS; x++)
+	for (int x = 0; x < CHUNK_SIZE; x++)
 	{
 		// Loop through y dimension
-		for (int y = 0; y < CHUNK_BLOCKS; y++)
+		for (int y = 0; y < CHUNK_SIZE; y++)
 		{
 			// Loop through z dimension
-			for (int z = 0; z < CHUNK_BLOCKS; z++)
+			for (int z = 0; z < CHUNK_SIZE; z++)
 			{
 				// Set block neighbours
 				Blocks_[x][y][z].SetNeighbour(Direction::Up, GetBlock(x, y + 1, z));
@@ -194,11 +194,6 @@ void Chunk::GenerateBlankChunk()
 
 				Blocks_[x][y][z].SetNeighbour(Direction::Forward, GetBlock(x, y, z + 1));
 				Blocks_[x][y][z].SetNeighbour(Direction::Backward, GetBlock(x, y, z - 1));
-
-				Blocks_[x][y][z].Refresh();
-
-				if (Blocks_[x][y][z].IsActive())
-					ChunkBlock_->AddInstance(Blocks_[x][y][z].GetInstance());
 			}
 		}
 	}
