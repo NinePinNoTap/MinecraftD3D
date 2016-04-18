@@ -11,7 +11,7 @@ enum BlockType
 {
 	None, Air, Dirt, Sand, Gravel, Wood, 
 	Cobblestone, Stone, Gold, Diamond,
-	Water, Lava
+	Water, Lava, Bedrock
 };
 
 class Block

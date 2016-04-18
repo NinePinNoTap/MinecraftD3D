@@ -22,8 +22,13 @@ void VoxelTerrain::Initialise()
 	//==========================
 
 	BuildThread_ = thread(&VoxelTerrain::BuildChunks, this);
-	UpdateThread_ = thread(&VoxelTerrain::UpdateWorld, this);
+	//UpdateThread_ = thread(&VoxelTerrain::UpdateWorld, this);
 	NeedsUpdating_ = false;
+
+	TryBuildChunk(D3DXVECTOR3(0, 0, 0));
+	TryBuildChunk(D3DXVECTOR3(0, 1, 0));
+	TryBuildChunk(D3DXVECTOR3(0, 2, 0));
+	TryBuildChunk(D3DXVECTOR3(0, 3, 0));
 }
 
 // Frame
@@ -33,7 +38,7 @@ void VoxelTerrain::Frame()
 	HandleChunks();
 
 	// Create chunks
-	HandleChunkGeneration();
+	//HandleChunkGeneration();
 }
 
 void VoxelTerrain::Render()

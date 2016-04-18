@@ -27,6 +27,7 @@ void BlockManager::Initialise()
 	BlockDatabase_["lava"] =		Block("lava",		 BlockType::Lava,		 D3DXVECTOR2(0, 0), D3DXVECTOR2(4,3), true);
 	BlockDatabase_["gold"] =		Block("gold",		 BlockType::Gold,		 D3DXVECTOR2(0, 2), D3DXVECTOR2(4,3), true);
 	BlockDatabase_["diamond"] =		Block("diamond",	 BlockType::Diamond,	 D3DXVECTOR2(1, 2), D3DXVECTOR2(4,3), true);
+	BlockDatabase_["bedrock"] =		Block("bedrock",	 BlockType::Bedrock,	 D3DXVECTOR2(3, 2), D3DXVECTOR2(4,3), true);
 }
 
 Block BlockManager::GetBlock(string blockName)

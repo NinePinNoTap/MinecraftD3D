@@ -194,47 +194,59 @@ void Chunk::GenerateChunk()
 	ChunkBlock_->RebuildInstanceBuffer();
 }
 
-float stoneBaseHeight = -24;
-float stoneBaseNoise = 0.05f;
-float stoneBaseNoiseHeight = 4;
+int bedrockBaseHeight = 0;
 
-float stoneMountainHeight = 48;
-float stoneMountainFrequency = 0.008f;
-float stoneMinHeight = -12;
+int diamondBaseHeight = 4;
+int diamondMaxHeight = 13;
+int diamondNoise = diamondMaxHeight - diamondBaseHeight;
 
-float dirtBaseHeight = 1;
-float dirtNoise = 0.04f;
-float dirtNoiseHeight = 3;
-
-float caveFrequency = 0.025f;
-int caveSize = 7;
+int stoneBaseHeight = 16;
+int dirtBaseHeight = 4;
 
 void Chunk::GenerateColumn(int x, int z)
 {
+	// Generate Bedrock
+	int bedrockHeight = floor(bedrockBaseHeight);
+	bedrockHeight += GetNoise(x, 0, z, 0.5f, 2);
+
+	// Generate Diamond
+	int diamondHeight = bedrockHeight + floor(diamondBaseHeight);
+	//Clamp(diamondHeight, diamondBaseHeight, 1000);
+	//diamondHeight += GetNoise(x, 0, z, 100.0f, diamondNoise);
+
+	// Generate Stone
 	int stoneHeight = floor(stoneBaseHeight);
-	stoneHeight += GetNoise(x, 0, z, stoneMountainFrequency, floor(stoneMountainHeight));
-
-	if (stoneHeight < stoneMinHeight)
-		stoneHeight = floor(stoneMinHeight);
-
-	stoneHeight += GetNoise(x, 0, z, stoneBaseNoise, floor(stoneBaseNoiseHeight));
+	//stoneHeight += GetNoise(x, 0, z, 0.008f, 12);
+	//stoneHeight += GetNoise(x, 0, z, 0.05f, 4);
 
 	int dirtHeight = stoneHeight + floor(dirtBaseHeight);
-	dirtHeight += GetNoise(x, 100, z, dirtNoise, floor(dirtNoiseHeight));
+	dirtHeight += GetNoise(x, 100, z, 0.04f, 3);
 
 	// Loop through y dimension
 	for (int y = Position_.y; y < Position_.y + CHUNK_SIZE; y++)
 	{
+		//Get a value to base cave generation on
+		int caveChance = GetNoise(x, y, z, 0.025f, 100);
+
 		Block* currentBlock = GetBlock(x - Position_.x, y - Position_.y, z - Position_.z);
 
-		//Get a value to base cave generation on
-		int caveChance = GetNoise(x, y, z, caveFrequency, 100);
-
-		if (y <= stoneHeight && caveSize < caveChance)
+		if (y < bedrockHeight)
+		{
+			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("air"));
+		}
+		else if (y == bedrockHeight)
+		{
+			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("bedrock"));
+		}
+		else if (y == diamondHeight)
+		{
+			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("diamond"));
+		}
+		else if (y < stoneHeight)
 		{
 			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
 		}
-		else if (y <= dirtHeight && caveSize < caveChance)
+		else if (y < dirtHeight)
 		{
 			currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
 		}
@@ -248,41 +260,6 @@ void Chunk::GenerateColumn(int x, int z)
 		{
 			ChunkBlock_->AddInstance(currentBlock->GetInstance());
 		}
-
-		//if (y < 3)
-		//{
-		//	int r = rand() % 50;
-		//	if (r < 3)
-		//	{
-		//		currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("diamond"));
-		//	}
-		//	else
-		//	{
-		//		currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
-		//	}
-		//}
-		//else if (y < 4)
-		//{
-		//	currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("stone"));
-		//}
-		//else if (y < 11)
-		//{
-		//	currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("sand"));
-		//}
-		//else if (y < 16)
-		//{
-		//	currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
-		//}
-		//else
-		//{
-		//	currentBlock->CopyFrom(BlockManager::Instance()->GetBlock("air"));
-		//}
-		//
-		//// Create instance 
-		//if (currentBlock->IsActive() && currentBlock->IsSolid())
-		//{
-		//	ChunkBlock_->AddInstance(currentBlock->GetInstance());
-		//}
 
 		// Clean Up
 		currentBlock = 0;
