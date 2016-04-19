@@ -1,5 +1,7 @@
 #include "VoxelWorld.h"
 
+const int ChunkHeight = 8;
+
 VoxelWorld::VoxelWorld()
 {
 }
@@ -22,15 +24,23 @@ void VoxelWorld::Initialise()
 	//===============================
 
 	BuildThread_ = thread(&VoxelWorld::BuildChunksInBuildList, this);
+
+	Player_ = new Player;
+	Player_->Initialise();
+	Player_->SetHeight(2.0f);
+
+	GenerateLocalChunks();
 }
 
 void VoxelWorld::Frame()
 {
+	Player_->Frame();
+
 	//=========================
 	// Handle Chunk Generation
 	//=========================
 
-	GenerateLocalChunks();
+	//GenerateLocalChunks();
 
 	//======================
 	// Update Active Chunks
@@ -51,12 +61,12 @@ void VoxelWorld::Render()
 	}
 }
 
-void VoxelWorld::AddChunkToBuildList(D3DXVECTOR2 chunkIndex)
+void VoxelWorld::AddChunkToBuildList(D3DXVECTOR3 chunkIndex)
 {
 	string chunkKey;
 
 	// Generate a key for the chunk
-	chunkKey = GetKey(chunkIndex.x, chunkIndex.y);
+	chunkKey = GetKey(chunkIndex.x, chunkIndex.y, chunkIndex.z);
 
 	// Search for the chunk
 	it_wc iterator = Map_.find(chunkKey);
@@ -89,15 +99,15 @@ void VoxelWorld::BuildChunksInBuildList()
 		}
 
 		// Get current working chunk
-		D3DXVECTOR2 chunkIndex = BuildList_.front();
+		D3DXVECTOR3 chunkIndex = BuildList_.front();
 
 		//================
 		// Generate Chunk
 		//================
 
 		// Create World Chunk and Generate Terrain
-		Map_[GetKey(chunkIndex.x, chunkIndex.y)] = new WorldChunk;
-		Map_[GetKey(chunkIndex.x, chunkIndex.y)]->Initialise(chunkIndex.x, chunkIndex.y, 4);
+		Map_[GetKey(chunkIndex.x, chunkIndex.y, chunkIndex.z)] = new ChunkColumn;
+		Map_[GetKey(chunkIndex.x, chunkIndex.y, chunkIndex.z)]->Initialise(chunkIndex.x, chunkIndex.z, ChunkHeight);
 
 		// Clean Up
 		BuildList_.erase(BuildList_.begin());
@@ -118,7 +128,7 @@ void VoxelWorld::HandleChunks()
 
 void VoxelWorld::GenerateLocalChunks()
 {
-	D3DXVECTOR2 chunkIndex, offsetPosition, forwardVector(1,0);
+	D3DXVECTOR3 chunkIndex, offsetPosition;
 	D3DXMATRIX rotationMatrix;
 
 	//================
@@ -127,16 +137,17 @@ void VoxelWorld::GenerateLocalChunks()
 
 	// Calculate the chunk we are in
 	chunkIndex.x = floor(Camera::Instance()->GetTransform()->GetPosition().x / (float)CHUNK_SIZE);
-	chunkIndex.y = floor(Camera::Instance()->GetTransform()->GetPosition().z / (float)CHUNK_SIZE);
+	chunkIndex.y = 0;
+	chunkIndex.z = floor(Camera::Instance()->GetTransform()->GetPosition().z / (float)CHUNK_SIZE);
 
 	// Check if we have moved chunk since last check
-	if (chunkIndex == LastWorldChunk_)
+	if (chunkIndex == LastChunkPosition_)
 	{
 		return;
 	}
 
 	// Store the new chunk we are in
-	LastWorldChunk_ = chunkIndex;
+	LastChunkPosition_ = chunkIndex;
 
 	//================
 	// Chunk Building
@@ -149,8 +160,8 @@ void VoxelWorld::GenerateLocalChunks()
 	for (int i = 0; i < 9; i++)
 	{
 		// Rotate forward vector by angle
-		D3DXMatrixRotationYawPitchRoll(&rotationMatrix, 0, 0, D3DXToRadian(i * 45));
-		D3DXVec2TransformCoord(&offsetPosition, &forwardVector, &rotationMatrix);
+		D3DXMatrixRotationYawPitchRoll(&rotationMatrix, D3DXToRadian(i * 45), 0, 0);
+		D3DXVec3TransformCoord(&offsetPosition, &FORWARD_VECTOR, &rotationMatrix);
 		RoundVector(offsetPosition);
 
 		// Calculate new chunk index
@@ -197,7 +208,7 @@ Block* VoxelWorld::GetBlock(int x, int y, int z)
 	chunkY = floor(chunkY);
 
 	// Find the chunk
-	it_wc it = Map_.find(GetKey(chunkX, chunkZ));
+	it_wc it = Map_.find(GetKey(chunkX, 0.0f, chunkZ));
 	if (it == Map_.end())
 	{
 		return 0;

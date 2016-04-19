@@ -5,11 +5,11 @@
 #include "Chunk.h"
 #include "TerrainLayer.h"
 
-class WorldChunk
+class ChunkColumn
 {
 public:
-	WorldChunk();
-	~WorldChunk();
+	ChunkColumn();
+	~ChunkColumn();
 
 	// Initialise
 	void Initialise(int x, int z, int chunkHeight);
@@ -28,6 +28,6 @@ private:
 	vector<Chunk*> Chunks_;
 	vector<TerrainLayer> Layers_;
 
-	D3DXVECTOR2 ChunkID_;
+	D3DXVECTOR3 ChunkPos_;
 };
 

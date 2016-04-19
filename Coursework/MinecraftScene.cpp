@@ -37,8 +37,8 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	//=======================
 
 	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
-	Camera::Instance()->SetStartPosition(-2, 9, -13);
-	Camera::Instance()->SetStartRotation(37, 3, 0);
+	Camera::Instance()->SetStartPosition(0, 100, 0);
+	Camera::Instance()->SetStartRotation(-89, 0, 0);
 	Camera::Instance()->AllowFlying(true);
 	Camera::Instance()->SetSpeed(4.317f);
 
@@ -283,8 +283,8 @@ void MinecraftScene::Reset()
 	//=========================================
 
 	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
-	Camera::Instance()->SetStartPosition(0, 10, 0);
-	Camera::Instance()->SetStartRotation(0, 0, 0);
+	Camera::Instance()->SetStartPosition(0, 100, 0);
+	Camera::Instance()->SetStartRotation(-89, 0, 0);
 	Camera::Instance()->AllowFlying(true);
 	Camera::Instance()->SetSpeed(4.137f);
 

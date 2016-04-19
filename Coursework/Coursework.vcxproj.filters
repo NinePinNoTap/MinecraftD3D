@@ -260,11 +260,14 @@
     <ClCompile Include="VoxelWorld.cpp">
       <Filter>Scene\VoxelTerrain</Filter>
     </ClCompile>
-    <ClCompile Include="WorldChunk.cpp">
-      <Filter>Scene\VoxelTerrain</Filter>
-    </ClCompile>
     <ClCompile Include="BlockManager.cpp">
       <Filter>Scene\VoxelTerrain\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ChunkColumn.cpp">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Scene\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -460,17 +463,20 @@
     <ClInclude Include="SimplexNoise.h">
       <Filter>Framework\Noise</Filter>
     </ClInclude>
-    <ClInclude Include="TerrainLayer.h">
-      <Filter>Framework\System\Data</Filter>
-    </ClInclude>
     <ClInclude Include="VoxelWorld.h">
-      <Filter>Scene\VoxelTerrain</Filter>
-    </ClInclude>
-    <ClInclude Include="WorldChunk.h">
       <Filter>Scene\VoxelTerrain</Filter>
     </ClInclude>
     <ClInclude Include="BlockManager.h">
       <Filter>Scene\VoxelTerrain\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainLayer.h">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkColumn.h">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Scene\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

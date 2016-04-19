@@ -110,6 +110,7 @@
     <ClCompile Include="OceanShader.cpp" />
     <ClCompile Include="PerformanceManager.cpp" />
     <ClCompile Include="PerlinNoise.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="PrimitiveFactory.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="LoadingScene.cpp" />
@@ -138,7 +139,7 @@
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Ocean.cpp" />
-    <ClCompile Include="WorldChunk.cpp" />
+    <ClCompile Include="ChunkColumn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="Mesh3D.h" />
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="OceanShader.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="PrimitiveFactory.h" />
     <ClInclude Include="ColourShader.h" />
     <ClInclude Include="CloudShader.h" />
@@ -208,7 +210,7 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Ocean.h" />
-    <ClInclude Include="WorldChunk.h" />
+    <ClInclude Include="ChunkColumn.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shaders\cloud.ps" />

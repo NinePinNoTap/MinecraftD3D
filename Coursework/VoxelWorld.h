@@ -7,11 +7,12 @@
 #include "BlockManager.h"
 #include "Singleton.h"
 #include "Utilities.h"
-#include "WorldChunk.h"
+#include "ChunkColumn.h"
+#include "Player.h"
 
 using namespace std;
 
-typedef std::map<string, WorldChunk*>::iterator it_wc;
+typedef std::map<string, ChunkColumn*>::iterator it_wc;
 
 static D3DXVECTOR2 ChunkLocalOffsets[9] {
 	{  0,  0 },				// Centre
@@ -36,20 +37,22 @@ public:
 	Block* GetBlock(int x, int y, int z);
 
 private:
-	void AddChunkToBuildList(D3DXVECTOR2 chunkIndex);
+	void AddChunkToBuildList(D3DXVECTOR3 chunkIndex);
 	void BuildChunksInBuildList();
 
 	void HandleChunks();
 	void GenerateLocalChunks();
 
 	BlockManager* BlockManager_;
-	map<string, WorldChunk*> Map_;
+	map<string, ChunkColumn*> Map_;
 
 	// Updating
-	D3DXVECTOR2 LastWorldChunk_;
+	D3DXVECTOR3 LastChunkPosition_;
 
 	// Building
-	vector<D3DXVECTOR2> BuildList_;
+	vector<D3DXVECTOR3> BuildList_;
 	thread BuildThread_;
+
+	Player* Player_;
 };
 

@@ -94,7 +94,7 @@ bool Camera::Frame()
 		// Up / Down
 		if (InputManager::Instance()->GetKey(VK_SPACE))
 		{
-			Velocity_ += Transform_->GetUpVector() * MoveSpeed_;
+			Velocity_ += Transform_->GetUpVector() * MoveSpeed_ ;
 		}
 		else if (InputManager::Instance()->GetKey(VK_SHIFT))
 		{

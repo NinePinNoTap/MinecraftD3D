@@ -6,6 +6,7 @@ Block::Block()
 	BlockName_ = "null";
 	BlockType_ = BlockType::None;
 	TextureOffset_ = D3DXVECTOR2(0, 0);
+	TotalTextures_ = D3DXVECTOR2(16, 16);
 	IsSolid_ = false;
 	IsActive_ = false;
 

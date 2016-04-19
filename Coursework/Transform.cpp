@@ -187,8 +187,6 @@ D3DXVECTOR3 Transform::GetForwardVector()
 	// Create a rotation matrix based on pitch/yaw/roll
 	GetRotationMatrix(RotationMatrix);
 
-	// Point in Z-Axis
-
 	// Apply rotation to the vector
 	D3DXVec3TransformCoord(&ForwardVector, &FORWARD_VECTOR, &RotationMatrix);
 

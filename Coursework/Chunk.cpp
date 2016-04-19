@@ -42,15 +42,6 @@ void Chunk::Initialise(int x, int y, int z)
 
 void Chunk::Generate()
 {
-	/*if (IsGenerated_)
-	{
-		
-	}
-	else
-	{
-		IsGenerated_ = true;
-		IsVisible_ = true;
-	}*/
 }
 
 void Chunk::Shutdown()
@@ -170,7 +161,7 @@ void Chunk::GenerateBlankChunk()
 				zPos = Position_.z + z;
 
 				// Store it
-				Blocks_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock("dirt"));
+				Blocks_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock("air"));
 				Blocks_[x][y][z].SetPosition(xPos, yPos, zPos);
 			}
 		}
@@ -197,6 +188,4 @@ void Chunk::GenerateBlankChunk()
 			}
 		}
 	}
-
-	ChunkBlock_->RebuildInstanceBuffer();
 }
