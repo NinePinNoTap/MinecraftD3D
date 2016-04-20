@@ -32,13 +32,13 @@ public:
 	void EndScene();
 
 	// Rendering Toggles
-	void ToggleZBuffer(bool flag);
-	void ToggleAlphaBlending(bool flag);
-	void ToggleCulling(bool flag);
+	void SetDepthBufferOn(bool flag);
+	void SetAlphaBlendingOn(bool flag);
+	void SetBackfaceCullingOn(bool flag);
 	void ToggleWireframe(bool flag);
 
 	// Blend States
-	void EnableSecondBlendState();
+	void SetCloudBlendingOn();
 	void EnableFireBlendState();
 
 	// Misc

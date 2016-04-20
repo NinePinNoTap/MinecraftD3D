@@ -18,7 +18,6 @@
 #include "Text.h"
 #include "Ocean.h"
 #include "Model.h"
-//#include "VoxelTerrain.h"
 #include "VoxelWorld.h"
 
 class MinecraftScene : public GameScene
@@ -59,7 +58,8 @@ private:
 	Model* CampFire_;
 	Ocean* Ocean_;
 	ParticleSystem* ParticleSystem_;
-	Sprite* Sprite_;
+	Sprite* ActionBar_;
+	Sprite* WindowSprite_;
 	SkySphere* SkySphere_;
 	Texture* RenderTexture_;
 	Texture* RefractionTexture_;

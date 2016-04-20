@@ -603,7 +603,7 @@ void DirectXManager::GetOrthoMatrix(D3DXMATRIX& orthoMatrix)
 	return;
 }
 
-void DirectXManager::ToggleZBuffer(bool isON)
+void DirectXManager::SetDepthBufferOn(bool isON)
 {
 	// Toggle between Z buffer on or off
 	if(isON)
@@ -616,7 +616,7 @@ void DirectXManager::ToggleZBuffer(bool isON)
 	}
 }
 
-void DirectXManager::ToggleAlphaBlending(bool isON)
+void DirectXManager::SetAlphaBlendingOn(bool isON)
 {
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	
@@ -631,7 +631,7 @@ void DirectXManager::ToggleAlphaBlending(bool isON)
 	}
 }
 
-void DirectXManager::ToggleCulling(bool isON)
+void DirectXManager::SetBackfaceCullingOn(bool isON)
 {
 	if(isON)
 	{
@@ -704,7 +704,7 @@ void DirectXManager::ResetViewport()
 	return;
 }
 
-void DirectXManager::EnableSecondBlendState()
+void DirectXManager::SetCloudBlendingOn()
 {
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	

@@ -13,7 +13,7 @@ MinecraftScene::MinecraftScene() : GameScene()
 	RefractionTexture_ = 0;
 	ReflectionTexture_ = 0;
 	RenderTexture_ = 0;
-	Sprite_ = 0;
+	WindowSprite_ = 0;
 	SkySphere_ = 0;
 	Ocean_ = 0;
 	World_ = 0;
@@ -37,10 +37,6 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	//=======================
 
 	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
-	Camera::Instance()->SetStartPosition(0, 100, 0);
-	Camera::Instance()->SetStartRotation(-89, 0, 0);
-	Camera::Instance()->AllowFlying(true);
-	Camera::Instance()->SetSpeed(4.317f);
 
 	//============================
 	// Initialise Render Textures
@@ -65,16 +61,6 @@ bool MinecraftScene::Initialise(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialise the sky plane object.", L"Error", MB_OK);
 		return false;
 	}
-
-	//======================
-	// Initialise the Light
-	//======================
-
-	Light::Instance()->GetTransform()->SetPosition(-3500.0f, 9900.0f, 2100.0f);
-	Light::Instance()->SetAmbientColor(0.5f, 0.5f, 0.5f, 1.0f);
-	Light::Instance()->SetDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
-	Light::Instance()->SetDirection(0.5f, -0.75f, 0.25f);
-	Light::Instance()->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	//======================
 	// Initialise the Ocean 
@@ -113,12 +99,27 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	// Initialise 2D Bitmaps
 	//=======================
 
-	Sprite_ = new Sprite;
-	if (!Sprite_)
+	ActionBar_ = new Sprite;
+	if (!ActionBar_)
 	{
 		return false;
 	}
-	Result_ = Sprite_->Initialise(Rect3D(windowWidth, windowHeight));
+	Result_ = ActionBar_->Initialise(Rect3D(900, 109));
+	if (!Result_)
+	{
+		MessageBox(hwnd, L"Could not initialise the action bar object.", L"Error", MB_OK);
+		return false;
+	}
+	ActionBar_->GetTransform()->SetY(-(windowHeight * 0.8) / 2);
+	ActionBar_->SetTexture("ui_toolbar.dds");
+	ActionBar_->SetShader("texture");
+
+	WindowSprite_ = new Sprite;
+	if (!WindowSprite_)
+	{
+		return false;
+	}
+	Result_ = WindowSprite_->Initialise(Rect3D(windowWidth, windowHeight));
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the screen window object.", L"Error", MB_OK);
@@ -178,8 +179,9 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	Text_->CreateText("Reset Camera [BACKSPACE]", Vector2(windowWidth - 10, 70), BLACK, RIGHT);
 	Text_->CreateText("Quit [ESC]", Vector2(windowWidth - 10, 110), BLACK, RIGHT);
 
-	/*Chunk_ = new VoxelTerrain;
-	Chunk_->Initialise();*/
+	//==============
+	// Create World
+	//==============
 
 	World_ = new VoxelWorld;
 	World_->Initialise();
@@ -224,32 +226,11 @@ void MinecraftScene::Shutdown()
 		ParticleSystem_ = 0;
 	}
 
-	if (RefractionTexture_)
+	if (WindowSprite_)
 	{
-		RefractionTexture_ -> Shutdown();
-		delete RefractionTexture_;
-		RefractionTexture_ = 0;
-	}
-
-	if (ReflectionTexture_)
-	{
-		ReflectionTexture_ -> Shutdown();
-		delete ReflectionTexture_;
-		ReflectionTexture_ = 0;
-	}
-
-	if (RenderTexture_)
-	{
-		RenderTexture_ -> Shutdown();
-		delete RenderTexture_;
-		RenderTexture_ = 0;
-	}
-
-	if (Sprite_)
-	{
-		Sprite_ -> Shutdown();
-		delete Sprite_;
-		Sprite_ = 0;
+		WindowSprite_ -> Shutdown();
+		delete WindowSprite_;
+		WindowSprite_ = 0;
 	}
 
 	if (SkySphere_)
@@ -368,19 +349,6 @@ bool MinecraftScene::HandleObjects()
 		return false;
 	}
 
-	//=========================
-	// Check Underwater Status
-	//=========================
-
-/*	if (Camera::Instance()->GetTransform()->GetY() < Ocean_->GetWaterHeight())
-	{
-		IsUnderwater_ = true;
-	}
-	else
-	{
-		IsUnderwater_ = false;
-	}*/
-
 	return true;
 }
 
@@ -471,7 +439,6 @@ bool MinecraftScene::HandleInput()
 		Light::Instance() -> ToggleTime(NightTimeMode_);
 		SkySphere_ -> ToggleTime(NightTimeMode_);
 		Ocean_ -> ToggleTime(NightTimeMode_);
-		//Fire_ -> SetActive(NightTimeMode_);
 	}
 
 	return true;
@@ -528,24 +495,24 @@ bool MinecraftScene::RenderScene(bool ShowText)
 	SkySphere_->GetTransform()->SetPosition(Camera::Instance()->GetTransform()->GetPosition());
 
 	// Disable culling and the z buffer
-	DirectXManager::Instance() -> ToggleCulling(false);
-	DirectXManager::Instance() -> ToggleZBuffer(false);
+	DirectXManager::Instance() -> SetBackfaceCullingOn(false);
+	DirectXManager::Instance() -> SetDepthBufferOn(false);
 
 	// Render the sky dome
 	SkySphere_->Render();
 
 	// Turn back face culling on
-	DirectXManager::Instance() -> ToggleCulling(true);
+	DirectXManager::Instance() -> SetBackfaceCullingOn(true);
 
 	// Enable blending so the clouds can be blended with the sky
-	DirectXManager::Instance() -> EnableSecondBlendState();
+	DirectXManager::Instance() -> SetCloudBlendingOn();
 
 	// Render the clouds
 	Clouds_->Render();
 
 	// Enable culling and the z buffer
-	DirectXManager::Instance() -> ToggleAlphaBlending(false);
-	DirectXManager::Instance() -> ToggleZBuffer(true);
+	DirectXManager::Instance() -> SetAlphaBlendingOn(false);
+	DirectXManager::Instance() -> SetDepthBufferOn(true);
 
 	//==============================================
 	// Generate Matrices and Send To Shader Manager
@@ -553,13 +520,6 @@ bool MinecraftScene::RenderScene(bool ShowText)
 
 	GenerateMatrices();
 	SetShaderManagerVars();
-
-	//====================
-	// Render the Terrain
-	//====================
-
-	//Result_ = ShaderManager::Instance()->TerrainRender(Terrain_);
-	//if (!Result_) { return false; }
 
 	//==================
 	// Render the Ocean 
@@ -578,7 +538,7 @@ bool MinecraftScene::RenderScene(bool ShowText)
 	//===================
 
 	// Turn off back face culling
-	DirectXManager::Instance()->ToggleCulling(false);
+	DirectXManager::Instance()->SetBackfaceCullingOn(false);
 
 	//Chunk_->Render();
 	World_->Render();
@@ -612,7 +572,7 @@ bool MinecraftScene::RenderScene(bool ShowText)
 	if (NightTimeMode_)
 	{
 		// Turn on alpha blending
-		DirectXManager::Instance() -> ToggleAlphaBlending(true);
+		DirectXManager::Instance() -> SetAlphaBlendingOn(true);
 
 		// Render the particle WindowManager
 		Result_ = ShaderManager::Instance()->TextureRender(ParticleSystem_);
@@ -622,7 +582,7 @@ bool MinecraftScene::RenderScene(bool ShowText)
 		}
 
 		// Turn off alpha blending.
-		DirectXManager::Instance() -> ToggleAlphaBlending(false);
+		DirectXManager::Instance() -> SetAlphaBlendingOn(false);
 	}
 
 	// Check if we are underwater, if not don't render text
@@ -701,8 +661,8 @@ bool MinecraftScene::RenderReflection()
 	Clouds_->GetTransform()->SetPosition(ReflectedCameraPosition);
 
 	// Disable back face culling and z buffer
-	DirectXManager::Instance() -> ToggleCulling(false);
-	DirectXManager::Instance() -> ToggleZBuffer(false);
+	DirectXManager::Instance() -> SetBackfaceCullingOn(false);
+	DirectXManager::Instance() -> SetDepthBufferOn(false);
 
 	// Render the sky sphere
 	SkySphere_->Render();
@@ -712,10 +672,10 @@ bool MinecraftScene::RenderReflection()
 	}
 
 	// Re-enable culling
-	DirectXManager::Instance() -> ToggleCulling(true);
+	DirectXManager::Instance() -> SetBackfaceCullingOn(true);
 
 	// Enable blending so the clouds can be blended with the sky
-	DirectXManager::Instance() -> EnableSecondBlendState();
+	DirectXManager::Instance() -> SetCloudBlendingOn();
 
 	// Render the clouds
 	Clouds_->Render();
@@ -725,8 +685,8 @@ bool MinecraftScene::RenderReflection()
 	}
 
 	// Disable blending and re-enable the z buffer
-	DirectXManager::Instance() -> ToggleAlphaBlending(false);
-	DirectXManager::Instance() -> ToggleZBuffer(true);
+	DirectXManager::Instance() -> SetAlphaBlendingOn(false);
+	DirectXManager::Instance() -> SetDepthBufferOn(true);
 
 	//==============================================
 	// Generate Matrices and Send To Shader Manager
@@ -740,7 +700,7 @@ bool MinecraftScene::RenderReflection()
 	//===================
 
 	// Turn off culling
-	DirectXManager::Instance() -> ToggleCulling(false);
+	DirectXManager::Instance() -> SetBackfaceCullingOn(false);
 
 	// Render Models
 	/*for each (GameObject* gameObject in Objects_)
@@ -769,7 +729,7 @@ bool MinecraftScene::RenderReflection()
 	//if (!Result_) { return false; }
 
 	// Re-enable culling
-	DirectXManager::Instance() -> ToggleCulling(false);
+	DirectXManager::Instance() -> SetBackfaceCullingOn(false);
 
 	// Reset rendering back to normal
 	DirectXManager::Instance() -> SetBackBufferRenderTarget();
@@ -812,7 +772,7 @@ bool MinecraftScene::RenderText()
 	//=======================
 
 	// Turn on alpha blending
-	DirectXManager::Instance() -> ToggleAlphaBlending(true);
+	DirectXManager::Instance() -> SetAlphaBlendingOn(true);
 
 	// Render the text
 	Result_ = Text_ -> Render();
@@ -822,10 +782,10 @@ bool MinecraftScene::RenderText()
 	}
 
 	// Disable blending
-	DirectXManager::Instance() -> ToggleAlphaBlending(false);
+	DirectXManager::Instance() -> SetAlphaBlendingOn(false);
 
 	// Re-enable the z buffer
-	DirectXManager::Instance() -> ToggleZBuffer(true);
+	DirectXManager::Instance() -> SetDepthBufferOn(true);
 
 	return true;
 }
