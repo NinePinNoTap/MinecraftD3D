@@ -37,7 +37,6 @@ public:
 	Block* GetBlock(int x, int y, int z);
 
 private:
-	void AddChunkToBuildList(D3DXVECTOR3 chunkIndex);
 	void BuildChunksInBuildList();
 
 	void HandleChunks();
@@ -52,6 +51,8 @@ private:
 	// Building
 	vector<D3DXVECTOR3> BuildList_;
 	thread BuildThread_;
+
+	vector<D3DXVECTOR3> BuildOrder_;
 
 	Player* Player_;
 };

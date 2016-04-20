@@ -93,11 +93,11 @@ void Chunk::Frame()
 
 	//// Check distance to player
 	//distanceAway = Distance(Camera::Instance()->GetTransform()->GetPosition(), Position_);
-	//if (distanceAway > 30)
+	//if (distanceAway > 4 * CHUNK_SIZE)
 	//{
 	//	IsVisible_ = false;
 	//}
-	//else if (distanceAway < 20)
+	//else
 	//{
 	//	IsVisible_ = true;
 	//}

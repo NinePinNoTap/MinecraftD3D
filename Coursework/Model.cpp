@@ -20,9 +20,12 @@ void Model::Shutdown()
 	{
 		for (int i = 0; i < Meshes_.size(); i++)
 		{
-			Meshes_[i]->Shutdown();
-			delete Meshes_[i];
-			Meshes_[i] = 0;
+			if (Meshes_[i])
+			{
+				Meshes_[i]->Shutdown();
+				delete Meshes_[i];
+				Meshes_[i] = 0;
+			}
 		}
 
 		Meshes_.clear();
@@ -33,9 +36,12 @@ void Model::Shutdown()
 	{
 		for (int i = 0; i < Materials_.size(); i++)
 		{
-			Materials_[i]->Shutdown();
-			delete Materials_[i];
-			Materials_[i] = 0;
+			if (Materials_[i])
+			{
+				Materials_[i]->Shutdown();
+				delete Materials_[i];
+				Materials_[i] = 0;
+			}
 		}
 
 		Materials_.clear();

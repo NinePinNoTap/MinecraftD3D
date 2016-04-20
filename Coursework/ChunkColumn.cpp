@@ -27,7 +27,7 @@ void ChunkColumn::Initialise(int x, int z, int chunkCount)
 		// Clean Up
 		createdChunk = 0;
 
-		OutputTimeDelay("Creation Time : ", tBefore, timeGetTime());
+		OutputTimeDelay("Creation Time : " + GetKey(x,i,z), tBefore, timeGetTime());
 	}
 
 	// Generate Terrain Layers
@@ -67,15 +67,15 @@ void ChunkColumn::Render()
 
 void ChunkColumn::InitialiseLayers()
 {
-	// Add layer				   (Layer Name,         Block,	  base, Freq,  Amp,  Exp,	Layer Type)
-	Layers_.push_back(TerrainLayer("Bedrock",			"bedrock",	 0,	   10,   2,   1, LayerType::Absolute));
+	Layers_.push_back(TerrainLayer("Bedrock",		"bedrock",	 0,		1,	 2,   1, LayerType::Absolute));
 
-	Layers_.push_back(TerrainLayer("Base Stone",		"stone",	39,    63,   9,   1, LayerType::Absolute));
-	Layers_.push_back(TerrainLayer("Mountain 1",		"stone",	 1,   129,  40,   1, LayerType::Absolute));
-	Layers_.push_back(TerrainLayer("Mountain 2",		"stone",	 4,   111,  38,   1, LayerType::Absolute));
-	Layers_.push_back(TerrainLayer("Stone Noise",	    "stone",	 0,     7,   3,   1, LayerType::Additive));
-	Layers_.push_back(TerrainLayer("Dirt 1",	    "dirt",		60,    16,   4,   1, LayerType::Absolute));
-	Layers_.push_back(TerrainLayer("Dirt 2",	    "dirt",		59,    25,   6,   1, LayerType::Absolute));
+	//Layers_.push_back(TerrainLayer("Base Stone",	"stone",	39,    63,   9,   1, LayerType::Absolute));
+	//Layers_.push_back(TerrainLayer("Mountain 1",	"stone",	 1,   129,  30,   1, LayerType::Absolute));
+
+	//Layers_.push_back(TerrainLayer("Mountain 2",	"stone",	 4,   111,  21,   1, LayerType::Additive));
+	//Layers_.push_back(TerrainLayer("Stone Noise",	"stone",	 1,     7,   3,   1, LayerType::Additive));
+
+	//Layers_.push_back(TerrainLayer("Dirt 1",	    "dirt",		23,    16,   8,   1, LayerType::Additive));
 }
 
 void ChunkColumn::GenerateTerrain()

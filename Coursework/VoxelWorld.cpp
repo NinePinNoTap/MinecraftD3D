@@ -1,6 +1,7 @@
 #include "VoxelWorld.h"
 
 const int ChunkHeight = 8;
+const int LoadRadius = 1;
 
 VoxelWorld::VoxelWorld()
 {
@@ -12,6 +13,8 @@ VoxelWorld::~VoxelWorld()
 
 void VoxelWorld::Initialise()
 {
+	D3DXMATRIX rotationMatrix;
+
 	//======================
 	// Create Block Manager
 	//======================
@@ -23,18 +26,34 @@ void VoxelWorld::Initialise()
 	// Initialise Build and Updating
 	//===============================
 
+	// Current Chunk
+	BuildOrder_.push_back(D3DXVECTOR3(0, 0, 0));
+
+	for (int x = -LoadRadius; x <= LoadRadius; x++)
+	{
+		for (int z = LoadRadius; z >= -LoadRadius; z--)
+		{
+			BuildOrder_.push_back(D3DXVECTOR3(x, 0, z));
+		}
+	}
+
+	GenerateLocalChunks();
+
 	BuildThread_ = thread(&VoxelWorld::BuildChunksInBuildList, this);
+
+	//===================
+	// Initialise Player
+	//===================
 
 	Player_ = new Player;
 	Player_->Initialise();
 	Player_->SetHeight(2.0f);
 
-	GenerateLocalChunks();
 }
 
 void VoxelWorld::Frame()
 {
-	Player_->Frame();
+	//Player_->Frame();
 
 	//=========================
 	// Handle Chunk Generation
@@ -61,35 +80,10 @@ void VoxelWorld::Render()
 	}
 }
 
-void VoxelWorld::AddChunkToBuildList(D3DXVECTOR3 chunkIndex)
+void VoxelWorld::BuildChunksInBuildList()
 {
 	string chunkKey;
 
-	// Generate a key for the chunk
-	chunkKey = GetKey(chunkIndex.x, chunkIndex.y, chunkIndex.z);
-
-	// Search for the chunk
-	it_wc iterator = Map_.find(chunkKey);
-	if (iterator == Map_.end())
-	{
-		// Couldn't find the chunk so check if its currently in the build list
-		if (find(BuildList_.begin(), BuildList_.end(), chunkIndex) == BuildList_.end())
-		{
-			OutputToDebug("New Chunk Found : " + chunkKey);
-
-			// Add to build list
-			BuildList_.push_back(chunkIndex);
-		}
-	}
-	else
-	{
-		// Chunk was found in the map
-		// We should look to load it
-	}
-}
-
-void VoxelWorld::BuildChunksInBuildList()
-{
 	while (true)
 	{
 		// Make sure we have chunks to build
@@ -101,13 +95,22 @@ void VoxelWorld::BuildChunksInBuildList()
 		// Get current working chunk
 		D3DXVECTOR3 chunkIndex = BuildList_.front();
 
-		//================
-		// Generate Chunk
-		//================
+		// Generate a key for the chunk
+		chunkKey = GetKey(chunkIndex.x, chunkIndex.y, chunkIndex.z);
 
-		// Create World Chunk and Generate Terrain
-		Map_[GetKey(chunkIndex.x, chunkIndex.y, chunkIndex.z)] = new ChunkColumn;
-		Map_[GetKey(chunkIndex.x, chunkIndex.y, chunkIndex.z)]->Initialise(chunkIndex.x, chunkIndex.z, ChunkHeight);
+		// Search for the chunk
+		it_wc iterator = Map_.find(chunkKey);
+		if (iterator == Map_.end())
+		{
+			// Create World Chunk and Generate Terrain
+			Map_[chunkKey] = new ChunkColumn;
+			Map_[chunkKey]->Initialise(chunkIndex.x, chunkIndex.z, ChunkHeight);
+		}
+		else
+		{
+			// Chunk was found in the map
+			// We should look to load it
+		}
 
 		// Clean Up
 		BuildList_.erase(BuildList_.begin());
@@ -128,8 +131,7 @@ void VoxelWorld::HandleChunks()
 
 void VoxelWorld::GenerateLocalChunks()
 {
-	D3DXVECTOR3 chunkIndex, offsetPosition;
-	D3DXMATRIX rotationMatrix;
+	D3DXVECTOR3 chunkIndex;
 
 	//================
 	// Check Movement
@@ -153,19 +155,11 @@ void VoxelWorld::GenerateLocalChunks()
 	// Chunk Building
 	//================
 
-	// Build current chunk
-	AddChunkToBuildList(chunkIndex);
-
 	// Build chunks around us
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < BuildOrder_.size(); i++)
 	{
-		// Rotate forward vector by angle
-		D3DXMatrixRotationYawPitchRoll(&rotationMatrix, D3DXToRadian(i * 45), 0, 0);
-		D3DXVec3TransformCoord(&offsetPosition, &FORWARD_VECTOR, &rotationMatrix);
-		RoundVector(offsetPosition);
-
 		// Calculate new chunk index
-		AddChunkToBuildList(chunkIndex + offsetPosition);
+		BuildList_.push_back(chunkIndex + BuildOrder_[i]);
 	}
 }
 
