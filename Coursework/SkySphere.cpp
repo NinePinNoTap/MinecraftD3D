@@ -98,23 +98,29 @@ bool SkySphere::Render()
 	// Render Reflection
 	if (IsReflective_ == RenderMode::On)
 	{
+		// Reverse the camera position as depth buffer and camera tracking is on
 		float currentY = Transform_->GetY();
 		D3DXVECTOR3 reflectedCamera = Camera::Instance()->GetTransform()->GetPosition();
 		reflectedCamera.y *= -1;
 
 		Transform_->SetY(reflectedCamera.y);
 
+		// Define how we want to see the model
 		Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
 
+		// Get the reflection texture and set it as the render target
 		Texture* reflectionTexture;
 		AssetManager::Instance()->LoadTexture(&reflectionTexture, "ReflectionTexture");
 		reflectionTexture->SetRenderTarget();
 
+		// Render the model
 		RenderMeshes();
 
+		// Reset Render Target
 		DirectXManager::Instance()->SetBackBufferRenderTarget();
 		DirectXManager::Instance()->ResetViewport();
 
+		// Reset Transform
 		Transform_->SetY(currentY);
 	}
 
@@ -126,6 +132,8 @@ bool SkySphere::Render()
 
 	// Reset Pipeline Settings
 	ResetRenderModes();
+
+	return true;
 }
 
 void SkySphere::ToggleTime(bool timeMode)

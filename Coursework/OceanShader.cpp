@@ -59,41 +59,30 @@ bool OceanShader::Prepare(Material* objMaterial, Transform* objTransform)
 	ID3D11ShaderResourceView* reflectionTexture = objMaterial->GetTexture("ReflectionTexture")->GetTexture();
 	ID3D11ShaderResourceView* normalTexture = objMaterial->GetNormalTexture();
 
-	/*WaterHeight_ = waterResolution.depth;
-	NormalMapTiling_ = D3DXVECTOR2(0.01f, 0.02f);
-	Frame_ = 0.0f;
-	WaterTranslation_ = 0.0f;
-	ReflectRefractScale_ = 0.03f;
-	RefractionTint_ = D3DXVECTOR4(0.0f, 0.8f, 1.0f, 1.0f);
-	WaterShininess_ = 50.0f;
-	WaveHeight_ = 1.5f;
-	WaveSpeed_ = 0.025f;
-	Tessellation_ = 58.0f;*/
-
 	// Create camera buffer
 	CameraBuffer cameraBuffer;
 	cameraBuffer.cameraPosition = Camera::Instance()->GetTransform()->GetPosition();
-	cameraBuffer.normalMapTiling = D3DXVECTOR2(0.01f, 0.02f);
+	cameraBuffer.normalMapTiling = objMaterial->GetVector2("NormalMapTiling");// D3DXVECTOR2(0.01f, 0.02f);
 	cameraBuffer.padding = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	// Create ocean buffer
 	OceanBuffer oceanBuffer;
-	oceanBuffer.waterTranslation = 0.0f;
-	oceanBuffer.reflectRefractScale = 0.03f;
-	oceanBuffer.refractionTint = D3DXVECTOR4(0.0f, 0.8f, 1.0f, 1.0f);
+	oceanBuffer.waterTranslation = objMaterial->GetFloat("WaterTranslation");// 0.0f;
+	oceanBuffer.reflectRefractScale = objMaterial->GetFloat("ReflectRefractScale");// 0.03f;
+	oceanBuffer.refractionTint = objMaterial->GetVector4("RefractionTint");// D3DXVECTOR4(0.0f, 0.8f, 1.0f, 1.0f);
 	oceanBuffer.lightDirection = Light::Instance()->GetDirection();
 	oceanBuffer.specularShininess = Light::Instance()->GetSpecularPower();
 	oceanBuffer.padding = D3DXVECTOR2(0.0f, 0.0f);
 
 	// Create wave buffer
 	WaveBuffer waveBuffer;
-	waveBuffer.waveTime = 0.0f;
-	waveBuffer.waveHeight = 1.5f / 2;
+	waveBuffer.waveTime = objMaterial->GetFloat("Frame");
+	waveBuffer.waveHeight = objMaterial->GetFloat("WaveHeight") / 2;
 	waveBuffer.padding = D3DXVECTOR2(0.0f, 0.0f);
 
 	// Create tessellation buffer
 	TessellationBuffer tessellationBuffer;
-	tessellationBuffer.tessellationAmount = 58;// gameObject->GetTessellation();
+	tessellationBuffer.tessellationAmount = objMaterial->GetFloat("TessellationAmount");// 58;// gameObject->GetTessellation();
 	tessellationBuffer.padding = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	// Create the world matrix for the model

@@ -552,7 +552,7 @@ bool MinecraftScene::RenderRefraction()
 
 	// Clip everything above the maximum wave height water
 	// We use max wave height here otherwise the refraction renders incorrectly
-	ClipPlane_ = D3DXVECTOR4(0.0f, -1.0f, 0.0f, Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
+	//ClipPlane_ = D3DXVECTOR4(0.0f, -1.0f, 0.0f, Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
 
 	// Render the terrain using reflection shader
 	//Result_ = ShaderManager::Instance()->TerrainRender(Terrain_, ClipPlane_);
@@ -579,7 +579,7 @@ bool MinecraftScene::RenderReflection()
 
 	// Create a camera reflected in the Y axis
 	ReflectedCameraPosition = Camera::Instance()->GetTransform()->GetPosition();
-	ReflectedCameraPosition.y = -Camera::Instance()->GetTransform()->GetY() + (Ocean_->GetWaterHeight() * 2.0f);
+	//ReflectedCameraPosition.y = -Camera::Instance()->GetTransform()->GetY() + (Ocean_->GetWaterHeight() * 2.0f);
 
 	// Update Camera Position
 	SkySphere_->GetTransform()->SetPosition(ReflectedCameraPosition);
@@ -607,7 +607,7 @@ bool MinecraftScene::RenderReflection()
 
 	// Clip everything above the maximum wave height water
 	// We use max wave height here otherwise the refraction renders incorrectly
-	ClipPlane_ = D3DXVECTOR4(0.0f, 1.0f, 0.0f, -Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
+	//ClipPlane_ = D3DXVECTOR4(0.0f, 1.0f, 0.0f, -Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
 
 	// Reset rendering back to normal
 	DirectXManager::Instance() -> SetBackBufferRenderTarget();

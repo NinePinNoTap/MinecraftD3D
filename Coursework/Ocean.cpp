@@ -19,18 +19,6 @@ bool Ocean::Initialise(string textureFilename, Rect3D waterResolution)
 	PrimitiveFactory primitiveFactory;
 	Texture* refractionTexture;
 	Texture* reflectionTexture;
-
-	// Initialise water variables
-	WaterHeight_ = waterResolution.depth;
-	NormalMapTiling_ = D3DXVECTOR2(0.01f, 0.02f);
-	Frame_ = 0.0f;
-	WaterTranslation_ = 0.0f;
-	ReflectRefractScale_ = 0.03f;
-	RefractionTint_ = D3DXVECTOR4(0.0f, 0.8f, 1.0f, 1.0f);
-	WaterShininess_ = 50.0f;
-	WaveHeight_ = 1.5f;
-	WaveSpeed_ = 0.025f;
-	Tessellation_ = 58.0f;
 	
 	//==============
 	// Create Model
@@ -66,6 +54,15 @@ bool Ocean::Initialise(string textureFilename, Rect3D waterResolution)
 	}
 	newMaterial->SetTexture("RefractionTexture", refractionTexture);
 	newMaterial->SetTexture("ReflectionTexture", reflectionTexture);
+
+	newMaterial->SetFloat("WaterHeight", waterResolution.depth);
+	newMaterial->SetVector2("NormalMapTiling", D3DXVECTOR2(0.01f, 0.02f));
+	newMaterial->SetFloat("WaterTranslation", 0.0f);
+	newMaterial->SetFloat("ReflectRefractScale", 0.03f);
+	newMaterial->SetVector4("RefractionTint", D3DXVECTOR4(0.0f, 0.8f, 1.0f, 1.0f));
+	newMaterial->SetFloat("WaveHeight", 1.5f);
+	newMaterial->SetFloat("TessellationAmount", 58.0f);
+
 	Model_->AddMaterial(newMaterial);
 
 	//==================
@@ -82,7 +79,9 @@ bool Ocean::Initialise(string textureFilename, Rect3D waterResolution)
 	// Initialise Vars
 	//=================
 
-	Frame_ = 0;
+	Frame_ = 0.0f;
+	WaveSpeed_ = 0.025f;
+	WaterTranslation_ = 0.0f;
 
 	IsReflective_ = RenderMode::Off;
 	UseCulling_ = RenderMode::Off;
@@ -130,6 +129,10 @@ bool Ocean::Frame()
 
 	// Update the waater time to simulate waves
 	Frame_ += WaveSpeed_;
+
+	// Update Material
+	Model_->GetMaterial()->SetFloat("Frame", Frame_);
+	Model_->GetMaterial()->SetFloat("WaterTranslation", WaterTranslation_);
 
 	return true;
 }
@@ -207,53 +210,12 @@ void Ocean::ToggleTime(bool NightTimeMode)
 	// Toggle between good weather and bad weather
 	if (NightTimeMode)
 	{
-		WaveHeight_ = 2.0f;
 		WaveSpeed_ = 0.06f;
+		Model_->GetMaterial()->SetFloat("WaveHeight", 2.0f);
 	}
 	else
 	{
-		WaveHeight_ = 1.5f;
+		Model_->GetMaterial()->SetFloat("WaveHeight", 1.5f);
 		WaveSpeed_ = 0.025f;
 	}
-}
-
-// Getters
-float Ocean::GetTessellation()
-{
-	return Tessellation_;
-}
-
-float Ocean::GetWaterHeight()
-{
-	return WaterHeight_;
-}
-
-float Ocean::GetWaveHeight()
-{
-	return WaveHeight_;
-}
-
-D3DXVECTOR2 Ocean::GetNormalMapTiling()
-{
-	return NormalMapTiling_;
-}
-
-float Ocean::GetWaterTranslation()
-{
-	return WaterTranslation_;
-}
-
-float Ocean::GetReflectRefractScale()
-{
-	return ReflectRefractScale_;
-}
-
-D3DXVECTOR4 Ocean::GetRefractionTint()
-{
-	return RefractionTint_;
-}
-
-float Ocean::GetSpecularShininess()
-{
-	return WaterShininess_;
 }
