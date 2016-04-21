@@ -46,46 +46,55 @@ void ChunkColumn::Initialise(int x, int z, int chunkCount)
 	OutputToDebug("Refreshed Terrain");
 }
 
-void ChunkColumn::Frame()
+bool ChunkColumn::Frame()
 {
 	for (unsigned int i = 0; i < Chunks_.size(); i++)
 	{
 		Chunks_[i]->Frame();
 	}
+
+	return true;
 }
 
-void ChunkColumn::Render()
+bool ChunkColumn::Render()
 {
+	// Loop through chunks and render them
 	for (unsigned int i = 0; i < Chunks_.size(); i++)
 	{
 		if (Chunks_[i]->IsVisible())
 		{
-			Chunks_[i]->Render();
+			Result_ = Chunks_[i]->Render();
+			if (!Result_)
+			{
+				return false;
+			}
 		}
 	}
+
+	return true;
 }
 
 void ChunkColumn::InitialiseLayers()
 {
 	Layers_.push_back(TerrainLayer("Bedrock",		"bedrock",	 0,		1,	 2,   1, LayerType::Absolute));
 
-	//Layers_.push_back(TerrainLayer("Base Stone",	"stone",	39,    63,   9,   1, LayerType::Absolute));
+	Layers_.push_back(TerrainLayer("Base Stone",	"stone",	39,    63,   9,   1, LayerType::Absolute));
 	//Layers_.push_back(TerrainLayer("Mountain 1",	"stone",	 1,   129,  30,   1, LayerType::Absolute));
 
 	//Layers_.push_back(TerrainLayer("Mountain 2",	"stone",	 4,   111,  21,   1, LayerType::Additive));
 	//Layers_.push_back(TerrainLayer("Stone Noise",	"stone",	 1,     7,   3,   1, LayerType::Additive));
 
-	//Layers_.push_back(TerrainLayer("Dirt 1",	    "dirt",		23,    16,   8,   1, LayerType::Additive));
+	Layers_.push_back(TerrainLayer("Dirt 1",	    "dirt",		23,    16,   8,   1, LayerType::Additive));
 }
 
 void ChunkColumn::GenerateTerrain()
 {
-	D3DXVECTOR3 worldPos = ChunkPos_ * CHUNK_SIZE;
+	D3DXVECTOR3 worldPos = ChunkPos_ * Config::World::ChunkSize;
 
 	// Loop through and generate terrain for specific x/z coordinate
-	for (int x = worldPos.x; x < worldPos.x + CHUNK_SIZE; x++)
+	for (int x = worldPos.x; x < worldPos.x + Config::World::ChunkSize; x++)
 	{
-		for (int z = worldPos.z; z < worldPos.z + CHUNK_SIZE; z++)
+		for (int z = worldPos.z; z < worldPos.z + Config::World::ChunkSize; z++)
 		{
 			GenerateColumn(x, z);
 		}

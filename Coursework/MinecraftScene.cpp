@@ -115,12 +115,14 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	{
 		return false;
 	}
-	Result_ = WindowSprite_->Initialise(Rect3D(windowWidth, windowHeight));
+	Result_ = WindowSprite_->Initialise(Rect3D(windowWidth * 0.5f, windowHeight * 0.5f));
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the screen window object.", L"Error", MB_OK);
 		return false;
 	}
+	WindowSprite_->SetTexture("RenderTexture");
+	WindowSprite_->SetShader("texture");
 
 	//===========================
 	// Initialise the Sky Sphere
@@ -142,7 +144,7 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	// Initialise Sounds
 	//===================
 
-	AssetManager::Instance()->LoadAudio(&AmbientSound_, "ambience");
+	AssetManager::Instance()->LoadAudio(&AmbientSound_, "ambience.wav");
 	AmbientSound_->SetVolume(1.0f);
 
 	//=================
@@ -154,26 +156,26 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	{
 		return false;
 	}
-	Result_ = Text_->Initialise(hwnd, "shruti", "shruti.dds", 95);
+	Result_ = Text_->Initialise(hwnd, "shruti.txt", "shruti.dds", 95);
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the text object.", L"Error", MB_OK);
 		return false;
 	}
-	Text_->CreateText("FPS:", Vector2(10, 10), WHITE); // FPS
-	Text_->CreateText("CPU:", Vector2(10, 30), BLACK); // CPU
-	Text_->CreateText("Camera X :", Vector2(10, 50), BLACK); // CameraX
-	Text_->CreateText("Camera Y :", Vector2(10, 70), BLACK); // CameraY
-	Text_->CreateText("Camera Z :", Vector2(10, 90), BLACK); // CameraZ
-	Text_->CreateText("Rotation X :", Vector2(10, 110), BLACK); // RotationX
-	Text_->CreateText("Rotation Y :", Vector2(10, 130), BLACK); // RotationY
-	Text_->CreateText("Rotation Z :", Vector2(10, 150), BLACK); // Rotation Z
+	Text_->CreateText("FPS:", Vector2(10, 10), Config::Colour::White); // FPS
+	Text_->CreateText("CPU:", Vector2(10, 30), Config::Colour::Black); // CPU
+	Text_->CreateText("Camera X :", Vector2(10, 50), Config::Colour::Black); // CameraX
+	Text_->CreateText("Camera Y :", Vector2(10, 70), Config::Colour::Black); // CameraY
+	Text_->CreateText("Camera Z :", Vector2(10, 90), Config::Colour::Black); // CameraZ
+	Text_->CreateText("Rotation X :", Vector2(10, 110), Config::Colour::Black); // RotationX
+	Text_->CreateText("Rotation Y :", Vector2(10, 130), Config::Colour::Black); // RotationY
+	Text_->CreateText("Rotation Z :", Vector2(10, 150), Config::Colour::Black); // Rotation Z
 
-	Text_->CreateText("CONTROLS", Vector2(windowWidth - 10, 10), BLACK, RIGHT);
-	Text_->CreateText("Toggle Wireframe [1]", Vector2(windowWidth - 10, 30), BLACK, RIGHT);
-	Text_->CreateText("Toggle Time [2]", Vector2(windowWidth - 10, 50), BLACK, RIGHT);
-	Text_->CreateText("Reset Camera [BACKSPACE]", Vector2(windowWidth - 10, 70), BLACK, RIGHT);
-	Text_->CreateText("Quit [ESC]", Vector2(windowWidth - 10, 110), BLACK, RIGHT);
+	Text_->CreateText("CONTROLS", Vector2(windowWidth - 10, 10), Config::Colour::Black, RIGHT);
+	Text_->CreateText("Toggle Wireframe [1]", Vector2(windowWidth - 10, 30), Config::Colour::Black, RIGHT);
+	Text_->CreateText("Toggle Time [2]", Vector2(windowWidth - 10, 50), Config::Colour::Black, RIGHT);
+	Text_->CreateText("Reset Camera [BACKSPACE]", Vector2(windowWidth - 10, 70), Config::Colour::Black, RIGHT);
+	Text_->CreateText("Quit [ESC]", Vector2(windowWidth - 10, 110), Config::Colour::Black, RIGHT);
 
 	//==============
 	// Create World
@@ -442,26 +444,20 @@ bool MinecraftScene::HandleInput()
 
 bool MinecraftScene::Render()
 {
-	//==============================
-	// Render Refraction To Texture
-	//==============================
+	//================
+	// Reset Textures
+	//================
 
-	//Result_ = RenderRefraction();
-	//if (!Result_) { return false; }
-
-	////==============================
-	//// Render Reflection To Texture
-	////==============================
-
-	//Result_ = RenderReflection();
-	//if (!Result_) { return false; }
+	RenderTexture_->ClearRenderTarget(Config::Colour::Black);
+	ReflectionTexture_->ClearRenderTarget(Config::Colour::Black);
+	RefractionTexture_->ClearRenderTarget(Config::Colour::Black);
 
 	//==============
 	// Render Scene
 	//==============
 
 	// Render the scene normally to the screen
-	Result_ = RenderScene(!DirectXManager::Instance()->GetWireframeStatus());
+	Result_ = RenderScene();
 	if (!Result_)
 	{
 		return false;
@@ -470,11 +466,8 @@ bool MinecraftScene::Render()
 	return true;
 }
 
-bool MinecraftScene::RenderScene(bool ShowText)
+bool MinecraftScene::RenderScene()
 {
-	ReflectionTexture_->ClearRenderTarget(BLACK);
-	RefractionTexture_->ClearRenderTarget(BLACK);
-
 	// Begin rendering
 	DirectXManager::Instance() -> BeginScene();
 
@@ -485,11 +478,17 @@ bool MinecraftScene::RenderScene(bool ShowText)
 	// Render the Sky 
 	//================
 
-	// Render the sky dome
-	SkySphere_->Render();
+	Result_ = SkySphere_->Render();
+	if (!Result_)
+	{
+		return false;
+	}
 
-	// Render the clouds
-	Clouds_->Render();
+	Result_ = Clouds_->Render();
+	if (!Result_)
+	{
+		return false;
+	}
 
 	//==================
 	// Render the World 
@@ -497,152 +496,30 @@ bool MinecraftScene::RenderScene(bool ShowText)
 
 	World_->Render();
 
-	//==================
-	// Render the Ocean 
-	//==================
-
 	Result_ = Ocean_->Render();
 	if (!Result_)
 	{
 		return false;
 	}
 
-	//=============
-	// Render Rain
-	//=============
+	//==================
+	// Render Particles
+	//==================
 
 	// Only rain on the screen if is night time and we arent underwater
 	if (NightTimeMode_)
 	{
-		// Turn on alpha blending
-		DirectXManager::Instance() -> SetAlphaBlendingOn(true);
-
 		// Render the particle WindowManager
 		Result_ = ShaderManager::Instance()->TextureRender(ParticleSystem_);
 		if (!Result_)
 		{
 			return false;
 		}
-
-		// Turn off alpha blending.
-		DirectXManager::Instance() -> SetAlphaBlendingOn(false);
 	}
 
-	Result_ = RenderText();
-	if (!Result_)
-	{
-		return false;
-	}
-
-	// End rendering
-	DirectXManager::Instance() -> EndScene();
-
-	return true;
-}
-
-bool MinecraftScene::RenderRefraction()
-{
-	// Render to the refraction texture
-	RefractionTexture_ -> SetRenderTarget();
-	RefractionTexture_ -> ClearRenderTarget(BLACK);
-
-	//====================
-	// Render the Terrain
-	//====================
-
-	// Clip everything above the maximum wave height water
-	// We use max wave height here otherwise the refraction renders incorrectly
-	//ClipPlane_ = D3DXVECTOR4(0.0f, -1.0f, 0.0f, Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
-
-	// Render the terrain using reflection shader
-	//Result_ = ShaderManager::Instance()->TerrainRender(Terrain_, ClipPlane_);
-	//if (!Result_) { return false; }
-
-	// Reset rendering back to normal
-	DirectXManager::Instance() -> SetBackBufferRenderTarget();
-	DirectXManager::Instance() -> ResetViewport();
-
-	return true;
-}
-
-bool MinecraftScene::RenderReflection()
-{
-	D3DXVECTOR3 ReflectedCameraPosition;
-
-	// Render to the reflection texture
-	ReflectionTexture_ -> SetRenderTarget();
-	ReflectionTexture_ -> ClearRenderTarget(BLACK);
-
-	//================
-	// Render the sky
-	//================
-
-	// Create a camera reflected in the Y axis
-	ReflectedCameraPosition = Camera::Instance()->GetTransform()->GetPosition();
-	//ReflectedCameraPosition.y = -Camera::Instance()->GetTransform()->GetY() + (Ocean_->GetWaterHeight() * 2.0f);
-
-	// Update Camera Position
-	SkySphere_->GetTransform()->SetPosition(ReflectedCameraPosition);
-	Clouds_->GetTransform()->SetPosition(ReflectedCameraPosition);
-	
-	// Render the sky sphere
-	SkySphere_->Render();
-	if (!Result_)
-	{
-		return false;
-	}
-	
-	// Render the clouds
-	Clouds_->Render();
-	if (!Result_)
-	{
-		return false;
-	}
-	
-	World_->Render();
-
-	//====================
-	// Render the Terrain
-	//====================
-
-	// Clip everything above the maximum wave height water
-	// We use max wave height here otherwise the refraction renders incorrectly
-	//ClipPlane_ = D3DXVECTOR4(0.0f, 1.0f, 0.0f, -Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
-
-	// Reset rendering back to normal
-	DirectXManager::Instance() -> SetBackBufferRenderTarget();
-	DirectXManager::Instance() -> ResetViewport();
-
-	return true;
-}
-
-bool MinecraftScene::RenderToTexture(bool ShowText)
-{
-	// Render to the scene texture
-	RenderTexture_ -> SetRenderTarget();
-	RenderTexture_ -> ClearRenderTarget(BLACK);
-
-	// Render the scene
-	Result_ = RenderScene(ShowText);
-	if (!Result_)
-	{
-		return false;
-	}
-
-	// Reset rendering back to default
-	DirectXManager::Instance() -> SetBackBufferRenderTarget();
-
-	return true;
-}
-
-bool MinecraftScene::RenderText()
-{
-	//=======================
-	// Render Text to Screen
-	//=======================
-
-	// Turn on alpha blending
-	DirectXManager::Instance()->SetAlphaBlendingOn(true);
+	//============
+	// Render GUI
+	//============
 
 	// Render the text
 	Result_ = Text_->Render();
@@ -657,11 +534,15 @@ bool MinecraftScene::RenderText()
 		return false;
 	}
 
-	// Disable blending
-	DirectXManager::Instance() -> SetAlphaBlendingOn(false);
+	//========================
+	// Render Post Processing
+	//========================
 
-	// Re-enable the z buffer
-	DirectXManager::Instance() -> SetDepthBufferOn(true);
+	// NEED IF STATEMENT TO SEE IF WE SHOULD RENDER THIS
+	//WindowSprite_->Render();
+
+	// End rendering
+	DirectXManager::Instance() -> EndScene();
 
 	return true;
 }

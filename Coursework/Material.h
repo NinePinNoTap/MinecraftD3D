@@ -5,7 +5,7 @@
 #include <string>
 #include <map>
 
-#include "Constants.h"
+
 #include "Texture.h"
 
 class Material

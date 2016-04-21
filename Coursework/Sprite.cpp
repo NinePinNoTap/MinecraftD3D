@@ -81,7 +81,6 @@ bool Sprite::SetTexture(string textureFilename)
 {
 	Material* newMaterial = new Material;
 	newMaterial->SetBaseTexture(textureFilename);
-
 	Model_->AddMaterial(newMaterial);
 
 	return true;

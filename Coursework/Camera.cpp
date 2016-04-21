@@ -139,8 +139,8 @@ void Camera::HandleMouse()
 	if (MouseTotal != ScreenTotal)
 	{
 		// Calculate the difference between the position of the mouse and the middle of the screen
-		float DeltaX = (MousePos.x - CenterScreenX) / CAMERA_SENSITIVITY;
-		float DeltaY = (MousePos.y - CenterScreenY) / CAMERA_SENSITIVITY;
+		float DeltaX = (MousePos.x - CenterScreenX) / Config::Camera::Sensitivity;
+		float DeltaY = (MousePos.y - CenterScreenY) / Config::Camera::Sensitivity;
 
 		// Adjust the rotation based on the above movement
 		Transform_->Rotate(DeltaY, DeltaX, 0);
@@ -154,7 +154,7 @@ void Camera::HandleMouse()
 bool Camera::Render()
 {
 	// Create the view matrix
-	ViewMatrix_ = GenerateMatrix(UP_VECTOR, Transform_->GetPosition(), FORWARD_VECTOR);
+	ViewMatrix_ = GenerateMatrix(Config::Vector::Up, Transform_->GetPosition(), Config::Vector::Forward);
 
 	return true;
 }
@@ -170,7 +170,7 @@ void Camera::GetViewMatrix(D3DXMATRIX& viewMatrix)
 void Camera::Render2DViewMatrix()
 {
 	// Generate the 2D view matrix
-	ViewMatrix2D_ = GenerateMatrix(UP_VECTOR, Position2D_, FORWARD_VECTOR);
+	ViewMatrix2D_ = GenerateMatrix(Config::Vector::Up, Position2D_, Config::Vector::Forward);
 
 	return;
 }
@@ -194,7 +194,7 @@ void Camera::RenderReflection(float ReflectionHeight)
 	ReflectedPosition.y = -ReflectedPosition.y + (ReflectionHeight * 2.0f);
 
 	// Generate the reflection matrix
-	ReflectionViewMatrix_ = GenerateMatrix(UP_VECTOR, ReflectedPosition, FORWARD_VECTOR, true);
+	ReflectionViewMatrix_ = GenerateMatrix(Config::Vector::Up, ReflectedPosition, Config::Vector::Forward, true);
 
 	return;
 }

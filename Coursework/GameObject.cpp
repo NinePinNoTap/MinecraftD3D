@@ -37,6 +37,7 @@ bool GameObject::Initialise()
 	IsReflective_ = RenderMode::Off;
 	UseCulling_ = RenderMode::Off;
 	UseDepth_ = RenderMode::On;
+	IsPostProcessed_ = RenderMode::On;
 	BlendMode_ = BlendMode::NoBlending;
 
 	IsActive_ = true;
@@ -75,6 +76,7 @@ bool GameObject::Initialise(const char* filename)
 	IsReflective_ = RenderMode::Off;
 	UseCulling_ = RenderMode::Off;
 	UseDepth_ = RenderMode::On;
+	IsPostProcessed_ = RenderMode::On;
 	BlendMode_ = BlendMode::NoBlending;
 
 	IsActive_ = true;
@@ -108,20 +110,42 @@ bool GameObject::Render()
 	// Render Reflection
 	if (IsReflective_ == RenderMode::On)
 	{
+		// Define how we want to see the model
 		Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
 
+		// Get and set the reflection texture
 		Texture* reflectionTexture;
 		AssetManager::Instance()->LoadTexture(&reflectionTexture, "ReflectionTexture");
 		reflectionTexture->SetRenderTarget();
+
+		// Render Model
+		RenderMeshes();
+
+		DirectXManager::Instance()->SetBackBufferRenderTarget();
+		DirectXManager::Instance()->ResetViewport();
+
+		// Clean Up
+		reflectionTexture = 0;
+	}
+
+	// Define how we want to see the model
+	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
+	
+	if (IsPostProcessed_ == RenderMode::On)
+	{
+		// Get and set the reflection texture
+		Texture* renderTexture;
+		AssetManager::Instance()->LoadTexture(&renderTexture, "RenderTexture");
+		renderTexture->SetRenderTarget();
 
 		RenderMeshes();
 
 		DirectXManager::Instance()->SetBackBufferRenderTarget();
 		DirectXManager::Instance()->ResetViewport();
-	}
 
-	// Define how we want to see the model
-	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
+		// Clean Up
+		renderTexture = 0;
+	}
 
 	// Render Mesh
 	RenderMeshes();

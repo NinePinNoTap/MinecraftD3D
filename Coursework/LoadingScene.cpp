@@ -47,8 +47,8 @@ bool LoadingScene::Initialise()
 	//================
 
 	LoadingText_ = new Text;
-	LoadingText_->Initialise(GetActiveWindow(), "shruti", "shruti.dds", 95);
-	LoadingText_->CreateText("Load Time : ", Vector2(windowWidth - 25, windowHeight - 25), WHITE, RIGHT);
+	LoadingText_->Initialise(GetActiveWindow(), "shruti.txt", "shruti.dds", 95);
+	LoadingText_->CreateText("Load Time : ", Vector2(windowWidth - 25, windowHeight - 25), Config::Colour::White, RIGHT);
 	LoadingProgress_ = timeGetTime();
 
 	return true;

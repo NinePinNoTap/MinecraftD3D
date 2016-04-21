@@ -30,8 +30,8 @@ public:
 
 	void Initialise();
 
-	void Frame();
-	void Render();
+	bool Frame();
+	bool Render();
 
 	void SetBlock(int x, int y, int z, string blockName);
 	Block* GetBlock(int x, int y, int z);
@@ -42,6 +42,7 @@ private:
 	void HandleChunks();
 	void GenerateLocalChunks();
 
+	// Blocks and Chunks
 	BlockManager* BlockManager_;
 	map<string, ChunkColumn*> Map_;
 
@@ -55,5 +56,7 @@ private:
 	vector<D3DXVECTOR3> BuildOrder_;
 
 	Player* Player_;
+
+	bool Result_;
 };
 

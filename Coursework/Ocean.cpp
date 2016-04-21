@@ -86,6 +86,7 @@ bool Ocean::Initialise(string textureFilename, Rect3D waterResolution)
 	IsReflective_ = RenderMode::Off;
 	UseCulling_ = RenderMode::Off;
 	UseDepth_ = RenderMode::On;
+	IsPostProcessed_ = RenderMode::On;
 	BlendMode_ = BlendMode::NoBlending;
 
 	IsActive_ = true;
@@ -147,6 +148,25 @@ bool Ocean::Render()
 
 	// Define how we want to see the model
 	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
+
+	// Render to Render Texture
+	if (IsPostProcessed_ == RenderMode::On)
+	{
+		// Get and set render texture
+		Texture* renderTexture;
+		AssetManager::Instance()->LoadTexture(&renderTexture, "RenderTexture");
+		renderTexture->SetRenderTarget();
+
+		// Render the model
+		RenderMeshes();
+
+		// Reset Render Target
+		DirectXManager::Instance()->SetBackBufferRenderTarget();
+		DirectXManager::Instance()->ResetViewport();
+
+		// Clean Up
+		renderTexture = 0;
+	}
 
 	// Render Mesh
 	RenderMeshes();

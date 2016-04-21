@@ -10,9 +10,10 @@
 #include <d3d11.h>
 #include <d3dx10math.h>
 
-#include "Constants.h"
+#include "Config.h"
 #include "Rect.h"
 #include "Singleton.h"
+
 
 class DirectXManager : public Singleton<DirectXManager>
 {
@@ -28,7 +29,7 @@ public:
 	void Shutdown();
 	
 	// Rendering
-	void BeginScene(D3DXVECTOR4 clearColour = BLACK);
+	void BeginScene(D3DXVECTOR4 clearColour = Config::Colour::Black);
 	void EndScene();
 
 	// Rendering Toggles

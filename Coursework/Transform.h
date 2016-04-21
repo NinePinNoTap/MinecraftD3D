@@ -3,8 +3,7 @@
 #include <d3dx11.h>
 #include <d3dx10math.h>
 
-#include "Constants.h"
-
+#include "Config.h"
 #include "Utilities.h"
 
 class Transform

@@ -66,7 +66,7 @@ void WindowManager::InitialiseWindows(int& screenWidth, int& screenHeight)
 	screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
 	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
-	if (FULL_SCREEN)
+	if (Config::Global::FullScreen)
 	{
 		// If full screen set the screen to maximum size of the users desktop and 32bit.
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
@@ -85,8 +85,8 @@ void WindowManager::InitialiseWindows(int& screenWidth, int& screenHeight)
 	else
 	{
 		// Set to default window resolution
-		screenWidth = SCREEN_WIDTH;
-		screenHeight = SCREEN_HEIGHT;
+		screenWidth = Config::Global::ScreenWidth;
+		screenHeight = Config::Global::ScreenHeight;
 
 		// Place the window in the middle of the active window space (top of screen to top of taskbar)
 		screenPosition.x = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
@@ -133,7 +133,7 @@ void WindowManager::Shutdown()
 	ShowCursor(true);
 
 	// Fix the display settings if leaving full screen mode
-	if (FULL_SCREEN)
+	if (Config::Global::FullScreen)
 	{
 		ChangeDisplaySettings(NULL, 0);
 	}

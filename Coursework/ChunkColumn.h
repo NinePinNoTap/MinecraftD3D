@@ -14,8 +14,8 @@ public:
 	// Initialise
 	void Initialise(int x, int z, int chunkHeight);
 
-	void Frame();
-	void Render();
+	bool Frame();
+	bool Render();
 
 	Chunk* GetChunk(int y);
 
@@ -29,5 +29,7 @@ private:
 	vector<TerrainLayer> Layers_;
 
 	D3DXVECTOR3 ChunkPos_;
+
+	bool Result_;
 };
 

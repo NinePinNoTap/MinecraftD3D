@@ -51,7 +51,7 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	D3D11_BLEND_DESC blendStateDescription;
 
 	// Store the VSYNC_ENABLED setting.
-	VSyncEnabled_ = VSYNC_ENABLED;
+	VSyncEnabled_ = Config::Global::UseVSync;
 
 	// Create a DirectXManager graphics interface factory.
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
@@ -178,7 +178,7 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
     swapChainDesc.SampleDesc.Quality = 0;
 
 	// Set to full screen or windowed mode.
-	if(FULL_SCREEN)
+	if(Config::Global::FullScreen)
 	{
 		swapChainDesc.Windowed = false;
 	}
@@ -357,13 +357,13 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	screenAspect = (float)WindowResolution.width / (float)WindowResolution.height;
 
 	// Create the projection matrix for 3D rendering.
-	D3DXMatrixPerspectiveFovLH(&ProjectionMatrix_, fieldOfView, screenAspect, SCREEN_NEAR, SCREEN_DEPTH);
+	D3DXMatrixPerspectiveFovLH(&ProjectionMatrix_, fieldOfView, screenAspect, Config::Camera::NearClipPlane, Config::Camera::FarClipPlane);
 
     // Initialise the world matrix to the identity matrix.
     D3DXMatrixIdentity(&WorldMatrix_);
 
 	// Create an orthographic projection matrix for 2D rendering.
-	D3DXMatrixOrthoLH(&OrthoMatrix_, (float)WindowResolution.width, (float)WindowResolution.height, SCREEN_NEAR, SCREEN_DEPTH);
+	D3DXMatrixOrthoLH(&OrthoMatrix_, (float)WindowResolution.width, (float)WindowResolution.height, Config::Camera::NearClipPlane, Config::Camera::FarClipPlane);
 
 	// Clear the second depth stencil state before setting the parameters.
 	ZeroMemory(&depthDisabledStencilDesc, sizeof(depthDisabledStencilDesc));

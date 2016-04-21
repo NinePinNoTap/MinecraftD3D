@@ -31,7 +31,7 @@ bool OBJLoader::LoadModel(const char* modelFilename, Model& model)
 	//===================
 
 	// Open the file
-	fin.open(MODEL_DIR + modelFilename);
+	fin.open(Config::Directory::Model + modelFilename);
 
 	// Check if file couldnt be opened
 	if (fin.fail())

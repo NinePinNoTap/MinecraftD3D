@@ -5,7 +5,7 @@
 #include <windows.h>
 
 #include "ApplicationManager.h"
-#include "Constants.h"
+
 #include "Rect.h"
 #include "Singleton.h"
 

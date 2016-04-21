@@ -188,7 +188,7 @@ D3DXVECTOR3 Transform::GetForwardVector()
 	GetRotationMatrix(RotationMatrix);
 
 	// Apply rotation to the vector
-	D3DXVec3TransformCoord(&ForwardVector, &FORWARD_VECTOR, &RotationMatrix);
+	D3DXVec3TransformCoord(&ForwardVector, &Config::Vector::Forward, &RotationMatrix);
 
 	return ForwardVector;
 }
@@ -206,7 +206,7 @@ D3DXVECTOR3 Transform::GetRightVector()
 	GetRotationMatrix(RotationMatrix);
 
 	// Apply rotation to the vector
-	D3DXVec3TransformCoord(&RightVector, &RIGHT_VECTOR, &RotationMatrix);
+	D3DXVec3TransformCoord(&RightVector, &Config::Vector::Right, &RotationMatrix);
 
 	return RightVector;
 }
@@ -224,7 +224,7 @@ D3DXVECTOR3 Transform::GetUpVector()
 	GetRotationMatrix(RotationMatrix);
 
 	// Apply rotation to the vector
-	D3DXVec3TransformCoord(&UpVector, &UP_VECTOR, &RotationMatrix);
+	D3DXVec3TransformCoord(&UpVector, &Config::Vector::Up, &RotationMatrix);
 
 	return UpVector;
 }

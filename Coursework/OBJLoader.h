@@ -6,7 +6,7 @@
 #include <iterator>
 #include <vector>
 
-#include "Constants.h"
+
 #include "Model.h"
 
 class OBJLoader

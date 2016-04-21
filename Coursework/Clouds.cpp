@@ -87,6 +87,7 @@ bool Clouds::Initialise(string cloudTextureFilename, string perturbTextureFilena
 	IsReflective_ = RenderMode::On;
 	UseCulling_ = RenderMode::Off;
 	UseDepth_ = RenderMode::Off;
+	IsPostProcessed_ = RenderMode::On;
 	BlendMode_ = BlendMode::CloudBlending;
 
 	IsActive_ = true;
@@ -157,6 +158,25 @@ bool Clouds::Render()
 
 	// Define how we want to see the model
 	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
+
+	// Render to Render Texture
+	if (IsPostProcessed_ == RenderMode::On)
+	{
+		// Get and set render texture
+		Texture* renderTexture;
+		AssetManager::Instance()->LoadTexture(&renderTexture, "RenderTexture");
+		renderTexture->SetRenderTarget();
+
+		// Render the model
+		RenderMeshes();
+
+		// Reset Render Target
+		DirectXManager::Instance()->SetBackBufferRenderTarget();
+		DirectXManager::Instance()->ResetViewport();
+
+		// Clean Up
+		renderTexture = 0;
+	}
 
 	// Render Mesh
 	RenderMeshes();

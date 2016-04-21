@@ -4,7 +4,7 @@
 #include <d3dx10math.h>
 
 #include "DirectXManager.h"
-#include "Constants.h"
+
 #include "GameObject.h"
 #include "Model.h"
 #include "Rect.h"

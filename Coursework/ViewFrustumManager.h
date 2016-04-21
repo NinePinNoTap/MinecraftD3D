@@ -4,7 +4,7 @@
 #include <d3dx10math.h>
 
 #include "Camera.h"
-#include "Constants.h"
+
 #include "DirectXManager.h"
 #include "Singleton.h"
 
@@ -25,7 +25,7 @@ public:
 
 		// Calculate the minimum Z distance in the frustum.
 		zMinimum = -projectionMatrix._43 / projectionMatrix._33;
-		r = SCREEN_DEPTH / (SCREEN_DEPTH - zMinimum);
+		r = Config::Camera::FarClipPlane / (Config::Camera::FarClipPlane - zMinimum);
 		projectionMatrix._33 = r;
 		projectionMatrix._43 = -r * zMinimum;
 

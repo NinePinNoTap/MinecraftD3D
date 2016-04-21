@@ -38,11 +38,7 @@ private:
 	bool HandleInput();
 
 	bool Render();
-	bool RenderRefraction();
-	bool RenderReflection();
-	bool RenderToTexture(bool ShowText = true);
-	bool RenderScene(bool ShowText = true);
-	bool RenderText();
+	bool RenderScene();
 
 	// Rendering
 	D3DXVECTOR4 ClipPlane_;

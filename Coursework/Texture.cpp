@@ -45,6 +45,7 @@ bool Texture::Initialise(Rect2D textureResolution)
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
 	D3D11_TEXTURE2D_DESC depthBufferDesc;
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+	float aspectRatio;
 
 	// Initialise the render target texture description.
 	ZeroMemory(&textureDesc, sizeof(textureDesc));
@@ -139,11 +140,14 @@ bool Texture::Initialise(Rect2D textureResolution)
     Viewport_.TopLeftX = 0.0f;
     Viewport_.TopLeftY = 0.0f;
 
+	aspectRatio = ((float)textureResolution.width / (float)textureResolution.height);
+
 	// Setup the projection matrix.
-	D3DXMatrixPerspectiveFovLH(&ProjectionMatrix_, ((float)D3DX_PI / 4.0f), ((float)textureResolution.width / (float)textureResolution.height), SCREEN_NEAR, SCREEN_DEPTH);
+	D3DXMatrixPerspectiveFovLH(&ProjectionMatrix_, ((float)D3DX_PI / 4.0f), aspectRatio, 
+	Config::Camera::NearClipPlane, Config::Camera::FarClipPlane);
 
 	// Create an orthographic projection matrix for 2D rendering.
-	D3DXMatrixOrthoLH(&OrthoMatrix_, (float)textureResolution.width, (float)textureResolution.height, SCREEN_NEAR, SCREEN_DEPTH);
+	D3DXMatrixOrthoLH(&OrthoMatrix_, (float)textureResolution.width, (float)textureResolution.height, Config::Camera::NearClipPlane, Config::Camera::FarClipPlane);
 
 	return true;
 }

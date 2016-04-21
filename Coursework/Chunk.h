@@ -4,7 +4,7 @@
 
 #include "Block.h"
 #include "BlockManager.h"
-#include "Constants.h"
+
 #include "InstancedGameObject.h"
 #include "ShaderManager.h"
 #include "SimplexNoise.h"
@@ -26,8 +26,8 @@ public:
 	void RefreshVisible();
 
 	// Frame
-	void Frame();
-	void Render();
+	bool Frame();
+	bool Render();
 
 	// Setter
 	void SetBlocks(string blockName);
@@ -43,13 +43,23 @@ public:
 	}
 	inline Block* GetBlock(int x, int y, int z)
 	{
-		// Make sure we are trying to access a valid node
-		if (RangeCheck(x, 0, CHUNK_SIZE - 1) && RangeCheck(y, 0, CHUNK_SIZE - 1) && RangeCheck(z, 0, CHUNK_SIZE - 1))
+		// Check the value is within range
+		if (!RangeCheck(x, 0, Config::World::ChunkSize - 1))
 		{
-			return &Blocks_[x][y][z];
+			return 0;
 		}
 
-		return 0;
+		if (!RangeCheck(y, 0, Config::World::ChunkSize - 1))
+		{
+			return 0;
+		}
+		if (!RangeCheck(z, 0, Config::World::ChunkSize - 1))
+		{
+			return 0;
+		}
+
+		// Return block
+		return &Blocks_[x][y][z];
 	}
 
 private:
@@ -62,4 +72,5 @@ private:
 
 	bool IsVisible_;
 	bool IsGenerated_;
+	bool Result_;
 };

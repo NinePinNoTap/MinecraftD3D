@@ -29,6 +29,7 @@ void VoxelWorld::Initialise()
 	// Current Chunk
 	BuildOrder_.push_back(D3DXVECTOR3(0, 0, 0));
 
+	// Positions within a radius
 	for (int x = -LoadRadius; x <= LoadRadius; x++)
 	{
 		for (int z = LoadRadius; z >= -LoadRadius; z--)
@@ -37,9 +38,13 @@ void VoxelWorld::Initialise()
 		}
 	}
 
+	// Generate local chunks
 	GenerateLocalChunks();
 
 	BuildThread_ = thread(&VoxelWorld::BuildChunksInBuildList, this);
+
+	// TODO
+	// WE SHOULD HANG UNTIL WE HAVE CHUNKS TO DISPLAY?
 
 	//===================
 	// Initialise Player
@@ -48,10 +53,9 @@ void VoxelWorld::Initialise()
 	Player_ = new Player;
 	Player_->Initialise();
 	Player_->SetHeight(2.0f);
-
 }
 
-void VoxelWorld::Frame()
+bool VoxelWorld::Frame()
 {
 	//Player_->Frame();
 
@@ -66,9 +70,11 @@ void VoxelWorld::Frame()
 	//======================
 
 	HandleChunks();
+
+	return true;
 }
 
-void VoxelWorld::Render()
+bool VoxelWorld::Render()
 {
 	//======================
 	// Render Active Chunks
@@ -76,8 +82,14 @@ void VoxelWorld::Render()
 
 	for (it_wc it = Map_.begin(); it != Map_.end(); it++)
 	{
-		it->second->Render();
+		Result_ = it->second->Render();
+		if (!Result_)
+		{
+			return false;
+		}
 	}
+
+	return true;
 }
 
 void VoxelWorld::BuildChunksInBuildList()
@@ -138,9 +150,9 @@ void VoxelWorld::GenerateLocalChunks()
 	//================
 
 	// Calculate the chunk we are in
-	chunkIndex.x = floor(Camera::Instance()->GetTransform()->GetPosition().x / (float)CHUNK_SIZE);
+	chunkIndex.x = floor(Camera::Instance()->GetTransform()->GetPosition().x / (float)Config::World::ChunkSize);
 	chunkIndex.y = 0;
-	chunkIndex.z = floor(Camera::Instance()->GetTransform()->GetPosition().z / (float)CHUNK_SIZE);
+	chunkIndex.z = floor(Camera::Instance()->GetTransform()->GetPosition().z / (float)Config::World::ChunkSize);
 
 	// Check if we have moved chunk since last check
 	if (chunkIndex == LastChunkPosition_)
@@ -188,8 +200,8 @@ Block* VoxelWorld::GetBlock(int x, int y, int z)
 	// Calculate World Chunk
 	//=======================
 
-	chunkX = x / (float)CHUNK_SIZE;
-	chunkZ = z / (float)CHUNK_SIZE;
+	chunkX = x / (float)Config::World::ChunkSize;
+	chunkZ = z / (float)Config::World::ChunkSize;
 
 	chunkX = floor(chunkX);
 	chunkZ = floor(chunkZ);
@@ -198,7 +210,7 @@ Block* VoxelWorld::GetBlock(int x, int y, int z)
 	// Calculate Chunk Index
 	//=======================
 
-	chunkY = y / (float)CHUNK_SIZE;
+	chunkY = y / (float)Config::World::ChunkSize;
 	chunkY = floor(chunkY);
 
 	// Find the chunk

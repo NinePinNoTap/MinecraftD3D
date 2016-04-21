@@ -3,7 +3,7 @@
 #include <thread>
 
 #include "Camera.h"
-#include "Constants.h"
+
 #include "DirectXManager.h"
 #include "DirectSound.h"
 #include "Light.h"

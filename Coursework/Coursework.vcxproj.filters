@@ -266,11 +266,11 @@
     <ClCompile Include="Player.cpp">
       <Filter>Scene\GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Config.cpp">
+      <Filter>Framework\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Constants.h">
-      <Filter>Framework\System</Filter>
-    </ClInclude>
     <ClInclude Include="Singleton.h">
       <Filter>Framework\System</Filter>
     </ClInclude>
@@ -474,6 +474,12 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Scene\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Framework\System</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualKeys.h">
+      <Filter>Framework\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

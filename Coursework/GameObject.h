@@ -3,7 +3,7 @@
 #include <d3dx11.h>
 #include <d3dx10math.h>
 
-#include "Constants.h"
+
 #include "Model.h"
 #include "OBJLoader.h"
 #include "Transform.h"
@@ -70,5 +70,6 @@ protected:
 	RenderMode IsReflective_;
 	RenderMode UseCulling_;
 	RenderMode UseDepth_;
+	RenderMode IsPostProcessed_;
 	BlendMode BlendMode_;
 };

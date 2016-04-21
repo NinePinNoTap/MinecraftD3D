@@ -9,9 +9,13 @@ using namespace std;
 
 enum BlockType
 {
-	None, Air, Dirt, Sand, Gravel, Wood, 
-	Cobblestone, Stone, Gold, Diamond,
-	Water, Lava, Bedrock
+	None, Air, Dirt, Sand, Gravel, Wood, Cobblestone, Stone, Gold, Diamond, Water, Lava, Bedrock
+};
+
+
+enum Direction
+{
+	Up, Down, Left, Right, Forward, Backward
 };
 
 class Block
