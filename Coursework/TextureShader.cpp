@@ -51,7 +51,7 @@ bool TextureShader::Prepare(Material* objMaterial, Transform* objTransform)
 	ID3D11ShaderResourceView* baseTexture = objMaterial->GetBaseTexture();
 
 	// Create the world matrix for the model
-	MatrixBuffer matrixBuffer = ShaderManager::Instance()->GetMatrixBuffer();
+	MatrixBuffer matrixBuffer = MatrixBuffer_;
 	objTransform->GetWorldMatrix(matrixBuffer.world);
 	TransposeMatrix(matrixBuffer);
 

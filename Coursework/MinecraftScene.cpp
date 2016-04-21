@@ -3,7 +3,7 @@
 #include "PerformanceManager.h"
 #include "WindowManager.h"
 
-MinecraftScene::MinecraftScene() : GameScene()
+MinecraftScene::MinecraftScene()
 {
 	// Initialise pointers
 	Clouds_ = 0;
@@ -15,6 +15,7 @@ MinecraftScene::MinecraftScene() : GameScene()
 	RenderTexture_ = 0;
 	WindowSprite_ = 0;
 	SkySphere_ = 0;
+	Text_ = 0;
 	Ocean_ = 0;
 	World_ = 0;
 }
@@ -31,12 +32,6 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	// Get window width and height
 	windowWidth = WindowManager::Instance()->GetWindowResolution().width;
 	windowHeight = WindowManager::Instance()->GetWindowResolution().height;
-
-	//=======================
-	// Initialise the Camera
-	//=======================
-
-	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
 
 	//============================
 	// Initialise Render Textures
@@ -104,7 +99,7 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	{
 		return false;
 	}
-	Result_ = ActionBar_->Initialise(Rect3D(900, 109));
+	Result_ = ActionBar_->Initialise(Rect3D(728, 88));
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the action bar object.", L"Error", MB_OK);
@@ -202,9 +197,7 @@ void MinecraftScene::Shutdown()
 	//===================
 	// Shut down objects
 	//===================
-
-	ShutdownGameObjects();
-
+	
 	if (Clouds_)
 	{
 		Clouds_ -> Shutdown();
@@ -263,7 +256,6 @@ void MinecraftScene::Reset()
 	// Reset objects back to their start state
 	//=========================================
 
-	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
 	Camera::Instance()->SetStartPosition(0, 100, 0);
 	Camera::Instance()->SetStartRotation(-89, 0, 0);
 	Camera::Instance()->AllowFlying(true);
@@ -326,8 +318,11 @@ bool MinecraftScene::HandleObjects()
 	Camera::Instance() -> Frame();
 	PerformanceManager::Instance()->Frame();
 	ViewFrustumManager::Instance()->Frame();
+
+
 	Clouds_ -> Frame();
 	Ocean_->Frame();
+	SkySphere_->Frame();
 	World_->Frame();
 
 	if (NightTimeMode_)
@@ -479,47 +474,15 @@ bool MinecraftScene::RenderScene(bool ShowText)
 	// Begin rendering
 	DirectXManager::Instance() -> BeginScene();
 
-	//==============================================
-	// Generate Matrices and Send To Shader Manager
-	//==============================================
-
-	GenerateMatrices();
-	SetShaderManagerVars();
-
 	//================
 	// Render the Sky 
 	//================
 
-	// Set the position of the sky and clouds to the camera
-	Clouds_->GetTransform()->SetPosition(Camera::Instance()->GetTransform()->GetPosition());
-	SkySphere_->GetTransform()->SetPosition(Camera::Instance()->GetTransform()->GetPosition());
-
-	// Disable culling and the z buffer
-	DirectXManager::Instance() -> SetBackfaceCullingOn(false);
-	DirectXManager::Instance() -> SetDepthBufferOn(false);
-
 	// Render the sky dome
 	SkySphere_->Render();
 
-	// Turn back face culling on
-	DirectXManager::Instance() -> SetBackfaceCullingOn(true);
-
-	// Enable blending so the clouds can be blended with the sky
-	DirectXManager::Instance() -> SetCloudBlendingOn();
-
 	// Render the clouds
 	Clouds_->Render();
-
-	// Enable culling and the z buffer
-	DirectXManager::Instance() -> SetAlphaBlendingOn(false);
-	DirectXManager::Instance() -> SetDepthBufferOn(true);
-
-	//==============================================
-	// Generate Matrices and Send To Shader Manager
-	//==============================================
-
-	GenerateMatrices();
-	SetShaderManagerVars();
 
 	//==================
 	// Render the Ocean 
@@ -530,39 +493,13 @@ bool MinecraftScene::RenderScene(bool ShowText)
 	{
 		return false;
 	}*/
-	//Result_ = ShaderManager::Instance()->OceanRender(Ocean_, RefractionTexture_, ReflectionTexture_);
-	//if (!Result_) { return false; }
 
-	//===================
-	// Render the Models 
-	//===================
 
-	// Turn off back face culling
-	DirectXManager::Instance()->SetBackfaceCullingOn(false);
+	//==================
+	// Render the World 
+	//==================
 
-	//Chunk_->Render();
 	World_->Render();
-
-	// Render Static Models
-	for each (GameObject* gameObject in Objects_)
-	{
-		if (gameObject->IsActive())
-		{
-			gameObject->Render();
-			if (!Result_)
-			{
-				return false;
-			}
-		}
-	}
-
-	//==============================================
-	// Generate Matrices and Send To Shader Manager
-	//==============================================
-
-	GenerateMatrices();
-
-	SetShaderManagerVars();
 
 	//=============
 	// Render Rain
@@ -585,14 +522,10 @@ bool MinecraftScene::RenderScene(bool ShowText)
 		DirectXManager::Instance() -> SetAlphaBlendingOn(false);
 	}
 
-	// Check if we are underwater, if not don't render text
-	if (ShowText)
+	Result_ = RenderText();
+	if (!Result_)
 	{
-		Result_ = RenderText();
-		if (!Result_)
-		{
-			return false;
-		}
+		return false;
 	}
 
 	// End rendering
@@ -606,13 +539,6 @@ bool MinecraftScene::RenderRefraction()
 	// Render to the refraction texture
 	RefractionTexture_ -> SetRenderTarget();
 	RefractionTexture_ -> ClearRenderTarget(BLACK);
-
-	//==============================================
-	// Generate Matrices and Send To Shader Manager
-	//==============================================
-
-	GenerateMatrices();
-	SetShaderManagerVars();
 
 	//====================
 	// Render the Terrain
@@ -641,13 +567,6 @@ bool MinecraftScene::RenderReflection()
 	ReflectionTexture_ -> SetRenderTarget();
 	ReflectionTexture_ -> ClearRenderTarget(BLACK);
 
-	//===================
-	// Generate Matrices
-	//===================
-
-	GenerateMatrices();
-	SetShaderManagerReflectionVars();
-
 	//================
 	// Render the sky
 	//================
@@ -659,62 +578,21 @@ bool MinecraftScene::RenderReflection()
 	// Update Camera Position
 	SkySphere_->GetTransform()->SetPosition(ReflectedCameraPosition);
 	Clouds_->GetTransform()->SetPosition(ReflectedCameraPosition);
-
-	// Disable back face culling and z buffer
-	DirectXManager::Instance() -> SetBackfaceCullingOn(false);
-	DirectXManager::Instance() -> SetDepthBufferOn(false);
-
+	
 	// Render the sky sphere
 	SkySphere_->Render();
 	if (!Result_)
 	{
 		return false;
 	}
-
-	// Re-enable culling
-	DirectXManager::Instance() -> SetBackfaceCullingOn(true);
-
-	// Enable blending so the clouds can be blended with the sky
-	DirectXManager::Instance() -> SetCloudBlendingOn();
-
+	
 	// Render the clouds
 	Clouds_->Render();
 	if (!Result_)
 	{
 		return false;
 	}
-
-	// Disable blending and re-enable the z buffer
-	DirectXManager::Instance() -> SetAlphaBlendingOn(false);
-	DirectXManager::Instance() -> SetDepthBufferOn(true);
-
-	//==============================================
-	// Generate Matrices and Send To Shader Manager
-	//==============================================
-
-	GenerateMatrices();
-	SetShaderManagerReflectionVars();
-
-	//===================
-	// Render the Models
-	//===================
-
-	// Turn off culling
-	DirectXManager::Instance() -> SetBackfaceCullingOn(false);
-
-	// Render Models
-	/*for each (GameObject* gameObject in Objects_)
-	{
-		if (gameObject->IsReflectable())
-		{
-			Result_ = ShaderManager::Instance()->LightRender(gameObject);
-			if (!Result_)
-			{
-				return false;
-			}
-		}
-	}*/
-
+	
 	World_->Render();
 
 	//====================
@@ -724,12 +602,6 @@ bool MinecraftScene::RenderReflection()
 	// Clip everything above the maximum wave height water
 	// We use max wave height here otherwise the refraction renders incorrectly
 	ClipPlane_ = D3DXVECTOR4(0.0f, 1.0f, 0.0f, -Ocean_ -> GetWaterHeight() + (Ocean_ -> GetWaveHeight() * 2));
-
-	//Result_ = ShaderManager::Instance()->TerrainRender(Terrain_, ClipPlane_);
-	//if (!Result_) { return false; }
-
-	// Re-enable culling
-	DirectXManager::Instance() -> SetBackfaceCullingOn(false);
 
 	// Reset rendering back to normal
 	DirectXManager::Instance() -> SetBackBufferRenderTarget();
@@ -759,23 +631,21 @@ bool MinecraftScene::RenderToTexture(bool ShowText)
 
 bool MinecraftScene::RenderText()
 {
-	//==============================================
-	// Generate Matrices and Send To Shader Manager
-	//==============================================
-
-	GenerateMatrices();
-
-	SetShaderManager2DVars();
-
 	//=======================
 	// Render Text to Screen
 	//=======================
 
 	// Turn on alpha blending
-	DirectXManager::Instance() -> SetAlphaBlendingOn(true);
+	DirectXManager::Instance()->SetAlphaBlendingOn(true);
 
 	// Render the text
-	Result_ = Text_ -> Render();
+	Result_ = Text_->Render();
+	if (!Result_)
+	{
+		return false;
+	}
+
+	Result_ = ActionBar_->Render();
 	if (!Result_)
 	{
 		return false;
@@ -788,45 +658,4 @@ bool MinecraftScene::RenderText()
 	DirectXManager::Instance() -> SetDepthBufferOn(true);
 
 	return true;
-}
-
-void MinecraftScene::GenerateMatrices()
-{
-	//===============================================
-	// Generate World/Ortho/Projection/View Matrices
-	//===============================================
-
-	Camera::Instance() -> Render();
-	Camera::Instance() -> RenderReflection(Ocean_ -> GetWaterHeight());
-	Camera::Instance() -> GetViewMatrix(ViewMatrix_);
-	Camera::Instance() -> Get2DViewMatrix(BaseViewMatrix_);
-	Camera::Instance() -> GetReflectionMatrix(ReflectionViewMatrix_);
-
-	DirectXManager::Instance() -> GetWorldMatrix(WorldMatrix_);
-	DirectXManager::Instance() -> GetProjectionMatrix(ProjectionMatrix_);
-	DirectXManager::Instance() -> GetOrthoMatrix(OrthoMatrix_);
-}
-
-void MinecraftScene::SetShaderManagerVars()
-{
-	//==================================================
-	// Send Normal Rendering Matrices to Shader Manager
-	//==================================================
-
-	ShaderManager::Instance()->SetWorldMatrix(WorldMatrix_);
-	ShaderManager::Instance()->SetProjectionMatrix(ProjectionMatrix_);
-	ShaderManager::Instance()->SetViewMatrix(ViewMatrix_);
-	ShaderManager::Instance()->SetReflectionViewMatrix(ReflectionViewMatrix_);
-}
-
-void MinecraftScene::SetShaderManagerReflectionVars()
-{
-	//======================================================
-	// Send Reflection Rendering Matrices to Shader Manager
-	//======================================================
-
-	ShaderManager::Instance()->SetWorldMatrix(WorldMatrix_);
-	ShaderManager::Instance()->SetProjectionMatrix(ProjectionMatrix_);
-	ShaderManager::Instance()->SetViewMatrix(ReflectionViewMatrix_);
-	ShaderManager::Instance()->SetReflectionViewMatrix(ReflectionViewMatrix_);
 }

@@ -72,7 +72,7 @@ bool LightShader::Prepare(Material* objMaterial, Transform* objTransform)
 	lightPositionBuffer.lightPosition = D3DXVECTOR4(Light::Instance()->GetTransform()->GetPosition(), 1.0f);
 
 	// Create matrix buffer
-	MatrixBuffer matrixBuffer = ShaderManager::Instance()->GetMatrixBuffer();
+	MatrixBuffer matrixBuffer = MatrixBuffer_;
 	objTransform->GetWorldMatrix(matrixBuffer.world);
 	TransposeMatrix(matrixBuffer);
 

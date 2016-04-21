@@ -288,65 +288,44 @@ void ShaderManager::Shutdown()
 	}
 }
 
-// matrixBuffer Setters
-void ShaderManager::SetWorldMatrix(D3DXMATRIX world)
-{
-	MatrixBuffer_.world = world;
-}
-
-void ShaderManager::SetViewMatrix(D3DXMATRIX view)
-{
-	MatrixBuffer_.view = view;
-}
-
-void ShaderManager::SetProjectionMatrix(D3DXMATRIX projection)
-{
-	MatrixBuffer_.projection = projection;
-}
-
-void ShaderManager::SetReflectionViewMatrix(D3DXMATRIX reflection)
-{
-	MatrixBuffer_.reflection = reflection;
-}
-
 bool ShaderManager::TextureRender(ParticleSystem* gameObject)
 {
-	Mesh3D* objMesh;
-	Material* objMaterial;
+	//Mesh3D* objMesh;
+	//Material* objMaterial;
 
-	// Model Properties
-	objMesh = gameObject->GetModel()->GetMesh();
-	if (!objMesh)
-	{
-		MessageBox(NULL, L"No Model Attached - Texture", L"Error", MB_OK);
-		return false;
-	}
-	objMaterial = gameObject->GetModel()->GetMaterial();
-	if (!objMaterial)
-	{
-		MessageBox(NULL, L"No Material Attached - Texture", L"Error", MB_OK);
-		return false;
-	}
+	//// Model Properties
+	//objMesh = gameObject->GetModel()->GetMesh();
+	//if (!objMesh)
+	//{
+	//	MessageBox(NULL, L"No Model Attached - Texture", L"Error", MB_OK);
+	//	return false;
+	//}
+	//objMaterial = gameObject->GetModel()->GetMaterial();
+	//if (!objMaterial)
+	//{
+	//	MessageBox(NULL, L"No Material Attached - Texture", L"Error", MB_OK);
+	//	return false;
+	//}
 
-	// Model Properties
-	int indexCount = objMesh->GetIndexCount();
-	ID3D11ShaderResourceView* texture = objMaterial->GetBaseTexture();
+	//// Model Properties
+	//int indexCount = objMesh->GetIndexCount();
+	//ID3D11ShaderResourceView* texture = objMaterial->GetBaseTexture();
 
-	// Create matrix buffer
-	MatrixBuffer matrixBuffer = MatrixBuffer_;
-	gameObject->GetTransform()->GetTranslationMatrix(matrixBuffer.world);
-	TransposeMatrix(matrixBuffer);
+	//// Create matrix buffer
+	//MatrixBuffer matrixBuffer = MatrixBuffer_;;
+	//gameObject->GetTransform()->GetTranslationMatrix(matrixBuffer.world);
+	//TransposeMatrix(matrixBuffer);
 
-	// Update Buffers
-	TextureShader_->UpdateBuffer(VertexShader, 0, matrixBuffer);
-	TextureShader_->SendBuffersToShader();
+	//// Update Buffers
+	//TextureShader_->UpdateBuffer(VertexShader, 0, matrixBuffer);
+	//TextureShader_->SendBuffersToShader();
 
-	// Send Textures
-	TextureShader_->SendTextureToShader(0, texture);
+	//// Send Textures
+	//TextureShader_->SendTextureToShader(0, texture);
 
-	// Render using shader
-	gameObject->Render();
-	TextureShader_->Render(indexCount);
+	//// Render using shader
+	//gameObject->Render();
+	//TextureShader_->Render(indexCount);
 
 	return true;
 }

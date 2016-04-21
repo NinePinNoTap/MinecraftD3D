@@ -47,7 +47,7 @@ bool ColourShader::Prepare(Material* objMaterial, Transform* objTransform)
 	}
 
 	// Create the world matrix for the model
-	MatrixBuffer matrixBuffer = ShaderManager::Instance()->GetMatrixBuffer();
+	MatrixBuffer matrixBuffer = MatrixBuffer_;
 	objTransform->GetWorldMatrix(matrixBuffer.world);
 	TransposeMatrix(matrixBuffer);
 

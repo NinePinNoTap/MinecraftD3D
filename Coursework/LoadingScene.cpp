@@ -18,12 +18,6 @@ bool LoadingScene::Initialise()
 	// Get window width and height
 	windowWidth = WindowManager::Instance()->GetWindowResolution().width;
 	windowHeight = WindowManager::Instance()->GetWindowResolution().height;
-
-	//=======================
-	// Initialise the Camera
-	//=======================
-
-	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
 	
 	//===============================
 	// Initialise the Loading Screen
@@ -82,14 +76,8 @@ void LoadingScene::Render()
 {
 	DirectXManager::Instance()->BeginScene();
 
-	// Generate Matrices and Send to Shader
-	GenerateMatrices();
-	SetShaderManager2DVars();
-
 	// Render the loading screen
 	Background_->Render();
-
-	SetShaderManager2DVars();
 
 	// Render Text
 	LoadingText_->Render();
@@ -98,26 +86,6 @@ void LoadingScene::Render()
 }
 
 void LoadingScene::Reset()
-{
-	return;
-}
-
-void LoadingScene::GenerateMatrices()
-{
-	//===============================================
-	// Generate World/Ortho/Projection/View Matrices
-	//===============================================
-
-	Camera::Instance()->Render();
-	Camera::Instance()->GetViewMatrix(ViewMatrix_);
-	Camera::Instance()->Get2DViewMatrix(BaseViewMatrix_);
-
-	DirectXManager::Instance()->GetWorldMatrix(WorldMatrix_);
-	DirectXManager::Instance()->GetProjectionMatrix(ProjectionMatrix_);
-	DirectXManager::Instance()->GetOrthoMatrix(OrthoMatrix_);
-}
-
-void LoadingScene::SetShaderManagerVars()
 {
 	return;
 }

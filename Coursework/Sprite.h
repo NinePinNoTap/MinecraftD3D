@@ -16,7 +16,13 @@ public:
 	Sprite();
 	Sprite(const Sprite&);
 	~Sprite();
-
+	
+	// Initialising
 	bool Initialise(Rect3D Dimensions);
+
+	// Frame
+	bool Render();
+
+	// Setters
 	bool SetTexture(string filename);
 };

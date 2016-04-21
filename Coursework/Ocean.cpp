@@ -83,8 +83,14 @@ bool Ocean::Initialise(string textureFilename, Rect3D waterResolution)
 	//=================
 
 	Frame_ = 0;
-	IsReflectable_ = false;
+
+	IsReflective_ = RenderMode::Off;
+	UseCulling_ = RenderMode::Off;
+	UseDepth_ = RenderMode::On;
+	BlendMode_ = BlendMode::NoBlending;
+
 	IsActive_ = true;
+
 	SetShader("ocean");
 
 	// Clean Up
@@ -130,17 +136,14 @@ bool Ocean::Frame()
 
 bool Ocean::Render()
 {
-	// Make sure the object is active
-	if (!IsActive_)
+	if (!IsActive_ || !Shader_ || !Model_)
 		return true;
 
-	// Make sure we have a shader to use
-	if (!Shader_)
-		return true;
+	RenderMeshes();
+}
 
-	if (!Model_)
-		return true;
-
+bool Ocean::RenderMeshes()
+{
 	// Render the model
 	for (int i = 0; i < Model_->GetMeshCount(); i++)
 	{
@@ -157,6 +160,8 @@ bool Ocean::Render()
 			Shader_->Render(Model_->GetMesh(i)->GetIndexCount());
 		}
 	}
+
+	return true;
 }
 
 bool Ocean::SendModelToPipeline(Mesh3D* objMesh)

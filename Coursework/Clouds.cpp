@@ -83,7 +83,12 @@ bool Clouds::Initialise(string cloudTextureFilename, string perturbTextureFilena
 	//=================
 
 	Frame_ = 0;
-	IsReflectable_ = false;
+
+	IsReflective_ = RenderMode::Off;
+	UseCulling_ = RenderMode::Off;
+	UseDepth_ = RenderMode::Off;
+	BlendMode_ = BlendMode::CloudBlending;
+
 	IsActive_ = true;
 
 	return true;
@@ -103,6 +108,12 @@ bool Clouds::Frame()
 	}
 
 	Model_->GetMaterial()->SetFloat("Frame", Frame_);
+
+	//==============
+	// Track Camera
+	//==============
+
+	Transform_->SetPosition(Camera::Instance()->GetTransform()->GetPosition());
 
 	return true;
 }

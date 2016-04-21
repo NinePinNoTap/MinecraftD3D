@@ -29,6 +29,7 @@ public:
 	ID3D11Buffer* GetInstanceBuffer();
 
 protected:
+	bool RenderMeshes();
 	bool SendModelToPipeline(Mesh3D* objMesh);
 
 	ID3D11Buffer* InstanceBuffer_;

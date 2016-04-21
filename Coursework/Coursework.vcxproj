@@ -112,7 +112,6 @@
     <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PrimitiveFactory.cpp" />
-    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="ApplicationManager.cpp" />
     <ClCompile Include="SimplexNoise.cpp" />

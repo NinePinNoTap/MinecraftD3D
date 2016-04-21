@@ -8,11 +8,7 @@
 #include "Texture.h"
 #include "TerrainFactory.h"
 
-enum TerrainType
-{
-	FLAT,
-	PERLIN
-};
+enum TerrainType { FLAT, PERLIN };
 
 class Terrain : public GameObject
 {

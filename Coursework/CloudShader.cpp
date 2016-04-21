@@ -54,7 +54,7 @@ bool CloudShader::Prepare(Material* objMaterial, Transform* objTransform)
 	ID3D11ShaderResourceView* perturbTexture = objMaterial->GetTexture("PerturbTexture")->GetTexture();
 
 	// Create matrix buffer
-	MatrixBuffer matrixBuffer = ShaderManager::Instance()->GetMatrixBuffer();
+	MatrixBuffer matrixBuffer = MatrixBuffer_;
 	objTransform->GetTranslationMatrix(matrixBuffer.world);
 	TransposeMatrix(matrixBuffer);
 

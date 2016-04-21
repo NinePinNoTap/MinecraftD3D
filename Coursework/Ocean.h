@@ -43,6 +43,7 @@ public:
 	float GetSpecularShininess();
 
 private:
+	bool RenderMeshes();
 	bool SendModelToPipeline(Mesh3D* objMesh);
 
 	// Properties

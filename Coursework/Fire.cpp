@@ -90,7 +90,12 @@ bool Fire::Initialise(char* modelFilename, std::string textureFilename, std::str
 	//=================
 
 	Frame_ = 0;
-	IsReflectable_ = false;
+	
+	IsReflective_ = RenderMode::Off;
+	UseCulling_ = RenderMode::Off;
+	UseDepth_ = RenderMode::On;
+	BlendMode_ = BlendMode::FireBlending;
+
 	IsActive_ = true;
 	
 	return true;

@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Constants.h"
+#include "GameObject.h"
 #include "Font.h"
 #include "Model.h"
 #include "Mesh3D.h"
@@ -17,7 +18,7 @@ enum Alignment
 	LEFT, CENTRE, RIGHT
 };
 
-class Text
+class Text : public GameObject
 {
 public:
 	struct SentenceType

@@ -53,7 +53,12 @@ bool SkySphere::Initialise(const char* filename)
 	//=================
 
 	Frame_ = 0;
-	IsReflectable_ = false;
+
+	IsReflective_ = RenderMode::Off;
+	UseCulling_ = RenderMode::Off;
+	UseDepth_ = RenderMode::On;
+	BlendMode_ = BlendMode::NoBlending;
+
 	IsActive_ = true;
 
 	// Initialise sky color for daytime
@@ -67,6 +72,17 @@ bool SkySphere::Initialise(const char* filename)
 	// Initialise the current color for daytime
 	Model_->GetMaterial()->SetVector4("TopColour", Colors_[0][0]);
 	Model_->GetMaterial()->SetVector4("CenterColour", Colors_[0][1]);
+
+	return true;
+}
+
+bool SkySphere::Frame()
+{
+	//==============
+	// Track Camera
+	//==============
+
+	Transform_->SetPosition(Camera::Instance()->GetTransform()->GetPosition());
 
 	return true;
 }

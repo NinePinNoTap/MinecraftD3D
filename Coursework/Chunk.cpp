@@ -25,6 +25,7 @@ void Chunk::Initialise(int x, int y, int z)
 	ChunkBlock_ = new InstancedGameObject;
 	ChunkBlock_->Initialise("block.obj");
 	ChunkBlock_->SetShader("instancedlight");
+	ChunkBlock_->SetRenderModes(RenderMode::On, RenderMode::On, RenderMode::Off, BlendMode::NoBlending);
 
 	//================
 	// Generate Chunk

@@ -33,7 +33,12 @@ bool GameObject::Initialise()
 	//=================
 
 	Frame_ = 0;
-	IsReflectable_ = false;
+
+	IsReflective_ = RenderMode::Off;
+	UseCulling_ = RenderMode::Off;
+	UseDepth_ = RenderMode::On;
+	BlendMode_ = BlendMode::NoBlending;
+
 	IsActive_ = true;
 }
 
@@ -66,7 +71,12 @@ bool GameObject::Initialise(const char* filename)
 	//=================
 
 	Frame_ = 0;
-	IsReflectable_ = false;
+
+	IsReflective_ = RenderMode::Off;
+	UseCulling_ = RenderMode::Off;
+	UseDepth_ = RenderMode::On;
+	BlendMode_ = BlendMode::NoBlending;
+
 	IsActive_ = true;
 }
 
@@ -97,20 +107,38 @@ bool GameObject::Frame()
 
 bool GameObject::Render()
 {
-	// Make sure the object is active
-	if (!IsActive_)
+	if (!IsActive_ || !Shader_ || !Model_)
 		return true;
 
-	// Make sure we have a shader to use
-	if (!Shader_)
-		return true;
+	// Define how we want to see the model
+	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
 
-	if (!Model_)
-		return true;
+	// Define how we want the model to be rendered
+	SetRenderModes();
 
+	// Render Reflection
+	if (IsReflective_ == RenderMode::On)
+	{
+		// Update render target to reflection
+		// Update view to reflection
+		// Render Reflection
+		//RenderMeshes();
+		//DirectXManager::Instance()->SetBackBufferRenderTarget();
+		//DirectXManager::Instance()->ResetViewport();
+	}
+	
+	// Render Mesh
+	RenderMeshes();
+
+	// Reset Pipeline Settings
+	ResetRenderModes();
+}
+
+bool GameObject::RenderMeshes()
+{
 	// Render the model
 	for (int i = 0; i < Model_->GetMeshCount(); i++)
-	{	
+	{
 		// Make sure the mesh is active for it to be rendered
 		if (Model_->GetMesh(i)->IsActive())
 		{
@@ -124,6 +152,8 @@ bool GameObject::Render()
 			Shader_->Render(Model_->GetMesh(i)->GetIndexCount());
 		}
 	}
+
+	return true;
 }
 
 bool GameObject::SendModelToPipeline(Mesh3D* objMesh)
@@ -156,6 +186,54 @@ bool GameObject::SendModelToPipeline(Mesh3D* objMesh)
 	return true;
 }
 
+void GameObject::SetRenderModes()
+{
+	// Backface Culling
+	if (UseCulling_ == RenderMode::On)
+	{
+		DirectXManager::Instance()->SetBackfaceCullingOn(true);
+	}
+	else
+	{
+		DirectXManager::Instance()->SetBackfaceCullingOn(false);
+	}
+
+	// Z Buffer
+	if (UseDepth_ == RenderMode::On)
+	{
+		DirectXManager::Instance()->SetDepthBufferOn(true);
+	}
+	else
+	{
+		DirectXManager::Instance()->SetDepthBufferOn(false);
+	}
+	
+	// Blending
+	switch (BlendMode_)
+	{
+		case BlendMode::NoBlending:
+			DirectXManager::Instance()->SetAlphaBlendingOn(false);
+			break;
+
+		case BlendMode::AlphaBlending:
+			DirectXManager::Instance()->SetAlphaBlendingOn(true);
+			break;
+
+		case BlendMode::CloudBlending:
+			DirectXManager::Instance()->SetCloudBlendingOn();
+			break;
+
+		case BlendMode::FireBlending:
+			DirectXManager::Instance()->SetFireBlendingOn();
+			break;
+	}
+}
+
+void GameObject::ResetRenderModes()
+{
+	
+}
+
 // Setters
 void GameObject::SetShader(string shaderName)
 {
@@ -167,9 +245,12 @@ void GameObject::SetShader(string shaderName)
 	}
 }
 
-void GameObject::SetReflectable(bool Flag)
+void GameObject::SetRenderModes(RenderMode canReflect, RenderMode useCulling, RenderMode useDepth, BlendMode blendMode)
 {
-	IsReflectable_ = Flag;
+	IsReflective_ = canReflect;
+	UseCulling_ = useCulling;
+	UseDepth_ = useDepth;
+	BlendMode_ = blendMode;
 }
 
 void GameObject::SetActive(bool Flag)
@@ -191,11 +272,6 @@ Model* GameObject::GetModel()
 Transform* GameObject::GetTransform()
 {	
 	return Transform_;
-}
-
-bool GameObject::IsReflectable()
-{
-	return IsReflectable_;
 }
 
 bool GameObject::IsActive()

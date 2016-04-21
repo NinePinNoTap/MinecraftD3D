@@ -10,6 +10,9 @@
 #include "Utilities.h"
 #include "GameShader.h"
 
+enum RenderMode { On, Off };
+enum BlendMode { NoBlending, AlphaBlending, FireBlending, CloudBlending };
+
 class GameObject
 {
 public:
@@ -29,7 +32,7 @@ public:
 
 	// Rendering
 	void SetShader(string shaderName);
-	void SetReflectable(bool Flag);
+	void SetRenderModes(RenderMode canReflect, RenderMode useCulling, RenderMode useDepth, BlendMode blendMode);
 	void SetActive(bool Flag);
 
 	// Setters
@@ -39,12 +42,15 @@ public:
 	Model* GetModel();
 	Transform* GetTransform();
 
-	bool IsReflectable();
 	bool IsActive();
 	float GetFrame();
 
 protected:
+	virtual bool RenderMeshes();
 	bool SendModelToPipeline(Mesh3D* objMesh);
+
+	void SetRenderModes();
+	void ResetRenderModes();
 
 	// Model
 	Model* Model_;
@@ -60,6 +66,9 @@ protected:
 	
 	// Flags
 	bool Result_;
-	bool IsReflectable_;
 	bool IsActive_;
+	RenderMode IsReflective_;
+	RenderMode UseCulling_;
+	RenderMode UseDepth_;
+	BlendMode BlendMode_;
 };

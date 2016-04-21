@@ -14,38 +14,25 @@
 class GameScene
 {
 public:
-	GameScene();
-	~GameScene();
+	GameScene()
+	{
+
+	}
+	~GameScene()
+	{
+
+	}
 
 	// Shutdown
 	virtual void Shutdown() = 0;
-	void ShutdownGameObjects();
 
 	// Frame
 	virtual bool Frame() = 0;
 	virtual void Reset() = 0;
 	
 protected:
-	virtual void GenerateMatrices() = 0;
-	virtual void SetShaderManagerVars() = 0;
-	void SetShaderManager2DVars();
-
-	// Matrices
-	D3DXMATRIX WorldMatrix_;
-	D3DXMATRIX ViewMatrix_;
-	D3DXMATRIX ProjectionMatrix_;
-	D3DXMATRIX OrthoMatrix_;
-	D3DXMATRIX BaseViewMatrix_;
-	D3DXMATRIX ReflectionViewMatrix_;
-
-	// Objects
-	Text* Text_;
-
 	// Flags
 	bool Result_;
-
-	// Rendering
-	vector<GameObject*> Objects_;
 };
 
 

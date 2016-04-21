@@ -69,7 +69,7 @@ bool TerrainReflectionShader::Prepare(Material* objMaterial, Transform* objTrans
 	clipPlaneBuffer.clipPlane = objMaterial->GetVector4("ClipPlane");
 
 	// Create matrix buffer
-	MatrixBuffer matrixBuffer = ShaderManager::Instance()->GetMatrixBuffer();
+	MatrixBuffer matrixBuffer = MatrixBuffer_;
 	objTransform->GetWorldMatrix(matrixBuffer.world);
 	TransposeMatrix(matrixBuffer);
 

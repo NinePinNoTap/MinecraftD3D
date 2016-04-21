@@ -242,9 +242,6 @@
     <ClCompile Include="OceanShader.cpp">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>Scene\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="MinecraftScene.cpp">
       <Filter>Scene\Scenes</Filter>
     </ClCompile>

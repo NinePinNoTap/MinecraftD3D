@@ -171,8 +171,7 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	// Create a thread to keep the application rendering until we have finished loading
 	LoadingScreenThread_ = std::thread(LoadingScreenUpdater);
-
-
+	
 	//=================
 	// Initialise Game
 	//=================
@@ -187,6 +186,9 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 
 	// Switch once we have loaded
 	SetScene(GAME);
+
+	// Join back the thread
+	LoadingScreenThread_.join();
 
 	return true;
 }
@@ -299,7 +301,6 @@ void ApplicationManager::UpdateScene()
 	switch (NewScene_)
 	{
 		case GAME:
-			LoadingScreenThread_.join();
 			CurrentScene_ = MinecraftScene_;
 			break;
 

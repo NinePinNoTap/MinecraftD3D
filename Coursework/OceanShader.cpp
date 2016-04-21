@@ -97,7 +97,7 @@ bool OceanShader::Prepare(Material* objMaterial, Transform* objTransform)
 	tessellationBuffer.padding = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	// Create the world matrix for the model
-	MatrixBuffer matrixBuffer = ShaderManager::Instance()->GetMatrixBuffer();
+	MatrixBuffer matrixBuffer = MatrixBuffer_;
 	objTransform->GetWorldMatrix(matrixBuffer.world);
 	TransposeMatrix(matrixBuffer);
 

@@ -60,7 +60,7 @@ bool FontShader::Prepare(Material* objMaterial, Transform* objTransform)
 	D3DXMATRIX baseView, orthoMatrix;
 	Camera::Instance()->Get2DViewMatrix(baseView);
 	DirectXManager::Instance()->GetOrthoMatrix(orthoMatrix);
-	MatrixBuffer matrixBuffer = ShaderManager::Instance()->GetMatrixBuffer();
+	MatrixBuffer matrixBuffer = MatrixBuffer_;
 	matrixBuffer.view = baseView;
 	matrixBuffer.projection = orthoMatrix;
 	TransposeMatrix(matrixBuffer);

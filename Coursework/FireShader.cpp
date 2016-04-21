@@ -71,7 +71,7 @@ bool FireShader::Prepare(Material* objMaterial, Transform* objTransform)
 	distortionBuffer.distortionBias = objMaterial->GetFloat("DistortionBias"); // gameObject->GetDistortionBias();
 
 	// Create matrix buffer
-	MatrixBuffer matrixBuffer = ShaderManager::Instance()->GetMatrixBuffer();
+	MatrixBuffer matrixBuffer = MatrixBuffer_;
 	objTransform->GetWorldMatrix(matrixBuffer.world);
 	TransposeMatrix(matrixBuffer);
 

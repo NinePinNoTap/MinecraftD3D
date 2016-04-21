@@ -50,7 +50,7 @@ bool SkyShader::Prepare(Material* objMaterial, Transform* objTransform)
 	}
 
 	// Create matrixBuffer Buffer
-	MatrixBuffer matrixBuffer = ShaderManager::Instance()->GetMatrixBuffer();
+	MatrixBuffer matrixBuffer = MatrixBuffer_;
 	objTransform->GetTranslationMatrix(matrixBuffer.world);
 	TransposeMatrix(matrixBuffer);
 

@@ -44,10 +44,6 @@ private:
 	bool RenderScene(bool ShowText = true);
 	bool RenderText();
 
-	void GenerateMatrices();
-	void SetShaderManagerVars();
-	void SetShaderManagerReflectionVars();
-
 	// Rendering
 	D3DXVECTOR4 ClipPlane_;
 
@@ -61,6 +57,7 @@ private:
 	Sprite* ActionBar_;
 	Sprite* WindowSprite_;
 	SkySphere* SkySphere_;
+	Text* Text_;
 	Texture* RenderTexture_;
 	Texture* RefractionTexture_;
 	Texture* ReflectionTexture_;

@@ -12,22 +12,37 @@ InstancedGameObject::~InstancedGameObject()
 
 bool InstancedGameObject::Render()
 {
-	// Make sure the object is active
-	if (!IsActive_)
+	if (!IsActive_ || !Shader_ || !Model_)
 		return true;
 
-	// Make sure we have a shader to use
-	if (!Shader_)
-		return true;
+	// Define how we want to see the model
+	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
 
-	// Make sure we have a model to render
-	if (!Model_)
-		return true;
-	
-	// Make sure we have instances to render
-	if (InstanceCount_ == 0)
-		return true;
+	// Define how we want the model to be rendered
+	SetRenderModes();
 
+	// Render Reflection
+	if (IsReflective_ == RenderMode::On)
+	{
+		// Update render target to reflection
+		// Update view to reflection
+		// Render Reflection
+		//RenderMeshes();
+		//DirectXManager::Instance()->SetBackBufferRenderTarget();
+		//DirectXManager::Instance()->ResetViewport();
+	}
+
+	// Render Mesh
+	RenderMeshes();
+
+	// Reset Pipeline Settings
+	ResetRenderModes();
+
+	return true;
+}
+
+bool InstancedGameObject::RenderMeshes()
+{
 	// Render the model
 	for (int i = 0; i < Model_->GetMeshCount(); i++)
 	{

@@ -26,9 +26,6 @@ public:
 private:
 	void Render();
 
-	void GenerateMatrices();
-	void SetShaderManagerVars();
-
 	Sprite* Background_;
 	Sprite* Bar_;
 	Sprite* BarMask_;

@@ -14,6 +14,9 @@
 #include "Transform.h"
 #include "ShaderBuffers.h"
 
+enum ProjectionMode { Perspective, Orthographic};
+enum ViewMode { BaseView, View, Reflection };
+
 using namespace std;
 
 class GameShader
@@ -35,12 +38,19 @@ public:
 	// Rendering
 	virtual bool Prepare(Material* objMaterial, Transform* objTransform = 0);
 
+	// Properties
+	void SetRenderMode(ProjectionMode projMode, ViewMode viewMode);
+
 	// Shader Data Management
 	void AddShader(string shaderName);
 	void AddLayout(LPCSTR semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot, UINT alignedByteOffset, D3D11_INPUT_CLASSIFICATION inputSlotClass, UINT instanceDataStepRate);
 	void AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE AddressUVW, FLOAT MipLODBias, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC ComparisonFunc, D3DXVECTOR4 borderColor, FLOAT MinLOD, FLOAT MaxLOD);
 	bool BuildShader(HWND hwnd);
-	
+
+	// Shader Management
+	void SendBuffersToShader();
+	void SendTextureToShader(int shaderSlot, ID3D11ShaderResourceView* shaderTexture);
+
 	// Buffer Management
 	template <class T>
 	void AddBuffer(ShaderType type)
@@ -93,10 +103,6 @@ public:
 		}
 	}
 
-	// Shader Management
-	void SendBuffersToShader();
-	void SendTextureToShader(int shaderSlot, ID3D11ShaderResourceView* shaderTexture);
-
 protected:
 	// Error Handling
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, const WCHAR* shaderFilename);
@@ -124,4 +130,7 @@ protected:
 	vector<ConstantBuffer*> PixelBuffers_;
 	vector<ConstantBuffer*> HullBuffers_;
 	vector<ConstantBuffer*> DomainBuffers_;
+
+	// Matrix Buffer
+	MatrixBuffer MatrixBuffer_;
 };

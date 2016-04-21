@@ -19,6 +19,9 @@ public:
 	// Initialising
 	bool Initialise(const char* filename);
 
+	// Frame
+	bool Frame();
+
 	// Setters
 	void ToggleTime(bool);
 

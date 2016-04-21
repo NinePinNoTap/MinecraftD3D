@@ -1,4 +1,5 @@
 #include "GameShader.h"
+#include "Camera.h"
 
 GameShader::GameShader()
 {
@@ -167,6 +168,39 @@ void GameShader::Render(int vertexCount, int instanceCount)
 bool GameShader::Prepare(Material* objMaterial, Transform* objTransform)
 {
 	return true;
+}
+
+void GameShader::SetRenderMode(ProjectionMode projMode, ViewMode viewMode)
+{
+	DirectXManager::Instance()->GetWorldMatrix(MatrixBuffer_.world);
+
+	switch (projMode)
+	{
+		case ProjectionMode::Perspective:
+			DirectXManager::Instance()->GetProjectionMatrix(MatrixBuffer_.projection);
+			break;
+
+		case ProjectionMode::Orthographic:
+			DirectXManager::Instance()->GetOrthoMatrix(MatrixBuffer_.projection);
+			break;
+	}
+
+	switch (viewMode)
+	{
+		case ViewMode::BaseView:
+			Camera::Instance()->Get2DViewMatrix(MatrixBuffer_.view);
+			break;
+
+		case ViewMode::View:
+			Camera::Instance()->GetViewMatrix(MatrixBuffer_.view);
+			break;
+
+		case ViewMode::Reflection:
+			Camera::Instance()->GetReflectionMatrix(MatrixBuffer_.view);
+			break;
+	}
+
+	Camera::Instance()->GetReflectionMatrix(MatrixBuffer_.reflection);
 }
 
 // Shader Management

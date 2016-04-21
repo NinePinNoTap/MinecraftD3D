@@ -48,10 +48,33 @@ bool Sprite::Initialise(Rect3D Dimensions)
 	//=================
 
 	Frame_ = 0;
-	IsReflectable_ = false;
+
+	IsReflective_ = RenderMode::Off;
+	UseCulling_ = RenderMode::Off;
+	UseDepth_ = RenderMode::Off;
+	BlendMode_ = BlendMode::NoBlending;
+
 	IsActive_ = true;
 
 	return true;
+}
+
+bool Sprite::Render()
+{
+	if (!IsActive_ || !Shader_ || !Model_)
+		return true;
+
+	// Define how we want to see the model
+	Shader_->SetRenderMode(ProjectionMode::Orthographic, ViewMode::BaseView);
+
+	// Define how we want the model to be rendered
+	SetRenderModes();
+
+	// Render Mesh
+	RenderMeshes();
+
+	// Reset Pipeline Settings
+	ResetRenderModes();
 }
 
 bool Sprite::SetTexture(string textureFilename)

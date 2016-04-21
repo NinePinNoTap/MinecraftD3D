@@ -46,6 +46,11 @@ bool Text::Initialise(HWND hwnd, string fontName, string fontTexture, int letter
 		return false;
 	}
 
+	IsReflective_ = RenderMode::Off;
+	UseCulling_ = RenderMode::Off;
+	UseDepth_ = RenderMode::Off;
+	BlendMode_ = BlendMode::AlphaBlending;
+
 	return true;
 }
 
@@ -174,6 +179,12 @@ bool Text::Render()
 		return true;
 	}
 
+	// Define how we want to see the model
+	Shader_->SetRenderMode(ProjectionMode::Orthographic, ViewMode::BaseView);
+
+	// Define how we want the model to be rendered
+	SetRenderModes();
+
 	// Look through sentences and render them
 	for (unsigned int i = 0; i < Sentences_.size(); i++)
 	{
@@ -186,6 +197,9 @@ bool Text::Render()
 		}
 		Shader_->Render(Model_->GetMesh(i)->GetIndexCount());
 	}
+
+	// Reset Pipeline Settings
+	ResetRenderModes();
 
 	return true;
 }

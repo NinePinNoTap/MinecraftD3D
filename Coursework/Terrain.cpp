@@ -74,7 +74,12 @@ bool Terrain::Initialise(Rect3D terrainSize, TerrainType type, string textureFil
 	//=================
 
 	Frame_ = 0;
-	IsReflectable_ = true;
+
+	IsReflective_ = RenderMode::Off;
+	UseCulling_ = RenderMode::Off;
+	UseDepth_ = RenderMode::On;
+	BlendMode_ = BlendMode::NoBlending;
+
 	IsActive_ = true;
 
 	return true;

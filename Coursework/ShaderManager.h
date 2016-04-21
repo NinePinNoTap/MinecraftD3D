@@ -42,18 +42,8 @@ public:
 
 	// Shutdown
 	void Shutdown();
-
-	// Matrix Setters
-	void SetWorldMatrix(D3DXMATRIX world);
-	void SetViewMatrix(D3DXMATRIX view);
-	void SetProjectionMatrix(D3DXMATRIX projection);
-	void SetReflectionViewMatrix(D3DXMATRIX reflection);
-
-	// Matrix Getters
-	MatrixBuffer GetMatrixBuffer() { return MatrixBuffer_; }
 	
 	// Shaders
-	//bool OceanRender(Ocean* ocean, Texture* refraction, Texture* reflection);
 	bool TextureRender(ParticleSystem* particles);
 	
 	GameShader* GetShader(string keyName)
@@ -63,9 +53,6 @@ public:
 
 private:
 	bool Result_;
-
-	// Matrices
-	MatrixBuffer MatrixBuffer_;
 	
 	// Shaders
 	CloudShader* CloudShader_;
