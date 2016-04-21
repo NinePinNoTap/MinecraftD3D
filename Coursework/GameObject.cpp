@@ -83,14 +83,6 @@ bool GameObject::Initialise(const char* filename)
 // Shutdown
 void GameObject::Shutdown()
 {
-	// Release the model
-	if (Model_)
-	{
-		Model_->Shutdown();
-		delete Model_;
-		Model_ = 0;
-	}
-
 	// Delete the transform
 	if (Transform_)
 	{
@@ -110,23 +102,27 @@ bool GameObject::Render()
 	if (!IsActive_ || !Shader_ || !Model_)
 		return true;
 
-	// Define how we want to see the model
-	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
-
 	// Define how we want the model to be rendered
 	SetRenderModes();
 
 	// Render Reflection
 	if (IsReflective_ == RenderMode::On)
 	{
-		// Update render target to reflection
-		// Update view to reflection
-		// Render Reflection
-		//RenderMeshes();
-		//DirectXManager::Instance()->SetBackBufferRenderTarget();
-		//DirectXManager::Instance()->ResetViewport();
+		Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
+
+		Texture* reflectionTexture;
+		AssetManager::Instance()->LoadTexture(&reflectionTexture, "ReflectionTexture");
+		reflectionTexture->SetRenderTarget();
+
+		RenderMeshes();
+
+		DirectXManager::Instance()->SetBackBufferRenderTarget();
+		DirectXManager::Instance()->ResetViewport();
 	}
-	
+
+	// Define how we want to see the model
+	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
+
 	// Render Mesh
 	RenderMeshes();
 
@@ -231,7 +227,9 @@ void GameObject::SetRenderModes()
 
 void GameObject::ResetRenderModes()
 {
-	
+	DirectXManager::Instance()->SetAlphaBlendingOn(false);
+	DirectXManager::Instance()->SetDepthBufferOn(true);
+	DirectXManager::Instance()->SetBackfaceCullingOn(false);
 }
 
 // Setters

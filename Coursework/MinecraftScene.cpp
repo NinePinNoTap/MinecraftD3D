@@ -66,13 +66,14 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	{
 		return false;
 	}
-	Result_ = Ocean_->Initialise("water_normal.dds", Rect3D(512.0f, 512.0f, 17.5f));
+	Result_ = Ocean_->Initialise("water_normal.dds", Rect3D(512.0f, 512.0f, 0.0f));
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the ocean object.", L"Error", MB_OK);
 		return false;
 	}
-	Ocean_->GetTransform()->SetPosition(256, Ocean_->GetWaterHeight(), 256);
+	Ocean_->GetTransform()->SetX(256);
+	Ocean_->GetTransform()->SetZ(256);
 
 	//================================
 	// Initialise the Particle System
@@ -471,8 +472,14 @@ bool MinecraftScene::Render()
 
 bool MinecraftScene::RenderScene(bool ShowText)
 {
+	ReflectionTexture_->ClearRenderTarget(BLACK);
+	RefractionTexture_->ClearRenderTarget(BLACK);
+
 	// Begin rendering
 	DirectXManager::Instance() -> BeginScene();
+
+	Camera::Instance()->Render();
+	Camera::Instance()->RenderReflection(0.0f);
 
 	//================
 	// Render the Sky 
@@ -485,21 +492,20 @@ bool MinecraftScene::RenderScene(bool ShowText)
 	Clouds_->Render();
 
 	//==================
-	// Render the Ocean 
-	//==================
-
-	/*Result_ = Ocean_->Render();
-	if (!Result_)
-	{
-		return false;
-	}*/
-
-
-	//==================
 	// Render the World 
 	//==================
 
 	World_->Render();
+
+	//==================
+	// Render the Ocean 
+	//==================
+
+	Result_ = Ocean_->Render();
+	if (!Result_)
+	{
+		return false;
+	}
 
 	//=============
 	// Render Rain

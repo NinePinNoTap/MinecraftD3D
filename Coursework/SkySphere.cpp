@@ -54,9 +54,9 @@ bool SkySphere::Initialise(const char* filename)
 
 	Frame_ = 0;
 
-	IsReflective_ = RenderMode::Off;
+	IsReflective_ = RenderMode::On;
 	UseCulling_ = RenderMode::Off;
-	UseDepth_ = RenderMode::On;
+	UseDepth_ = RenderMode::Off;
 	BlendMode_ = BlendMode::NoBlending;
 
 	IsActive_ = true;
@@ -85,6 +85,47 @@ bool SkySphere::Frame()
 	Transform_->SetPosition(Camera::Instance()->GetTransform()->GetPosition());
 
 	return true;
+}
+
+bool SkySphere::Render()
+{
+	if (!IsActive_ || !Shader_ || !Model_)
+		return true;
+
+	// Define how we want the model to be rendered
+	SetRenderModes();
+
+	// Render Reflection
+	if (IsReflective_ == RenderMode::On)
+	{
+		float currentY = Transform_->GetY();
+		D3DXVECTOR3 reflectedCamera = Camera::Instance()->GetTransform()->GetPosition();
+		reflectedCamera.y *= -1;
+
+		Transform_->SetY(reflectedCamera.y);
+
+		Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
+
+		Texture* reflectionTexture;
+		AssetManager::Instance()->LoadTexture(&reflectionTexture, "ReflectionTexture");
+		reflectionTexture->SetRenderTarget();
+
+		RenderMeshes();
+
+		DirectXManager::Instance()->SetBackBufferRenderTarget();
+		DirectXManager::Instance()->ResetViewport();
+
+		Transform_->SetY(currentY);
+	}
+
+	// Define how we want to see the model
+	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
+
+	// Render Mesh
+	RenderMeshes();
+
+	// Reset Pipeline Settings
+	ResetRenderModes();
 }
 
 void SkySphere::ToggleTime(bool timeMode)

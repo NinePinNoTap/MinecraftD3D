@@ -84,7 +84,7 @@ bool Clouds::Initialise(string cloudTextureFilename, string perturbTextureFilena
 
 	Frame_ = 0;
 
-	IsReflective_ = RenderMode::Off;
+	IsReflective_ = RenderMode::On;
 	UseCulling_ = RenderMode::Off;
 	UseDepth_ = RenderMode::Off;
 	BlendMode_ = BlendMode::CloudBlending;
@@ -116,6 +116,47 @@ bool Clouds::Frame()
 	Transform_->SetPosition(Camera::Instance()->GetTransform()->GetPosition());
 
 	return true;
+}
+
+bool Clouds::Render()
+{
+	if (!IsActive_ || !Shader_ || !Model_)
+		return true;
+
+	// Define how we want the model to be rendered
+	SetRenderModes();
+
+	// Render Reflection
+	if (IsReflective_ == RenderMode::On)
+	{
+		float currentY = Transform_->GetY();
+		D3DXVECTOR3 reflectedCamera = Camera::Instance()->GetTransform()->GetPosition();
+		reflectedCamera.y *= -1;
+
+		Transform_->SetY(reflectedCamera.y);
+
+		Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
+
+		Texture* reflectionTexture;
+		AssetManager::Instance()->LoadTexture(&reflectionTexture, "ReflectionTexture");
+		reflectionTexture->SetRenderTarget();
+
+		RenderMeshes();
+
+		DirectXManager::Instance()->SetBackBufferRenderTarget();
+		DirectXManager::Instance()->ResetViewport();
+
+		Transform_->SetY(currentY);
+	}
+
+	// Define how we want to see the model
+	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
+
+	// Render Mesh
+	RenderMeshes();
+
+	// Reset Pipeline Settings
+	ResetRenderModes();
 }
 
 // Getters

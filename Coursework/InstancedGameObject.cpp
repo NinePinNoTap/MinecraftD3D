@@ -1,4 +1,5 @@
 #include "InstancedGameObject.h"
+#include "AssetManager.h"
 
 InstancedGameObject::InstancedGameObject() : GameObject()
 {
@@ -15,8 +16,6 @@ bool InstancedGameObject::Render()
 	if (!IsActive_ || !Shader_ || !Model_)
 		return true;
 
-	// Define how we want to see the model
-	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
 
 	// Define how we want the model to be rendered
 	SetRenderModes();
@@ -24,13 +23,20 @@ bool InstancedGameObject::Render()
 	// Render Reflection
 	if (IsReflective_ == RenderMode::On)
 	{
-		// Update render target to reflection
-		// Update view to reflection
-		// Render Reflection
-		//RenderMeshes();
-		//DirectXManager::Instance()->SetBackBufferRenderTarget();
-		//DirectXManager::Instance()->ResetViewport();
+		Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
+
+		Texture* reflectionTexture;
+		AssetManager::Instance()->LoadTexture(&reflectionTexture, "ReflectionTexture");
+		reflectionTexture->SetRenderTarget();
+
+		RenderMeshes();
+
+		DirectXManager::Instance()->SetBackBufferRenderTarget();
+		DirectXManager::Instance()->ResetViewport();
 	}
+
+	// Define how we want to see the model
+	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
 
 	// Render Mesh
 	RenderMeshes();

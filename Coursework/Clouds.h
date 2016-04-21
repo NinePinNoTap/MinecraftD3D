@@ -23,6 +23,7 @@ public:
 
 	// Frame
 	bool Frame();
+	bool Render();
 
 	// Getters
 	float GetScale();

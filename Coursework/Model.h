@@ -35,4 +35,3 @@ protected:
 	std::vector<Mesh3D*> Meshes_;
 	std::vector<Material*> Materials_;
 };
-

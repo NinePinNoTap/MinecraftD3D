@@ -139,7 +139,17 @@ bool Ocean::Render()
 	if (!IsActive_ || !Shader_ || !Model_)
 		return true;
 
+	// Define how we want the model to be rendered
+	SetRenderModes();
+
+	// Define how we want to see the model
+	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
+
+	// Render Mesh
 	RenderMeshes();
+
+	// Reset Pipeline Settings
+	ResetRenderModes();
 }
 
 bool Ocean::RenderMeshes()
