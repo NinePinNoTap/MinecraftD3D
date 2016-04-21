@@ -14,6 +14,7 @@
 #include "Rect.h"
 #include "Singleton.h"
 
+using namespace Config;
 
 class DirectXManager : public Singleton<DirectXManager>
 {
@@ -29,7 +30,7 @@ public:
 	void Shutdown();
 	
 	// Rendering
-	void BeginScene(D3DXVECTOR4 clearColour = Config::Colour::Black);
+	void BeginScene(D3DXVECTOR4 clearColour = Colour::Black);
 	void EndScene();
 
 	// Rendering Toggles

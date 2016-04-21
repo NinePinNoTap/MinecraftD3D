@@ -122,6 +122,7 @@
     <ClCompile Include="TerrainReflectionShader.cpp" />
     <ClCompile Include="TerrainShader.cpp" />
     <ClCompile Include="TextureShader.cpp" />
+    <ClCompile Include="TintShader.cpp" />
     <ClCompile Include="TXTLoader.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="TextureShader.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TerrainFactory.h" />
+    <ClInclude Include="TintShader.h" />
     <ClInclude Include="TXTLoader.h" />
     <ClInclude Include="ViewFrustumManager.h" />
     <ClInclude Include="VoxelWorld.h" />
@@ -238,6 +240,8 @@
     <None Include="Data\Shaders\terrainreflection.vs" />
     <None Include="Data\Shaders\texture.ps" />
     <None Include="Data\Shaders\texture.vs" />
+    <None Include="Data\Shaders\tint.ps" />
+    <None Include="Data\Shaders\tint.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

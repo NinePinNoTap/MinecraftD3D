@@ -122,7 +122,8 @@ bool MinecraftScene::Initialise(HWND hwnd)
 		return false;
 	}
 	WindowSprite_->SetTexture("RenderTexture");
-	WindowSprite_->SetShader("texture");
+	WindowSprite_->SetShader("tint");
+	WindowSprite_->GetModel()->GetMaterial()->SetVector4("BaseColour", D3DXVECTOR4(1, 0, 0, 1));
 
 	//===========================
 	// Initialise the Sky Sphere
@@ -162,20 +163,20 @@ bool MinecraftScene::Initialise(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialise the text object.", L"Error", MB_OK);
 		return false;
 	}
-	Text_->CreateText("FPS:", Vector2(10, 10), Config::Colour::White); // FPS
-	Text_->CreateText("CPU:", Vector2(10, 30), Config::Colour::Black); // CPU
-	Text_->CreateText("Camera X :", Vector2(10, 50), Config::Colour::Black); // CameraX
-	Text_->CreateText("Camera Y :", Vector2(10, 70), Config::Colour::Black); // CameraY
-	Text_->CreateText("Camera Z :", Vector2(10, 90), Config::Colour::Black); // CameraZ
-	Text_->CreateText("Rotation X :", Vector2(10, 110), Config::Colour::Black); // RotationX
-	Text_->CreateText("Rotation Y :", Vector2(10, 130), Config::Colour::Black); // RotationY
-	Text_->CreateText("Rotation Z :", Vector2(10, 150), Config::Colour::Black); // Rotation Z
+	Text_->CreateText("FPS:", Vector2(10, 10), Colour::White); // FPS
+	Text_->CreateText("CPU:", Vector2(10, 30), Colour::Black); // CPU
+	Text_->CreateText("Camera X :", Vector2(10, 50), Colour::Black); // CameraX
+	Text_->CreateText("Camera Y :", Vector2(10, 70), Colour::Black); // CameraY
+	Text_->CreateText("Camera Z :", Vector2(10, 90), Colour::Black); // CameraZ
+	Text_->CreateText("Rotation X :", Vector2(10, 110), Colour::Black); // RotationX
+	Text_->CreateText("Rotation Y :", Vector2(10, 130), Colour::Black); // RotationY
+	Text_->CreateText("Rotation Z :", Vector2(10, 150), Colour::Black); // Rotation Z
 
-	Text_->CreateText("CONTROLS", Vector2(windowWidth - 10, 10), Config::Colour::Black, RIGHT);
-	Text_->CreateText("Toggle Wireframe [1]", Vector2(windowWidth - 10, 30), Config::Colour::Black, RIGHT);
-	Text_->CreateText("Toggle Time [2]", Vector2(windowWidth - 10, 50), Config::Colour::Black, RIGHT);
-	Text_->CreateText("Reset Camera [BACKSPACE]", Vector2(windowWidth - 10, 70), Config::Colour::Black, RIGHT);
-	Text_->CreateText("Quit [ESC]", Vector2(windowWidth - 10, 110), Config::Colour::Black, RIGHT);
+	Text_->CreateText("CONTROLS", Vector2(windowWidth - 10, 10), Colour::Black, RIGHT);
+	Text_->CreateText("Toggle Wireframe [1]", Vector2(windowWidth - 10, 30), Colour::Black, RIGHT);
+	Text_->CreateText("Toggle Time [2]", Vector2(windowWidth - 10, 50), Colour::Black, RIGHT);
+	Text_->CreateText("Reset Camera [BACKSPACE]", Vector2(windowWidth - 10, 70), Colour::Black, RIGHT);
+	Text_->CreateText("Quit [ESC]", Vector2(windowWidth - 10, 110), Colour::Black, RIGHT);
 
 	//==============
 	// Create World
@@ -448,9 +449,9 @@ bool MinecraftScene::Render()
 	// Reset Textures
 	//================
 
-	RenderTexture_->ClearRenderTarget(Config::Colour::Black);
-	ReflectionTexture_->ClearRenderTarget(Config::Colour::Black);
-	RefractionTexture_->ClearRenderTarget(Config::Colour::Black);
+	RenderTexture_->ClearRenderTarget(Colour::Black);
+	ReflectionTexture_->ClearRenderTarget(Colour::Black);
+	RefractionTexture_->ClearRenderTarget(Colour::Black);
 
 	//==============
 	// Render Scene
@@ -539,7 +540,14 @@ bool MinecraftScene::RenderScene()
 	//========================
 
 	// NEED IF STATEMENT TO SEE IF WE SHOULD RENDER THIS
-	//WindowSprite_->Render();
+	if (!IsUnderwater_)
+	{
+		Result_ = WindowSprite_->Render();
+		if (!Result_)
+		{
+			return false;
+		}
+	}
 
 	// End rendering
 	DirectXManager::Instance() -> EndScene();

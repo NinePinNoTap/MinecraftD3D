@@ -89,6 +89,9 @@
     <Filter Include="Scene\VoxelTerrain\Managers">
       <UniqueIdentifier>{5eba4f86-008d-4b9c-ac78-3defc8dfa236}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Shader\HLSL Shader Files\Tint">
+      <UniqueIdentifier>{663983e1-24cd-485b-a90d-2d94b6f5e2d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -268,6 +271,9 @@
     </ClCompile>
     <ClCompile Include="Config.cpp">
       <Filter>Framework\System</Filter>
+    </ClCompile>
+    <ClCompile Include="TintShader.cpp">
+      <Filter>Framework\Shader\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -481,6 +487,9 @@
     <ClInclude Include="VirtualKeys.h">
       <Filter>Framework\System</Filter>
     </ClInclude>
+    <ClInclude Include="TintShader.h">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shaders\cloud.ps">
@@ -554,6 +563,12 @@
     </None>
     <None Include="Data\Shaders\instancedlight.vs">
       <Filter>Framework\Shader\HLSL Shader Files\InstancedLight</Filter>
+    </None>
+    <None Include="Data\Shaders\tint.vs">
+      <Filter>Framework\Shader\HLSL Shader Files\Tint</Filter>
+    </None>
+    <None Include="Data\Shaders\tint.ps">
+      <Filter>Framework\Shader\HLSL Shader Files\Tint</Filter>
     </None>
   </ItemGroup>
 </Project>

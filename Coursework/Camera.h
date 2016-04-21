@@ -68,6 +68,7 @@ private:
 
 	// Properties
 	float MoveSpeed_;
+	float LookSensitivity_;
 };
 
 

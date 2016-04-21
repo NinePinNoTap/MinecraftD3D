@@ -143,11 +143,10 @@ bool Texture::Initialise(Rect2D textureResolution)
 	aspectRatio = ((float)textureResolution.width / (float)textureResolution.height);
 
 	// Setup the projection matrix.
-	D3DXMatrixPerspectiveFovLH(&ProjectionMatrix_, ((float)D3DX_PI / 4.0f), aspectRatio, 
-	Config::Camera::NearClipPlane, Config::Camera::FarClipPlane);
+	D3DXMatrixPerspectiveFovLH(&ProjectionMatrix_, ((float)D3DX_PI / 4.0f), aspectRatio, Rendering::NearClipPlane, Rendering::FarClipPlane);
 
 	// Create an orthographic projection matrix for 2D rendering.
-	D3DXMatrixOrthoLH(&OrthoMatrix_, (float)textureResolution.width, (float)textureResolution.height, Config::Camera::NearClipPlane, Config::Camera::FarClipPlane);
+	D3DXMatrixOrthoLH(&OrthoMatrix_, (float)textureResolution.width, (float)textureResolution.height, Rendering::NearClipPlane, Rendering::FarClipPlane);
 
 	return true;
 }

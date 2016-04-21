@@ -6,6 +6,8 @@
 #include "Config.h"
 #include "Utilities.h"
 
+using namespace Config;
+
 class Transform
 {
 public:

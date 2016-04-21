@@ -29,6 +29,9 @@ bool Camera::Initialise()
 	// Set the starting move speed
 	SetSpeed(1.0f);
 
+	// Set how fast can turn
+	LookSensitivity_ = 10.0f;
+
 	// Set default move velocity
 	Velocity_ = D3DXVECTOR3();
 
@@ -139,8 +142,8 @@ void Camera::HandleMouse()
 	if (MouseTotal != ScreenTotal)
 	{
 		// Calculate the difference between the position of the mouse and the middle of the screen
-		float DeltaX = (MousePos.x - CenterScreenX) / Config::Camera::Sensitivity;
-		float DeltaY = (MousePos.y - CenterScreenY) / Config::Camera::Sensitivity;
+		float DeltaX = (MousePos.x - CenterScreenX) / LookSensitivity_;
+		float DeltaY = (MousePos.y - CenterScreenY) / LookSensitivity_;
 
 		// Adjust the rotation based on the above movement
 		Transform_->Rotate(DeltaY, DeltaX, 0);
@@ -154,7 +157,7 @@ void Camera::HandleMouse()
 bool Camera::Render()
 {
 	// Create the view matrix
-	ViewMatrix_ = GenerateMatrix(Config::Vector::Up, Transform_->GetPosition(), Config::Vector::Forward);
+	ViewMatrix_ = GenerateMatrix(Vector::Up, Transform_->GetPosition(), Vector::Forward);
 
 	return true;
 }
@@ -170,7 +173,7 @@ void Camera::GetViewMatrix(D3DXMATRIX& viewMatrix)
 void Camera::Render2DViewMatrix()
 {
 	// Generate the 2D view matrix
-	ViewMatrix2D_ = GenerateMatrix(Config::Vector::Up, Position2D_, Config::Vector::Forward);
+	ViewMatrix2D_ = GenerateMatrix(Vector::Up, Position2D_, Vector::Forward);
 
 	return;
 }
@@ -194,7 +197,7 @@ void Camera::RenderReflection(float ReflectionHeight)
 	ReflectedPosition.y = -ReflectedPosition.y + (ReflectionHeight * 2.0f);
 
 	// Generate the reflection matrix
-	ReflectionViewMatrix_ = GenerateMatrix(Config::Vector::Up, ReflectedPosition, Config::Vector::Forward, true);
+	ReflectionViewMatrix_ = GenerateMatrix(Vector::Up, ReflectedPosition, Vector::Forward, true);
 
 	return;
 }

@@ -4,8 +4,10 @@
 #include <d3dx10math.h>
 #include <string>
 
+#include "Config.h"
 #include "Rect.h"
 
+using namespace Config;
 using namespace std;
 
 class Texture

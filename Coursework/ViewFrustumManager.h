@@ -25,7 +25,7 @@ public:
 
 		// Calculate the minimum Z distance in the frustum.
 		zMinimum = -projectionMatrix._43 / projectionMatrix._33;
-		r = Config::Camera::FarClipPlane / (Config::Camera::FarClipPlane - zMinimum);
+		r = Rendering::FarClipPlane / (Rendering::FarClipPlane - zMinimum);
 		projectionMatrix._33 = r;
 		projectionMatrix._43 = -r * zMinimum;
 

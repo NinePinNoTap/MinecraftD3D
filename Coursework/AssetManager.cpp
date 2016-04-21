@@ -60,7 +60,7 @@ void AssetManager::LoadAudio(AudioClip** audioClip, std::string filename, bool i
 	}
 
 	// Construct filename path to txt
-	std::string audioPath = Config::Directory::Audio + filename;
+	std::string audioPath = Directory::Audio + filename;
 	const char* audioFilePath = audioPath.c_str();
 
 	// Create audio clip
@@ -98,7 +98,7 @@ void AssetManager::LoadFont(Font** font, std::string filename, int letterCount)
 	//===============
 
 	// Construct filename path to txt
-	std::string txtPath = Config::Directory::Font + filename;
+	std::string txtPath = Directory::Font + filename;
 	const char* txtFilePath = txtPath.c_str();
 
 	// Create Font
@@ -205,7 +205,7 @@ void AssetManager::LoadTexture(Texture** texture, std::string filename)
 
 	// Create the texture
 	Texture* loadedTexture = new Texture;
-	Result_ = loadedTexture->Initialise(Config::Directory::Texture + filename);
+	Result_ = loadedTexture->Initialise(Directory::Texture + filename);
 	if (!Result_)
 	{
 		*texture = 0;

@@ -20,6 +20,8 @@
 #include "Model.h"
 #include "VoxelWorld.h"
 
+using namespace Config;
+
 class MinecraftScene : public GameScene
 {
 public:

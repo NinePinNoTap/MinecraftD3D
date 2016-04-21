@@ -1,0 +1,29 @@
+// Globals
+Texture2D shaderTexture;
+SamplerState SampleType;
+
+cbuffer PixelBuffer
+{
+    float4 pixelColor;
+};
+
+// Typedef
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
+};
+
+// Pixel Shader
+float4 PixelShaderMain(PixelInputType input) : SV_TARGET
+{
+	float4 color;
+	
+	// Sample the texture pixel at this location
+	color = shaderTexture.Sample(SampleType, input.tex);
+
+	// Multiply the texture color with a tint
+	color = color * pixelColor;
+
+    return color;
+}

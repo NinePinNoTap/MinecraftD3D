@@ -12,6 +12,8 @@
 
 #include "Model.h"
 
+using namespace Config;
+
 class TXTLoader
 {
 public:

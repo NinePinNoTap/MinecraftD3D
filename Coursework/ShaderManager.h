@@ -4,12 +4,12 @@
 
 #include "DirectXManager.h"
 #include "Singleton.h"
+#include "ParticleSystem.h"
 #include "Camera.h"
 #include "Clouds.h"
 #include "Fire.h"
 #include "Light.h"
 #include "GameObject.h"
-#include "ParticleSystem.h"
 #include "Texture.h"
 #include "Sprite.h"
 #include "SkySphere.h"
@@ -29,6 +29,7 @@
 #include "TerrainReflectionShader.h"
 #include "TerrainShader.h"
 #include "TextureShader.h"
+#include "TintShader.h"
 
 class ShaderManager : public Singleton<ShaderManager>
 {
@@ -38,7 +39,7 @@ public:
 	~ShaderManager();
 
 	// Initialising
-	bool Initialise(HWND);
+	bool Initialise(HWND hwnd);
 
 	// Shutdown
 	void Shutdown();
@@ -66,6 +67,7 @@ private:
 	TerrainShader* TerrainShader_;
 	TerrainReflectionShader* TerrainReflectionShader_;
 	TextureShader* TextureShader_;
+	TintShader* TintShader_;
 
 	// Shader Database
 	std::map<string, GameShader*> ShaderDatabase_;

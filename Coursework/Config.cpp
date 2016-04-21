@@ -1,13 +1,13 @@
 #include "Config.h"
 
 //==================================================================
-// Globals
+// Config::Globals
 //==================================================================
 
 bool Config::Global::FullScreen		= false;
 bool Config::Global::UseVSync		= true;
-int  Config::Global::ScreenHeight	= 720;
-int  Config::Global::ScreenWidth	= 1280;
+int Config::Global::ScreenHeight	= 720;
+int Config::Global::ScreenWidth		= 1280;
 
 //==================================================================
 // Directories
@@ -23,9 +23,8 @@ std::string Config::Directory::Texture	= "data/textures/";
 // Camera
 //==================================================================
 
-float Config::Camera::NearClipPlane	= 0.1f;
-float Config::Camera::FarClipPlane	= 1000.0f;
-float Config::Camera::Sensitivity	= 10.0f;
+float Config::Rendering::NearClipPlane = 0.1f;
+float Config::Rendering::FarClipPlane = 1000.0f;
 
 //==================================================================
 // World

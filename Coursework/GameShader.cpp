@@ -455,7 +455,7 @@ HRESULT GameShader::CompileShader(HWND hwnd, string filename, LPCSTR EntryPoint,
 	std::wstring output;
 	
 	// Create the full extension
-	string compiledFilename = Config::Directory::Shader + filename;
+	string compiledFilename = Directory::Shader + filename;
 
 	// Add the shader directory to the filename
 	output = std::wstring(compiledFilename.begin(), compiledFilename.end());

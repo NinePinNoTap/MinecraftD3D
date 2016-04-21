@@ -89,12 +89,12 @@ void ChunkColumn::InitialiseLayers()
 
 void ChunkColumn::GenerateTerrain()
 {
-	D3DXVECTOR3 worldPos = ChunkPos_ * Config::World::ChunkSize;
+	D3DXVECTOR3 worldPos = ChunkPos_ * World::ChunkSize;
 
 	// Loop through and generate terrain for specific x/z coordinate
-	for (int x = worldPos.x; x < worldPos.x + Config::World::ChunkSize; x++)
+	for (int x = worldPos.x; x < worldPos.x + World::ChunkSize; x++)
 	{
-		for (int z = worldPos.z; z < worldPos.z + Config::World::ChunkSize; z++)
+		for (int z = worldPos.z; z < worldPos.z + World::ChunkSize; z++)
 		{
 			GenerateColumn(x, z);
 		}

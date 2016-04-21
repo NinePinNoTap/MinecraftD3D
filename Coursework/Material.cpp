@@ -12,7 +12,7 @@ Material::Material()
 	PerturbTexture_ = 0;
 
 	// Initialise colours
-	Tint_ = Config::Colour::White;
+	Tint_ = Colour::White;
 	SpecularAmount_ = 32.0f;
 
 	// Add Default Data

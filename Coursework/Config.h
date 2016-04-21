@@ -27,12 +27,11 @@ namespace Config
 			static std::string Texture;
 	};
 
-	static class Camera
+	static class Rendering
 	{
 		public:
 			static float NearClipPlane;
 			static float FarClipPlane;
-			static float Sensitivity;
 	};
 
 	static class World

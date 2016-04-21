@@ -6,8 +6,9 @@
 #include <iterator>
 #include <vector>
 
-
 #include "Model.h"
+
+using namespace Config;
 
 class OBJLoader
 {

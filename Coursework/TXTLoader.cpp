@@ -21,7 +21,7 @@ bool TXTLoader::LoadModel(const char* filename, Model& model)
 	//===============
 
 	// Open the model file.
-	fin.open(Config::Directory::Model + filename);
+	fin.open(Directory::Model + filename);
 
 	// If it could not open the file then exit
 	if (fin.fail())

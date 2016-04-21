@@ -150,9 +150,9 @@ void VoxelWorld::GenerateLocalChunks()
 	//================
 
 	// Calculate the chunk we are in
-	chunkIndex.x = floor(Camera::Instance()->GetTransform()->GetPosition().x / (float)Config::World::ChunkSize);
+	chunkIndex.x = floor(Camera::Instance()->GetTransform()->GetPosition().x / (float)World::ChunkSize);
 	chunkIndex.y = 0;
-	chunkIndex.z = floor(Camera::Instance()->GetTransform()->GetPosition().z / (float)Config::World::ChunkSize);
+	chunkIndex.z = floor(Camera::Instance()->GetTransform()->GetPosition().z / (float)World::ChunkSize);
 
 	// Check if we have moved chunk since last check
 	if (chunkIndex == LastChunkPosition_)
@@ -200,8 +200,8 @@ Block* VoxelWorld::GetBlock(int x, int y, int z)
 	// Calculate World Chunk
 	//=======================
 
-	chunkX = x / (float)Config::World::ChunkSize;
-	chunkZ = z / (float)Config::World::ChunkSize;
+	chunkX = x / (float)World::ChunkSize;
+	chunkZ = z / (float)World::ChunkSize;
 
 	chunkX = floor(chunkX);
 	chunkZ = floor(chunkZ);
@@ -210,7 +210,7 @@ Block* VoxelWorld::GetBlock(int x, int y, int z)
 	// Calculate Chunk Index
 	//=======================
 
-	chunkY = y / (float)Config::World::ChunkSize;
+	chunkY = y / (float)World::ChunkSize;
 	chunkY = floor(chunkY);
 
 	// Find the chunk

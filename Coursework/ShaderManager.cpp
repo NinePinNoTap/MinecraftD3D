@@ -192,6 +192,21 @@ bool ShaderManager::Initialise(HWND hwnd)
 		return false;
 	}
 
+	//============================
+	// Initialise the Tint Shader
+	//============================
+
+	TintShader_ = new TintShader;
+	if (!TintShader_)
+	{
+		return false;
+	}
+	Result_ = TintShader_->Initialise(hwnd);
+	if (!Result_)
+	{
+		return false;
+	}
+
 	//=======================
 	// Setup Shader Database
 	//=======================
@@ -206,6 +221,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 	ShaderDatabase_["texture"] = TextureShader_;
 	ShaderDatabase_["terrain"] = TerrainShader_;
 	ShaderDatabase_["terrainreflection"] = TerrainReflectionShader_;
+	ShaderDatabase_["tint"] = TintShader_;
 
 	return true;
 }

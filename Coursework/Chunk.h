@@ -44,16 +44,16 @@ public:
 	inline Block* GetBlock(int x, int y, int z)
 	{
 		// Check the value is within range
-		if (!RangeCheck(x, 0, Config::World::ChunkSize - 1))
+		if (!RangeCheck(x, 0, World::ChunkSize - 1))
 		{
 			return 0;
 		}
 
-		if (!RangeCheck(y, 0, Config::World::ChunkSize - 1))
+		if (!RangeCheck(y, 0, World::ChunkSize - 1))
 		{
 			return 0;
 		}
-		if (!RangeCheck(z, 0, Config::World::ChunkSize - 1))
+		if (!RangeCheck(z, 0, World::ChunkSize - 1))
 		{
 			return 0;
 		}
