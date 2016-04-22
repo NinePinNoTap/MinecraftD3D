@@ -281,6 +281,26 @@ void GameObject::SetRenderModes(RenderMode canReflect, RenderMode useCulling, Re
 	BlendMode_ = blendMode;
 }
 
+void GameObject::SetReflectionMode(RenderMode canReflect)
+{
+	IsReflective_ = canReflect;
+}
+
+void GameObject::SetCullingMode(RenderMode useCulling)
+{
+	UseCulling_ = useCulling;
+}
+
+void GameObject::SetDepthMode(RenderMode useDepth)
+{
+	UseDepth_ = useDepth;
+}
+
+void GameObject::SetBlendMode(BlendMode blendMode)
+{
+	BlendMode_ = blendMode;
+}
+
 void GameObject::SetActive(bool Flag)
 {
 	IsActive_ = Flag;

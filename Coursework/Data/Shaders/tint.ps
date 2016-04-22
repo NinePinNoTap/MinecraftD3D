@@ -22,6 +22,11 @@ float4 PixelShaderMain(PixelInputType input) : SV_TARGET
 	// Sample the texture pixel at this location
 	color = shaderTexture.Sample(SampleType, input.tex);
 
+	if(color.r == 0 && color.g == 0 && color.b == 0)
+	{
+		return color;
+	}
+
 	// Multiply the texture color with a tint
 	color.r = lerp(color.r, pixelColor.r, pixelColor.a);
 	color.g = lerp(color.g, pixelColor.g, pixelColor.a);

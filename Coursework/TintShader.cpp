@@ -55,6 +55,7 @@ bool TintShader::Prepare(Material* objMaterial, Transform* objTransform)
 
 	// Create matrix buffer
 	MatrixBuffer matrixBuffer = MatrixBuffer_;
+	objTransform->GetWorldMatrix(matrixBuffer.world);
 	TransposeMatrix(matrixBuffer);
 
 	// Update Buffers

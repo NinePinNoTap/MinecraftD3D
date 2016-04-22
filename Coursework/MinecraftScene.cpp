@@ -94,6 +94,21 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	ActionBar_->GetTransform()->SetY(-(windowHeight * 0.8) / 2);
 	ActionBar_->SetShader("texture");
 
+	// UI Cursor
+	Cursor_ = new Sprite;
+	if (!Cursor_)
+	{
+		return false;
+	}
+	Result_ = Cursor_->Initialise(Rect3D(72, 72), "ui_cursor.dds");
+	if (!Result_)
+	{
+		MessageBox(hwnd, L"Could not initialise the action bar object.", L"Error", MB_OK);
+		return false;
+	}
+	Cursor_->SetShader("texture");
+	Cursor_->SetBlendMode(BlendMode::AlphaMasked);
+
 	// Post Processing Window
 	WindowSprite_ = new Sprite;
 	if (!WindowSprite_)
@@ -269,6 +284,7 @@ void MinecraftScene::Reset()
 
 	InputManager::Instance()->Initialise();
 	LockMouseToCenter();
+	ShowCursor(false);
 
 	//============
 	// Play Sound
@@ -531,12 +547,18 @@ bool MinecraftScene::RenderScene()
 		return false;
 	}
 
+	Result_ = Cursor_->Render();
+	if (!Result_)
+	{
+		return false;
+	}
+
 	//========================
 	// Render Post Processing
 	//========================
 
 	// NEED IF STATEMENT TO SEE IF WE SHOULD RENDER THIS
-	if (!IsUnderwater_)
+	if (IsUnderwater_)
 	{
 		Result_ = WindowSprite_->Render();
 		if (!Result_)

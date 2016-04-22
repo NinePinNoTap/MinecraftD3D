@@ -15,7 +15,7 @@ private:
 	struct FontType
 	{
 		float left, right;
-		int size;
+		int width, height;
 	};
 
 public:

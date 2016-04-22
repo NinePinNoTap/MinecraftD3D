@@ -470,10 +470,6 @@ HRESULT GameShader::CompileShader(HWND hwnd, string filename, LPCSTR EntryPoint,
 		{
 			// Output the error message to a text file
 			OutputShaderErrorMessage(errorMessage, hwnd, output.c_str());
-
-			// Clean Up
-			errorMessage->Release();
-			errorMessage = 0;
 		}
 		else
 		{

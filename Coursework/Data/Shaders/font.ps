@@ -17,22 +17,13 @@ struct PixelInputType
 // Pixel Shader
 float4 PixelShaderMain(PixelInputType input) : SV_TARGET
 {
-	float4 color;
+	float4 textureColor;
 	
 	// Sample the texture pixel at this location.
-	color = shaderTexture.Sample(SampleType, input.tex);
+	textureColor = shaderTexture.Sample(SampleType, input.tex);
 	
-	if(color.r == 0.0f)
-	{
-		// Pixel is black so set as transparent
-		color.a = 0.0f;
-	}
-	else
-	{
-		// Pixel is non-transparent so apply text color
-		color.a = 1.0f;
-		color = color * pixelColor;
-	}
+	// Apply colour change
+	textureColor = textureColor * pixelColor;
 
-    return color;
+	return textureColor;
 }

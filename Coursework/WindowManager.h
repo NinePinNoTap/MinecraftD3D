@@ -20,8 +20,8 @@ public:
 	void Shutdown();
 	void Run();
 
-	Rect2D GetWindowResolution();
-	HWND GetHWND() { return HWND_; }
+	inline Rect2D GetWindowResolution() { return WindowResolution_; }
+	inline HWND GetHWND() { return HWND_; }
 
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 

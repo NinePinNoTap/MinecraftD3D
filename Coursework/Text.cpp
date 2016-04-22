@@ -49,7 +49,7 @@ bool Text::Initialise(HWND hwnd, string fontName, string fontTexture, int letter
 	IsReflective_ = RenderMode::Off;
 	UseCulling_ = RenderMode::Off;
 	UseDepth_ = RenderMode::Off;
-	BlendMode_ = BlendMode::AlphaBlending;
+	BlendMode_ = BlendMode::AlphaMasked;
 
 	return true;
 }

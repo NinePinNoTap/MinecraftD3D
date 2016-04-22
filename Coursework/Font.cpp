@@ -51,7 +51,8 @@ bool Font::Initialise(const string fontFilename, int letterCount)
 
 		fin >> Font_[i].left;
 		fin >> Font_[i].right;
-		fin >> Font_[i].size;
+		fin >> Font_[i].width;
+		fin >> Font_[i].height;
 	}
 
 	// Close the file
@@ -90,7 +91,7 @@ void Font::BuildVertexArray(VertexData* vertexData, string sentence, float drawX
 		// If the letter is a space then just move over three pixels
 		if (letter == 0)
 		{
-			drawX = drawX + 3.0f;
+			drawX = drawX + Font_[letter].width;
 		}
 		else
 		{
@@ -99,11 +100,11 @@ void Font::BuildVertexArray(VertexData* vertexData, string sentence, float drawX
 			vertexData[index].texture = D3DXVECTOR2(Font_[letter].left, 0.0f);
 			index++;
 
-			vertexData[index].position = D3DXVECTOR3((drawX + Font_[letter].size), (drawY - 16), 0.0f);  // Bottom right
+			vertexData[index].position = D3DXVECTOR3((drawX + Font_[letter].width), (drawY - Font_[letter].height), 0.0f);  // Bottom right
 			vertexData[index].texture = D3DXVECTOR2(Font_[letter].right, 1.0f);
 			index++;
 
-			vertexData[index].position = D3DXVECTOR3(drawX, (drawY - 16), 0.0f);  // Bottom left
+			vertexData[index].position = D3DXVECTOR3(drawX, (drawY - Font_[letter].height), 0.0f);  // Bottom left
 			vertexData[index].texture = D3DXVECTOR2(Font_[letter].left, 1.0f);
 			index++;
 
@@ -112,16 +113,16 @@ void Font::BuildVertexArray(VertexData* vertexData, string sentence, float drawX
 			vertexData[index].texture = D3DXVECTOR2(Font_[letter].left, 0.0f);
 			index++;
 
-			vertexData[index].position = D3DXVECTOR3(drawX + Font_[letter].size, drawY, 0.0f);  // Top right
+			vertexData[index].position = D3DXVECTOR3(drawX + Font_[letter].width, drawY, 0.0f);  // Top right
 			vertexData[index].texture = D3DXVECTOR2(Font_[letter].right, 0.0f);
 			index++;
 
-			vertexData[index].position = D3DXVECTOR3((drawX + Font_[letter].size), (drawY - 16), 0.0f);  // Bottom right
+			vertexData[index].position = D3DXVECTOR3((drawX + Font_[letter].width), (drawY - Font_[letter].height), 0.0f);  // Bottom right
 			vertexData[index].texture = D3DXVECTOR2(Font_[letter].right, 1.0f);
 			index++;
 
 			// Update the x location for drawing by the size of the letter and one pixel
-			drawX = drawX + Font_[letter].size + 1.0f;
+			drawX = drawX + Font_[letter].width + 1.0f;
 		}
 	}
 
@@ -146,12 +147,12 @@ float Font::GetRenderSize(string text)
 		if (letterID == 0)
 		{
 			// Adjust accordingly
-			totalWidth += 3.0f;
+			totalWidth += Font_[letterID].width;
 		}
 		else
 		{
 			// Adjust by the width of the letter
-			totalWidth += (Font_[letterID].size + 1);
+			totalWidth += (Font_[letterID].width + 1);
 		}
 	}
 

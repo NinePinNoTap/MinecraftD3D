@@ -53,6 +53,7 @@ private:
 	Ocean* Ocean_;
 	ParticleSystem* ParticleSystem_;
 	Sprite* ActionBar_;
+	Sprite* Cursor_;
 	Sprite* WindowSprite_;
 	SkySphere* SkySphere_;
 	Text* Text_;

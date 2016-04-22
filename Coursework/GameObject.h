@@ -33,6 +33,10 @@ public:
 	// Rendering
 	void SetShader(string shaderName);
 	void SetRenderModes(RenderMode canReflect, RenderMode useCulling, RenderMode useDepth, BlendMode blendMode);
+	void SetReflectionMode(RenderMode canReflect);
+	void SetCullingMode(RenderMode useCulling);
+	void SetDepthMode(RenderMode useDepth);
+	void SetBlendMode(BlendMode blendMode);
 	void SetActive(bool Flag);
 
 	// Setters

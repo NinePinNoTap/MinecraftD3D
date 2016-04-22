@@ -3,6 +3,7 @@
 #include "GameScene.h"
 #include "InputManager.h"
 #include "Sprite.h"
+#include "Text.h"
 
 class MainMenuScene : public GameScene
 {
@@ -22,5 +23,6 @@ private:
 
 	Sprite* Background_;
 	vector<Sprite*> Buttons_;
+	Text* ButtonText_;
 };
 

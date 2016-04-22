@@ -202,11 +202,6 @@ LRESULT CALLBACK WindowManager::MessageHandler(HWND hwnd, UINT umsg, WPARAM wpar
 	return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
 
-Rect2D WindowManager::GetWindowResolution()
-{
-	return WindowResolution_;
-}
-
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
 	if(umessage == WM_DESTROY || umessage == WM_CLOSE)
