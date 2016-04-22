@@ -11,13 +11,15 @@
 #include "PerformanceManager.h"
 #include "GameScene.h"
 #include "LoadingScene.h"
+#include "MainMenuScene.h"
 #include "ShaderManager.h"
 #include "ViewFrustumManager.h"
 
 enum SceneState
 {
-	GAME,
-	LOADING
+	MENU,
+	LOADING,
+	GAME
 };
 
 class ApplicationManager : public Singleton<ApplicationManager>
@@ -58,6 +60,7 @@ private:
 	ViewFrustumManager* ViewFrustumManager_;
 	
 	// Scenes
+	MainMenuScene* MainMenuScene_;
 	MinecraftScene* MinecraftScene_;
 	LoadingScene* LoadingScene_;
 	std::thread LoadingScreenThread_;

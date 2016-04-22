@@ -29,7 +29,7 @@ bool LoadingScene::Initialise()
 	{
 		return false;
 	}
-	Result_ = Background_->Initialise(Rect3D(windowWidth, windowHeight, 1.0f), "LoadingScreen.dds");
+	Result_ = Background_->Initialise(Rect3D(windowWidth, windowHeight, 1.0f), "bg_loading.dds");
 	if (!Result_)
 	{
 		return false;

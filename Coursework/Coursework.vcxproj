@@ -105,6 +105,7 @@
     <ClCompile Include="GameShader.cpp" />
     <ClCompile Include="Interpolator.cpp" />
     <ClCompile Include="LightShader.cpp" />
+    <ClCompile Include="MainMenuScene.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh3D.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="FontShader.h" />
     <ClInclude Include="InstancedGameObject.h" />
     <ClInclude Include="InstancedLightShader.h" />
+    <ClInclude Include="MainMenuScene.h" />
     <ClInclude Include="Mesh3D.h" />
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="OceanShader.h" />

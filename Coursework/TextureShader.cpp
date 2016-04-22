@@ -33,7 +33,7 @@ bool TextureShader::Initialise(HWND hwnd)
 	Result_ = BuildShader(hwnd);
 	if (!Result_)
 	{
-		OutputToDebug("Could not initialise baseTexture shader.");
+		OutputToDebug("Could not initialise Texture shader.");
 		return false;
 	}
 

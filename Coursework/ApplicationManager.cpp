@@ -172,6 +172,18 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	// Create a thread to keep the application rendering until we have finished loading
 	LoadingScreenThread_ = std::thread(LoadingScreenUpdater);
 	
+	//======================
+	// Initialise Main Menu
+	//======================
+
+	MainMenuScene_ = new MainMenuScene;
+	Result_ = MainMenuScene_->Initialise(hwnd);
+	if (!Result_)
+	{
+		MessageBox(hwnd, L"Could not initialise the main menu scene", L"Error", MB_OK);
+		return false;
+	}
+
 	//=================
 	// Initialise Game
 	//=================
@@ -180,12 +192,12 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	Result_ = MinecraftScene_->Initialise(hwnd);
 	if (!Result_)
 	{
-		MessageBox(hwnd, L"Could not initialise the inside scene", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialise the minecraft scene", L"Error", MB_OK);
 		return false;
 	}
 
 	// Switch once we have loaded
-	SetScene(GAME);
+	SetScene(MENU);
 
 	// Join back the thread
 	LoadingScreenThread_.join();
@@ -300,6 +312,10 @@ void ApplicationManager::UpdateScene()
 	// Check which scene to change to
 	switch (NewScene_)
 	{
+		case MENU:
+			CurrentScene_ = MainMenuScene_;
+			break;
+
 		case GAME:
 			CurrentScene_ = MinecraftScene_;
 			break;

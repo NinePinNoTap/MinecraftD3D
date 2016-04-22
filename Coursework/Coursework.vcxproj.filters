@@ -275,6 +275,9 @@
     <ClCompile Include="TintShader.cpp">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="MainMenuScene.cpp">
+      <Filter>Scene\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -489,6 +492,9 @@
     </ClInclude>
     <ClInclude Include="TintShader.h">
       <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenuScene.h">
+      <Filter>Scene\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
