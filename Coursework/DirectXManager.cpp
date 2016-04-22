@@ -714,7 +714,7 @@ void DirectXManager::SetCloudBlendingOn()
 	return;
 }
 
-void DirectXManager::SetFireBlendingOn()
+void DirectXManager::SetAlphaMaskingOn()
 {
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 

@@ -17,8 +17,10 @@ public:
 	void Reset();
 
 private:
+	void CreateButton(int x, int y);
 	void Render();
 
 	Sprite* Background_;
+	vector<Sprite*> Buttons_;
 };
 

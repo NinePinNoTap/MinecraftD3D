@@ -41,7 +41,7 @@ public:
 
 	// Blend States
 	void SetCloudBlendingOn();
-	void SetFireBlendingOn();
+	void SetAlphaMaskingOn();
 
 	// Misc
 	void SetBackBufferRenderTarget();

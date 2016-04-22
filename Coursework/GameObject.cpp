@@ -249,8 +249,8 @@ void GameObject::SetRenderModes()
 			DirectXManager::Instance()->SetCloudBlendingOn();
 			break;
 
-		case BlendMode::FireBlending:
-			DirectXManager::Instance()->SetFireBlendingOn();
+		case BlendMode::AlphaMasked:
+			DirectXManager::Instance()->SetAlphaMaskingOn();
 			break;
 	}
 }

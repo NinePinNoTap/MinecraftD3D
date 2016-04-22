@@ -11,7 +11,7 @@
 #include "GameShader.h"
 
 enum RenderMode { On, Off };
-enum BlendMode { NoBlending, AlphaBlending, FireBlending, CloudBlending };
+enum BlendMode { NoBlending, AlphaBlending, AlphaMasked, CloudBlending };
 
 class GameObject
 {
