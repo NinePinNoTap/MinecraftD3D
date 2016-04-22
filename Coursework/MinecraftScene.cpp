@@ -37,26 +37,10 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	// Initialise Render Textures
 	//============================
 
-	AssetManager::Instance()->LoadTexture(&RenderTexture_, "RenderTexture", Rect2D(windowWidth, windowHeight));
-	AssetManager::Instance()->LoadTexture(&ReflectionTexture_, "ReflectionTexture", Rect2D(windowWidth, windowHeight));
-	AssetManager::Instance()->LoadTexture(&RefractionTexture_, "RefractionTexture", Rect2D(windowWidth, windowHeight));
-
-	//=======================
-	// Initialise the Clouds
-	//=======================
-
-	Clouds_ = new Clouds;
-	if (!Clouds_)
-	{
-		return false;
-	}
-	Result_ = Clouds_ -> Initialise("cloud.dds", "cloudperturb.dds");
-	if (!Result_)
-	{
-		MessageBox(hwnd, L"Could not initialise the sky plane object.", L"Error", MB_OK);
-		return false;
-	}
-
+	AssetManager::Instance()->LoadTexture(&RenderTexture_,		"RenderTexture",	 Rect2D(windowWidth, windowHeight));
+	AssetManager::Instance()->LoadTexture(&ReflectionTexture_,  "ReflectionTexture", Rect2D(windowWidth, windowHeight));
+	AssetManager::Instance()->LoadTexture(&RefractionTexture_,  "RefractionTexture", Rect2D(windowWidth, windowHeight));
+	
 	//======================
 	// Initialise the Ocean 
 	//======================
@@ -87,7 +71,7 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	Result_ = ParticleSystem_ -> Initialise("rain.dds");
 	if (!Result_)
 	{
-		MessageBox(hwnd, L"Could not initialise the particle WindowManager.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialise the particle system.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -95,39 +79,51 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	// Initialise 2D Bitmaps
 	//=======================
 
+	// UI Toolbar
 	ActionBar_ = new Sprite;
 	if (!ActionBar_)
 	{
 		return false;
 	}
-	Result_ = ActionBar_->Initialise(Rect3D(728, 88));
+	Result_ = ActionBar_->Initialise(Rect3D(728, 88), "ui_toolbar.dds");
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the action bar object.", L"Error", MB_OK);
 		return false;
 	}
 	ActionBar_->GetTransform()->SetY(-(windowHeight * 0.8) / 2);
-	ActionBar_->SetTexture("ui_toolbar.dds");
 	ActionBar_->SetShader("texture");
 
+	// Post Processing Window
 	WindowSprite_ = new Sprite;
 	if (!WindowSprite_)
 	{
 		return false;
 	}
-	Result_ = WindowSprite_->Initialise(Rect3D(windowWidth * 0.5f, windowHeight * 0.5f));
+	Result_ = WindowSprite_->Initialise(Rect3D(WindowManager::Instance()->GetWindowResolution() * 0.5f), "RenderTexture");
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the screen window object.", L"Error", MB_OK);
 		return false;
 	}
-	WindowSprite_->SetTexture("RenderTexture");
 	WindowSprite_->SetShader("tint");
-	WindowSprite_->GetModel()->GetMaterial()->SetVector4("BaseColour", D3DXVECTOR4(1, 0, 0, 1));
+	WindowSprite_->GetModel()->GetMaterial()->SetVector4("BaseColour", Colour::Water);
 
-	//===========================
-	// Initialise the Sky Sphere
-	//===========================
+	//====================
+	// Initialise the Sky
+	//====================
+
+	Clouds_ = new Clouds;
+	if (!Clouds_)
+	{
+		return false;
+	}
+	Result_ = Clouds_->Initialise("cloud.dds", "cloudperturb.dds");
+	if (!Result_)
+	{
+		MessageBox(hwnd, L"Could not initialise the sky plane object.", L"Error", MB_OK);
+		return false;
+	}
 
 	SkySphere_ = new SkySphere;
 	if (!SkySphere_)

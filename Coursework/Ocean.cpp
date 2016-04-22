@@ -173,6 +173,8 @@ bool Ocean::Render()
 
 	// Reset Pipeline Settings
 	ResetRenderModes();
+
+	return true;
 }
 
 bool Ocean::RenderMeshes()

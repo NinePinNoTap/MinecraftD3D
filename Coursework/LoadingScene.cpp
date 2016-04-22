@@ -29,17 +29,11 @@ bool LoadingScene::Initialise()
 	{
 		return false;
 	}
-	Result_ = Background_->Initialise(Rect3D(windowWidth, windowHeight));
+	Result_ = Background_->Initialise(Rect3D(windowWidth, windowHeight, 1.0f), "LoadingScreen.dds");
 	if (!Result_)
 	{
 		return false;
 	}
-	Result_ = Background_->SetTexture("LoadingScreen.dds");
-	if (!Result_)
-	{
-		return false;
-	}
-	Background_->GetTransform()->MoveZ(1.0f);
 	Background_->SetShader("texture");
 
 	//================

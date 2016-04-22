@@ -18,7 +18,7 @@ void Model::Shutdown()
 	// Shutdown meshes
 	if (Meshes_.size() > 0)
 	{
-		for (int i = 0; i < Meshes_.size(); i++)
+		for (unsigned int i = 0; i < Meshes_.size(); i++)
 		{
 			if (Meshes_[i])
 			{
@@ -34,7 +34,7 @@ void Model::Shutdown()
 	// Shutdown materials
 	if (Materials_.size() > 0)
 	{
-		for (int i = 0; i < Materials_.size(); i++)
+		for (unsigned int i = 0; i < Materials_.size(); i++)
 		{
 			if (Materials_[i])
 			{
@@ -105,7 +105,7 @@ void Model::UpdateMaterial(int index, Material* material)
 void Model::ClearMeshes()
 {
 	// Clean Up
-	for (int i = 0; i < Meshes_.size(); i++)
+	for (unsigned int i = 0; i < Meshes_.size(); i++)
 	{
 		Meshes_[i]->Shutdown();
 		delete Meshes_[i];
@@ -118,7 +118,7 @@ void Model::ClearMeshes()
 void Model::ClearMaterials()
 {
 	// Clean Up
-	for (int i = 0; i < Meshes_.size(); i++)
+	for (unsigned int i = 0; i < Meshes_.size(); i++)
 	{
 		delete Materials_[i];
 		Materials_[i] = 0;

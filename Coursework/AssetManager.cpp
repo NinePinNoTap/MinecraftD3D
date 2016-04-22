@@ -68,7 +68,7 @@ void AssetManager::LoadAudio(AudioClip** audioClip, std::string filename, bool i
 	Result_ = loadedClip->LoadFile(audioFilePath, is3D);
 	if (!Result_)
 	{
-		OutputToDebug("Could not load (AUDIO) : " + filename);
+		OutputToDebug("(AUDIO) Could not load : " + filename);
 		audioClip = 0;
 		return;
 	}
@@ -78,7 +78,7 @@ void AssetManager::LoadAudio(AudioClip** audioClip, std::string filename, bool i
 
 	*audioClip = loadedClip;
 
-	OutputToDebug("Loaded (AUDIO) : " + filename);
+	OutputToDebug("(AUDIO) Loaded : " + filename);
 
 	return;
 }
@@ -111,7 +111,7 @@ void AssetManager::LoadFont(Font** font, std::string filename, int letterCount)
 	Result_ = loadedFont->Initialise(txtFilePath, letterCount);
 	if (!Result_)
 	{
-		OutputToDebug("Could not load (FONT) : " + filename);
+		OutputToDebug("(FONT) Could not load : " + filename);
 		*font = 0;
 		return;
 	}
@@ -122,14 +122,14 @@ void AssetManager::LoadFont(Font** font, std::string filename, int letterCount)
 	// Set font and return
 	*font = loadedFont;
 
-	OutputToDebug("Loaded (FONT) : " + filename);
+	OutputToDebug("(FONT) Loaded : " + filename);
 
 	return;
 }
 
 void AssetManager::LoadModel(Model** model, std::string filename)
 {
-	// Check if the font already exists
+	// Check if the model already exists
 	if (ModelDatabase_.count(filename))
 	{
 		vector<Mesh3D*> modelMesh = ModelDatabase_[filename]->GetAllMeshes();
@@ -137,14 +137,14 @@ void AssetManager::LoadModel(Model** model, std::string filename)
 
 		(*model) = new Model;
 		
-		for (int i = 0; i < modelMesh.size(); i++)
+		for (unsigned int i = 0; i < modelMesh.size(); i++)
 		{
 			// Take a copy of the mesh
 			Mesh3D* tempMesh = new Mesh3D(*modelMesh[i]);
 			(*model)->AddMesh(tempMesh);
 		}
 
-		for (int i = 0; i < modelMaterial.size(); i++)
+		for (unsigned int i = 0; i < modelMaterial.size(); i++)
 		{
 			(*model)->AddMaterial(modelMaterial[i]);
 		}
@@ -179,14 +179,14 @@ void AssetManager::LoadModel(Model** model, std::string filename)
 	{
 		*model = loadedModel;
 
-		OutputToDebug("Loaded (MODEL) : " + filename);
+		OutputToDebug("(MODEL) Loaded : " + filename);
 
 		// Add to the map
 		ModelDatabase_[filename] = loadedModel;
 	}
 	else
 	{
-		OutputToDebug("Could not load (MODEL) : " + filename);
+		OutputToDebug("(MODEL) Could not load : " + filename);
 		*model = 0;
 	}
 
@@ -209,7 +209,7 @@ void AssetManager::LoadTexture(Texture** texture, std::string filename)
 	if (!Result_)
 	{
 		*texture = 0;
-		OutputToDebug("Could not load (TEXTURE) : " + filename);
+		OutputToDebug("(TEXTURE) Could not load : " + filename);
 		return;
 	}
 
@@ -218,7 +218,7 @@ void AssetManager::LoadTexture(Texture** texture, std::string filename)
 
 	*texture = loadedTexture;
 
-	OutputToDebug("Loaded (TEXTURE) : " + filename);
+	OutputToDebug("(TEXTURE) Loaded : " + filename);
 
 	return;
 }
@@ -257,5 +257,5 @@ void AssetManager::LoadTexture(Texture** texture, string keyName, Rect2D texture
 	// Return it
 	*texture = createdTexture;
 
-	OutputToDebug("Created (TEXTURE) : " + keyName);
+	OutputToDebug("(RENDER TEXTURE) Created : " + keyName);
 }

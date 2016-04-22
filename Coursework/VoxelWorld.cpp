@@ -1,8 +1,5 @@
 #include "VoxelWorld.h"
 
-const int ChunkHeight = 8;
-const int LoadRadius = 1;
-
 VoxelWorld::VoxelWorld()
 {
 }
@@ -30,9 +27,9 @@ void VoxelWorld::Initialise()
 	BuildOrder_.push_back(D3DXVECTOR3(0, 0, 0));
 
 	// Positions within a radius
-	for (int x = -LoadRadius; x <= LoadRadius; x++)
+	for (int x = -World::LoadRadius; x <= World::LoadRadius; x++)
 	{
-		for (int z = LoadRadius; z >= -LoadRadius; z--)
+		for (int z = World::LoadRadius; z >= -World::LoadRadius; z--)
 		{
 			BuildOrder_.push_back(D3DXVECTOR3(x, 0, z));
 		}
@@ -116,7 +113,7 @@ void VoxelWorld::BuildChunksInBuildList()
 		{
 			// Create World Chunk and Generate Terrain
 			Map_[chunkKey] = new ChunkColumn;
-			Map_[chunkKey]->Initialise(chunkIndex.x, chunkIndex.z, ChunkHeight);
+			Map_[chunkKey]->Initialise(chunkIndex.x, chunkIndex.z, World::ColumnHeight);
 		}
 		else
 		{
@@ -168,7 +165,7 @@ void VoxelWorld::GenerateLocalChunks()
 	//================
 
 	// Build chunks around us
-	for (int i = 0; i < BuildOrder_.size(); i++)
+	for (unsigned int i = 0; i < BuildOrder_.size(); i++)
 	{
 		// Calculate new chunk index
 		BuildList_.push_back(chunkIndex + BuildOrder_[i]);

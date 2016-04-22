@@ -41,6 +41,8 @@ bool GameObject::Initialise()
 	BlendMode_ = BlendMode::NoBlending;
 
 	IsActive_ = true;
+
+	return true;
 }
 
 bool GameObject::Initialise(const char* filename)
@@ -80,6 +82,8 @@ bool GameObject::Initialise(const char* filename)
 	BlendMode_ = BlendMode::NoBlending;
 
 	IsActive_ = true;
+	
+	return true;
 }
 
 // Shutdown
@@ -152,6 +156,8 @@ bool GameObject::Render()
 
 	// Reset Pipeline Settings
 	ResetRenderModes();
+
+	return true;
 }
 
 bool GameObject::RenderMeshes()

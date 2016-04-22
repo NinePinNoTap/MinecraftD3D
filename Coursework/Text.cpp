@@ -210,7 +210,6 @@ bool Text::BuildSentence(SentenceType sentence)
 	VertexData* textMesh;
 	unsigned long* indices;
 	float drawX, drawY;
-	HRESULT result;
 	int renderLength, vertexCount, indexCount;
 	string finalText, convertedValue;
 

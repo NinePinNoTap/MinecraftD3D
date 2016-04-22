@@ -33,6 +33,7 @@ float Config::Rendering::FarClipPlane = 1000.0f;
 int Config::World::ChunkSize	= 16;
 int Config::World::BlockSize	= 1;
 int Config::World::LoadRadius	= 4;
+int Config::World::ColumnHeight = 8;
 
 //==================================================================
 // Colour
@@ -44,6 +45,7 @@ D3DXVECTOR4 Config::Colour::Red		= D3DXVECTOR4(1, 0, 0, 1);
 D3DXVECTOR4 Config::Colour::Green	= D3DXVECTOR4(0, 1, 0, 1);
 D3DXVECTOR4 Config::Colour::Blue	= D3DXVECTOR4(0, 0, 1, 1);
 D3DXVECTOR4 Config::Colour::Yellow	= D3DXVECTOR4(1, 1, 0, 1);
+D3DXVECTOR4 Config::Colour::Water	= D3DXVECTOR4(0, 0.8f, 1, .5f);
 
 //==================================================================
 // Vectors

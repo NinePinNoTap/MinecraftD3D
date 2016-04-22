@@ -18,11 +18,8 @@ public:
 	~Sprite();
 	
 	// Initialising
-	bool Initialise(Rect3D Dimensions);
+	bool Initialise(Rect3D spriteResolution, string textureFilename);
 
 	// Frame
 	bool Render();
-
-	// Setters
-	bool SetTexture(string filename);
 };

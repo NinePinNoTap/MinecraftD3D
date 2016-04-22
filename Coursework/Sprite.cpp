@@ -12,7 +12,7 @@ Sprite::~Sprite()
 {
 }
 
-bool Sprite::Initialise(Rect3D Dimensions)
+bool Sprite::Initialise(Rect3D spriteResolution, string textureFilename)
 {
 	PrimitiveFactory primitiveFactory;
 
@@ -27,11 +27,19 @@ bool Sprite::Initialise(Rect3D Dimensions)
 	}
 
 	// Load Model
-	Result_ = primitiveFactory.Create2DBox(Dimensions, *Model_);
+	Result_ = primitiveFactory.Create2DBox(spriteResolution, *Model_);
 	if (!Result_)
 	{
 		return false;
 	}
+
+	//=================
+	// Create Material
+	//=================
+
+	Material* newMaterial = new Material;
+	newMaterial -> SetBaseTexture(textureFilename);
+	Model_ -> AddMaterial(newMaterial);
 
 	//==================
 	// Create Transform
@@ -56,6 +64,9 @@ bool Sprite::Initialise(Rect3D Dimensions)
 
 	IsActive_ = true;
 
+	// Clean Up
+	newMaterial = 0;
+
 	return true;
 }
 
@@ -75,13 +86,6 @@ bool Sprite::Render()
 
 	// Reset Pipeline Settings
 	ResetRenderModes();
-}
-
-bool Sprite::SetTexture(string textureFilename)
-{
-	Material* newMaterial = new Material;
-	newMaterial->SetBaseTexture(textureFilename);
-	Model_->AddMaterial(newMaterial);
 
 	return true;
 }

@@ -97,7 +97,7 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 
 	// Now go through all the display modes and find the one that matches the screen width and height.
 	// When a match is found store the numerator and denominator of the refresh rate for that monitor.
-	for(int i=0; i < numModes; i++)
+	for(unsigned int i = 0; i < numModes; i++)
 	{
 		if (displayModeList[i].Width == (unsigned int)WindowResolution.width)
 		{

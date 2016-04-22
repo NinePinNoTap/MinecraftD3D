@@ -228,7 +228,7 @@ bool TerrainFactory::BuildModelFromModelData(Rect3D Terrain, VertexData* modelDa
 
 bool TerrainFactory::CalculateTerrainNormals(Rect3D terrainSize, VertexData* modelData)
 {
-	int index, index1, index2, index3, index4;
+	int index, index1, index2, index3;
 	int count;
 	float length;
 	Vector3* Normals;

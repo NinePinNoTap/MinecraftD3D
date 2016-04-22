@@ -11,16 +11,9 @@
 #include "Player.h"
 
 using namespace std;
+using namespace Config;
 
 typedef std::map<string, ChunkColumn*>::iterator it_wc;
-
-static D3DXVECTOR2 ChunkLocalOffsets[9] {
-	{  0,  0 },				// Centre
-	{ -1,  0 }, { 1,  0 }, // Left / Right
-	{  0,  1 }, { 0, -1 }, // Forward / Backward
-	{ -1,  1 }, { 1,  1 }, // Forward Left / Right
-	{ -1, -1 }, { 1, -1 },	// Backward Left / Right
-};
 
 class VoxelWorld : public Singleton<VoxelWorld>
 {

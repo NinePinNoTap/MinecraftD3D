@@ -8,7 +8,7 @@ using namespace std;
 
 namespace Config
 {
-	static class Global
+	class Global
 	{
 		public:
 			static bool FullScreen;
@@ -17,7 +17,7 @@ namespace Config
 			static int ScreenWidth;
 	};
 
-	static class Directory
+	class Directory
 	{
 		public:
 			static std::string Audio;
@@ -27,19 +27,20 @@ namespace Config
 			static std::string Texture;
 	};
 
-	static class Rendering
+	class Rendering
 	{
 		public:
 			static float NearClipPlane;
 			static float FarClipPlane;
 	};
 
-	static class World
+	class World
 	{
 		public:
 			static int ChunkSize;
 			static int BlockSize;
 			static int LoadRadius;
+			static int ColumnHeight;
 	};
 
 	class Colour
@@ -51,9 +52,10 @@ namespace Config
 			static D3DXVECTOR4 Green;
 			static D3DXVECTOR4 Blue;
 			static D3DXVECTOR4 Yellow;
+			static D3DXVECTOR4 Water;
 	};
 
-	static class Vector
+	class Vector
 	{
 		public:
 			static D3DXVECTOR3 Forward;

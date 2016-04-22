@@ -15,6 +15,11 @@ struct Rect2D
 		height = h;
 	}
 
+	inline Rect2D operator * (const float multiplier)
+	{
+		return Rect2D(width * multiplier, height * multiplier);
+	}
+
 	int width;
 	int height;
 };
@@ -37,11 +42,29 @@ struct Rect3D
 		depth = 0.0f;
 	}
 
+	Rect3D(Rect2D rect)
+	{
+		width = rect.width;
+		height = rect.height;
+		depth = 0.0f;
+	}
+
 	Rect3D(float w, float h, float d)
 	{
 		width = w;
 		height = h;
 		depth = d;
+	}
+	Rect3D(Rect2D rect, float d)
+	{
+		width = rect.width;
+		height = rect.height;
+		depth = d;
+	}
+
+	inline Rect3D operator * (const float multiplier)
+	{
+		return Rect3D(width * multiplier, height * multiplier, depth * multiplier);
 	}
 
 	float width;

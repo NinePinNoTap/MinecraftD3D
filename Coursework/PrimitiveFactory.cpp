@@ -332,7 +332,6 @@ bool PrimitiveFactory::Create3DBox(Rect3D BoxSize, float tileFactor, Model& mode
 	vector<D3DXVECTOR3> TextureCoords;
 	Vector3 textureRepeat;
 	float halfW, halfH, halfD;
-	int index;
 	int vertexCount, indexCount;
 	VertexData* primitiveMesh;
 	unsigned long* Indices;

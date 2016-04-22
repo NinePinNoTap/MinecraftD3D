@@ -83,7 +83,7 @@ void Font::BuildVertexArray(VertexData* vertexData, string sentence, float drawX
 	index = 0;
 
 	// Draw each letter onto a quad
-	for (int i = 0; i<sentence.length(); i++)
+	for (unsigned int i = 0; i<sentence.length(); i++)
 	{
 		letter = ((int)sentence[i]) - 32;
 
@@ -132,13 +132,12 @@ float Font::GetRenderSize(string text)
 {
 	int letterID;
 	float totalWidth;
-	int Length;
 	
 	// Initialise vars
 	totalWidth = 0;
 
 	// Loop through the sentence and calculate width
-	for (int i = 0; i < text.length(); i++)
+	for (unsigned int i = 0; i < text.length(); i++)
 	{
 		// Convert to char to ascii ID
 		letterID = ((int)text[i]) - 32;
