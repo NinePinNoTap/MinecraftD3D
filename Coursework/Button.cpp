@@ -38,7 +38,7 @@ bool Button::Initialise(Rect3D spriteResolution, string textureFilename)
 bool Button::Frame()
 {
 	// Check if we are mousing over
-	if (CheckCollision(Box_, InputManager::Instance()->GetMousePos()))
+	if (CheckCollision(Box_, InputManager::Instance()->GetMousePosInWindow()))
 	{
 		Model_->GetMaterial()->SetVector4("BaseColour", HighlightColour_);
 

@@ -8,13 +8,14 @@ using namespace std;
 
 namespace Config
 {
-	class Global
+	class System
 	{
 		public:
 			static bool FullScreen;
 			static bool UseVSync;
 			static int ScreenHeight;
 			static int ScreenWidth;
+			static D3DXVECTOR2 CentreScreen;
 	};
 
 	class Directory
@@ -53,6 +54,12 @@ namespace Config
 			static D3DXVECTOR4 Blue;
 			static D3DXVECTOR4 Yellow;
 			static D3DXVECTOR4 Water;
+	};
+
+	class Physics
+	{
+		public:
+			static float Gravity;
 	};
 
 	class Vector

@@ -26,16 +26,21 @@ void InputManager::Initialise()
 
 void InputManager::Frame()
 {
+	POINT mousePos;
+
 	// Get Mouse Position
-	POINT monitorPos;
-	GetCursorPos(&monitorPos);
+	GetCursorPos(&mousePos);
+
+	// Store the position of the mouse
+	MousePosOnScreen_.x = mousePos.x;
+	MousePosOnScreen_.y = mousePos.y;
 
 	// Convert to window space
-	ScreenToClient(GetActiveWindow(), &monitorPos);
+	ScreenToClient(GetActiveWindow(), &mousePos);
 
 	// Convert to view space
-	MousePos_.x = ((WindowManager::Instance()->GetWindowResolution().width / 2) * -1) + monitorPos.x;
-	MousePos_.y = (WindowManager::Instance()->GetWindowResolution().height / 2) - monitorPos.y;
+	MousePosInWindow_.x = ((WindowManager::Instance()->GetWindowResolution().width / 2) * -1) + mousePos.x;
+	MousePosInWindow_.y = (WindowManager::Instance()->GetWindowResolution().height / 2) - mousePos.y;
 }
 
 bool InputManager::GetKey(unsigned int key)

@@ -16,34 +16,46 @@ Player::~Player()
 
 bool Player::Initialise()
 {
+	// Call parent initialise
 	GameObject::Initialise();
 
-	// Define Start
+	// Define Start Position
 	Transform_->SetPosition(0, 98, 0);
 	Camera::Instance()->GetTransform()->SetPosition(Transform_->GetPosition() + D3DXVECTOR3(0, Height_, 0));
+
+	// Define Vars
+	LookSpeed_ = 10.0f;
+	MoveSpeed_ = 4.137f;
 
 	return true;
 }
 
 bool Player::Frame()
 {
-	// Make sure the player is up to date with x/z (Need this until we have controls here)
-	Transform_->SetX(Camera::Instance()->GetTransform()->GetPosition().x);
-	Transform_->SetZ(Camera::Instance()->GetTransform()->GetPosition().z);
+	//=================
+	// Handle Controls
+	//=================
 
-	// Set Gravity
-	GravityAmount_ = 9.806f * PerformanceManager::Instance()->GetDeltaTime();
+	HandleMovement();
+	HandleLooking();
 
-	// Apply Physics
+	//=========
+	// Physics
+	//=========
+
 	if (UseGravity_)
 	{
+		GroundedCheck();
 		ApplyGravity();
 	}
 
-	// Debugging
+	//===========
+	// Debugging -- REMOVE LATER
+	//===========
+
 	if (InputManager::Instance()->GetKeyDown(VK_O))
 	{
-		SetGravityOn();
+		SetGravity(!UseGravity_);
 	}
 
 	return true;
@@ -51,15 +63,8 @@ bool Player::Frame()
 
 void Player::GroundedCheck()
 {
-	int x, y, z;
-
-	// Get current position
-	x = Transform_->GetPosition().x;
-	y = Transform_->GetPosition().y;
-	z = Transform_->GetPosition().z;
-
 	// Get the block we are currently in
-	Block* beneathBlock = VoxelWorld::Instance()->GetBlock(x, y - 1, z);
+	Block* beneathBlock = VoxelWorld::Instance()->GetBlock(Transform_->GetPosition().x, Transform_->GetPosition().y - 1, Transform_->GetPosition().z);
 	if (beneathBlock)
 	{
 		// Make sure the block beneath us is solid
@@ -68,7 +73,7 @@ void Player::GroundedCheck()
 			GroundLevel_ = beneathBlock->GetInstance().position.y + 1.0f;
 
 			// Check if we are grounded
-			if (Transform_->GetPosition().y - GravityAmount_ <= GroundLevel_)
+			if (Transform_->GetPosition().y - Physics::Gravity <= GroundLevel_)
 			{
 				Transform_->SetY(GroundLevel_);
 
@@ -83,20 +88,65 @@ void Player::GroundedCheck()
 
 void Player::ApplyGravity()
 {
-	// Check if we are grounded
-	GroundedCheck();
-
 	if (IsGrounded_)
 		return;
 
 	// Apply Gravity
-	Transform_->MoveY(-GravityAmount_);
+	Transform_->MoveY(-Physics::Gravity * PerformanceManager::Instance()->GetDeltaTime());
 
 	// Align Camera
 	Camera::Instance()->GetTransform()->SetPosition(Transform_->GetPosition() + D3DXVECTOR3(0, Height_, 0));
 }
 
-void Player::SetHeight(float height)
+void Player::HandleMovement()
 {
-	Height_ = height;
+	// Reset Movement Velocity
+	MoveVelocity_ = D3DXVECTOR3(0, 0, 0);
+	
+	//====================
+	// Check for Movement
+	//====================
+
+	// Forward / Backward
+	HandleMovementKey(VK_W, Transform_->GetForwardVector());
+	HandleMovementKey(VK_S, -Transform_->GetForwardVector());
+
+	// Left / Right
+	HandleMovementKey(VK_A, -Transform_->GetRightVector());
+	HandleMovementKey(VK_D, Transform_->GetRightVector());
+
+	// Apply Velocity to Character
+	Transform_->Move(MoveVelocity_ * MoveSpeed_);
+}
+
+void Player::HandleMovementKey(unsigned int key, D3DXVECTOR3 moveAmount)
+{
+	if (!InputManager::Instance()->GetKey(key))
+	{
+		return;
+	}
+
+	MoveVelocity_ += moveAmount;
+}
+
+void Player::HandleLooking()
+{
+	// Check if we have changed where we are looking
+	if (InputManager::Instance()->GetMousePosOnScreen() == System::CentreScreen)
+	{
+		return;
+	}
+
+	// Calculate the difference between the position of the mouse and the middle of the screen
+	float DeltaX = (InputManager::Instance()->GetMousePosOnScreen().x - System::CentreScreen.x) / LookSpeed_;
+	float DeltaY = (InputManager::Instance()->GetMousePosOnScreen().y - System::CentreScreen.y) / LookSpeed_;
+
+	// Rotate the Player in Y
+	Transform_->Rotate(DeltaY, 0, 0);
+
+	// Rotate the Camera in X and Y
+	Camera::Instance()->GetTransform()->Rotate(DeltaY, DeltaX, 0);
+
+	// Keep Mouse in Center Screen
+	LockMouseToCenter();
 }

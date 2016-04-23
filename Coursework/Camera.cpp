@@ -126,24 +126,13 @@ bool Camera::Frame()
 
 void Camera::HandleMouse()
 {
-	// Get the position of the mouse
-	POINT MousePos;
-	GetCursorPos(&MousePos);
+	InputManager::Instance()->Frame();
 
-	// Calculate the middle of the screen
-	static int CenterScreenX = GetSystemMetrics(SM_CXSCREEN) / 2;
-	static int CenterScreenY = GetSystemMetrics(SM_CYSCREEN) / 2;
-
-	// Calculate a combine x/y position for mouse and screen
-	int MouseTotal = MousePos.x + MousePos.y;
-	int ScreenTotal = CenterScreenX + CenterScreenY;
-
-	// Check if the mouse has moved off from the center of the screen
-	if (MouseTotal != ScreenTotal)
+	if (InputManager::Instance()->GetMousePosOnScreen() != System::CentreScreen)
 	{
 		// Calculate the difference between the position of the mouse and the middle of the screen
-		float DeltaX = (MousePos.x - CenterScreenX) / LookSensitivity_;
-		float DeltaY = (MousePos.y - CenterScreenY) / LookSensitivity_;
+		float DeltaX = (InputManager::Instance()->GetMousePosOnScreen().x - System::CentreScreen.x) / LookSensitivity_;
+		float DeltaY = (InputManager::Instance()->GetMousePosOnScreen().y - System::CentreScreen.y) / LookSensitivity_;
 
 		// Adjust the rotation based on the above movement
 		Transform_->Rotate(DeltaY, DeltaX, 0);

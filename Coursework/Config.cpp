@@ -4,10 +4,11 @@
 // Config::Globals
 //==================================================================
 
-bool Config::Global::FullScreen		= false;
-bool Config::Global::UseVSync		= true;
-int Config::Global::ScreenHeight	= 720;
-int Config::Global::ScreenWidth		= 1280;
+bool Config::System::FullScreen		= false;
+bool Config::System::UseVSync		= true;
+int Config::System::ScreenHeight	= 720;
+int Config::System::ScreenWidth		= 1280;
+D3DXVECTOR2 Config::System::CentreScreen = D3DXVECTOR2((FLOAT)GetSystemMetrics(SM_CXSCREEN) / 2, (FLOAT)GetSystemMetrics(SM_CYSCREEN) / 2);
 
 //==================================================================
 // Directories
@@ -46,6 +47,12 @@ D3DXVECTOR4 Config::Colour::Green	= D3DXVECTOR4(0, 1, 0, 1);
 D3DXVECTOR4 Config::Colour::Blue	= D3DXVECTOR4(0, 0, 1, 1);
 D3DXVECTOR4 Config::Colour::Yellow	= D3DXVECTOR4(1, 1, 0, 1);
 D3DXVECTOR4 Config::Colour::Water	= D3DXVECTOR4(0, 0.8f, 1, .5f);
+
+//==================================================================
+// Physics
+//==================================================================
+
+float Config::Physics::Gravity = 9.80665f;
 
 //==================================================================
 // Vectors

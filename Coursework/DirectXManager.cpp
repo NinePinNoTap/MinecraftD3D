@@ -51,7 +51,7 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	D3D11_BLEND_DESC blendStateDescription;
 
 	// Store the VSYNC_ENABLED setting.
-	VSyncEnabled_ = Global::UseVSync;
+	VSyncEnabled_ = System::UseVSync;
 
 	// Create a DirectXManager graphics interface factory.
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
@@ -178,7 +178,7 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
     swapChainDesc.SampleDesc.Quality = 0;
 
 	// Set to full screen or windowed mode.
-	if(Global::FullScreen)
+	if(System::FullScreen)
 	{
 		swapChainDesc.Windowed = false;
 	}
