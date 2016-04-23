@@ -21,11 +21,11 @@ public:
 	bool GetKeyDown(unsigned int key);
 	bool GetKey(unsigned int key);
 
-	inline D3DXVECTOR3 GetMousePos() { return MousePos_; }
+	inline D3DXVECTOR2 GetMousePos() { return MousePos_; }
 
 private:
 	bool Keys_[256];
-	D3DXVECTOR3 MousePos_;
+	D3DXVECTOR2 MousePos_;
 };
 
 

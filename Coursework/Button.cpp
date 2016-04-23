@@ -30,15 +30,13 @@ bool Button::Initialise(Rect3D spriteResolution, string textureFilename)
 		return false;
 	}
 
-	ButtonText_->CreateText("TEXT NOT SET", Vector2(0, 0), NormalColour_, Alignment::CENTRE);
+	ButtonText_->CreateText("TEXT NOT SET", Vector2(0, 0), Colour::White, Alignment::CENTRE);
 
 	return true;
 }
 
 bool Button::Frame()
 {
-	D3DXVECTOR3 hey = InputManager::Instance()->GetMousePos();
-	
 	// Check if we are mousing over
 	if (CheckCollision(Box_, InputManager::Instance()->GetMousePos()))
 	{
@@ -52,6 +50,23 @@ bool Button::Frame()
 	else
 	{
 		Model_->GetMaterial()->SetVector4("BaseColour", NormalColour_);
+	}
+
+	return true;
+}
+
+bool Button::Render()
+{
+	Result_ = Sprite::Render();
+	if (!Result_)
+	{
+		return false;
+	}
+
+	Result_ = ButtonText_->Render();
+	if (!Result_)
+	{
+		return false;
 	}
 
 	return true;
@@ -73,12 +88,16 @@ void Button::SetButton(string buttonText, int x, int y)
 	// Update Positioning
 	//====================
 
+	// Calculate the X and Y pixel position on the screen to start drawing to.
+	float drawX = (float)(((WindowManager::Instance()->GetWindowResolution().width / 2) * -1) + x);
+	float drawY = (float)((WindowManager::Instance()->GetWindowResolution().height / 2) - y);
+
 	// Set sprite position
-	Transform_->SetPosition(x, y, 0);
+	Transform_->SetPosition(drawX, drawY, 0);
 
 	// Update bounding box
 	Box_ = Model_->GetMesh()->GetBoundingBox();
-	Box_.SetPosition(D3DXVECTOR3(x, y, 0));
+	Box_.SetPosition(D3DXVECTOR3(drawX, drawY, 0));
 
 	//=============
 	// Update Text

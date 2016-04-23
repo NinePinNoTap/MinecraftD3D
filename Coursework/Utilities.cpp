@@ -156,6 +156,14 @@ bool RangeCheck(float value, float min, float max)
 	return value >= min && value <= max;
 }
 
+bool CheckCollision(BoundingBox box, D3DXVECTOR2 position)
+{
+	bool insideX = RangeCheck(position.x, box.left, box.right);
+	bool insideY = RangeCheck(position.y, box.bottom, box.top);
+
+	return insideX && insideY;
+}
+
 bool CheckCollision(BoundingBox box, D3DXVECTOR3 position)
 {
 	bool insideX = RangeCheck(position.x, box.left, box.right);

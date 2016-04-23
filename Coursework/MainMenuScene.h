@@ -19,7 +19,7 @@ public:
 	void Reset();
 
 private:
-	void CreateButton(string buttonText, int x, int y);
+	void CreateButton(string buttonText, int x, int y, int sceneID);
 	void Render();
 
 	Sprite* Background_;

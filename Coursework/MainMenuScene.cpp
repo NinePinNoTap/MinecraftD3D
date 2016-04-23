@@ -34,8 +34,8 @@ bool MainMenuScene::Initialise(HWND hwnd)
 	// Create Buttons
 	//===============
 
-	CreateButton("Play Game", 350, 325);
-	CreateButton("Exit Game", 350, 475);
+	CreateButton("PLAY GAME", 350, 325, SceneState::MINECRAFT);
+	CreateButton("EXIT GAME", 350, 475, SceneState::EXIT);
 
 	ShowCursor(true);
 
@@ -60,7 +60,7 @@ bool MainMenuScene::Frame()
 			Result_ = Buttons_[i]->Frame();
 			if (!Result_)
 			{
-				Buttons_[i]->buttonProcess();
+				Buttons_[i]->Execute();
 			}
 		}
 	}
@@ -97,15 +97,8 @@ void MainMenuScene::Reset()
 	return;
 }
 
-void MainMenuScene::CreateButton(string buttonText, int x, int y)
+void MainMenuScene::CreateButton(string buttonText, int x, int y, int sceneID)
 {
-	float drawX;
-	float drawY;
-
-	// Calculate where to draw the button
-	drawX = (float)(((WindowManager::Instance()->GetWindowResolution().width / 2) * -1) + x);
-	drawY = (float)((WindowManager::Instance()->GetWindowResolution().height / 2) - y);
-
 	// Create the button
 	Button* createdButton = new Button;
 	if (!createdButton)
@@ -121,9 +114,11 @@ void MainMenuScene::CreateButton(string buttonText, int x, int y)
 	}
 
 	// Set Data
-	createdButton->SetButton(buttonText, drawX, drawY);
-	createdButton->SetHighlightColour(D3DXVECTOR4(.2f, .2f, 1, 0.5f));
-	createdButton->buttonProcess = std::bind(&ApplicationManager::SetScene, ApplicationManager::Instance(), SceneState::EXIT);
+	createdButton->SetButton(buttonText, x, y);
+	createdButton->SetHighlightColour(D3DXVECTOR4(.2f, .2f, 1, 0.2f));
+
+	// Set Function
+	createdButton->SetFunction(std::bind(&ApplicationManager::SetScene, ApplicationManager::Instance(), (SceneState)sceneID));
 
 	// Set Shader
 	createdButton->SetShader("tint");

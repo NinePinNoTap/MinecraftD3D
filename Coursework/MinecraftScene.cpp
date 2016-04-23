@@ -284,7 +284,6 @@ void MinecraftScene::Reset()
 
 	InputManager::Instance()->Initialise();
 	LockMouseToCenter();
-	ShowCursor(false);
 
 	//============
 	// Play Sound
@@ -295,6 +294,9 @@ void MinecraftScene::Reset()
 
 bool MinecraftScene::Frame()
 {
+	// Turn off Mouse
+	ShowCursor(false);
+
 	// Handle user InputManager
 	Result_ = HandleInput();
 	if (!Result_)

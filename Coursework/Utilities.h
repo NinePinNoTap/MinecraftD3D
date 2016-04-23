@@ -59,6 +59,7 @@ bool RangeCheck(int value, int min, int max);
 bool RangeCheck(float value, float min, float max);
 
 // Checks if the position is inside the bounding box
+bool CheckCollision(BoundingBox box, D3DXVECTOR2 position);
 bool CheckCollision(BoundingBox box, D3DXVECTOR3 position);
 
 // Converts a 3D position to 2D screen space

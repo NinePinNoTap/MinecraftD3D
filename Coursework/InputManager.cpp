@@ -36,7 +36,6 @@ void InputManager::Frame()
 	// Convert to view space
 	MousePos_.x = ((WindowManager::Instance()->GetWindowResolution().width / 2) * -1) + monitorPos.x;
 	MousePos_.y = (WindowManager::Instance()->GetWindowResolution().height / 2) - monitorPos.y;
-	MousePos_.z = 0.0f;
 }
 
 bool InputManager::GetKey(unsigned int key)
