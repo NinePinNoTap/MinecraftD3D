@@ -58,6 +58,8 @@ bool Player::Frame()
 		SetGravity(!UseGravity_);
 	}
 
+	Camera::Instance()->Frame();
+
 	return true;
 }
 
@@ -115,8 +117,15 @@ void Player::HandleMovement()
 	HandleMovementKey(VK_A, -Transform_->GetRightVector());
 	HandleMovementKey(VK_D, Transform_->GetRightVector());
 
-	// Apply Velocity to Character
-	Transform_->Move(MoveVelocity_ * MoveSpeed_);
+	//====================
+	// Apply to Character
+	//====================
+	
+	// Move Character
+	Transform_->Move(MoveVelocity_ * MoveSpeed_ * PerformanceManager::Instance()->GetDeltaTime());
+
+	// Update Camera Position
+	Camera::Instance()->GetTransform()->SetPosition(Transform_->GetPosition() + D3DXVECTOR3(0, Height_, 0));
 }
 
 void Player::HandleMovementKey(unsigned int key, D3DXVECTOR3 moveAmount)
@@ -131,6 +140,13 @@ void Player::HandleMovementKey(unsigned int key, D3DXVECTOR3 moveAmount)
 
 void Player::HandleLooking()
 {
+	float deltaX, deltaY;
+
+	if (!WindowActive())
+	{
+		return;
+	}
+
 	// Check if we have changed where we are looking
 	if (InputManager::Instance()->GetMousePosOnScreen() == System::CentreScreen)
 	{
@@ -138,14 +154,15 @@ void Player::HandleLooking()
 	}
 
 	// Calculate the difference between the position of the mouse and the middle of the screen
-	float DeltaX = (InputManager::Instance()->GetMousePosOnScreen().x - System::CentreScreen.x) / LookSpeed_;
-	float DeltaY = (InputManager::Instance()->GetMousePosOnScreen().y - System::CentreScreen.y) / LookSpeed_;
+	deltaX = (InputManager::Instance()->GetMousePosOnScreen().x - System::CentreScreen.x) / LookSpeed_;
+	deltaY = (InputManager::Instance()->GetMousePosOnScreen().y - System::CentreScreen.y) / LookSpeed_;
 
 	// Rotate the Player in Y
-	Transform_->Rotate(DeltaY, 0, 0);
+	Transform_->RotateY(deltaX);
 
 	// Rotate the Camera in X and Y
-	Camera::Instance()->GetTransform()->Rotate(DeltaY, DeltaX, 0);
+	Camera::Instance()->GetTransform()->RotateX(deltaY);
+	Camera::Instance()->GetTransform()->RotateY(deltaX);
 
 	// Keep Mouse in Center Screen
 	LockMouseToCenter();

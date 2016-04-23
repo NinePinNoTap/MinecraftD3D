@@ -128,6 +128,7 @@
     <ClCompile Include="TerrainShader.cpp" />
     <ClCompile Include="TextureShader.cpp" />
     <ClCompile Include="TintShader.cpp" />
+    <ClCompile Include="Toolbar.cpp" />
     <ClCompile Include="TXTLoader.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TerrainFactory.h" />
     <ClInclude Include="TintShader.h" />
+    <ClInclude Include="Toolbar.h" />
     <ClInclude Include="TXTLoader.h" />
     <ClInclude Include="ViewFrustumManager.h" />
     <ClInclude Include="VoxelWorld.h" />

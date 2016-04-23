@@ -54,7 +54,7 @@ void VoxelWorld::Initialise()
 
 bool VoxelWorld::Frame()
 {
-	//Player_->Frame();
+	Player_->Frame();
 
 	//=========================
 	// Handle Chunk Generation

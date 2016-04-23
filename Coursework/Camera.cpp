@@ -22,20 +22,8 @@ bool Camera::Initialise()
 
 	// Create the transform
 	Transform_ = new Transform;
-
-	// Set default transform
-	SetStartPosition(0, 0, 0);
 	
-	// Set the starting move speed
-	SetSpeed(1.0f);
-
-	// Set how fast can turn
-	LookSensitivity_ = 10.0f;
-
-	// Set default move velocity
-	Velocity_ = D3DXVECTOR3();
-
-	// Set Base Vectors
+	// Set position to view 2D objects
 	Position2D_ = D3DXVECTOR3(0, 0, -10);
 
 	//=========================
@@ -44,102 +32,16 @@ bool Camera::Initialise()
 
 	Render2DViewMatrix();
 
-	//==================
-	// Initialise Flags
-	//==================
-
-	CanFreeRoam_ = true;
-	CanLook_ = true;
-
 	return true;
 }
 
 // Frame
 bool Camera::Frame()
 {
-	// Make sure we are currently on the ApplicationManager to register key presses
-	if (!WindowActive())
-		return true;
-
-	if (!CanMove_)
-		return true;
-
-	// Default Velocity
-	Velocity_ = D3DXVECTOR3(0, 0, 0);
-
-	//=================
-	// Camera Movement
-	//=================
-
-	// Forward / Backward
-	if (InputManager::Instance()->GetKey(VK_W))
-	{
-		Velocity_ += Transform_->GetForwardVector() * MoveSpeed_;
-	}
-	else if (InputManager::Instance()->GetKey(VK_S))
-	{
-		Velocity_ += Transform_->GetForwardVector() * -MoveSpeed_;
-	}
-
-	// Left / Right
-	if (InputManager::Instance()->GetKey(VK_A))
-	{
-		Velocity_ += Transform_->GetRightVector() * -MoveSpeed_;
-	}
-	else if (InputManager::Instance()->GetKey(VK_D))
-	{
-		Velocity_ += Transform_->GetRightVector() * MoveSpeed_;
-	}
-
-	// Check if we can fly
-	if (CanFreeRoam_)
-	{
-		// Up / Down
-		if (InputManager::Instance()->GetKey(VK_SPACE))
-		{
-			Velocity_ += Transform_->GetUpVector() * MoveSpeed_ ;
-		}
-		else if (InputManager::Instance()->GetKey(VK_SHIFT))
-		{
-			Velocity_ += Transform_->GetUpVector() * -MoveSpeed_;
-		}
-	}
-	else
-	{
-		Velocity_.y = 0;
-	}
-
-	// Apply velocities to the camera
-	Transform_->Move(Velocity_ * (PerformanceManager::Instance()->GetDeltaTime()));
-
-	//========================
-	// Center Mouse On Screen
-	//========================
-
-	if (CanLook_)
-	{
-		HandleMouse();
-	}
+	// Render the view matrix
+	Render();
 
 	return true;
-}
-
-void Camera::HandleMouse()
-{
-	InputManager::Instance()->Frame();
-
-	if (InputManager::Instance()->GetMousePosOnScreen() != System::CentreScreen)
-	{
-		// Calculate the difference between the position of the mouse and the middle of the screen
-		float DeltaX = (InputManager::Instance()->GetMousePosOnScreen().x - System::CentreScreen.x) / LookSensitivity_;
-		float DeltaY = (InputManager::Instance()->GetMousePosOnScreen().y - System::CentreScreen.y) / LookSensitivity_;
-
-		// Adjust the rotation based on the above movement
-		Transform_->Rotate(DeltaY, DeltaX, 0);
-
-		// Keep Mouse in Center Screen
-		LockMouseToCenter();
-	}
 }
 
 // Rendering
@@ -242,60 +144,4 @@ D3DXMATRIX Camera::GenerateMatrix(D3DXVECTOR3 UpVector, D3DXVECTOR3 PositionVect
 	D3DXMatrixLookAtLH(&ViewMatrix, &PositionVector, &LookAtVector, &UpVector);
 
 	return ViewMatrix;
-}
-
-// Setters
-void Camera::SetStartPosition(float x, float y, float z)
-{
-	// Store the starting position for later
-	StartPosition_ = D3DXVECTOR3(x, y, z);
-
-	// Set our initial position to the start
-	Transform_->SetPosition(x, y, z);
-}
-
-void Camera::SetStartRotation(float x, float y, float z)
-{
-	StartRotation_ = D3DXVECTOR3(x, y, z);
-
-	Transform_->SetRotation(x, y, z);
-}
-
-void Camera::SetSpeed(float speed)
-{
-	// Set the speed the camera moves at
-	MoveSpeed_ = speed;
-}
-
-void Camera::Reset()
-{
-	// Store the starting positions
-	Transform_->SetPosition(StartPosition_);
-	Transform_->SetRotation(0, 0, 0);
-}
-
-// Flags
-void Camera::AllowFlying(bool flag)
-{
-	CanFreeRoam_ = flag;
-}
-
-void Camera::AllowLooking(bool flag)
-{
-	CanLook_ = flag;
-}
-
-void Camera::AllowMovement(bool flag)
-{
-	CanMove_ = flag;
-}
-
-float Camera::GetMovementSpeed()
-{
-	return MoveSpeed_;
-}
-
-bool Camera::IsMoving()
-{
-	return D3DXVec3Length(&Velocity_) != 0;
 }

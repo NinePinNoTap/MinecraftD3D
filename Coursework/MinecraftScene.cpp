@@ -9,7 +9,6 @@ MinecraftScene::MinecraftScene()
 	Clouds_ = 0;
 	Fire_ = 0;
 	CampFire_ = 0;
-	ParticleSystem_ = 0;
 	RefractionTexture_ = 0;
 	ReflectionTexture_ = 0;
 	RenderTexture_ = 0;
@@ -59,40 +58,9 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	Ocean_->GetTransform()->SetX(256);
 	Ocean_->GetTransform()->SetZ(256);
 
-	//================================
-	// Initialise the Particle System
-	//================================
-
-	ParticleSystem_ = new ParticleSystem;
-	if (!ParticleSystem_)
-	{
-		return false;
-	}
-	Result_ = ParticleSystem_ -> Initialise("rain.dds");
-	if (!Result_)
-	{
-		MessageBox(hwnd, L"Could not initialise the particle system.", L"Error", MB_OK);
-		return false;
-	}
-
 	//=======================
 	// Initialise 2D Bitmaps
 	//=======================
-
-	// UI Toolbar
-	ActionBar_ = new Sprite;
-	if (!ActionBar_)
-	{
-		return false;
-	}
-	Result_ = ActionBar_->Initialise(Rect3D(728, 88), "ui_toolbar.dds");
-	if (!Result_)
-	{
-		MessageBox(hwnd, L"Could not initialise the action bar object.", L"Error", MB_OK);
-		return false;
-	}
-	ActionBar_->GetTransform()->SetY(-(windowHeight * 0.8) / 2);
-	ActionBar_->SetShader("texture");
 
 	// UI Cursor
 	Cursor_ = new Sprite;
@@ -125,22 +93,17 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	WindowSprite_->GetModel()->GetMaterial()->SetVector4("BaseColour", Colour::Water);
 
 	// Toolbar UI Icons
-	ToolbarUI_ = new InstancedSprite;
+	ToolbarUI_ = new Toolbar;
 	if (!ToolbarUI_)
 	{
 		return false;
 	}
-	Result_ = ToolbarUI_->Initialise(Rect3D(64, 64), "ui_toolbar_icons.dds");
+	Result_ = ToolbarUI_->Initialise();
 	if (!Result_)
 	{
 		return false;
 	}
 
-	ToolbarUI_->AddInstance(D3DXVECTOR3(0, (-windowHeight * 0.8) / 2, 1), D3DXVECTOR2(0, 0), D3DXVECTOR2(16, 2));
-	ToolbarUI_->AddInstance(D3DXVECTOR3(80, (-windowHeight * 0.8) / 2, 1), D3DXVECTOR2(1, 1), D3DXVECTOR2(16, 2));
-	ToolbarUI_->RebuildInstanceBuffer();
-	ToolbarUI_->SetShader("instancedtexture");
-	ToolbarUI_->SetBlendMode(BlendMode::AlphaMasked);
 
 	//====================
 	// Initialise the Sky
@@ -202,10 +165,9 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	Text_->CreateText("Rotation Z :", Vector2(10, 150), Colour::Black); // Rotation Z
 
 	Text_->CreateText("CONTROLS", Vector2(windowWidth - 10, 10), Colour::Black, RIGHT);
-	Text_->CreateText("Toggle Wireframe [1]", Vector2(windowWidth - 10, 30), Colour::Black, RIGHT);
-	Text_->CreateText("Toggle Time [2]", Vector2(windowWidth - 10, 50), Colour::Black, RIGHT);
-	Text_->CreateText("Reset Camera [BACKSPACE]", Vector2(windowWidth - 10, 70), Colour::Black, RIGHT);
-	Text_->CreateText("Quit [ESC]", Vector2(windowWidth - 10, 110), Colour::Black, RIGHT);
+	Text_->CreateText("Toggle Wireframe [9]", Vector2(windowWidth - 10, 30), Colour::Black, RIGHT);
+	Text_->CreateText("Toggle Time [0]", Vector2(windowWidth - 10, 50), Colour::Black, RIGHT);
+	Text_->CreateText("Back to Menu [ESC]", Vector2(windowWidth - 10, 110), Colour::Black, RIGHT);
 
 	//==============
 	// Create World
@@ -245,13 +207,6 @@ void MinecraftScene::Shutdown()
 		Fire_ = 0;
 	}
 
-	if (ParticleSystem_)
-	{
-		ParticleSystem_ -> Shutdown();
-		delete ParticleSystem_;
-		ParticleSystem_ = 0;
-	}
-
 	if (WindowSprite_)
 	{
 		WindowSprite_ -> Shutdown();
@@ -285,20 +240,9 @@ void MinecraftScene::Shutdown()
 
 void MinecraftScene::Reset()
 {
-	//=========================================
-	// Reset objects back to their start state
-	//=========================================
-
-	Camera::Instance()->SetStartPosition(0, 100, 0);
-	Camera::Instance()->SetStartRotation(-89, 0, 0);
-	Camera::Instance()->AllowFlying(true);
-	Camera::Instance()->SetSpeed(4.137f);
-
-	Light::Instance()->GetTransform()->SetPosition(-3500.0f, 9900.0f, 2100.0f);
-	Light::Instance()->SetAmbientColor(0.5f, 0.5f, 0.5f, 1.0f);
-	Light::Instance()->SetDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
-	Light::Instance()->SetDirection(0.5f, -0.75f, 0.25f);
-	Light::Instance()->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	//===============
+	// Reset Objects
+	//===============
 
 	InputManager::Instance()->Initialise();
 	LockMouseToCenter();
@@ -329,25 +273,6 @@ bool MinecraftScene::Frame()
 		return false;
 	}
 
-	//
-	// Tool Switching - NEEDS ITS OWN ENCAPSULATION FOR BETTER MANAGEMENT
-	//
-
-	int windowHeight = WindowManager::Instance()->GetWindowResolution().height;
-	if (InputManager::Instance()->GetKeyDown(VK_5))
-	{
-		ToolbarUI_->AddInstance(D3DXVECTOR3(0, (-windowHeight * 0.8f) / 2, 1), D3DXVECTOR2(0, 1), D3DXVECTOR2(16, 2));
-		ToolbarUI_->AddInstance(D3DXVECTOR3(80, (-windowHeight * 0.8f) / 2, 1), D3DXVECTOR2(1, 0), D3DXVECTOR2(16, 2));
-		ToolbarUI_->RebuildInstanceBuffer();
-	}
-	else if (InputManager::Instance()->GetKeyDown(VK_6))
-	{
-		ToolbarUI_->AddInstance(D3DXVECTOR3(0, (-windowHeight * 0.8f) / 2, 1), D3DXVECTOR2(0, 0), D3DXVECTOR2(16, 2));
-		ToolbarUI_->AddInstance(D3DXVECTOR3(80, (-windowHeight * 0.8f) / 2, 1), D3DXVECTOR2(1, 1), D3DXVECTOR2(16, 2));
-		ToolbarUI_->RebuildInstanceBuffer();
-	}
-
-
 	// Render the scene
 	Result_ = Render();
 	if (!Result_)
@@ -360,17 +285,11 @@ bool MinecraftScene::Frame()
 
 bool MinecraftScene::HandleObjects()
 {
-	//=====================
-	// Set Camera Position
-	//=====================
-	
-	ParticleSystem_->GetTransform()->SetPosition(Camera::Instance()->GetTransform()->GetPosition() + (Camera::Instance()->GetTransform()->GetForwardVector() * 1.25));
-
 	//=======================
 	// Update System Objects
 	//=======================
 
-	Camera::Instance() -> Frame();
+	InputManager::Instance()->Frame();
 	PerformanceManager::Instance()->Frame();
 	ViewFrustumManager::Instance()->Frame();
 
@@ -378,19 +297,11 @@ bool MinecraftScene::HandleObjects()
 	// Update Scene Objects
 	//======================
 
+	World_->Frame();
 	Clouds_ -> Frame();
 	Ocean_->Frame();
 	SkySphere_->Frame();
-	World_->Frame();
-
-	if (NightTimeMode_)
-	{
-		Result_ = ParticleSystem_->Frame();
-		if (!Result_)
-		{
-			return false;
-		}
-	}
+	ToolbarUI_->Frame();
 	
 	//===========================
 	// Update System Information
@@ -440,50 +351,30 @@ bool MinecraftScene::HandleText()
 
 bool MinecraftScene::HandleInput()
 {
-	//====================
-	// Escape ApplicationManager
-	//====================
+	//=================
+	// Go Back to Menu
+	//=================
 
 	if (InputManager::Instance() -> GetKeyDown(VK_ESCAPE))
 	{
-		MessageBox(NULL, L"Shutting Down.", L"Warning", MB_OK);
-		ApplicationManager::Instance()->SetScene(SceneState::EXIT);
-	}
-
-	//=================
-	// Scene Switching
-	//=================
-
-	if (InputManager::Instance() -> GetKeyDown(VK_HOME))
-	{
-		ApplicationManager::Instance()->SetScene(MINECRAFT);
-		AmbientSound_->Stop();
-	}
-
-	//==============
-	// Reset Camera
-	//==============
-
-	if (InputManager::Instance() -> GetKeyDown(VK_BACK))
-	{
-		Camera::Instance() -> Reset();
+		ApplicationManager::Instance()->SetScene(SceneState::MENU);
 	}
 
 	//=======================
 	// Toggle Wireframe Mode
 	//=======================
 
-	if (InputManager::Instance() -> GetKeyDown(VK_1))
+	if (InputManager::Instance() -> GetKeyDown(VK_9))
 	{
 		// Switch to the opposite state for wireframe mode
 		DirectXManager::Instance() -> ToggleWireframe(!DirectXManager::Instance() -> GetWireframeStatus());
 	}
 
-	//==================
-	// Toggle Time Mode
-	//==================
+	//=============
+	// Toggle Time
+	//=============
 
-	if (InputManager::Instance() -> GetKeyDown(VK_2))
+	if (InputManager::Instance() -> GetKeyDown(VK_0))
 	{
 		// Switch to the opposite state
 		NightTimeMode_ = !NightTimeMode_;
@@ -557,33 +448,17 @@ bool MinecraftScene::RenderScene()
 		return false;
 	}
 
-	//==================
-	// Render Particles
-	//==================
-
-	// Only rain on the screen if is night time and we arent underwater
-	if (NightTimeMode_)
-	{
-		// Render the particle system
-		Result_ = ShaderManager::Instance()->TextureRender(ParticleSystem_);
-		if (!Result_)
-		{
-			return false;
-		}
-	}
-
 	//============
 	// Render GUI
 	//============
 
-	// Render the text
 	Result_ = Text_->Render();
 	if (!Result_)
 	{
 		return false;
 	}
 
-	Result_ = ActionBar_->Render();
+	Result_ = ToolbarUI_->Render();
 	if (!Result_)
 	{
 		return false;

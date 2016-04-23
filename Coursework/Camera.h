@@ -30,45 +30,17 @@ public:
 	void RenderReflection(float);
 	void GetReflectionMatrix(D3DXMATRIX& ViewMatrix);
 
-	// Setters
-	void SetStartPosition(float x, float y, float z);
-	void SetStartRotation(float x, float y, float z);
-	void SetSpeed(float speed);
-	void Reset();
-	void AllowFlying(bool flag);
-	void AllowLooking(bool flag);
-	void AllowMovement(bool flag);
-
-	// Getters
-	float GetMovementSpeed();
-	bool IsMoving();
-
 private:
-	// Updating
-	void HandleMouse();
-
 	// Generation
 	D3DXMATRIX GenerateMatrix(D3DXVECTOR3 upVector, D3DXVECTOR3 positionVector, D3DXVECTOR3 lookAtVector, bool isReflection = false);
 
 	// Vectors
-	D3DXVECTOR3 StartPosition_;
-	D3DXVECTOR3 StartRotation_;
 	D3DXVECTOR3 Position2D_;
-	D3DXVECTOR3 Velocity_;
 
 	// Matrices
 	D3DXMATRIX ViewMatrix_;
 	D3DXMATRIX ViewMatrix2D_;
 	D3DXMATRIX ReflectionViewMatrix_;
-
-	// Flags
-	bool CanFreeRoam_;
-	bool CanLook_;
-	bool CanMove_;
-
-	// Properties
-	float MoveSpeed_;
-	float LookSensitivity_;
 };
 
 

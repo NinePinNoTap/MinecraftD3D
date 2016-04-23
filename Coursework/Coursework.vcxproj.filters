@@ -34,9 +34,6 @@
     <Filter Include="Scene\Scenes">
       <UniqueIdentifier>{317ff001-83f9-478c-92f7-d8ba91138583}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\GameObjects">
-      <UniqueIdentifier>{1722001a-f49f-43b3-be35-71e5b4d6f8b0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework\Assets">
       <UniqueIdentifier>{92810a1f-d223-430c-aa79-43a1c9435178}</UniqueIdentifier>
     </Filter>
@@ -98,6 +95,12 @@
     <Filter Include="Framework\Shader\HLSL Shader Files\InstancedTexture">
       <UniqueIdentifier>{fe3bdda7-847b-4c58-b00d-a75f3ea996a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\Objects">
+      <UniqueIdentifier>{1722001a-f49f-43b3-be35-71e5b4d6f8b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Graphics">
+      <UniqueIdentifier>{1db97dec-738c-4c8a-9f4e-fa3676c0f0d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -126,13 +129,13 @@
       <Filter>Framework\System</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Scene\GameObjects</Filter>
+      <Filter>Scene\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
-      <Filter>Scene\GameObjects</Filter>
+      <Filter>Scene\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Terrain.cpp">
-      <Filter>Scene\GameObjects</Filter>
+      <Filter>Scene\Objects</Filter>
     </ClCompile>
     <ClCompile Include="PerformanceManager.cpp">
       <Filter>Framework\Manager</Filter>
@@ -160,18 +163,6 @@
     </ClCompile>
     <ClCompile Include="AudioClip.cpp">
       <Filter>Framework\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Clouds.cpp">
-      <Filter>Scene\GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="Fire.cpp">
-      <Filter>Scene\GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleSystem.cpp">
-      <Filter>Scene\GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="SkySphere.cpp">
-      <Filter>Scene\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="OBJLoader.cpp">
       <Filter>Framework\Assets</Filter>
@@ -234,7 +225,7 @@
       <Filter>Framework\Shader\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="Ocean.cpp">
-      <Filter>Scene\GameObjects</Filter>
+      <Filter>Scene\Objects</Filter>
     </ClCompile>
     <ClCompile Include="FontShader.cpp">
       <Filter>Framework\Shader\Shaders</Filter>
@@ -270,7 +261,7 @@
       <Filter>Scene\VoxelTerrain</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Scene\GameObjects</Filter>
+      <Filter>Scene\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Config.cpp">
       <Filter>Framework\System</Filter>
@@ -293,6 +284,19 @@
     <ClCompile Include="InstancedTextureShader.cpp">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="SkySphere.cpp">
+      <Filter>Scene\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Scene\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Fire.cpp">
+      <Filter>Scene\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Clouds.cpp">
+      <Filter>Scene\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -329,13 +333,13 @@
       <Filter>Framework\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Scene\GameObjects</Filter>
+      <Filter>Scene\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>Scene\GameObjects</Filter>
+      <Filter>Scene\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Terrain.h">
-      <Filter>Scene\GameObjects</Filter>
+      <Filter>Scene\Objects</Filter>
     </ClInclude>
     <ClInclude Include="PerformanceManager.h">
       <Filter>Framework\Manager</Filter>
@@ -378,18 +382,6 @@
     </ClInclude>
     <ClInclude Include="VertexData.h">
       <Filter>Framework\System\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="Clouds.h">
-      <Filter>Scene\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Fire.h">
-      <Filter>Scene\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleSystem.h">
-      <Filter>Scene\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="SkySphere.h">
-      <Filter>Scene\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="OBJLoader.h">
       <Filter>Framework\Assets</Filter>
@@ -452,7 +444,7 @@
       <Filter>Framework\Shader\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="Ocean.h">
-      <Filter>Scene\GameObjects</Filter>
+      <Filter>Scene\Objects</Filter>
     </ClInclude>
     <ClInclude Include="FontShader.h">
       <Filter>Framework\Shader\Shaders</Filter>
@@ -494,7 +486,7 @@
       <Filter>Scene\VoxelTerrain</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Scene\GameObjects</Filter>
+      <Filter>Scene\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Config.h">
       <Filter>Framework\System</Filter>
@@ -523,6 +515,19 @@
     <ClInclude Include="InstancedTextureShader.h">
       <Filter>Framework\Shader\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="SkySphere.h">
+      <Filter>Scene\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Scene\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Fire.h">
+      <Filter>Scene\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Clouds.h">
+      <Filter>Scene\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Toolbar.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shaders\cloud.ps">

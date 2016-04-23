@@ -8,7 +8,6 @@
 #include "Light.h"
 #include "GameObject.h"
 #include "InputManager.h"
-#include "ParticleSystem.h"
 #include "Texture.h"
 #include "ShaderManager.h"
 #include "GameScene.h"
@@ -19,7 +18,7 @@
 #include "Ocean.h"
 #include "Model.h"
 #include "VoxelWorld.h"
-#include "InstancedSprite.h"
+#include "Toolbar.h"
 
 using namespace Config;
 
@@ -52,9 +51,6 @@ private:
 	Fire* Fire_;
 	Model* CampFire_;
 	Ocean* Ocean_;
-	ParticleSystem* ParticleSystem_;
-	InstancedSprite* ToolbarUI_;
-	Sprite* ActionBar_;
 	Sprite* Cursor_;
 	Sprite* WindowSprite_;
 	SkySphere* SkySphere_;
@@ -62,6 +58,7 @@ private:
 	Texture* RenderTexture_;
 	Texture* RefractionTexture_;
 	Texture* ReflectionTexture_;
+	Toolbar* ToolbarUI_;
 	VoxelWorld* World_;
 
 	// Flags
