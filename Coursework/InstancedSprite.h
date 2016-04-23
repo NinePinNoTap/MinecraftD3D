@@ -1,15 +1,14 @@
 #pragma once
 
-#include "GameObject.h"
+#include "Sprite.h"
 #include "InstanceData.h"
 
-class InstancedGameObject : public GameObject
+class InstancedSprite : public Sprite
 {
 public:
-	InstancedGameObject();
-	~InstancedGameObject();
+	InstancedSprite();
+	~InstancedSprite();
 
-	// Frame
 	bool Render();
 
 	// Instance Management
@@ -22,7 +21,7 @@ public:
 	int GetInstanceCount();
 	ID3D11Buffer* GetInstanceBuffer();
 
-protected:
+private:
 	bool RenderMeshes();
 	bool SendModelToPipeline(Mesh3D* objMesh);
 

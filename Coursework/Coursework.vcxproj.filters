@@ -95,6 +95,9 @@
     <Filter Include="Framework\Graphics\UI">
       <UniqueIdentifier>{60530d0a-da24-4e3b-a1b2-2f1f70c36cde}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Shader\HLSL Shader Files\InstancedTexture">
+      <UniqueIdentifier>{fe3bdda7-847b-4c58-b00d-a75f3ea996a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -283,6 +286,12 @@
     </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>Framework\Graphics\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancedSprite.cpp">
+      <Filter>Framework\Graphics\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancedTextureShader.cpp">
+      <Filter>Framework\Shader\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -505,6 +514,15 @@
     <ClInclude Include="Button.h">
       <Filter>Framework\Graphics\UI</Filter>
     </ClInclude>
+    <ClInclude Include="InstanceData.h">
+      <Filter>Framework\System\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancedSprite.h">
+      <Filter>Framework\Graphics\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancedTextureShader.h">
+      <Filter>Framework\Shader\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shaders\cloud.ps">
@@ -584,6 +602,12 @@
     </None>
     <None Include="Data\Shaders\tint.ps">
       <Filter>Framework\Shader\HLSL Shader Files\Tint</Filter>
+    </None>
+    <None Include="Data\Shaders\instancedtexture.vs">
+      <Filter>Framework\Shader\HLSL Shader Files\InstancedTexture</Filter>
+    </None>
+    <None Include="Data\Shaders\instancedtexture.ps">
+      <Filter>Framework\Shader\HLSL Shader Files\InstancedTexture</Filter>
     </None>
   </ItemGroup>
 </Project>

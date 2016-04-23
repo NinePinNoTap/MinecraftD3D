@@ -8,6 +8,7 @@ ShaderManager::ShaderManager()
 	FireShader_ = 0;
 	FontShader_ = 0;
 	InstancedLightShader_ = 0;
+	InstancedTextureShader_ = 0;
 	LightShader_ = 0;
 	OceanShader_ = 0;
 	SkySphereShader_ = 0;
@@ -97,6 +98,21 @@ bool ShaderManager::Initialise(HWND hwnd)
 		return false;
 	}
 	Result_ = InstancedLightShader_->Initialise(hwnd);
+	if (!Result_)
+	{
+		return false;
+	}
+
+	//=========================================
+	// Initialise the Instanced Texture Shader
+	//=========================================
+
+	InstancedTextureShader_ = new InstancedTextureShader;
+	if (!InstancedTextureShader_)
+	{
+		return false;
+	}
+	Result_ = InstancedTextureShader_->Initialise(hwnd);
 	if (!Result_)
 	{
 		return false;
@@ -215,6 +231,7 @@ bool ShaderManager::Initialise(HWND hwnd)
 	ShaderDatabase_["colour"] = ColourShader_;
 	ShaderDatabase_["font"] = FontShader_;
 	ShaderDatabase_["instancedlight"] = InstancedLightShader_;
+	ShaderDatabase_["instancedtexture"] = InstancedTextureShader_;
 	ShaderDatabase_["ocean"] = OceanShader_;
 	ShaderDatabase_["light"] = LightShader_;
 	ShaderDatabase_["skysphere"] = SkySphereShader_;

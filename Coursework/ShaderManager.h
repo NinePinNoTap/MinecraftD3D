@@ -23,6 +23,7 @@
 #include "FireShader.h"
 #include "FontShader.h"
 #include "InstancedLightShader.h"
+#include "InstancedTextureShader.h"
 #include "LightShader.h"
 #include "OceanShader.h"
 #include "SkyShader.h"
@@ -61,6 +62,7 @@ private:
 	FireShader* FireShader_;
 	FontShader* FontShader_;
 	InstancedLightShader* InstancedLightShader_;
+	InstancedTextureShader* InstancedTextureShader_;
 	LightShader* LightShader_;
 	OceanShader* OceanShader_;
 	SkyShader* SkySphereShader_;

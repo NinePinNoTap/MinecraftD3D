@@ -19,6 +19,7 @@
 #include "Ocean.h"
 #include "Model.h"
 #include "VoxelWorld.h"
+#include "InstancedSprite.h"
 
 using namespace Config;
 
@@ -52,6 +53,7 @@ private:
 	Model* CampFire_;
 	Ocean* Ocean_;
 	ParticleSystem* ParticleSystem_;
+	InstancedSprite* ToolbarUI_;
 	Sprite* ActionBar_;
 	Sprite* Cursor_;
 	Sprite* WindowSprite_;

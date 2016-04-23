@@ -101,6 +101,8 @@
     <ClCompile Include="FontShader.cpp" />
     <ClCompile Include="InstancedGameObject.cpp" />
     <ClCompile Include="InstancedLightShader.cpp" />
+    <ClCompile Include="InstancedSprite.cpp" />
+    <ClCompile Include="InstancedTextureShader.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameShader.cpp" />
@@ -153,8 +155,11 @@
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="FontShader.h" />
+    <ClInclude Include="InstanceData.h" />
     <ClInclude Include="InstancedGameObject.h" />
     <ClInclude Include="InstancedLightShader.h" />
+    <ClInclude Include="InstancedSprite.h" />
+    <ClInclude Include="InstancedTextureShader.h" />
     <ClInclude Include="MainMenuScene.h" />
     <ClInclude Include="Mesh3D.h" />
     <ClInclude Include="OBJLoader.h" />
@@ -231,6 +236,8 @@
     <None Include="Data\Shaders\font.vs" />
     <None Include="Data\Shaders\instancedlight.ps" />
     <None Include="Data\Shaders\instancedlight.vs" />
+    <None Include="Data\Shaders\instancedtexture.ps" />
+    <None Include="Data\Shaders\instancedtexture.vs" />
     <None Include="Data\Shaders\light.ps" />
     <None Include="Data\Shaders\light.vs" />
     <None Include="Data\Shaders\ocean.ds" />

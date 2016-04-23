@@ -124,6 +124,24 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	WindowSprite_->SetShader("tint");
 	WindowSprite_->GetModel()->GetMaterial()->SetVector4("BaseColour", Colour::Water);
 
+	// Toolbar UI Icons
+	ToolbarUI_ = new InstancedSprite;
+	if (!ToolbarUI_)
+	{
+		return false;
+	}
+	Result_ = ToolbarUI_->Initialise(Rect3D(64, 64), "ui_toolbar_icons.dds");
+	if (!Result_)
+	{
+		return false;
+	}
+
+	ToolbarUI_->AddInstance(D3DXVECTOR3(0, (-windowHeight * 0.8) / 2, 1), D3DXVECTOR2(0, 0), D3DXVECTOR2(16, 2));
+	ToolbarUI_->AddInstance(D3DXVECTOR3(80, (-windowHeight * 0.8) / 2, 1), D3DXVECTOR2(1, 1), D3DXVECTOR2(16, 2));
+	ToolbarUI_->RebuildInstanceBuffer();
+	ToolbarUI_->SetShader("instancedtexture");
+	ToolbarUI_->SetBlendMode(BlendMode::AlphaMasked);
+
 	//====================
 	// Initialise the Sky
 	//====================
@@ -311,6 +329,25 @@ bool MinecraftScene::Frame()
 		return false;
 	}
 
+	//
+	// Tool Switching - NEEDS ITS OWN ENCAPSULATION FOR BETTER MANAGEMENT
+	//
+
+	int windowHeight = WindowManager::Instance()->GetWindowResolution().height;
+	if (InputManager::Instance()->GetKeyDown(VK_5))
+	{
+		ToolbarUI_->AddInstance(D3DXVECTOR3(0, (-windowHeight * 0.8f) / 2, 1), D3DXVECTOR2(0, 1), D3DXVECTOR2(16, 2));
+		ToolbarUI_->AddInstance(D3DXVECTOR3(80, (-windowHeight * 0.8f) / 2, 1), D3DXVECTOR2(1, 0), D3DXVECTOR2(16, 2));
+		ToolbarUI_->RebuildInstanceBuffer();
+	}
+	else if (InputManager::Instance()->GetKeyDown(VK_6))
+	{
+		ToolbarUI_->AddInstance(D3DXVECTOR3(0, (-windowHeight * 0.8f) / 2, 1), D3DXVECTOR2(0, 0), D3DXVECTOR2(16, 2));
+		ToolbarUI_->AddInstance(D3DXVECTOR3(80, (-windowHeight * 0.8f) / 2, 1), D3DXVECTOR2(1, 1), D3DXVECTOR2(16, 2));
+		ToolbarUI_->RebuildInstanceBuffer();
+	}
+
+
 	// Render the scene
 	Result_ = Render();
 	if (!Result_)
@@ -329,14 +366,17 @@ bool MinecraftScene::HandleObjects()
 	
 	ParticleSystem_->GetTransform()->SetPosition(Camera::Instance()->GetTransform()->GetPosition() + (Camera::Instance()->GetTransform()->GetForwardVector() * 1.25));
 
-	//================
-	// Update Objects
-	//================
+	//=======================
+	// Update System Objects
+	//=======================
 
 	Camera::Instance() -> Frame();
 	PerformanceManager::Instance()->Frame();
 	ViewFrustumManager::Instance()->Frame();
 
+	//======================
+	// Update Scene Objects
+	//======================
 
 	Clouds_ -> Frame();
 	Ocean_->Frame();
@@ -353,7 +393,7 @@ bool MinecraftScene::HandleObjects()
 	}
 	
 	//===========================
-	// Update WindowManager Information
+	// Update System Information
 	//===========================
 
 	Result_ = HandleText();
@@ -524,7 +564,7 @@ bool MinecraftScene::RenderScene()
 	// Only rain on the screen if is night time and we arent underwater
 	if (NightTimeMode_)
 	{
-		// Render the particle WindowManager
+		// Render the particle system
 		Result_ = ShaderManager::Instance()->TextureRender(ParticleSystem_);
 		if (!Result_)
 		{
@@ -548,6 +588,8 @@ bool MinecraftScene::RenderScene()
 	{
 		return false;
 	}
+
+	ToolbarUI_->Render();
 
 	Result_ = Cursor_->Render();
 	if (!Result_)

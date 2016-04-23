@@ -166,14 +166,14 @@ bool OBJLoader::BuildModel(Model* model, std::string textureFilename, vector<D3D
 		// Grab data from the vectors and apply them to the model
 		ObjMesh[Index].position.x = vertexData[vertexID].x;
 		ObjMesh[Index].position.y = vertexData[vertexID].y;
-		ObjMesh[Index].position.z = vertexData[vertexID].z * -1; //Flip for RH WindowManager
+		ObjMesh[Index].position.z = vertexData[vertexID].z * -1; //Flip for RH system
 
 		ObjMesh[Index].texture.x = textureData[textureID].x;
-		ObjMesh[Index].texture.y = 1 - textureData[textureID].y; //Flip for RH WindowManager
+		ObjMesh[Index].texture.y = 1 - textureData[textureID].y; //Flip for RH system
 
 		ObjMesh[Index].normal.x = normalData[normalID].x;
 		ObjMesh[Index].normal.y = normalData[normalID].y;
-		ObjMesh[Index].normal.z = normalData[normalID].z * -1; //Flip for RH WindowManager
+		ObjMesh[Index].normal.z = normalData[normalID].z * -1; //Flip for RH system
 
 		Indices[Index] = Index;
 	}

@@ -24,7 +24,7 @@ void PerformanceManager::Initialise()
 
 	PDH_STATUS status;
 
-	// Initialise the flag indicating whether this object can read the WindowManager cpu usage or not.
+	// Initialise the flag indicating whether this object can read the system cpu usage or not.
 	CanReadCPU_ = true;
 
 	// Create a query object to poll cpu usage.
@@ -34,7 +34,7 @@ void PerformanceManager::Initialise()
 		CanReadCPU_ = false;
 	}
 
-	// Set query object to poll all cpus in the WindowManager.
+	// Set query object to poll all cpus in the system.
 	status = PdhAddCounter(QueryHandle_, TEXT("\\Processor(_Total)\\% processor time"), 0, &CounterHandle_);
 	if (status != ERROR_SUCCESS)
 	{
@@ -49,7 +49,7 @@ void PerformanceManager::Initialise()
 	// Timer
 	//=======
 
-	// Check to see if this WindowManager supports high PerformanceManager timers
+	// Check to see if this system supports high performance timers
 	QueryPerformanceFrequency((LARGE_INTEGER*)&Frequency_);
 
 	// Find out how many times the frequency counter ticks every millisecond
@@ -132,7 +132,7 @@ bool PerformanceManager::Frame()
 
 int PerformanceManager::GetUsage()
 {
-	// If the class can read the cpu from the operating WindowManager then return the current usage.  If not then return zero.
+	// If the class can read the cpu from the operating system then return the current usage.  If not then return zero.
 	if (CanReadCPU_)
 	{
 		return (int)Usage_;
