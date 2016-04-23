@@ -18,7 +18,7 @@ public:
 	~Sprite();
 	
 	// Initialising
-	bool Initialise(Rect3D spriteResolution, string textureFilename);
+	virtual bool Initialise(Rect3D spriteResolution, string textureFilename);
 
 	// Frame
 	bool Render();

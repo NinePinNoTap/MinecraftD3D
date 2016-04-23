@@ -17,9 +17,11 @@
 
 enum SceneState
 {
+	NO_SCENE,
 	MENU,
 	LOADING,
-	GAME
+	MINECRAFT,
+	EXIT
 };
 
 class ApplicationManager : public Singleton<ApplicationManager>
@@ -40,8 +42,6 @@ public:
 
 	// Scene Switching
 	void SetScene(SceneState scene);
-
-	SceneState GetScene() { return NewScene_; }
 	
 private:
 	// Update
@@ -71,7 +71,8 @@ private:
 
 	// Scene Switching
 	GameScene* CurrentScene_;
-	SceneState NewScene_;
+	SceneState CurrentState_;
+	SceneState NewSceneState_;
 	bool ChangeScene_;
 };
 

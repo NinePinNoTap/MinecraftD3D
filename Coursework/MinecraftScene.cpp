@@ -404,8 +404,8 @@ bool MinecraftScene::HandleInput()
 
 	if (InputManager::Instance() -> GetKeyDown(VK_ESCAPE))
 	{
-		MessageBox(NULL, L"Shutting down the ApplicationManager.", L"Warning", MB_OK);
-		return false;
+		MessageBox(NULL, L"Shutting Down.", L"Warning", MB_OK);
+		ApplicationManager::Instance()->SetScene(SceneState::EXIT);
 	}
 
 	//=================
@@ -414,7 +414,7 @@ bool MinecraftScene::HandleInput()
 
 	if (InputManager::Instance() -> GetKeyDown(VK_HOME))
 	{
-		ApplicationManager::Instance()->SetScene(GAME);
+		ApplicationManager::Instance()->SetScene(MINECRAFT);
 		AmbientSound_->Stop();
 	}
 

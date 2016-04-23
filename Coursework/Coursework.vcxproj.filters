@@ -92,6 +92,9 @@
     <Filter Include="Framework\Shader\HLSL Shader Files\Tint">
       <UniqueIdentifier>{663983e1-24cd-485b-a90d-2d94b6f5e2d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Graphics\UI">
+      <UniqueIdentifier>{60530d0a-da24-4e3b-a1b2-2f1f70c36cde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -191,9 +194,6 @@
     <ClCompile Include="Model.cpp">
       <Filter>Framework\Graphics\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>Framework\Graphics\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Framework\Graphics\Objects</Filter>
     </ClCompile>
@@ -277,6 +277,12 @@
     </ClCompile>
     <ClCompile Include="MainMenuScene.cpp">
       <Filter>Scene\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Framework\Graphics\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Framework\Graphics\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -400,9 +406,6 @@
     <ClInclude Include="Model.h">
       <Filter>Framework\Graphics\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>Framework\Graphics\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Framework\Graphics\Objects</Filter>
     </ClInclude>
@@ -495,6 +498,12 @@
     </ClInclude>
     <ClInclude Include="MainMenuScene.h">
       <Filter>Scene\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Framework\Graphics\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Framework\Graphics\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,13 +1,5 @@
 #include "ApplicationManager.h"
 
-void LoadingScreenUpdater()
-{
-	while (ApplicationManager::Instance()->GetScene() == SceneState::LOADING)
-	{
-		ApplicationManager::Instance()->Frame();
-	}
-}
-
 ApplicationManager::ApplicationManager()
 {
 	// Initialise pointers to null
@@ -169,8 +161,17 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	// Set starting scene as loading and render it
 	SetScene(LOADING);
 
+	// Refresh current scene
+	UpdateScene();
+
 	// Create a thread to keep the application rendering until we have finished loading
-	LoadingScreenThread_ = std::thread(LoadingScreenUpdater);
+	LoadingScreenThread_ = std::thread([this]()
+	{
+		while (CurrentState_ == SceneState::LOADING)
+		{
+			Frame();
+		}
+	});
 	
 	//======================
 	// Initialise Main Menu
@@ -310,20 +311,35 @@ bool ApplicationManager::Frame()
 void ApplicationManager::UpdateScene()
 {
 	// Check which scene to change to
-	switch (NewScene_)
+	switch (NewSceneState_)
 	{
 		case MENU:
 			CurrentScene_ = MainMenuScene_;
 			break;
 
-		case GAME:
-			CurrentScene_ = MinecraftScene_;
-			break;
-
 		case LOADING:
 			CurrentScene_ = LoadingScene_;
 			break;
+
+		case MINECRAFT:
+			CurrentScene_ = MinecraftScene_;
+			break;
+
+		case NO_SCENE:
+			NewSceneState_ = MENU;
+			UpdateScene();
+			return;
+			break;
+
+		case EXIT:
+			exit(1);
+			return;
+			break;
 	}
+
+	// Store the current sttate
+	CurrentState_ = NewSceneState_;
+	NewSceneState_ = SceneState::NO_SCENE;
 
 	// Reset the scene back to its original state
 	CurrentScene_ -> Reset();
@@ -334,6 +350,6 @@ void ApplicationManager::UpdateScene()
 
 void ApplicationManager::SetScene(SceneState scene)
 {
-	NewScene_ = scene;
+	NewSceneState_ = scene;
 	ChangeScene_ = true;
 }

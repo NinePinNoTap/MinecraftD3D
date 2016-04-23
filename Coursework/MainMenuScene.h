@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Button.h"
 #include "GameScene.h"
 #include "InputManager.h"
 #include "Sprite.h"
@@ -18,11 +19,10 @@ public:
 	void Reset();
 
 private:
-	void CreateButton(int x, int y);
+	void CreateButton(string buttonText, int x, int y);
 	void Render();
 
 	Sprite* Background_;
-	vector<Sprite*> Buttons_;
-	Text* ButtonText_;
+	vector<Button*> Buttons_;
 };
 

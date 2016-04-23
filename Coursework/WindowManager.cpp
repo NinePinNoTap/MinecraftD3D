@@ -114,9 +114,6 @@ void WindowManager::InitialiseWindows(int& screenWidth, int& screenHeight)
 	SetForegroundWindow(HWND_);
 	SetFocus(HWND_);
 
-	// Hide the mouse cursor.
-	ShowCursor(false);
-
 	return;
 }
 
