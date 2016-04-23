@@ -92,7 +92,7 @@ void MainMenuScene::Render()
 
 void MainMenuScene::Reset()
 {
-	ShowCursor(true);
+	SetCursor(LoadCursor(NULL, IDC_ARROW));
 
 	return;
 }

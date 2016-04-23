@@ -27,7 +27,11 @@ bool Toolbar::Initialise()
 	{
 		return false;
 	}
-	Background_->Initialise(Rect3D(728, 88), "ui_toolbar.dds");
+	Result_ = Background_->Initialise(Rect3D(728, 88), "ui_toolbar.dds");
+	if (!Result_)
+	{
+		return false;
+	}
 	Background_->GetTransform()->SetY(-(windowHeight * 0.8) / 2);
 	Background_->SetShader("texture");
 
@@ -38,7 +42,7 @@ bool Toolbar::Initialise()
 	ToolbarIcons_ = new InstancedSprite;
 	if (!ToolbarIcons_)
 	{
-
+		return false;
 	}
 	Result_ = ToolbarIcons_->Initialise(Rect3D(64, 64), "ui_toolbar_icons.dds");
 	if (!Result_)
@@ -69,6 +73,8 @@ bool Toolbar::Initialise()
 
 	// Refresh UI
 	RefreshTools();
+
+	return true;
 }
 
 bool Toolbar::Frame()
@@ -101,6 +107,8 @@ bool Toolbar::Render()
 	{
 		return false;
 	}
+
+	return true;
 }
 
 void Toolbar::HandleToolUpdate(unsigned int key, int index)

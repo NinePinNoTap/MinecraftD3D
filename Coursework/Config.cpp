@@ -33,7 +33,7 @@ float Config::Rendering::FarClipPlane = 1000.0f;
 
 int Config::World::ChunkSize	= 16;
 int Config::World::BlockSize	= 1;
-int Config::World::LoadRadius	= 4;
+int Config::World::LoadRadius	= 1;
 int Config::World::ColumnHeight = 8;
 
 //==================================================================

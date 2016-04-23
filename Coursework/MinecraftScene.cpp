@@ -244,8 +244,13 @@ void MinecraftScene::Reset()
 	// Reset Objects
 	//===============
 
+	// Reset Keys
 	InputManager::Instance()->Initialise();
+
+	// Reset Mouse
 	LockMouseToCenter();
+	SetCursor(0);
+	SetClassLong(WindowManager::Instance()->GetHWND(), GCL_HCURSOR, 0);
 
 	//============
 	// Play Sound
@@ -256,9 +261,6 @@ void MinecraftScene::Reset()
 
 bool MinecraftScene::Frame()
 {
-	// Turn off Mouse
-	ShowCursor(false);
-
 	// Handle user InputManager
 	Result_ = HandleInput();
 	if (!Result_)
