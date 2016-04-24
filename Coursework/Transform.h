@@ -76,6 +76,11 @@ public:
 	void GetScaleMatrix(D3DXMATRIX& ScaleMatrix);
 	void GetWorldMatrix(D3DXMATRIX& WorldMatrix);
 
+	// Reset
+	void ResetPosition();
+	void ResetRotation();
+	void ResetScale();
+
 private:
 	// Transforms
 	D3DXVECTOR3 Position_;

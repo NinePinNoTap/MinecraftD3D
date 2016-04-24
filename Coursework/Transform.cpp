@@ -300,3 +300,18 @@ void Transform::GetWorldMatrix(D3DXMATRIX& WorldMatrix)
 	D3DXMatrixMultiply(&WorldMatrix, &WorldMatrix, &TranslationMatrix);
 }
 
+// Reset
+void Transform::ResetPosition()
+{
+	Position_ = D3DXVECTOR3(0, 0, 0);
+}
+
+void Transform::ResetRotation()
+{
+	Rotation_ = D3DXVECTOR3(0, 0, 0);
+}
+
+void Transform::ResetScale()
+{
+	Scale_ = D3DXVECTOR3(1, 1, 1);
+}

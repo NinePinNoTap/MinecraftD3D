@@ -54,15 +54,21 @@ bool Sprite::Initialise(Rect3D spriteResolution, string textureFilename)
 	//=================
 	// Initialise Vars
 	//=================
-
-	Frame_ = 0;
-
+	
+	// Render Modes
 	IsReflective_ = RenderMode::Off;
 	UseCulling_ = RenderMode::Off;
 	UseDepth_ = RenderMode::Off;
 	BlendMode_ = BlendMode::NoBlending;
 
+	// Animations
+	Frame_ = 0;
+
+	// Flags
 	IsActive_ = true;
+
+	// Define Base Shader
+	SetShader("texture");
 
 	// Clean Up
 	newMaterial = 0;

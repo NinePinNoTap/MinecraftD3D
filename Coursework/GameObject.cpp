@@ -86,6 +86,36 @@ bool GameObject::Initialise(const char* filename)
 	return true;
 }
 
+bool GameObject::Initialise(const char* filename, string textureFilename)
+{
+	Material* createdMaterial;
+
+	// Call parent function
+	Result_ = GameObject::Initialise(filename);
+	if (!Result_)
+	{
+		return false;
+	}
+
+	// Create a Material
+	createdMaterial = new Material;
+	if (!createdMaterial)
+	{
+		return false;
+	}
+	Result_ = createdMaterial->SetBaseTexture(textureFilename);
+	if (!Result_)
+	{
+		return false;
+	}
+	Model_->AddMaterial(createdMaterial);
+
+	// Clean Up
+	createdMaterial = 0;
+
+	return true;
+}
+
 // Shutdown
 void GameObject::Shutdown()
 {

@@ -22,6 +22,7 @@ public:
 	// Initialising
 	virtual bool Initialise();
 	virtual bool Initialise(const char* filename);
+	virtual bool Initialise(const char* filename, string textureFilename);
 	
 	// Shutdown
 	virtual void Shutdown();

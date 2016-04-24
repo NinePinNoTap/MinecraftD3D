@@ -38,15 +38,6 @@ bool LoadingScene::Initialise()
 	}
 	Background_->SetShader("texture");
 
-	//================
-	// Initialise GUI
-	//================
-
-	LoadingText_ = new Text;
-	LoadingText_->Initialise(GetActiveWindow(), "shruti.txt", "shruti.dds", 95);
-	LoadingText_->CreateText("Load Time : ", Vector2(windowWidth - 25, windowHeight - 25), Colour::White, RIGHT);
-	LoadingProgress_ = timeGetTime();
-
 	//============
 	// Initialise
 	//============
@@ -80,9 +71,6 @@ bool LoadingScene::Frame()
 		}
 	}
 
-	// Update Text
-	LoadingText_->SetValue(0, (timeGetTime() - LoadingProgress_) / 1000);
-
 	// Render
 	Render();
 
@@ -96,9 +84,6 @@ void LoadingScene::Render()
 	// Render the loading screen
 	Background_->Render();
 
-	// Render Text
-	LoadingText_->Render();
-
 	DirectXManager::Instance()->EndScene();
 }
 
@@ -110,12 +95,12 @@ void LoadingScene::Load()
 
 void LoadingScene::Unload()
 {
-	LoadingProgress_ = 0;
+	// Clear Target
 	LoadTarget_ = SceneState::NO_SCENE;
-	return;
 }
 
 void LoadingScene::LoadScene(SceneState sceneState)
 {
+	// Store the loading target
 	LoadTarget_ = sceneState;
 }

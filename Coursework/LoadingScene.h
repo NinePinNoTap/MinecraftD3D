@@ -31,10 +31,6 @@ private:
 	void Render();
 
 	Sprite* Background_;
-	Sprite* Bar_;
-	Sprite* BarMask_;
-	int LoadingProgress_;
-	Text* LoadingText_;
 
 	SceneState LoadTarget_;
 };

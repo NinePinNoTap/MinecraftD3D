@@ -46,6 +46,10 @@ bool Text::Initialise(HWND hwnd, string fontName, string fontTexture, int letter
 		return false;
 	}
 
+	// Define Transform
+	Transform_ = new Transform;
+
+	// Define Render Modes
 	IsReflective_ = RenderMode::Off;
 	UseCulling_ = RenderMode::Off;
 	UseDepth_ = RenderMode::Off;
