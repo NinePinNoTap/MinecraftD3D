@@ -15,8 +15,6 @@ void ChunkColumn::Initialise(int x, int z, int chunkCount)
 
 	for (int i = 0; i < chunkCount; i++)
 	{
-		float tBefore = timeGetTime();
-
 		// Created chunk
 		Chunk* createdChunk = new Chunk;
 		createdChunk->Initialise(x, i, z);
@@ -26,8 +24,6 @@ void ChunkColumn::Initialise(int x, int z, int chunkCount)
 
 		// Clean Up
 		createdChunk = 0;
-
-		OutputTimeDelay("Creation Time : " + GetKey(x,i,z), tBefore, timeGetTime());
 	}
 
 	// Generate Terrain Layers
@@ -36,14 +32,10 @@ void ChunkColumn::Initialise(int x, int z, int chunkCount)
 	// Generate chunks
 	GenerateTerrain();
 
-	OutputToDebug("Generated Terrain");
-
 	for (int i = 0; i < chunkCount; i++)
 	{
 		Chunks_[i]->RefreshVisible();
 	}
-
-	OutputToDebug("Refreshed Terrain");
 }
 
 bool ChunkColumn::Frame()

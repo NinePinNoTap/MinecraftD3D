@@ -10,7 +10,7 @@ VoxelWorld::~VoxelWorld()
 
 void VoxelWorld::Initialise()
 {
-	D3DXMATRIX rotationMatrix;
+	SYSTEM_INFO systemInfo;
 
 	//======================
 	// Create Block Manager
@@ -19,29 +19,36 @@ void VoxelWorld::Initialise()
 	BlockManager_ = new BlockManager;
 	BlockManager_->Initialise();
 
-	//===============================
-	// Initialise Build and Updating
-	//===============================
-
-	// Current Chunk
-	BuildOrder_.push_back(D3DXVECTOR3(0, 0, 0));
+	//===========================
+	// Initialise Chunk Building
+	//===========================
 
 	// Positions within a radius
-	for (int x = -World::LoadRadius; x <= World::LoadRadius; x++)
+	for (int z = -World::LoadRadius; z <= World::LoadRadius; z++)
 	{
-		for (int z = World::LoadRadius; z >= -World::LoadRadius; z--)
+		for (int x = -World::LoadRadius; x <= World::LoadRadius; x++)
 		{
-			BuildOrder_.push_back(D3DXVECTOR3(x, 0, z));
+			LocalChunks_.push_back(D3DXVECTOR3(x, 0, z));
 		}
 	}
-
+	
+	//-- MAYBE HAVE THIS IN A THREAD WE WAIT ON
+	//-- THEN IT FORCES THE LOADING SCREEN TO WAIT
 	// Generate local chunks
 	GenerateLocalChunks();
 
-	BuildThread_ = thread(&VoxelWorld::BuildChunksInBuildList, this);
+	//======================
+	// Initialise Threading
+	//======================
 
-	// TODO
-	// WE SHOULD HANG UNTIL WE HAVE CHUNKS TO DISPLAY?
+	// Retrieve system Information
+	GetSystemInfo(&systemInfo);
+
+	// Store how many threads we have, reserve one for thread handler
+	MaxThreads_ = systemInfo.dwNumberOfProcessors - 2;
+
+	// Run a thread to handle worker threads
+	ThreadHandler_ = thread(&VoxelWorld::HandleThreads, this);
 
 	//===================
 	// Initialise Player
@@ -89,40 +96,89 @@ bool VoxelWorld::Render()
 	return true;
 }
 
-void VoxelWorld::BuildChunksInBuildList()
+void VoxelWorld::HandleThreads()
+{
+	while (true)
+	{
+		HandleActiveThreads();
+		HandleBuildList();
+	}
+}
+
+void VoxelWorld::HandleActiveThreads()
+{
+	if (ChunkThreads_.empty())
+	{
+		return;
+	}
+
+	//=======================
+	// Join Finished Threads
+	//=======================
+
+	for (unsigned int i = 0; i < ChunkThreads_.size(); i++)
+	{
+		// Check if the thread is finished
+		if (ChunkThreads_[i]->isFinished)
+		{
+			// Join it and remove it from the list
+			ChunkThreads_[i]->Join();
+			ChunkThreads_.erase(ChunkThreads_.begin() + i);
+		}
+	}
+}
+
+void VoxelWorld::HandleBuildList()
+{
+	// Make sure we have chunks to deal with
+	if (BuildList_.empty())
+	{
+		return;
+	}
+
+	// Make sure we have available threads
+	if (ChunkThreads_.size() >= MaxThreads_)
+	{
+		return;
+	}
+
+	// Get the first job
+	D3DXVECTOR3 buildTarget = BuildList_.front();
+
+	// Create a build thread
+	ChunkThread* chunkThread();
+	ChunkThreads_.push_back(new ChunkThread(buildTarget));
+
+	// Remove from build list
+	BuildList_.erase(BuildList_.begin());
+
+	return;
+}
+
+void VoxelWorld::BuildChunk(D3DXVECTOR3 chunkIndex)
 {
 	string chunkKey;
 
-	while (true)
+	// Generate a key for the chunk
+	chunkKey = GetKey(chunkIndex.x, chunkIndex.y, chunkIndex.z);
+
+	// Search for the chunk
+	it_wc iterator = Map_.find(chunkKey);
+	if (iterator == Map_.end())
 	{
-		// Make sure we have chunks to build
-		if (BuildList_.empty())
-		{
-			continue;
-		}
+		// Create the chunk
+		Map_[chunkKey] = new ChunkColumn;
+		Map_[chunkKey]->Initialise(chunkIndex.x, chunkIndex.z, World::ColumnHeight);
 
-		// Get current working chunk
-		D3DXVECTOR3 chunkIndex = BuildList_.front();
+		OutputToDebug("Created Chunk : " + chunkKey);
+	}
+	else
+	{
+		OutputToDebug("Found Existing Chunk : " + chunkKey);
 
-		// Generate a key for the chunk
-		chunkKey = GetKey(chunkIndex.x, chunkIndex.y, chunkIndex.z);
-
-		// Search for the chunk
-		it_wc iterator = Map_.find(chunkKey);
-		if (iterator == Map_.end())
-		{
-			// Create World Chunk and Generate Terrain
-			Map_[chunkKey] = new ChunkColumn;
-			Map_[chunkKey]->Initialise(chunkIndex.x, chunkIndex.z, World::ColumnHeight);
-		}
-		else
-		{
-			// Chunk was found in the map
-			// We should look to load it
-		}
-
-		// Clean Up
-		BuildList_.erase(BuildList_.begin());
+		//--TODO
+		// Chunk was found in the map
+		// We should look to load it
 	}
 }
 
@@ -165,10 +221,10 @@ void VoxelWorld::GenerateLocalChunks()
 	//================
 
 	// Build chunks around us
-	for (unsigned int i = 0; i < BuildOrder_.size(); i++)
+	for (unsigned int i = 0; i < LocalChunks_.size(); i++)
 	{
-		// Calculate new chunk index
-		BuildList_.push_back(chunkIndex + BuildOrder_[i]);
+		// Add to build list
+		BuildList_.push_back(chunkIndex + LocalChunks_[i]);
 	}
 }
 
