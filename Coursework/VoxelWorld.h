@@ -31,12 +31,12 @@ public:
 	void SetBlock(int x, int y, int z, string blockName);
 	Block* GetBlock(int x, int y, int z);
 
-	void BuildChunk(D3DXVECTOR3 chunkIndex);
-
 private:
 	void HandleThreads();
 	void HandleActiveThreads();
 	void HandleBuildList();
+
+	void BuildChunk(D3DXVECTOR3 chunkIndex);
 
 	void HandleChunks();
 	void GenerateLocalChunks();
@@ -62,36 +62,53 @@ private:
 	bool Result_;
 };
 
-class ChunkThread
+struct ChunkThread
 {
-public:
-	ChunkThread(D3DXVECTOR3 buildTarget)
+	ChunkThread()
 	{
-		VoxelWorld* vWorld = VoxelWorld::Instance();
+	}
+
+	~ChunkThread()
+	{
+		TryJoin();
+	}
+
+	void SetFunction(std::function<void()> function)
+	{
+		workerFunction = function;
+	}
+
+	void Start()
+	{
+		isFinished = false;
 
 		// Create a thread
-		workingThread = std::thread([this, buildTarget, vWorld]()
+		workerThread = std::thread([this]()
 		{
-			isFinished = false;
+			// Call the function
+			workerFunction();
 
-			vWorld->BuildChunk(buildTarget);
-
+			// Flag its complete
 			isFinished = true;
 		});
 	}
-	~ChunkThread()
-	{
-		
-	}
-	void Join()
-	{
-		if (workingThread.joinable())
-		{
-			workingThread.join();
-		}
-	}
-	bool isFinished;
 
-private:
-	std::thread workingThread;
+	bool TryJoin()
+	{
+		if (isFinished)
+		{
+			if (workerThread.joinable())
+			{
+				workerThread.join();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	std::function<void()> workerFunction;
+	std::thread workerThread;
+
+	bool isFinished;
 };

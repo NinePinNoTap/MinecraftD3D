@@ -319,6 +319,9 @@ bool ApplicationManager::Frame()
 // Scene Management
 void ApplicationManager::UpdateScene()
 {
+	// Unload the current scene
+	CurrentScene_->Unload();
+
 	// Check which scene to change to
 	switch (NewSceneState_)
 	{
@@ -345,9 +348,6 @@ void ApplicationManager::UpdateScene()
 			return;
 			break;
 	}
-
-	// Unload the current scene
-	CurrentScene_ -> Unload();
 
 	// Update current state
 	CurrentState_ = NewSceneState_;
