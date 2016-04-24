@@ -23,8 +23,11 @@ ApplicationManager::~ApplicationManager()
 {
 }
 
+// Initialise
 bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 {
+	bool managerFinished;
+
 	//===================
 	// Initialise Camera
 	//===================
@@ -165,14 +168,14 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	UpdateScene();
 
 	// Create a thread to keep the application rendering until we have finished loading
-	LoadingScreenThread_ = std::thread([this]()
+	LoadingScreenThread_ = std::thread([managerFinished, this]()
 	{
-		while (CurrentState_ == SceneState::LOADING)
+		while (!managerFinished)
 		{
 			Frame();
 		}
 	});
-	
+
 	//======================
 	// Initialise Main Menu
 	//======================
@@ -198,14 +201,18 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	}
 
 	// Switch once we have loaded
-	SetScene(MENU);
+	SetScene(MAINMENU);
 
-	// Join back the thread
+	// Close the thread
+	managerFinished = true;
 	LoadingScreenThread_.join();
+
+	OutputToDebug("Finished Loading");
 
 	return true;
 }
 
+// Shutdown
 void ApplicationManager::Shutdown()
 {
 	//=================
@@ -284,6 +291,7 @@ void ApplicationManager::Shutdown()
 	return;
 }
 
+// Frame
 bool ApplicationManager::Frame()
 {
 	//==========================
@@ -308,12 +316,13 @@ bool ApplicationManager::Frame()
 	return true;
 }
 
+// Scene Management
 void ApplicationManager::UpdateScene()
 {
 	// Check which scene to change to
 	switch (NewSceneState_)
 	{
-		case MENU:
+		case MAINMENU:
 			CurrentScene_ = MainMenuScene_;
 			break;
 
@@ -326,7 +335,7 @@ void ApplicationManager::UpdateScene()
 			break;
 
 		case NO_SCENE:
-			NewSceneState_ = MENU;
+			NewSceneState_ = MAINMENU;
 			UpdateScene();
 			return;
 			break;
@@ -337,19 +346,43 @@ void ApplicationManager::UpdateScene()
 			break;
 	}
 
-	// Store the current sttate
+	// Unload the current scene
+	CurrentScene_ -> Unload();
+
+	// Update current state
 	CurrentState_ = NewSceneState_;
 	NewSceneState_ = SceneState::NO_SCENE;
-
-	// Reset the scene back to its original state
-	CurrentScene_ -> Reset();
-
-	// Unflag the change
 	ChangeScene_ = false;
+
+	// Load the new scene
+	CurrentScene_ -> Load();
 }
 
 void ApplicationManager::SetScene(SceneState scene)
 {
 	NewSceneState_ = scene;
 	ChangeScene_ = true;
+}
+
+bool ApplicationManager::CheckSceneLoaded(SceneState scene)
+{
+	// Check which scene to change to
+	switch (NewSceneState_)
+	{
+		case MAINMENU:
+			MainMenuScene_->IsLoaded();
+			break;
+
+		case LOADING:
+			LoadingScene_->IsLoaded();
+			break;
+
+		case MINECRAFT:
+			MinecraftScene_->IsLoaded();
+			break;
+
+		default:
+			return false;
+			break;
+	}
 }

@@ -11,6 +11,7 @@ MainMenuScene::~MainMenuScene()
 {
 }
 
+// Initialising
 bool MainMenuScene::Initialise(HWND hwnd)
 {
 	//===================
@@ -37,16 +38,23 @@ bool MainMenuScene::Initialise(HWND hwnd)
 	CreateButton("PLAY GAME", 350, 325, SceneState::MINECRAFT);
 	CreateButton("EXIT GAME", 350, 475, SceneState::EXIT);
 
+	//=================
+	// Initialise Vars
+	//=================
+
 	ShowCursor(true);
+	IsLoaded_ = true;
 
 	return true;
 }
 
+// Shutdown
 void MainMenuScene::Shutdown()
 {
 
 }
 
+// Frame
 bool MainMenuScene::Frame()
 {
 	// Update Input
@@ -90,13 +98,20 @@ void MainMenuScene::Render()
 	DirectXManager::Instance()->EndScene();
 }
 
-void MainMenuScene::Reset()
+// Load and Unload
+void MainMenuScene::Load()
 {
 	SetCursor(LoadCursor(NULL, IDC_ARROW));
 
 	return;
 }
 
+void MainMenuScene::Unload()
+{
+	return;
+}
+
+// Functionality
 void MainMenuScene::CreateButton(string buttonText, int x, int y, int sceneID)
 {
 	// Create the button

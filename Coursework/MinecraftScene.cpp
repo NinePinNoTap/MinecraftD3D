@@ -23,6 +23,7 @@ MinecraftScene::~MinecraftScene()
 {
 }
 
+// Initialise
 bool MinecraftScene::Initialise(HWND hwnd)
 {
 	int windowWidth;
@@ -183,10 +184,12 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	IsUnderwater_ = false;
 	NightTimeMode_ = false;
 	Result_ = false;
+	IsLoaded_ = true;
 	
 	return true;
 }
 
+// Shutdown
 void MinecraftScene::Shutdown()
 {
 	//===================
@@ -238,7 +241,8 @@ void MinecraftScene::Shutdown()
 	return;
 }
 
-void MinecraftScene::Reset()
+// Load and Unloading
+void MinecraftScene::Load()
 {
 	//===============
 	// Reset Objects
@@ -259,6 +263,17 @@ void MinecraftScene::Reset()
 	AmbientSound_->Play(true);
 }
 
+void MinecraftScene::Unload()
+{
+	//============
+	// Stop Audio
+	//============
+
+	AmbientSound_->Stop();
+	return;
+}
+
+// Frame
 bool MinecraftScene::Frame()
 {
 	// Handle user InputManager
@@ -285,6 +300,111 @@ bool MinecraftScene::Frame()
 	return true;
 }
 
+bool MinecraftScene::Render()
+{
+	//================
+	// Reset Textures
+	//================
+
+	RenderTexture_->ClearRenderTarget(Colour::Black);
+	ReflectionTexture_->ClearRenderTarget(Colour::Black);
+	RefractionTexture_->ClearRenderTarget(Colour::Black);
+
+	//==============
+	// Render Scene
+	//==============
+
+	// Render the scene normally to the screen
+	Result_ = RenderScene();
+	if (!Result_)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool MinecraftScene::RenderScene()
+{
+	// Begin rendering
+	DirectXManager::Instance()->BeginScene();
+
+	Camera::Instance()->Render();
+	Camera::Instance()->RenderReflection(0.0f);
+
+	//================
+	// Render the Sky 
+	//================
+
+	Result_ = SkySphere_->Render();
+	if (!Result_)
+	{
+		return false;
+	}
+
+	Result_ = Clouds_->Render();
+	if (!Result_)
+	{
+		return false;
+	}
+
+	//==================
+	// Render the World 
+	//==================
+
+	World_->Render();
+
+	Result_ = Ocean_->Render();
+	if (!Result_)
+	{
+		return false;
+	}
+
+	//============
+	// Render GUI
+	//============
+
+	Result_ = Text_->Render();
+	if (!Result_)
+	{
+		return false;
+	}
+
+	Result_ = ToolbarUI_->Render();
+	if (!Result_)
+	{
+		return false;
+	}
+
+	ToolbarUI_->Render();
+
+	Result_ = Cursor_->Render();
+	if (!Result_)
+	{
+		return false;
+	}
+
+	//========================
+	// Render Post Processing
+	//========================
+
+	// NEED IF STATEMENT TO SEE IF WE SHOULD RENDER THIS
+	if (IsUnderwater_)
+	{
+		Result_ = WindowSprite_->Render();
+		if (!Result_)
+		{
+			return false;
+		}
+	}
+
+	// End rendering
+	DirectXManager::Instance()->EndScene();
+
+	return true;
+}
+
+// Handlers
 bool MinecraftScene::HandleObjects()
 {
 	//=======================
@@ -359,7 +479,7 @@ bool MinecraftScene::HandleInput()
 
 	if (InputManager::Instance() -> GetKeyDown(VK_ESCAPE))
 	{
-		ApplicationManager::Instance()->SetScene(SceneState::MENU);
+		ApplicationManager::Instance()->SetScene(SceneState::MAINMENU);
 	}
 
 	//=======================
@@ -386,110 +506,6 @@ bool MinecraftScene::HandleInput()
 		SkySphere_ -> ToggleTime(NightTimeMode_);
 		Ocean_ -> ToggleTime(NightTimeMode_);
 	}
-
-	return true;
-}
-
-bool MinecraftScene::Render()
-{
-	//================
-	// Reset Textures
-	//================
-
-	RenderTexture_->ClearRenderTarget(Colour::Black);
-	ReflectionTexture_->ClearRenderTarget(Colour::Black);
-	RefractionTexture_->ClearRenderTarget(Colour::Black);
-
-	//==============
-	// Render Scene
-	//==============
-
-	// Render the scene normally to the screen
-	Result_ = RenderScene();
-	if (!Result_)
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool MinecraftScene::RenderScene()
-{
-	// Begin rendering
-	DirectXManager::Instance() -> BeginScene();
-
-	Camera::Instance()->Render();
-	Camera::Instance()->RenderReflection(0.0f);
-
-	//================
-	// Render the Sky 
-	//================
-
-	Result_ = SkySphere_->Render();
-	if (!Result_)
-	{
-		return false;
-	}
-
-	Result_ = Clouds_->Render();
-	if (!Result_)
-	{
-		return false;
-	}
-
-	//==================
-	// Render the World 
-	//==================
-
-	World_->Render();
-
-	Result_ = Ocean_->Render();
-	if (!Result_)
-	{
-		return false;
-	}
-
-	//============
-	// Render GUI
-	//============
-
-	Result_ = Text_->Render();
-	if (!Result_)
-	{
-		return false;
-	}
-
-	Result_ = ToolbarUI_->Render();
-	if (!Result_)
-	{
-		return false;
-	}
-
-	ToolbarUI_->Render();
-
-	Result_ = Cursor_->Render();
-	if (!Result_)
-	{
-		return false;
-	}
-
-	//========================
-	// Render Post Processing
-	//========================
-
-	// NEED IF STATEMENT TO SEE IF WE SHOULD RENDER THIS
-	if (IsUnderwater_)
-	{
-		Result_ = WindowSprite_->Render();
-		if (!Result_)
-		{
-			return false;
-		}
-	}
-
-	// End rendering
-	DirectXManager::Instance() -> EndScene();
 
 	return true;
 }

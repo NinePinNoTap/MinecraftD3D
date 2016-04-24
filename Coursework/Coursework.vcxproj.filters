@@ -296,7 +296,9 @@
     <ClCompile Include="Clouds.cpp">
       <Filter>Scene\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Toolbar.cpp" />
+    <ClCompile Include="Toolbar.cpp">
+      <Filter>Scene\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -527,7 +529,9 @@
     <ClInclude Include="Clouds.h">
       <Filter>Scene\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Toolbar.h" />
+    <ClInclude Include="Toolbar.h">
+      <Filter>Scene\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shaders\cloud.ps">

@@ -15,15 +15,6 @@
 #include "ShaderManager.h"
 #include "ViewFrustumManager.h"
 
-enum SceneState
-{
-	NO_SCENE,
-	MENU,
-	LOADING,
-	MINECRAFT,
-	EXIT
-};
-
 class ApplicationManager : public Singleton<ApplicationManager>
 {
 public:
@@ -42,6 +33,9 @@ public:
 
 	// Scene Switching
 	void SetScene(SceneState scene);
+
+	// Scene Finished
+	bool CheckSceneLoaded(SceneState scene);
 	
 private:
 	// Update

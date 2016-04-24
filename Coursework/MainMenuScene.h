@@ -12,11 +12,18 @@ public:
 	MainMenuScene();
 	~MainMenuScene();
 
+	// Initialise
 	bool Initialise(HWND hwnd);
+
+	// Shutdown
 	void Shutdown();
 
+	// Frame
 	bool Frame();
-	void Reset();
+	
+	// Scene Change
+	void Load();
+	void Unload();
 
 private:
 	void CreateButton(string buttonText, int x, int y, int sceneID);

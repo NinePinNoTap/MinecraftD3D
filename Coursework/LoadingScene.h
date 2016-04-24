@@ -20,8 +20,12 @@ public:
 	// Frame
 	bool Frame();
 
-	// Setters
-	void Reset();
+	// Load and Unloading
+	void Load();
+	void Unload();
+
+	// Transitions
+	void LoadScene(SceneState sceneState);
 
 private:
 	void Render();
@@ -31,6 +35,8 @@ private:
 	Sprite* BarMask_;
 	int LoadingProgress_;
 	Text* LoadingText_;
+
+	SceneState LoadTarget_;
 };
 
 

@@ -13,6 +13,7 @@ public:
 
 	// Initialising
 	bool Initialise();
+	void Shutdown();
 
 	// Frame
 	bool Frame();
@@ -25,6 +26,7 @@ private:
 	void RefreshTools();
 
 	Sprite* Background_;
+	Sprite* ToolHighlighter_;
 	InstancedSprite* ToolbarIcons_;
 
 	int SelectedTool_;

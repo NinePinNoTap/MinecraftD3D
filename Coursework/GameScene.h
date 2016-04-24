@@ -11,28 +11,34 @@
 #include "AudioClip.h"
 #include "Text.h"
 
+enum SceneState
+{
+	NO_SCENE,
+	MAINMENU,
+	LOADING,
+	MINECRAFT,
+	EXIT
+};
+
 class GameScene
 {
 public:
-	GameScene()
-	{
-
-	}
-	~GameScene()
-	{
-
-	}
-
 	// Shutdown
 	virtual void Shutdown() = 0;
 
 	// Frame
 	virtual bool Frame() = 0;
-	virtual void Reset() = 0;
-	
+
+	// Functionality
+	virtual void Load() = 0;
+	virtual void Unload() = 0;
+
+	inline bool IsLoaded() { return IsLoaded_; }
+
 protected:
 	// Flags
 	bool Result_;
+	bool IsLoaded_;
 };
 
 

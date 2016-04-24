@@ -28,11 +28,18 @@ public:
 	MinecraftScene();
 	~MinecraftScene();
 
+	// Initialise
 	bool Initialise(HWND hwnd);
+
+	// Shutdown
 	void Shutdown();
 
+	// Frame
 	bool Frame();
-	void Reset();
+	
+	// Scene Change
+	void Load();
+	void Unload();
 
 private:
 	bool HandleObjects();
