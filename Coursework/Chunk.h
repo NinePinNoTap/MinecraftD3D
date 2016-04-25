@@ -31,12 +31,14 @@ public:
 
 	// Setter
 	void SetBlocks(string blockName);
+	inline void SetDirty(bool flag) { IsDirty_ = flag; }
 
 	// Getters
 	inline bool IsVisible()
 	{
 		return IsVisible_;
 	}
+	inline bool IsDirty() { return IsDirty_; }
 	inline D3DXVECTOR3 GetPosition()
 	{
 		return Position_;
@@ -71,6 +73,7 @@ private:
 	Block*** Blocks_;
 
 	bool IsVisible_;
+	bool IsDirty_;
 	bool IsGenerated_;
 	bool Result_;
 };

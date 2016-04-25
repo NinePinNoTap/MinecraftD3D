@@ -88,6 +88,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Chunk.cpp" />
+    <ClCompile Include="ChunkGenerator.cpp" />
     <ClCompile Include="Clouds.cpp" />
     <ClCompile Include="CloudShader.cpp" />
     <ClCompile Include="ColourShader.cpp" />
@@ -109,6 +110,7 @@
     <ClCompile Include="Interpolator.cpp" />
     <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="MainMenuScene.cpp" />
+    <ClCompile Include="ManagedThread.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh3D.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -154,7 +156,8 @@
     <ClInclude Include="BlockManager.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Chunk.h" />
-    <ClInclude Include="ChunkThread.h" />
+    <ClInclude Include="ChunkGenerator.h" />
+    <ClInclude Include="ManagedThread.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="FontShader.h" />
     <ClInclude Include="InstanceData.h" />

@@ -39,6 +39,7 @@ void Chunk::Initialise(int x, int y, int z)
 
 	IsVisible_ = true;
 	IsGenerated_ = false;
+	IsDirty_ = false;
 }
 
 void Chunk::Generate()

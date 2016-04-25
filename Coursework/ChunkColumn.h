@@ -4,6 +4,7 @@
 
 #include "Chunk.h"
 #include "TerrainLayer.h"
+#include "ChunkGenerator.h"
 
 class ChunkColumn
 {
@@ -14,19 +15,19 @@ public:
 	// Initialise
 	void Initialise(int x, int z, int chunkHeight);
 
+	// Shutdown
+	void Shutdown();
+
+	// Frame
 	bool Frame();
 	bool Render();
 
+	// Getters
 	Chunk* GetChunk(int y);
 
 private:
-	void InitialiseLayers();
-	void GenerateTerrain();
-	void GenerateColumn(int x, int z);
-	int GenerateLayer(TerrainLayer terrainLayer, int x, int z, int currentHeight);
-
 	vector<Chunk*> Chunks_;
-	vector<TerrainLayer> Layers_;
+	ChunkGenerator* ChunkGenerator_;
 
 	D3DXVECTOR3 ChunkPos_;
 

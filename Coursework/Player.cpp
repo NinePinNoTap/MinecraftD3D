@@ -24,6 +24,8 @@ bool Player::Initialise()
 	// Define Vars
 	LookSpeed_ = 10.0f;
 	MoveSpeed_ = 4.137f;
+	JumpPower_ = 15.0f;
+	MoveVelocity_ = Vector::Zero;
 
 	return true;
 }
@@ -55,8 +57,8 @@ bool Player::Frame()
 void Player::HandleMovement()
 {
 	// Reset velocity
-	MoveVelocity_ = D3DXVECTOR3(0, 0, 0);
-	
+	MoveVelocity_.x = MoveVelocity_.z = 0.0f;
+
 	//=================
 	// Check for Input
 	//=================
@@ -69,14 +71,26 @@ void Player::HandleMovement()
 	HandleMovementKey(VK_A, -Transform_->GetRightVector());
 	HandleMovementKey(VK_D, Transform_->GetRightVector());
 
-	// Gravity
-	if (!UseGravity_)
+	if (IsGrounded_)
 	{
-		return;
+		HandleMovementKey(VK_SPACE, Transform_->GetUpVector() * JumpPower_);
+	}
+	else
+	{
+		// Gravity
+		if (!UseGravity_)
+		{
+			return;
+		}
+
+		// Apply Gravity
+		MoveVelocity_.y -= Physics::Gravity;
 	}
 
-	// Apply Gravity
-	MoveVelocity_.y -= Physics::Gravity;
+	if (MoveVelocity_.y < -9)
+	{
+		MoveVelocity_.y = -9;
+	}
 
 	// Check for Ground
 	GroundCheck();
@@ -215,6 +229,9 @@ void Player::GroundCheck()
 	D3DXVECTOR3 nextStep;
 	Block* blockNextStep;
 
+	// Reset Flag
+	IsGrounded_ = false;
+
 	// Calculate next step
 	nextStep = Transform_->GetPosition() + MoveVelocity_ * PerformanceManager::Instance()->GetDeltaTime();
 
@@ -238,6 +255,7 @@ void Player::GroundCheck()
 	if (nextStep.y < blockNextStep->GetBoundingBox().top)
 	{
 		MoveVelocity_.y = 0.0f;
+		IsGrounded_ = true;
 	}
 }
 

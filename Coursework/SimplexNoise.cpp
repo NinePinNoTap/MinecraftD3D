@@ -32,28 +32,32 @@ unsigned char SimplexNoise::perm[512] =
 	138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180
 };
 
-float  SimplexNoise::Gradient(int hash, float x) {
+float  SimplexNoise::Gradient(int hash, float x)
+{
 	int h = hash & 15;
 	float Gradient = 1.0f + (h & 7);   // Gradient value 1.0, 2.0, ..., 8.0
 	if (h & 8) Gradient = -Gradient;         // Set a random sign for the Gradientient
 	return (Gradient * x);           // Multiply the Gradientient with the distance
 }
 
-float  SimplexNoise::Gradient(int hash, float x, float y) {
+float  SimplexNoise::Gradient(int hash, float x, float y)
+{
 	int h = hash & 7;      // Convert low 3 bits of hash code
 	float u = h < 4 ? x : y;  // into 8 simple Gradientient directions,
 	float v = h < 4 ? y : x;  // and compute the dot product with (x,y).
 	return ((h & 1) ? -u : u) + ((h & 2) ? -2.0f*v : 2.0f*v);
 }
 
-float  SimplexNoise::Gradient(int hash, float x, float y, float z) {
+float  SimplexNoise::Gradient(int hash, float x, float y, float z)
+{
 	int h = hash & 15;     // Convert low 4 bits of hash code into 12 simple
 	float u = h < 8 ? x : y; // Gradientient directions, and compute dot product.
 	float v = h < 4 ? y : h == 12 || h == 14 ? x : z; // Fix repeats at h = 12 to 15
 	return ((h & 1) ? -u : u) + ((h & 2) ? -v : v);
 }
 
-float  SimplexNoise::Gradient(int hash, float x, float y, float z, float t) {
+float  SimplexNoise::Gradient(int hash, float x, float y, float z, float t)
+{
 	int h = hash & 31;      // Convert low 5 bits of hash code into 32 simple
 	float u = h < 24 ? x : y; // Gradientient directions, and compute dot product.
 	float v = h < 16 ? y : z;
@@ -72,11 +76,12 @@ static unsigned char simplex[64][4] = {
 	{ 1, 0, 2, 3 }, { 1, 0, 3, 2 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 2, 0, 3, 1 }, { 0, 0, 0, 0 }, { 2, 1, 3, 0 },
 	{ 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 },
 	{ 2, 0, 1, 3 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 3, 0, 1, 2 }, { 3, 0, 2, 1 }, { 0, 0, 0, 0 }, { 3, 1, 2, 0 },
-	{ 2, 1, 0, 3 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 3, 1, 0, 2 }, { 0, 0, 0, 0 }, { 3, 2, 0, 1 }, { 3, 2, 1, 0 } };
+	{ 2, 1, 0, 3 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 3, 1, 0, 2 }, { 0, 0, 0, 0 }, { 3, 2, 0, 1 }, { 3, 2, 1, 0 }
+};
 
 // 1D simplex Noise
-float SimplexNoise::Noise(float x) {
-
+float SimplexNoise::Noise(float x)
+{
 	int i0 = FASTFLOOR(x);
 	int i1 = i0 + 1;
 	float x0 = x - i0;
@@ -101,8 +106,8 @@ float SimplexNoise::Noise(float x) {
 }
 
 // 2D simplex Noise
-float SimplexNoise::Noise(float x, float y) {
-
+float SimplexNoise::Noise(float x, float y)
+{
 #define F2 0.366025403f // F2 = 0.5*(sqrt(3.0)-1.0)
 #define G2 0.211324865f // G2 = (3.0-Math.sqrt(3.0))/6.0
 
@@ -168,8 +173,8 @@ float SimplexNoise::Noise(float x, float y) {
 }
 
 // 3D simplex Noise
-float SimplexNoise::Noise(float x, float y, float z) {
-
+float SimplexNoise::Noise(float x, float y, float z)
+{
 	// Simple skewing factors for the 3D case
 #define F3 0.333333333f
 #define G3 0.166666667f
@@ -274,7 +279,6 @@ float SimplexNoise::Noise(float x, float y, float z) {
 	// The result is scaled to stay just inside [-1,1]
 	return 32.0f * (n0 + n1 + n2 + n3); // TODO: The scale factor is preliminary!
 }
-
 
 // 4D simplex Noise
 float SimplexNoise::Noise(float x, float y, float z, float w)

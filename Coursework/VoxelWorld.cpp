@@ -107,7 +107,7 @@ void VoxelWorld::HandleThreads()
 
 void VoxelWorld::HandleActiveThreads()
 {
-	if (ChunkThreads_.empty())
+	if (ManagedThreads_.empty())
 	{
 		return;
 	}
@@ -116,14 +116,14 @@ void VoxelWorld::HandleActiveThreads()
 	// Remove Finished Threads
 	//=========================
 
-	for (vector<ChunkThread*>::iterator it = ChunkThreads_.begin(); it != ChunkThreads_.end();)
+	for (vector<ManagedThread*>::iterator it = ManagedThreads_.begin(); it != ManagedThreads_.end();)
 	{
-		ChunkThread* chunkThread = *it;
+		ManagedThread* chunkThread = *it;
 
 		// Remove finished threads
 		if (chunkThread->TryJoin())
 		{
-			it = ChunkThreads_.erase(it);
+			it = ManagedThreads_.erase(it);
 		}
 		else
 		{
@@ -144,7 +144,7 @@ void VoxelWorld::HandleBuildList()
 	}
 
 	// Make sure we have available threads
-	if (ChunkThreads_.size() >= MaxThreads_)
+	if (ManagedThreads_.size() >= MaxThreads_)
 	{
 		return;
 	}
@@ -153,10 +153,10 @@ void VoxelWorld::HandleBuildList()
 	D3DXVECTOR3 buildTarget = BuildList_.front();
 
 	// Create a build thread
-	ChunkThread* chunkThread = new ChunkThread;
+	ManagedThread* chunkThread = new ManagedThread;
 	chunkThread->SetFunction(std::bind(&VoxelWorld::BuildChunk, this, buildTarget));
 	chunkThread->Start();
-	ChunkThreads_.push_back(chunkThread);
+	ManagedThreads_.push_back(chunkThread);
 
 	// Remove chunk from build list
 	BuildList_.erase(BuildList_.begin());

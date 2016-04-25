@@ -299,6 +299,12 @@
     <ClCompile Include="Toolbar.cpp">
       <Filter>Scene\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="ChunkGenerator.cpp">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="ManagedThread.cpp">
+      <Filter>Framework\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -532,8 +538,11 @@
     <ClInclude Include="Toolbar.h">
       <Filter>Scene\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="ChunkThread.h">
-      <Filter>Framework\System\Data</Filter>
+    <ClInclude Include="ChunkGenerator.h">
+      <Filter>Scene\VoxelTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="ManagedThread.h">
+      <Filter>Framework\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

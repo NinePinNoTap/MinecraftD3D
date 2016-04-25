@@ -43,6 +43,10 @@ private:
 	float LookSpeed_;
 	D3DXVECTOR3 MoveVelocity_;
 
+	// Jumping
+	float JumpPower_;
+	bool IsGrounded_;
+
 	// Physics
 	bool UseGravity_;
 };

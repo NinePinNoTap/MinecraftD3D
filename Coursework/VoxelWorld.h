@@ -9,7 +9,7 @@
 #include "Utilities.h"
 #include "ChunkColumn.h"
 #include "Player.h"
-#include "ChunkThread.h"
+#include "ManagedThread.h"
 
 using namespace std;
 using namespace Config;
@@ -51,7 +51,7 @@ private:
 	// Building
 	vector<D3DXVECTOR3> LocalChunks_;
 	vector<D3DXVECTOR3> BuildList_;
-	vector<ChunkThread*> ChunkThreads_;
+	vector<ManagedThread*> ManagedThreads_;
 	thread ThreadHandler_;
 	int MaxThreads_;
 

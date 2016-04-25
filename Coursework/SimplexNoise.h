@@ -46,5 +46,4 @@ private:
 	static float Gradient(int hash, float x, float y);
 	static float Gradient(int hash, float x, float y, float z);
 	static float Gradient(int hash, float x, float y, float z, float t);
-
 };
