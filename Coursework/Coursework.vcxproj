@@ -154,6 +154,7 @@
     <ClInclude Include="BlockManager.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Chunk.h" />
+    <ClInclude Include="ChunkThread.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="FontShader.h" />
     <ClInclude Include="InstanceData.h" />

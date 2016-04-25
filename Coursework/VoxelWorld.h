@@ -9,13 +9,12 @@
 #include "Utilities.h"
 #include "ChunkColumn.h"
 #include "Player.h"
+#include "ChunkThread.h"
 
 using namespace std;
 using namespace Config;
 
 typedef std::map<string, ChunkColumn*>::iterator it_wc;
-
-class ChunkThread;
 
 class VoxelWorld : public Singleton<VoxelWorld>
 {
@@ -47,6 +46,7 @@ private:
 
 	// Updating
 	D3DXVECTOR3 LastChunkPosition_;
+	vector<D3DXVECTOR3> UpdateList_;
 
 	// Building
 	vector<D3DXVECTOR3> LocalChunks_;
@@ -60,55 +60,4 @@ private:
 
 	// Misc
 	bool Result_;
-};
-
-struct ChunkThread
-{
-	ChunkThread()
-	{
-	}
-
-	~ChunkThread()
-	{
-		TryJoin();
-	}
-
-	void SetFunction(std::function<void()> function)
-	{
-		workerFunction = function;
-	}
-
-	void Start()
-	{
-		isFinished = false;
-
-		// Create a thread
-		workerThread = std::thread([this]()
-		{
-			// Call the function
-			workerFunction();
-
-			// Flag its complete
-			isFinished = true;
-		});
-	}
-
-	bool TryJoin()
-	{
-		if (isFinished)
-		{
-			if (workerThread.joinable())
-			{
-				workerThread.join();
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	std::function<void()> workerFunction;
-	std::thread workerThread;
-
-	bool isFinished;
 };

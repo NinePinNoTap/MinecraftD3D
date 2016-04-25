@@ -4,9 +4,7 @@
 Player::Player() : GameObject()
 {
 	Height_ = 1;
-	IsGrounded_ = false;
 	UseGravity_ = false;
-	GroundLevel_ = 0;
 }
 
 Player::~Player()
@@ -38,16 +36,7 @@ bool Player::Frame()
 
 	HandleMovement();
 	HandleLooking();
-
-	//=========
-	// Physics
-	//=========
-
-	if (UseGravity_)
-	{
-		GroundedCheck();
-		ApplyGravity();
-	}
+	HandlePhysics();
 
 	//===========
 	// Debugging -- REMOVE LATER
@@ -63,51 +52,14 @@ bool Player::Frame()
 	return true;
 }
 
-void Player::GroundedCheck()
-{
-	// Get the block we are currently in
-	Block* beneathBlock = VoxelWorld::Instance()->GetBlock(Transform_->GetPosition().x, Transform_->GetPosition().y - 1, Transform_->GetPosition().z);
-	if (beneathBlock)
-	{
-		// Make sure the block beneath us is solid
-		if (beneathBlock->IsSolid())
-		{
-			GroundLevel_ = beneathBlock->GetInstance().position.y + 1.0f;
-
-			// Check if we are grounded
-			if (Transform_->GetPosition().y - Physics::Gravity <= GroundLevel_)
-			{
-				Transform_->SetY(GroundLevel_);
-
-				IsGrounded_ = true;
-				return;
-			}
-		}
-	}
-
-	IsGrounded_ = false;
-}
-
-void Player::ApplyGravity()
-{
-	if (IsGrounded_)
-		return;
-
-	// Apply Gravity
-	Transform_->MoveY(-Physics::Gravity * PerformanceManager::Instance()->GetDeltaTime());
-
-	// Align Camera
-	Camera::Instance()->GetTransform()->SetPosition(Transform_->GetPosition() + D3DXVECTOR3(0, Height_, 0));
-}
-
 void Player::HandleMovement()
 {
-	// Reset Movement Velocity
+	// Reset velocity
 	MoveVelocity_ = D3DXVECTOR3(0, 0, 0);
 	
-	//====================
-	// Check for Movement
-	//====================
+	//=================
+	// Check for Input
+	//=================
 
 	// Forward / Backward
 	HandleMovementKey(VK_W, Transform_->GetForwardVector());
@@ -117,15 +69,17 @@ void Player::HandleMovement()
 	HandleMovementKey(VK_A, -Transform_->GetRightVector());
 	HandleMovementKey(VK_D, Transform_->GetRightVector());
 
-	//====================
-	// Apply to Character
-	//====================
-	
-	// Move Character
-	Transform_->Move(MoveVelocity_ * MoveSpeed_ * PerformanceManager::Instance()->GetDeltaTime());
+	// Gravity
+	if (!UseGravity_)
+	{
+		return;
+	}
 
-	// Update Camera Position
-	Camera::Instance()->GetTransform()->SetPosition(Transform_->GetPosition() + D3DXVECTOR3(0, Height_, 0));
+	// Apply Gravity
+	MoveVelocity_.y -= Physics::Gravity;
+
+	// Check for Ground
+	GroundCheck();
 }
 
 void Player::HandleMovementKey(unsigned int key, D3DXVECTOR3 moveAmount)
@@ -135,7 +89,7 @@ void Player::HandleMovementKey(unsigned int key, D3DXVECTOR3 moveAmount)
 		return;
 	}
 
-	MoveVelocity_ += moveAmount;
+	MoveVelocity_ += (moveAmount * MoveSpeed_);
 }
 
 void Player::HandleLooking()
@@ -166,4 +120,132 @@ void Player::HandleLooking()
 
 	// Keep Mouse in Center Screen
 	LockMouseToCenter();
+}
+
+void Player::HandlePhysics()
+{
+	D3DXVECTOR3 nextStep, blockPos;
+	Block* blockNextStep;
+	BoundingBox boundingBox;
+	float lowestDistance, currentDistance;
+	int solutionID;
+	
+	// Calculate next position
+	nextStep = Transform_->GetPosition() + MoveVelocity_ * PerformanceManager::Instance()->GetDeltaTime();
+
+	// Check if theres a block in the next position
+	blockNextStep = VoxelWorld::Instance()->GetBlock(nextStep.x, nextStep.y, nextStep.z);
+	if (!blockNextStep)
+	{
+		// Apply to Transforms
+		UpdatePosition(nextStep);
+		return;
+	}
+
+	// Make sure the block is solid
+	if (!blockNextStep->IsSolid())
+	{
+		// Apply to Transforms
+		UpdatePosition(nextStep);
+		return;
+	}
+
+	//===================
+	// Handle Collisions
+	//===================
+
+	Round(nextStep.x, 1);
+	Round(nextStep.y, 1);
+	Round(nextStep.z, 1);
+
+	// Make it easier for readability
+	blockPos = blockNextStep->GetInstance().position;
+	boundingBox = blockNextStep->GetBoundingBox();
+
+	// Calculate face centres
+	D3DXVECTOR3 boxPositions[6] = {
+		D3DXVECTOR3(boundingBox.left, blockPos.y, blockPos.z),
+		D3DXVECTOR3(boundingBox.right, blockPos.y, blockPos.z),
+		D3DXVECTOR3(blockPos.x, boundingBox.top, blockPos.z),
+		D3DXVECTOR3(blockPos.x, boundingBox.bottom, blockPos.z),
+		D3DXVECTOR3(blockPos.x, blockPos.y, boundingBox.front),
+		D3DXVECTOR3(blockPos.x, blockPos.y, boundingBox.back),
+	};
+
+	// Calculate possible outcomes
+	D3DXVECTOR3 collisionOutcomes[6] = { 
+		D3DXVECTOR3(boundingBox.left,   nextStep.y,			nextStep.z), 
+		D3DXVECTOR3(boundingBox.right,  nextStep.y,			nextStep.z),
+		D3DXVECTOR3(nextStep.x,			boundingBox.top,	nextStep.z),
+		D3DXVECTOR3(nextStep.x,			boundingBox.bottom, nextStep.z),
+		D3DXVECTOR3(nextStep.x,			nextStep.y,			boundingBox.front),
+		D3DXVECTOR3(nextStep.x,			nextStep.y,			boundingBox.back),
+	};
+
+	// Start with a high number
+	lowestDistance = RAND_MAX;
+
+	// Check if we are colliding with the box
+	if (CheckCollision(boundingBox, nextStep))
+	{
+		// Find the intersecting side
+		for (int i = 0; i < 6; i++)
+		{
+			currentDistance = Distance(nextStep, boxPositions[i]);
+			if (currentDistance < lowestDistance)
+			{
+				// Store lowest
+				lowestDistance = currentDistance;
+
+				// Save index
+				solutionID = i;
+			}
+		}
+
+		// Update to solution
+		nextStep = collisionOutcomes[solutionID];
+	}
+
+	// Apply to Transforms
+	UpdatePosition(nextStep);
+}
+
+void Player::GroundCheck()
+{
+	D3DXVECTOR3 nextStep;
+	Block* blockNextStep;
+
+	// Calculate next step
+	nextStep = Transform_->GetPosition() + MoveVelocity_ * PerformanceManager::Instance()->GetDeltaTime();
+
+	// Get next step block
+	blockNextStep = VoxelWorld::Instance()->GetBlock(nextStep.x, nextStep.y, nextStep.z);
+	if (!blockNextStep)
+	{
+		return;
+	}
+
+	// Ensure its not air
+	if (!blockNextStep->IsSolid())
+	{
+		return;
+	}
+
+	// Round to 1 decimal place
+	Round(nextStep.y, 1);
+
+	// Check if we are colliding
+	if (nextStep.y < blockNextStep->GetBoundingBox().top)
+	{
+		MoveVelocity_.y = 0.0f;
+	}
+}
+
+void Player::UpdatePosition(D3DXVECTOR3 playerPos)
+{
+	// Set feet position
+	Transform_->SetPosition(playerPos);
+
+	// Set head position
+	Camera::Instance()->GetTransform()->SetPosition(Transform_->GetPosition() + D3DXVECTOR3(0, Height_, 0));
 }

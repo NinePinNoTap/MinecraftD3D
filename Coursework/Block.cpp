@@ -119,6 +119,8 @@ bool Block::CheckNeighbour(int i)
 void Block::SetPosition(float x, float y, float z)
 {
 	Position_ = D3DXVECTOR3(x, y, z);
+
+	BoundingBox_ = BoundingBox(Rect3D(World::BlockSize), Position_);
 }
 
 void Block::SetNeighbour(Direction direction, Block* block)
@@ -127,11 +129,6 @@ void Block::SetNeighbour(Direction direction, Block* block)
 }
 
 // Getters
-BlockType Block::GetType()
-{
-	return BlockType_;
-}
-
 InstanceData Block::GetInstance()
 {
 	InstanceData instanceData;
@@ -140,14 +137,4 @@ InstanceData Block::GetInstance()
 	instanceData.textureTotal = TotalTextures_;
 
 	return instanceData;
-}
-
-bool Block::IsSolid()
-{
-	return IsSolid_;
-}
-
-bool Block::IsActive()
-{
-	return IsActive_;
 }

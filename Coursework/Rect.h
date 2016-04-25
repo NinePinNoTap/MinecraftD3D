@@ -35,6 +35,13 @@ struct Rect3D
 		depth = 0;
 	}
 
+	Rect3D(float d)
+	{
+		width = d;
+		height = d;
+		depth = d;
+	}
+
 	Rect3D(float w, float h)
 	{
 		width = w;

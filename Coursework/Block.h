@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "BoundingBox.h"
 #include "InstancedGameObject.h"
 #include "ViewFrustumManager.h"
 
@@ -12,11 +13,12 @@ enum BlockType
 	None, Air, Dirt, Sand, Gravel, Wood, Cobblestone, Stone, Gold, Diamond, Water, Lava, Bedrock
 };
 
-
 enum Direction
 {
 	Up, Down, Left, Right, Forward, Backward
 };
+
+struct BoundingBox;
 
 class Block
 {
@@ -36,11 +38,11 @@ public:
 	void SetNeighbour(Direction direction, Block* block);
 
 	// Getters
-	BlockType GetType();
+	inline BlockType GetType() { return BlockType_; }
+	inline bool IsSolid() { return IsSolid_; }
+	inline bool IsActive() { return IsActive_; }
+	inline BoundingBox GetBoundingBox() { return BoundingBox_; }
 	InstanceData GetInstance();
-	bool IsSolid();
-	bool IsActive();
-
 
 private:
 	void HandleNeighbours();
@@ -57,4 +59,6 @@ private:
 
 	// Neighbours
 	Block* NeighbourBlocks_[6];
+
+	BoundingBox BoundingBox_;
 };

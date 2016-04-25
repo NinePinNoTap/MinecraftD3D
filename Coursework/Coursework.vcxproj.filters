@@ -532,6 +532,9 @@
     <ClInclude Include="Toolbar.h">
       <Filter>Scene\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="ChunkThread.h">
+      <Filter>Framework\System\Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shaders\cloud.ps">

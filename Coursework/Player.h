@@ -32,11 +32,10 @@ public:
 private:
 	void HandleMovement();
 	void HandleLooking();
-
+	void HandlePhysics();
+	void GroundCheck();
 	void HandleMovementKey(unsigned int key, D3DXVECTOR3 moveAmount);
-
-	void GroundedCheck();
-	void ApplyGravity();
+	void UpdatePosition(D3DXVECTOR3 playerPos);
 
 	// Attributes
 	float Height_;
@@ -45,7 +44,5 @@ private:
 	D3DXVECTOR3 MoveVelocity_;
 
 	// Physics
-	bool IsGrounded_;
-	int GroundLevel_;
 	bool UseGravity_;
 };

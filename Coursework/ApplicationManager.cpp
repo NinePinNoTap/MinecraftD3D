@@ -320,7 +320,10 @@ bool ApplicationManager::Frame()
 void ApplicationManager::UpdateScene()
 {
 	// Unload the current scene
-	CurrentScene_->Unload();
+	if (CurrentScene_)
+	{
+		CurrentScene_->Unload();
+	}
 
 	// Check which scene to change to
 	switch (NewSceneState_)
@@ -385,4 +388,6 @@ bool ApplicationManager::CheckSceneLoaded(SceneState scene)
 			return false;
 			break;
 	}
+
+	return false;
 }

@@ -29,7 +29,7 @@ D3DXVECTOR3 Normalise(D3DXVECTOR3 a, D3DXVECTOR3 b)
 
 void Round(float& number, int decimalplaces)
 {
-	int ten = 10 ^ decimalplaces;
+	int ten = pow(10, decimalplaces);
 
 	number = roundf(number * ten) / ten;
 }
@@ -154,6 +154,15 @@ bool RangeCheck(int value, int min, int max)
 bool RangeCheck(float value, float min, float max)
 {
 	return value >= min && value <= max;
+}
+
+bool CheckCollision(BoundingBox box, float position)
+{
+	bool insideX = RangeCheck(position, box.left, box.right);
+	bool insideY = RangeCheck(position, box.bottom, box.top);
+	bool insideZ = RangeCheck(position, box.front, box.back);
+
+	return insideX && insideY && insideZ;
 }
 
 bool CheckCollision(BoundingBox box, D3DXVECTOR2 position)

@@ -61,3 +61,4 @@ float Config::Physics::Gravity = 9.80665f;
 D3DXVECTOR3 Config::Vector::Forward = D3DXVECTOR3(0, 0, 1);
 D3DXVECTOR3 Config::Vector::Right	= D3DXVECTOR3(1, 0, 0);
 D3DXVECTOR3 Config::Vector::Up		= D3DXVECTOR3(0, 1, 0);
+D3DXVECTOR3 Config::Vector::Zero	= D3DXVECTOR3(0, 0, 0);

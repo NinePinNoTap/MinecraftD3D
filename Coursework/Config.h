@@ -68,5 +68,6 @@ namespace Config
 			static D3DXVECTOR3 Forward;
 			static D3DXVECTOR3 Right;
 			static D3DXVECTOR3 Up;
+			static D3DXVECTOR3 Zero;
 	};
 }

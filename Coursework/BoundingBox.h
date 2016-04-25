@@ -1,5 +1,8 @@
 #pragma once
 
+#include <d3dx11.h>
+#include <d3dx10math.h>
+
 #include "Rect.h"
 
 // Data Struct for Representing a Bounding Box
