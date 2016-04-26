@@ -222,8 +222,8 @@ void VoxelWorld::GenerateLocalChunks()
 	// Chunk Building
 	//================
 
+	// Force to load centre
 	BuildList_.push_back(D3DXVECTOR3(0, 0, 0));
-	return;
 
 	// Build chunks around us
 	for (unsigned int i = 0; i < LocalChunks_.size(); i++)
