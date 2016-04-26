@@ -3,11 +3,11 @@
 #include <string>
 
 #include "Block.h"
-#include "BlockManager.h"
-
 #include "InstancedGameObject.h"
 #include "ShaderManager.h"
 #include "SimplexNoise.h"
+
+using namespace Config;
 
 class Chunk
 {

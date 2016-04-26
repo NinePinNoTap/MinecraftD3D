@@ -35,6 +35,23 @@ int Config::World::ChunkSize	= 16;
 int Config::World::BlockSize	= 1;
 int Config::World::LoadRadius	= 1;
 int Config::World::ColumnHeight = 8;
+std::map<string, Block> Config::World::Blocks =
+{
+
+	{ "air", Block("air", BlockType::Air, D3DXVECTOR2(0, 0), D3DXVECTOR2(16, 16), false) },
+	{ "stone", Block("stone", BlockType::Stone, D3DXVECTOR2(1, 0), D3DXVECTOR2(16, 16), true) },
+	{ "dirt", Block("dirt", BlockType::Dirt, D3DXVECTOR2(2, 0), D3DXVECTOR2(16, 16), true) },
+	{ "wood", Block("wood", BlockType::Wood, D3DXVECTOR2(3, 0), D3DXVECTOR2(16, 16), true) },
+	{ "cobblestone", Block("cobblestone", BlockType::Cobblestone, D3DXVECTOR2(0, 1), D3DXVECTOR2(16, 16), true) },
+	{ "bedrock", Block("bedrock", BlockType::Bedrock, D3DXVECTOR2(1, 1), D3DXVECTOR2(16, 16), true) },
+	{ "sand", Block("sand", BlockType::Sand, D3DXVECTOR2(2, 1), D3DXVECTOR2(16, 16), true) },
+	{ "gravel", Block("gravel", BlockType::Gravel, D3DXVECTOR2(3, 1), D3DXVECTOR2(16, 16), true) },
+	{ "water", Block("water", BlockType::Water, D3DXVECTOR2(10, 1), D3DXVECTOR2(16, 16), true) },
+	{ "gold", Block("gold", BlockType::Gold, D3DXVECTOR2(0, 2), D3DXVECTOR2(16, 16), true) },
+	{ "diamond", Block("diamond", BlockType::Diamond, D3DXVECTOR2(2, 3), D3DXVECTOR2(16, 16), true) },
+	{ "lava", Block("lava", BlockType::Lava, D3DXVECTOR2(15, 15), D3DXVECTOR2(16, 16), true) }
+
+};
 
 //==================================================================
 // Colour

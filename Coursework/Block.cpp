@@ -1,5 +1,7 @@
 #include "Block.h"
-#include "BlockManager.h"
+#include "Config.h"
+
+using namespace Config;
 
 Block::Block()
 {
@@ -47,16 +49,6 @@ void Block::Refresh()
 		IsActive_ = false;
 		return;
 	}
-
-	//=========================
-	// Handle frustum checking
-	//=========================
-	//
-	//IsActive_ = ViewFrustumManager::Instance()->CheckCube(Transform_->GetPosition(), BLOCK_SIZE * 0.7);
-	//if (!IsActive_)
-	//{
-	//	return true;
-	//}
 
 	//===================
 	// Handle Neighbours

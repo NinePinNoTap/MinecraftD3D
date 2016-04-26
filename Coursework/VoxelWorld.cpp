@@ -12,13 +12,6 @@ void VoxelWorld::Initialise()
 {
 	SYSTEM_INFO systemInfo;
 
-	//======================
-	// Create Block Manager
-	//======================
-
-	BlockManager_ = new BlockManager;
-	BlockManager_->Initialise();
-
 	//===========================
 	// Initialise Chunk Building
 	//===========================
@@ -252,7 +245,7 @@ void VoxelWorld::SetBlock(int x, int y, int z, string blockName)
 		return;
 
 	// Update the block
-	currentBlock->CopyFrom(BlockManager_->GetBlock(blockName));
+	currentBlock->CopyFrom(World::Blocks[blockName]);
 }
 
 Block* VoxelWorld::GetBlock(int x, int y, int z)

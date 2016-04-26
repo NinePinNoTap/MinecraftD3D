@@ -4,7 +4,6 @@
 #include <thread>
 
 #include "Block.h"
-#include "BlockManager.h"
 #include "Singleton.h"
 #include "Utilities.h"
 #include "ChunkColumn.h"
@@ -41,7 +40,6 @@ private:
 	void GenerateLocalChunks();
 
 	// Blocks and Chunks
-	BlockManager* BlockManager_;
 	map<string, ChunkColumn*> Map_;
 
 	// Updating

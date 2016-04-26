@@ -147,6 +147,20 @@ void Player::HandlePhysics()
 	// Calculate next position
 	nextStep = Transform_->GetPosition() + MoveVelocity_ * PerformanceManager::Instance()->GetDeltaTime();
 
+	// Apply to Transforms -- NEED TO FIX PHYSICS
+	UpdatePosition(nextStep);
+	return;
+
+
+
+	
+
+
+
+
+
+
+
 	// Check if theres a block in the next position
 	blockNextStep = VoxelWorld::Instance()->GetBlock(nextStep.x, nextStep.y, nextStep.z);
 	if (!blockNextStep)

@@ -3,10 +3,11 @@
 #include <string>
 
 #include "BoundingBox.h"
-#include "InstancedGameObject.h"
-#include "ViewFrustumManager.h"
+#include "InstanceData.h"
 
 using namespace std;
+
+struct BoundingBox;
 
 enum BlockType
 {
@@ -17,8 +18,6 @@ enum Direction
 {
 	Up, Down, Left, Right, Forward, Backward
 };
-
-struct BoundingBox;
 
 class Block
 {

@@ -83,9 +83,6 @@
     <Filter Include="Framework\Noise">
       <UniqueIdentifier>{450adb5e-10df-4614-a8fd-2434304b7da3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\VoxelTerrain\Managers">
-      <UniqueIdentifier>{5eba4f86-008d-4b9c-ac78-3defc8dfa236}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework\Shader\HLSL Shader Files\Tint">
       <UniqueIdentifier>{663983e1-24cd-485b-a90d-2d94b6f5e2d7}</UniqueIdentifier>
     </Filter>
@@ -253,9 +250,6 @@
     </ClCompile>
     <ClCompile Include="VoxelWorld.cpp">
       <Filter>Scene\VoxelTerrain</Filter>
-    </ClCompile>
-    <ClCompile Include="BlockManager.cpp">
-      <Filter>Scene\VoxelTerrain\Managers</Filter>
     </ClCompile>
     <ClCompile Include="ChunkColumn.cpp">
       <Filter>Scene\VoxelTerrain</Filter>
@@ -483,9 +477,6 @@
     </ClInclude>
     <ClInclude Include="VoxelWorld.h">
       <Filter>Scene\VoxelTerrain</Filter>
-    </ClInclude>
-    <ClInclude Include="BlockManager.h">
-      <Filter>Scene\VoxelTerrain\Managers</Filter>
     </ClInclude>
     <ClInclude Include="TerrainLayer.h">
       <Filter>Scene\VoxelTerrain</Filter>

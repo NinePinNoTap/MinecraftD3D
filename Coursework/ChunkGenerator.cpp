@@ -1,5 +1,4 @@
 #include "ChunkGenerator.h"
-#include "BlockManager.h"
 
 ChunkGenerator::ChunkGenerator()
 {
@@ -59,14 +58,10 @@ void ChunkGenerator::GenerateLayer(Chunk* chunk, TerrainLayer terrainLayer, int 
 	int maxHeight;
 	int baseNoise;
 	D3DXVECTOR3 blockLocal;
-	Block blockData;
 	Block* currentTarget;
 
 	// Generate noise using layer settings
 	baseNoise = GetNoise(x, 0, z, terrainLayer.frequency, terrainLayer.amplitude, terrainLayer.exponent);
-
-	// Get the type of block we want to convert
-	blockData = BlockManager::Instance()->GetBlock(terrainLayer.blockName);
 
 	//=============================
 	// Define Maximum Layer Height
@@ -96,7 +91,7 @@ void ChunkGenerator::GenerateLayer(Chunk* chunk, TerrainLayer terrainLayer, int 
 		currentTarget = chunk->GetBlock(blockLocal.x, blockLocal.y, blockLocal.z);
 		if (currentTarget)
 		{
-			currentTarget->CopyFrom(blockData);
+			currentTarget->CopyFrom(World::Blocks[terrainLayer.blockName]);
 		}
 	}
 

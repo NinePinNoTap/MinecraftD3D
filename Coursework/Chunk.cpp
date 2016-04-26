@@ -139,7 +139,7 @@ void Chunk::SetBlocks(string blockName)
 			for (int z = 0; z < World::ChunkSize; z++)
 			{
 				// Store it
-				Blocks_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock(blockName));
+				Blocks_[x][y][z].CopyFrom(World::Blocks[blockName]);
 			}
 		}
 	}
@@ -172,7 +172,7 @@ void Chunk::GenerateBlankChunk()
 				zPos = Position_.z + z;
 
 				// Store it
-				Blocks_[x][y][z].CopyFrom(BlockManager::Instance()->GetBlock("air"));
+				Blocks_[x][y][z].CopyFrom(World::Blocks["air"]);
 				Blocks_[x][y][z].SetPosition(xPos, yPos, zPos);
 			}
 		}
