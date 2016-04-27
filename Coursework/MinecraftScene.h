@@ -69,6 +69,6 @@ private:
 	VoxelWorld* World_;
 
 	// Flags
-	bool IsUnderwater_;
+	bool WhiteOut_;
 	bool NightTimeMode_;
 };

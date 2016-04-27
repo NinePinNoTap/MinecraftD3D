@@ -159,7 +159,7 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	Text_->CreateText("FPS:", Vector2(10, 10), Colour::White); // FPS
 	Text_->CreateText("CPU:", Vector2(10, 30), Colour::White); // CPU
 	Text_->CreateText("Camera X :", Vector2(10, 50), Colour::White); // CameraX
-	Text_->CreateText("Camera Y :", Vector2(10, 70), Colour::Black); // CameraY
+	Text_->CreateText("Camera Y :", Vector2(10, 70), Colour::White); // CameraY
 	Text_->CreateText("Camera Z :", Vector2(10, 90), Colour::White); // CameraZ
 	Text_->CreateText("Rotation X :", Vector2(10, 110), Colour::White); // RotationX
 	Text_->CreateText("Rotation Y :", Vector2(10, 130), Colour::White); // RotationY
@@ -182,7 +182,7 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	// Initialise flags
 	//==================
 
-	IsUnderwater_ = false;
+	WhiteOut_ = false;
 	NightTimeMode_ = false;
 	Result_ = false;
 	IsLoaded_ = true;
@@ -386,7 +386,7 @@ bool MinecraftScene::RenderScene()
 	// Render Post Processing
 	//========================
 
-	if (IsUnderwater_)
+	if (WhiteOut_)
 	{
 		Result_ = WindowSprite_->Render();
 		if (!Result_)
@@ -505,6 +505,7 @@ bool MinecraftScene::HandleInput()
 		Light::Instance() -> ToggleTime(NightTimeMode_);
 		SkySphere_ -> ToggleTime(NightTimeMode_);
 		Ocean_ -> ToggleTime(NightTimeMode_);
+		WhiteOut_ = !WhiteOut_;
 	}
 
 	return true;
