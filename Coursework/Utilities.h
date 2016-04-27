@@ -78,6 +78,7 @@ void CalculateHardNormal(D3DXVECTOR3 tangent, D3DXVECTOR3 binormal, D3DXVECTOR3&
 // Convert a D3DXVECTOR3 into a string
 string GetKey(float x, float y);
 string GetKey(float x, float y, float z);
+D3DXVECTOR3 GetKey(string key);
 
 // Get index within a 3D array
 int GetIndex(int i, int j, int k, int maxJ, int maxK);

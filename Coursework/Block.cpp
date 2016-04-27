@@ -95,7 +95,7 @@ bool Block::CheckNeighbour(int i)
 	if (NeighbourBlocks_[i] == 0)
 	{
 		// No neighbour
-		return false;
+		return true;
 	}
 
 	// Check if the block is there and solid

@@ -246,8 +246,9 @@ void Player::GroundCheck()
 	// Reset Flag
 	IsGrounded_ = false;
 
-	// Calculate next step
-	nextStep = Transform_->GetPosition() + MoveVelocity_ * PerformanceManager::Instance()->GetDeltaTime();
+	// Check whats beneath us
+	nextStep = Transform_->GetPosition();// +MoveVelocity_ * PerformanceManager::Instance()->GetDeltaTime();
+	nextStep.y -= 1;
 
 	// Get next step block
 	blockNextStep = VoxelWorld::Instance()->GetBlock(nextStep.x, nextStep.y, nextStep.z);

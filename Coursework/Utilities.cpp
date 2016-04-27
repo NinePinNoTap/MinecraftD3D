@@ -351,6 +351,16 @@ string GetKey(float x, float y, float z)
 	return key;
 }
 
+D3DXVECTOR3 GetKey(string key)
+{
+	D3DXVECTOR3 chunkKey;
+
+	//Read the face line
+	sscanf_s(string(key).c_str(), "%f %f %f", &chunkKey.x, &chunkKey.y, &chunkKey.z);
+
+	return chunkKey;
+}
+
 int GetIndex(int i, int j, int k, int maxJ, int maxK)
 {
 	return (i*maxJ + j)*maxK + k;

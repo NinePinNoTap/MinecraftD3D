@@ -146,7 +146,6 @@
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Ocean.cpp" />
-    <ClCompile Include="ChunkColumn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
@@ -226,7 +225,6 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Ocean.h" />
-    <ClInclude Include="ChunkColumn.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shaders\cloud.ps" />

@@ -71,8 +71,9 @@ namespace Config
 		static int ChunkSize;
 		static int BlockSize;
 		static int LoadRadius;
+		static int UnloadRadius;
 		static int ColumnHeight;
+		static D3DXVECTOR3 ChunkOffset;
 		static map<string, Block> Blocks;
 	};
-
 }

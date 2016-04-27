@@ -17,7 +17,6 @@ public:
 
 	// Initiailise
 	void Initialise(int x, int y, int z);
-	void Generate();
 
 	// Shutdown
 	void Shutdown();
@@ -30,39 +29,16 @@ public:
 	bool Render();
 
 	// Setter
+	void SetBlock(int x, int y, int z, Block block);
 	void SetBlocks(string blockName);
 	inline void SetDirty(bool flag) { IsDirty_ = flag; }
 
 	// Getters
-	inline bool IsVisible()
-	{
-		return IsVisible_;
-	}
+	inline bool IsVisible() { return IsVisible_; }
 	inline bool IsDirty() { return IsDirty_; }
-	inline D3DXVECTOR3 GetPosition()
-	{
-		return Position_;
-	}
-	inline Block* GetBlock(int x, int y, int z)
-	{
-		// Check the value is within range
-		if (!RangeCheck(x, 0, World::ChunkSize - 1))
-		{
-			return 0;
-		}
-
-		if (!RangeCheck(y, 0, World::ChunkSize - 1))
-		{
-			return 0;
-		}
-		if (!RangeCheck(z, 0, World::ChunkSize - 1))
-		{
-			return 0;
-		}
-
-		// Return block
-		return &Blocks_[x][y][z];
-	}
+	inline bool IsOutOfRange() { return OutOfRange_; }
+	inline D3DXVECTOR3 GetPosition() { return Position_; }
+	Block* GetBlock(int x, int y, int z);
 
 private:
 	void GenerateBlankChunk();
@@ -76,4 +52,5 @@ private:
 	bool IsDirty_;
 	bool IsGenerated_;
 	bool Result_;
+	bool OutOfRange_;
 };

@@ -1,4 +1,5 @@
 #include "Chunk.h"
+#include "ViewFrustumManager.h"
 
 Chunk::Chunk()
 {
@@ -42,10 +43,6 @@ void Chunk::Initialise(int x, int y, int z)
 	IsDirty_ = false;
 }
 
-void Chunk::Generate()
-{
-}
-
 void Chunk::Shutdown()
 {
 	// Delete the blocks
@@ -63,49 +60,39 @@ void Chunk::Shutdown()
 	delete[] Blocks_;
 }
 
-void Chunk::RefreshVisible()
-{
-	// Loop through x dimension
-	for (int x = 0; x < World::ChunkSize; x++)
-	{
-		// Loop through y dimension
-		for (int y = 0; y < World::ChunkSize; y++)
-		{
-			// Loop through z dimension
-			for (int z = 0; z < World::ChunkSize; z++)
-			{
-				Blocks_[x][y][z].Refresh();
-
-				if (Blocks_[x][y][z].IsActive() && Blocks_[x][y][z].IsSolid())
-				{
-					ChunkBlock_->AddInstance(Blocks_[x][y][z].GetInstance());
-				}
-			}
-		}
-	}
-
-	// Compile the instance data to buffer
-	ChunkBlock_->RebuildInstanceBuffer();
-}
-
 // Frame
 bool Chunk::Frame()
 {
-	//float distanceAway;
+	float distanceAway;
+	
+	//==============
+	// View Frustum
+	//==============
 
-	//// Check distance to player
-	//distanceAway = Distance(Camera::Instance()->GetTransform()->GetPosition(), Position_);
-	//if (distanceAway > 4 * World::ChunkSize)
-	//{
-	//	IsVisible_ = false;
-	//}
-	//else
-	//{
-	//	IsVisible_ = true;
-	//}
+	IsVisible_ = ViewFrustumManager::Instance()->CheckCube(Position_ + World::ChunkOffset, World::ChunkSize / 2);
+	if (!IsVisible_)
+	{
+		return true;
+	}
 
-	// Set IsActive based on that
-	// We need Neighbours for chunks as well
+	//=================
+	// Distance Checks
+	//=================
+
+	// Check distance to player
+	distanceAway = Distance(Camera::Instance()->GetTransform()->GetPosition(), Position_);
+
+	// Check if we are out of range
+	if (distanceAway >= World::UnloadRadius * World::ChunkSize)
+	{
+		IsVisible_ = false;
+		OutOfRange_ = true;
+	}
+	else
+	{
+		IsVisible_ = true;
+		OutOfRange_ = false;
+	}
 
 	return true;
 }
@@ -127,25 +114,7 @@ bool Chunk::Render()
 	return true;
 }
 
-void Chunk::SetBlocks(string blockName)
-{
-	// Loop through x dimension
-	for (int x = 0; x < World::ChunkSize; x++)
-	{
-		// Loop through y dimension
-		for (int y = 0; y < World::ChunkSize; y++)
-		{
-			// Loop through z dimension
-			for (int z = 0; z < World::ChunkSize; z++)
-			{
-				// Store it
-				Blocks_[x][y][z].CopyFrom(World::Blocks[blockName]);
-			}
-		}
-	}
-}
-
-// Terrain Generation
+// Chunk Generating
 void Chunk::GenerateBlankChunk()
 {
 	float xPos, yPos, zPos;
@@ -154,7 +123,7 @@ void Chunk::GenerateBlankChunk()
 	Blocks_ = new Block**[World::ChunkSize];
 
 	// Loop through x dimension
-	for(int x = 0; x < World::ChunkSize; x++)
+	for (int x = 0; x < World::ChunkSize; x++)
 	{
 		Blocks_[x] = new Block*[World::ChunkSize];
 
@@ -199,4 +168,104 @@ void Chunk::GenerateBlankChunk()
 			}
 		}
 	}
+}
+
+void Chunk::RefreshVisible()
+{
+	D3DXVECTOR3 worldPos;
+
+	// Loop through x dimension
+	for (int x = 0; x < World::ChunkSize; x++)
+	{
+		// Loop through y dimension
+		for (int y = 0; y < World::ChunkSize; y++)
+		{
+			// Loop through z dimension
+			for (int z = 0; z < World::ChunkSize; z++)
+			{
+				worldPos = Position_ + D3DXVECTOR3(x, y, z);
+
+				// Set block neighbours
+				/*Blocks_[x][y][z].SetNeighbour(Direction::Up, GetBlock(worldPos.x, worldPos.y + 1, worldPos.z));
+				Blocks_[x][y][z].SetNeighbour(Direction::Down, GetBlock(worldPos.x, worldPos.y - 1, worldPos.z));
+
+				Blocks_[x][y][z].SetNeighbour(Direction::Left, GetBlock(worldPos.x - 1, worldPos.y, worldPos.z));
+				Blocks_[x][y][z].SetNeighbour(Direction::Right, GetBlock(worldPos.x + 1, worldPos.y, worldPos.z));
+
+				Blocks_[x][y][z].SetNeighbour(Direction::Forward, GetBlock(worldPos.x, worldPos.y, worldPos.z + 1));
+				Blocks_[x][y][z].SetNeighbour(Direction::Backward, GetBlock(worldPos.x, worldPos.y, worldPos.z - 1));*/
+
+				// Refresh the block visibility
+				Blocks_[x][y][z].Refresh();
+
+				if (Blocks_[x][y][z].IsActive() && Blocks_[x][y][z].IsSolid())
+				{
+					ChunkBlock_->AddInstance(Blocks_[x][y][z].GetInstance());
+				}
+			}
+		}
+	}
+
+	// Compile the instance data to buffer
+	ChunkBlock_->RebuildInstanceBuffer();
+}
+
+// Setters
+void Chunk::SetBlocks(string blockName)
+{
+	// Loop through x dimension
+	for (int x = 0; x < World::ChunkSize; x++)
+	{
+		// Loop through y dimension
+		for (int y = 0; y < World::ChunkSize; y++)
+		{
+			// Loop through z dimension
+			for (int z = 0; z < World::ChunkSize; z++)
+			{
+				// Store it
+				Blocks_[x][y][z].CopyFrom(World::Blocks[blockName]);
+			}
+		}
+	}
+}
+
+// Getters
+inline Block* Chunk::GetBlock(int x, int y, int z)
+{
+	// Check the value is within range
+	if (!RangeCheck(x, 0, World::ChunkSize - 1))
+	{
+		return 0;
+	}
+
+	if (!RangeCheck(y, 0, World::ChunkSize - 1))
+	{
+		return 0;
+	}
+	if (!RangeCheck(z, 0, World::ChunkSize - 1))
+	{
+		return 0;
+	}
+
+	// Return block
+	return &Blocks_[x][y][z];
+}
+
+inline void Chunk::SetBlock(int x, int y, int z, Block block)
+{
+	Block* targetBlock;
+
+	// Get the block
+	targetBlock = GetBlock(x, y, z);
+	if (targetBlock)
+	{
+		// Update the block
+		targetBlock = &block;
+
+		// Flag we need a refresh
+		IsDirty_ = true;
+	}
+
+	// Clean Up
+	targetBlock = 0;
 }

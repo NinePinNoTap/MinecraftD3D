@@ -251,9 +251,6 @@
     <ClCompile Include="VoxelWorld.cpp">
       <Filter>Scene\VoxelTerrain</Filter>
     </ClCompile>
-    <ClCompile Include="ChunkColumn.cpp">
-      <Filter>Scene\VoxelTerrain</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Scene\Objects</Filter>
     </ClCompile>
@@ -476,9 +473,6 @@
       <Filter>Scene\VoxelTerrain</Filter>
     </ClInclude>
     <ClInclude Include="TerrainLayer.h">
-      <Filter>Scene\VoxelTerrain</Filter>
-    </ClInclude>
-    <ClInclude Include="ChunkColumn.h">
       <Filter>Scene\VoxelTerrain</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">

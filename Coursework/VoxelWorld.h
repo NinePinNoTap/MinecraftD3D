@@ -6,14 +6,27 @@
 #include "Block.h"
 #include "Singleton.h"
 #include "Utilities.h"
-#include "ChunkColumn.h"
 #include "Player.h"
 #include "ManagedThread.h"
+#include "ChunkGenerator.h"
 
 using namespace std;
 using namespace Config;
 
-typedef std::map<string, ChunkColumn*>::iterator it_wc;
+typedef std::map<string, Chunk*>::iterator it_wc;
+
+enum WorkerType { Build, Update, Unload };
+
+struct ChunkTarget
+{
+	ChunkTarget(D3DXVECTOR3 target, WorkerType type)
+	{
+		chunkTarget = target;
+		workerType = type;
+	}
+	D3DXVECTOR3 chunkTarget;
+	WorkerType workerType;
+};
 
 class VoxelWorld : public Singleton<VoxelWorld>
 {
@@ -40,7 +53,8 @@ private:
 	void GenerateLocalChunks();
 
 	// Blocks and Chunks
-	map<string, ChunkColumn*> Map_;
+	map<string, Chunk*> Map_;
+	ChunkGenerator* ChunkGenerator_;
 
 	// Updating
 	D3DXVECTOR3 LastChunkPosition_;
@@ -48,7 +62,7 @@ private:
 
 	// Building
 	vector<D3DXVECTOR3> LocalChunks_;
-	vector<D3DXVECTOR3> BuildList_;
+	vector<ChunkTarget> ChunkQueue_;
 	vector<ManagedThread<void()>*> ManagedThreads_;
 	thread ThreadHandler_;
 	int MaxThreads_;

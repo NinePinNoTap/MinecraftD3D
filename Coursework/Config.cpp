@@ -66,8 +66,10 @@ D3DXVECTOR3 Config::Vector::Zero = D3DXVECTOR3(0, 0, 0);
 
 int Config::World::ChunkSize = 16;
 int Config::World::BlockSize = 1;
-int Config::World::LoadRadius = 4;
+int Config::World::LoadRadius = 1;
+int Config::World::UnloadRadius = 3;
 int Config::World::ColumnHeight = 8;
+D3DXVECTOR3 Config::World::ChunkOffset = D3DXVECTOR3(ChunkSize/2, ChunkSize/2, ChunkSize/2);
 std::map<string, Block> Config::World::Blocks =
 {
 
