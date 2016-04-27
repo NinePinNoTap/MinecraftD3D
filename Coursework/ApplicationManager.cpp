@@ -26,8 +26,6 @@ ApplicationManager::~ApplicationManager()
 // Initialise
 bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 {
-	bool managerFinished;
-
 	//===================
 	// Initialise Camera
 	//===================
@@ -168,13 +166,9 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	UpdateScene();
 
 	// Create a thread to keep the application rendering until we have finished loading
-	LoadingScreenThread_ = std::thread([managerFinished, this]()
-	{
-		while (!managerFinished)
-		{
-			Frame();
-		}
-	});
+	LoadingScreenThread_ = new ManagedThread < bool() > ;
+	LoadingScreenThread_->SetFunction(std::bind(&ApplicationManager::Frame, this));
+	LoadingScreenThread_->Start(true);
 
 	//======================
 	// Initialise Main Menu
@@ -204,8 +198,7 @@ bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
 	SetScene(MAINMENU);
 
 	// Close the thread
-	managerFinished = true;
-	LoadingScreenThread_.join();
+	LoadingScreenThread_->ForceClose();
 
 	OutputToDebug("Finished Loading");
 

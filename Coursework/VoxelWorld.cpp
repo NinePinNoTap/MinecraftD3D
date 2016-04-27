@@ -109,9 +109,9 @@ void VoxelWorld::HandleActiveThreads()
 	// Remove Finished Threads
 	//=========================
 
-	for (vector<ManagedThread*>::iterator it = ManagedThreads_.begin(); it != ManagedThreads_.end();)
+	for (vector<ManagedThread<void()>*>::iterator it = ManagedThreads_.begin(); it != ManagedThreads_.end();)
 	{
-		ManagedThread* chunkThread = *it;
+		ManagedThread<void()>* chunkThread = *it;
 
 		// Remove finished threads
 		if (chunkThread->TryJoin())
@@ -146,7 +146,7 @@ void VoxelWorld::HandleBuildList()
 	D3DXVECTOR3 buildTarget = BuildList_.front();
 
 	// Create a build thread
-	ManagedThread* chunkThread = new ManagedThread;
+	ManagedThread<void()>* chunkThread = new ManagedThread<void()>;
 	chunkThread->SetFunction(std::bind(&VoxelWorld::BuildChunk, this, buildTarget));
 	chunkThread->Start();
 	ManagedThreads_.push_back(chunkThread);

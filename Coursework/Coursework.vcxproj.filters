@@ -80,9 +80,6 @@
     <Filter Include="Framework\Shader\HLSL Shader Files\InstancedLight">
       <UniqueIdentifier>{4d195ff8-fa6e-4655-9273-fcca63fd7607}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Noise">
-      <UniqueIdentifier>{450adb5e-10df-4614-a8fd-2434304b7da3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework\Shader\HLSL Shader Files\Tint">
       <UniqueIdentifier>{663983e1-24cd-485b-a90d-2d94b6f5e2d7}</UniqueIdentifier>
     </Filter>
@@ -97,6 +94,9 @@
     </Filter>
     <Filter Include="Scene\Graphics">
       <UniqueIdentifier>{1db97dec-738c-4c8a-9f4e-fa3676c0f0d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Noise">
+      <UniqueIdentifier>{450adb5e-10df-4614-a8fd-2434304b7da3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -295,9 +295,6 @@
     </ClCompile>
     <ClCompile Include="ChunkGenerator.cpp">
       <Filter>Scene\VoxelTerrain</Filter>
-    </ClCompile>
-    <ClCompile Include="ManagedThread.cpp">
-      <Filter>Framework\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

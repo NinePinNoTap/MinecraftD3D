@@ -109,7 +109,6 @@
     <ClCompile Include="Interpolator.cpp" />
     <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="MainMenuScene.cpp" />
-    <ClCompile Include="ManagedThread.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh3D.cpp" />
     <ClCompile Include="Model.cpp" />

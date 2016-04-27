@@ -49,7 +49,7 @@ private:
 	// Building
 	vector<D3DXVECTOR3> LocalChunks_;
 	vector<D3DXVECTOR3> BuildList_;
-	vector<ManagedThread*> ManagedThreads_;
+	vector<ManagedThread<void()>*> ManagedThreads_;
 	thread ThreadHandler_;
 	int MaxThreads_;
 

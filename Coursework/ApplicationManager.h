@@ -57,7 +57,7 @@ private:
 	MainMenuScene* MainMenuScene_;
 	MinecraftScene* MinecraftScene_;
 	LoadingScene* LoadingScene_;
-	std::thread LoadingScreenThread_;
+	ManagedThread<bool()>* LoadingScreenThread_;
 
 	// Global Objects
 	Camera* Camera_;
