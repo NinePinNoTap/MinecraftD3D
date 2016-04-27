@@ -12,6 +12,14 @@ void VoxelWorld::Initialise()
 {
 	SYSTEM_INFO systemInfo;
 
+	//===================
+	// Initialise Player
+	//===================
+
+	Player_ = new Player;
+	Player_->Initialise();
+	Player_->SetHeight(2.0f);
+
 	//===========================
 	// Initialise Chunk Building
 	//===========================
@@ -43,13 +51,12 @@ void VoxelWorld::Initialise()
 	// Run a thread to handle worker threads
 	ThreadHandler_ = thread(&VoxelWorld::HandleThreads, this);
 
-	//===================
-	// Initialise Player
-	//===================
-
-	Player_ = new Player;
-	Player_->Initialise();
-	Player_->SetHeight(2.0f);
+	// Force a wait until initial terrain built
+	while (true)
+	{
+		if (BuildList_.empty())
+			break;
+	}
 }
 
 bool VoxelWorld::Frame()

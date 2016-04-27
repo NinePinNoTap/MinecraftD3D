@@ -19,6 +19,7 @@ public:
 private:
 	void GenerateColumn(Chunk* chunk, int x, int z);
 	void GenerateLayer(Chunk* chunk, TerrainLayer terrainLayer, int x, int z, int& currentHeight);
+	void GenerateCave(Chunk* chunk, int x, int z, int& currentHeight);
 
 	vector<TerrainLayer> Layers_;
 };

@@ -19,6 +19,7 @@ public:
 	inline void SetGravity(bool flag = true)
 	{
 		UseGravity_ = flag;
+		MoveVelocity_.y = 0.0f;
 	}
 	inline void SetMoveSpeed(float moveSpeed)
 	{

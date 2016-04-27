@@ -248,9 +248,6 @@ void MinecraftScene::Load()
 	// Reset Objects
 	//===============
 
-	// Reset Keys
-	InputManager::Instance()->Initialise();
-
 	// Reset Mouse
 	LockMouseToCenter();
 	SetCursor(0);

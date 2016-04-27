@@ -21,11 +21,12 @@ void ChunkColumn::Initialise(int x, int z, int chunkCount)
 	// LayerType						 (LayerName,         Block,      H,   Freq,   Amp, Exp,       Type)
 	ChunkGenerator_->AddLayer(TerrainLayer("Bedrock",	     "bedrock",	 1,	  0.1f,	   2,   1,	LayerType::Absolute));
 	ChunkGenerator_->AddLayer(TerrainLayer("Base Stone",     "stone",	39,  64.0f,	   9,   1,	LayerType::Absolute));
-	ChunkGenerator_->AddLayer(TerrainLayer("St Mountain 1",  "stone",	 1,	129.0f,	  40,   1,	LayerType::Absolute));
-	ChunkGenerator_->AddLayer(TerrainLayer("St Mountain 2",	 "stone",    4, 111.0f,   38,   1,  LayerType::Absolute));
+	ChunkGenerator_->AddLayer(TerrainLayer("Mountain 1",	 "stone",	 1,	129.0f,	  60,   1,	LayerType::Absolute));
+	ChunkGenerator_->AddLayer(TerrainLayer("Mountain 2",	 "stone",    4, 111.0f,   58,   1,  LayerType::Absolute));
 	ChunkGenerator_->AddLayer(TerrainLayer("Base Dirt 1",	 "dirt",    60,  16.0f,    4,   1,  LayerType::Absolute));
 	ChunkGenerator_->AddLayer(TerrainLayer("Base Dirt 2",	 "dirt",    59,  25.0f,    6,   1,  LayerType::Absolute));
 	ChunkGenerator_->AddLayer(TerrainLayer("Surface",	     "dirt",    1,    1.0f,    1,   1,  LayerType::Additive));
+	ChunkGenerator_->AddLayer(TerrainLayer("cave",			 "air",     1,   10.0f,   10,  10,  LayerType::Absolute));
 
 	// Generate chunks and build them downwards
 	for (int i = chunkCount - 1; i >= 0; i--)
@@ -41,12 +42,6 @@ void ChunkColumn::Initialise(int x, int z, int chunkCount)
 
 		// Clean Up
 		createdChunk = 0;
-	}
-
-	// Do a final refresh
-	for (unsigned int i = 0; i < Chunks_.size(); i++)
-	{
-		Chunks_[i]->RefreshVisible();
 	}
 }
 
