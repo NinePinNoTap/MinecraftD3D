@@ -164,6 +164,7 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	Text_->CreateText("Rotation X :", Vector2(10, 110), Colour::Black); // RotationX
 	Text_->CreateText("Rotation Y :", Vector2(10, 130), Colour::Black); // RotationY
 	Text_->CreateText("Rotation Z :", Vector2(10, 150), Colour::Black); // Rotation Z
+	Text_->CreateText("Build Time (s) :", Vector2(10, 170), Colour::Black);
 
 	Text_->CreateText("CONTROLS", Vector2(windowWidth - 10, 10), Colour::Black, RIGHT);
 	Text_->CreateText("Toggle Wireframe [9]", Vector2(windowWidth - 10, 30), Colour::Black, RIGHT);
@@ -463,6 +464,9 @@ bool MinecraftScene::HandleText()
 	if (!Result_) { return false; }
 
 	Result_ = Text_->SetValue(7, (int)Camera::Instance()->GetTransform()->GetRoll());
+	if (!Result_) { return false; }
+
+	Result_ = Text_->SetValue(8, World_->GetBuildTime());
 	if (!Result_) { return false; }
 
 	return true;

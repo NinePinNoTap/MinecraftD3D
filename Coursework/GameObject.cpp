@@ -122,7 +122,6 @@ void GameObject::Shutdown()
 	// Delete the transform
 	if (Transform_)
 	{
-		delete Transform_;
 		Transform_ = 0;
 	}
 }

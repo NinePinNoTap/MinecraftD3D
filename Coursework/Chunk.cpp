@@ -4,7 +4,6 @@
 Chunk::Chunk()
 {
 	Blocks_ = 0;
-	ChunkBlock_ = 0;
 }
 
 Chunk::~Chunk()
@@ -23,10 +22,9 @@ void Chunk::Initialise(int x, int y, int z)
 	// Create Representing Block
 	//===========================
 
-	ChunkBlock_ = new InstancedGameObject;
-	ChunkBlock_->Initialise("block.obj");
-	ChunkBlock_->SetShader("instancedlight");
-	ChunkBlock_->SetRenderModes(RenderMode::On, RenderMode::On, RenderMode::On, BlendMode::NoBlending);
+	ChunkBlock_.Initialise("block.obj");
+	ChunkBlock_.SetShader("instancedlight");
+	ChunkBlock_.SetRenderModes(RenderMode::On, RenderMode::On, RenderMode::On, BlendMode::NoBlending);
 
 	//================
 	// Generate Chunk
@@ -45,19 +43,21 @@ void Chunk::Initialise(int x, int y, int z)
 
 void Chunk::Shutdown()
 {
-	// Delete the blocks
-	for (int x = 0; x < World::ChunkSize; x++)
-	{
-		// Loop through y dimension
-		for (int y = 0; y < World::ChunkSize; y++)
-		{
-			delete[] Blocks_[x][y];
-		}
+	//// Delete the blocks
+	//for (int x = 0; x < World::ChunkSize; x++)
+	//{
+	//	// Loop through y dimension
+	//	for (int y = 0; y < World::ChunkSize; y++)
+	//	{
+	//		delete[] Blocks_[x][y];
+	//	}
 
-		delete[] Blocks_[x];
-	}
+	//	delete[] Blocks_[x];
+	//}
 
-	delete[] Blocks_;
+	//delete[] Blocks_;
+
+	ChunkBlock_.Shutdown();
 }
 
 // Frame
@@ -105,7 +105,7 @@ bool Chunk::Render()
 	}
 	
 	// Render Block
-	Result_ = ChunkBlock_->Render();
+	Result_ = ChunkBlock_.Render();
 	if (!Result_)
 	{
 		return false;
@@ -200,14 +200,14 @@ void Chunk::RefreshVisible()
 
 				if (Blocks_[x][y][z].IsActive() && Blocks_[x][y][z].IsSolid())
 				{
-					ChunkBlock_->AddInstance(Blocks_[x][y][z].GetInstance());
+					ChunkBlock_.AddInstance(Blocks_[x][y][z].GetInstance());
 				}
 			}
 		}
 	}
 
 	// Compile the instance data to buffer
-	ChunkBlock_->RebuildInstanceBuffer();
+	ChunkBlock_.RebuildInstanceBuffer();
 }
 
 // Setters

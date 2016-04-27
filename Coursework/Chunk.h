@@ -44,7 +44,7 @@ private:
 	void GenerateBlankChunk();
 
 	D3DXVECTOR3 Position_;
-	InstancedGameObject* ChunkBlock_;
+	InstancedGameObject ChunkBlock_;
 
 	Block*** Blocks_;
 

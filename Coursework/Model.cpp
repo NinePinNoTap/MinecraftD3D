@@ -69,7 +69,6 @@ void Model::UpdateMesh(int index, Mesh3D* mesh)
 
 	// Delete Old Mesh
 	Meshes_[index]->Shutdown();
-	delete Meshes_[index];
 	Meshes_[index] = 0;
 
 	// Add New Mesh

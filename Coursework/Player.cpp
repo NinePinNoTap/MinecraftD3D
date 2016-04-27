@@ -74,6 +74,13 @@ void Player::HandleMovement()
 	if (IsGrounded_)
 	{
 		HandleMovementKey(VK_SPACE, Transform_->GetUpVector() * JumpPower_);
+		
+		// Sprint
+		if (InputManager::Instance()->GetKey(VK_SHIFT))
+		{
+			MoveVelocity_.x *= 2;
+			MoveVelocity_.z *= 2;
+		}
 	}
 	else
 	{

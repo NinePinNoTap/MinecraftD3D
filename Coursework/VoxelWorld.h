@@ -42,6 +42,8 @@ public:
 	void SetBlock(int x, int y, int z, string blockName);
 	Block* GetBlock(int x, int y, int z);
 
+	inline float GetBuildTime() { return (int)(AverageLoadTime_ / (float)BuildCount_) / 1000.0f; }
+
 private:
 	void HandleThreads();
 	void HandleActiveThreads();
@@ -64,11 +66,15 @@ private:
 	vector<D3DXVECTOR3> LocalChunks_;
 	vector<ChunkTarget> ChunkQueue_;
 	vector<ManagedThread<void()>*> ManagedThreads_;
-	thread ThreadHandler_;
+	ManagedThread<void()>* ThreadHandler_;
 	int MaxThreads_;
 
 	// World Player
 	Player* Player_;
+
+	// Output
+	float AverageLoadTime_;
+	int BuildCount_;
 
 	// Misc
 	bool Result_;
