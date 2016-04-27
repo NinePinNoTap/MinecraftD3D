@@ -84,7 +84,7 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	{
 		return false;
 	}
-	Result_ = WindowSprite_->Initialise(Rect3D(WindowManager::Instance()->GetWindowResolution() * 0.5f), "RenderTexture");
+	Result_ = WindowSprite_->Initialise(Rect3D(WindowManager::Instance()->GetWindowResolution()), "RenderTexture");
 	if (!Result_)
 	{
 		MessageBox(hwnd, L"Could not initialise the screen window object.", L"Error", MB_OK);
@@ -157,19 +157,19 @@ bool MinecraftScene::Initialise(HWND hwnd)
 		return false;
 	}
 	Text_->CreateText("FPS:", Vector2(10, 10), Colour::White); // FPS
-	Text_->CreateText("CPU:", Vector2(10, 30), Colour::Black); // CPU
-	Text_->CreateText("Camera X :", Vector2(10, 50), Colour::Black); // CameraX
+	Text_->CreateText("CPU:", Vector2(10, 30), Colour::White); // CPU
+	Text_->CreateText("Camera X :", Vector2(10, 50), Colour::White); // CameraX
 	Text_->CreateText("Camera Y :", Vector2(10, 70), Colour::Black); // CameraY
-	Text_->CreateText("Camera Z :", Vector2(10, 90), Colour::Black); // CameraZ
-	Text_->CreateText("Rotation X :", Vector2(10, 110), Colour::Black); // RotationX
-	Text_->CreateText("Rotation Y :", Vector2(10, 130), Colour::Black); // RotationY
-	Text_->CreateText("Rotation Z :", Vector2(10, 150), Colour::Black); // Rotation Z
-	Text_->CreateText("Build Time (s) :", Vector2(10, 170), Colour::Black);
+	Text_->CreateText("Camera Z :", Vector2(10, 90), Colour::White); // CameraZ
+	Text_->CreateText("Rotation X :", Vector2(10, 110), Colour::White); // RotationX
+	Text_->CreateText("Rotation Y :", Vector2(10, 130), Colour::White); // RotationY
+	Text_->CreateText("Rotation Z :", Vector2(10, 150), Colour::White); // Rotation Z
+	Text_->CreateText("Build Time (s) :", Vector2(10, 170), Colour::White);
 
-	Text_->CreateText("CONTROLS", Vector2(windowWidth - 10, 10), Colour::Black, RIGHT);
-	Text_->CreateText("Toggle Wireframe [9]", Vector2(windowWidth - 10, 30), Colour::Black, RIGHT);
-	Text_->CreateText("Toggle Time [0]", Vector2(windowWidth - 10, 50), Colour::Black, RIGHT);
-	Text_->CreateText("Back to Menu [ESC]", Vector2(windowWidth - 10, 110), Colour::Black, RIGHT);
+	Text_->CreateText("CONTROLS", Vector2(windowWidth - 10, 10), Colour::White, RIGHT);
+	Text_->CreateText("Toggle Wireframe [9]", Vector2(windowWidth - 10, 30), Colour::White, RIGHT);
+	Text_->CreateText("Toggle Time [0]", Vector2(windowWidth - 10, 50), Colour::White, RIGHT);
+	Text_->CreateText("Back to Menu [ESC]", Vector2(windowWidth - 10, 110), Colour::White, RIGHT);
 
 	//==============
 	// Create World
@@ -386,7 +386,6 @@ bool MinecraftScene::RenderScene()
 	// Render Post Processing
 	//========================
 
-	// NEED IF STATEMENT TO SEE IF WE SHOULD RENDER THIS
 	if (IsUnderwater_)
 	{
 		Result_ = WindowSprite_->Render();

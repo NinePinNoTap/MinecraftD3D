@@ -73,6 +73,7 @@ namespace Config
 		static int LoadRadius;
 		static int UnloadRadius;
 		static int ColumnHeight;
+		static int WaterHeight;
 		static D3DXVECTOR3 ChunkOffset;
 		static map<string, Block> Blocks;
 	};
