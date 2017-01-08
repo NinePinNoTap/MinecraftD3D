@@ -12,14 +12,14 @@ public:
 	ChunkGenerator();
 	~ChunkGenerator();
 
-	void AddLayer(TerrainLayer terrainLayer);
+	void addLayer(TerrainLayer terrainLayer);
 
-	void GenerateChunk(Chunk& chunk);
+	void generateChunk(Chunk& chunk);
 
 private:
-	void GenerateColumn(Chunk* chunk, int x, int z);
-	void GenerateLayer(Chunk* chunk, TerrainLayer terrainLayer, int x, int z, int& currentHeight);
-	void GenerateCave(Chunk* chunk, int x, int z, int& currentHeight);
+	void generateColumn(Chunk* chunk, int x, int z);
+	void generateLayer(Chunk* chunk, TerrainLayer terrainLayer, int x, int z, int& currentHeight);
+	void generateCave(Chunk* chunk, int x, int z, int& currentHeight);
 
-	vector<TerrainLayer> Layers_;
+	vector<TerrainLayer> m_layers;
 };

@@ -12,17 +12,17 @@ public:
 	PerlinNoise();
 	~PerlinNoise();
 
-	// Generate a new hash map
-	void SetSeed(int Seed = -1);
+	// generate a new hash map
+	void setSeed(int Seed = -1);
 	
-	// Getters
-	double CreateNoise(double x, double y, double z);
-	double Fade(double t);
-	double Lerp(double t, double a, double b);
-	double Gradient(int hash, double x, double y, double z);
+	// getters
+	double createNoise(double x, double y, double z);
+	double fade(double t);
+	double lerp(double t, double a, double b);
+	double gradient(int hash, double x, double y, double z);
 
 private:
-	std::vector<int> HashMap_;
+	std::vector<int> m_hashMap;
 };
 
 #endif

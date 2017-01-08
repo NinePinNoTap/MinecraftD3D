@@ -27,32 +27,32 @@ public:
 	~ParticleSystem();
 
 	// Initialising
-	bool Initialise(string textureFilename);
+	bool initialise(string textureFilename);
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 
-	// Frame
-	bool Frame();
+	// update
+	bool update();
 
 private:	
 	// Buffers
-	bool UpdateBuffers();
+	bool updateBuffers();
 
 	// Creating particles
-	void EmitParticle();
-	void UpdateParticles();
+	void emitParticle();
+	void updateParticles();
 	
 	// Emission Variables
-	D3DXVECTOR3 Deviation_;
-	D3DXVECTOR3 Velocity_;
-	float AccumulatedTime_;
-	float ParticleSize_;
-	float ParticlesPerSecond_;
-	int MaxParticles_;
+	D3DXVECTOR3 m_deviation;
+	D3DXVECTOR3 m_velocity;
+	float m_accumulatedTime;
+	float m_particleSize;
+	float m_particlesPerSecond;
+	int m_maxParticles;
 	
 	// List of active particles
-	std::list<ParticleType> ParticleList_;
+	std::list<ParticleType> m_particles;
 };
 
 

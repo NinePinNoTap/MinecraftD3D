@@ -16,41 +16,41 @@ public:
 	~Chunk();
 
 	// Initiailise
-	void Initialise(int x, int y, int z);
+	void initialise(int x, int y, int z);
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 
 	// Chunk Management
-	void RefreshVisible();
+	void refreshVisible();
 
-	// Frame
-	bool Frame();
-	bool Render();
+	// update
+	bool update();
+	bool render();
 
-	// Setter
-	void SetBlock(int x, int y, int z, Block block);
-	void SetBlocks(string blockName);
-	inline void SetDirty(bool flag) { IsDirty_ = flag; }
+	// setter
+	void setBlock(int x, int y, int z, Block block);
+	void setBlocks(string blockName);
+	inline void setDirty(bool flag) { m_dirty = flag; }
 
-	// Getters
-	inline bool IsVisible() { return IsVisible_; }
-	inline bool IsDirty() { return IsDirty_; }
-	inline bool IsOutOfRange() { return OutOfRange_; }
-	inline D3DXVECTOR3 GetPosition() { return Position_; }
-	Block* GetBlock(int x, int y, int z);
+	// getters
+	inline bool isVisible() { return m_visible; }
+	inline bool isDirty() { return m_dirty; }
+	inline bool isOutOfRange() { return m_outOfRange; }
+	inline D3DXVECTOR3 getPosition() { return m_position; }
+	Block* getBlock(int x, int y, int z);
 
 private:
-	void GenerateBlankChunk();
+	void generateBlankChunk();
 
-	D3DXVECTOR3 Position_;
-	InstancedGameObject ChunkBlock_;
+	D3DXVECTOR3 m_position;
+	InstancedGameObject m_chunkBlock;
 
-	Block*** Blocks_;
+	Block*** m_blocks;
 
-	bool IsVisible_;
-	bool IsDirty_;
-	bool IsGenerated_;
-	bool Result_;
-	bool OutOfRange_;
+	bool m_visible;
+	bool m_dirty;
+	bool m_generated;
+	bool m_result;
+	bool m_outOfRange;
 };

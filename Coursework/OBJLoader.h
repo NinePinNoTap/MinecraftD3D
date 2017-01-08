@@ -10,16 +10,16 @@
 
 using namespace Config;
 
-class OBJLoader
+class OBJloader
 {
 public:
-	OBJLoader();
-	~OBJLoader();
+	OBJloader();
+	~OBJloader();
 
-	bool LoadModel(const char* modelFilename, Model& model);
+	bool loadModel(const char* modelFilename, Model& model);
 
 private:
-	bool BuildModel(Model* model, std::string textureFilename, vector<D3DXVECTOR3> vertexData, 
+	bool buildModel(Model* model, std::string textureFilename, vector<D3DXVECTOR3> vertexData, 
 		vector<D3DXVECTOR2> textureData, vector<D3DXVECTOR3> normalData, vector<D3DXVECTOR3> faceData);
-	bool Result_;
+	bool m_result;
 };

@@ -26,111 +26,111 @@ public:
 	GameShader(const GameShader&);
 	~GameShader();
 	
-	virtual bool Initialise(HWND hwnd);
+	virtual bool initialise(HWND hwnd);
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 
-	// Rendering
-	void Render(int indexCount);
-	void Render(int vertexCount, int instanceCount);
+	// rendering
+	void render(int indexCount);
+	void render(int vertexCount, int instanceCount);
 
-	// Rendering
-	virtual bool Prepare(Material* objMaterial, Transform* objTransform = 0);
+	// rendering
+	virtual bool prepare(Material* objMaterial, Transform* objTransform = 0);
 
 	// Properties
-	void SetRenderMode(ProjectionMode projMode, ViewMode viewMode);
+	void setrenderMode(ProjectionMode projMode, ViewMode viewMode);
 
 	// Shader Data Management
-	void AddShader(string shaderName);
-	void AddLayout(LPCSTR semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot, UINT alignedByteOffset, D3D11_INPUT_CLASSIFICATION inputSlotClass, UINT instanceDataStepRate);
-	void AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE AddressUVW, FLOAT MipLODBias, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC ComparisonFunc, D3DXVECTOR4 borderColor, FLOAT MinLOD, FLOAT MaxLOD);
-	bool BuildShader(HWND hwnd);
+	void addShader(string shaderName);
+	void addLayout(LPCSTR semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot, UINT alignedByteOffset, D3D11_INPUT_CLASSIFICATION inputSlotClass, UINT instanceDataStepRate);
+	void addSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE AddressUVW, FLOAT MipLODBias, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC ComparisonFunc, D3DXVECTOR4 borderColor, FLOAT MinLOD, FLOAT MaxLOD);
+	bool buildShader(HWND hwnd);
 
 	// Shader Management
-	void SendBuffersToShader();
-	void SendTextureToShader(int shaderSlot, ID3D11ShaderResourceView* shaderTexture);
+	void sendBuffersToShader();
+	void sendTextureToShader(int shaderSlot, ID3D11ShaderResourceView* shaderTexture);
 
 	// Buffer Management
 	template <class T>
-	void AddBuffer(ShaderType type)
+	void addBuffer(ShaderType type)
 	{
-		// Create a buffer
+		// create a buffer
 		ConstantBuffer* tempBuffer = new ConstantBuffer;
-		tempBuffer->BuildBuffer<T>();
+		tempBuffer->build<T>();
 
 		// Add to the required shader
 		switch (type)
 		{
 			case VertexShader:
-				VertexBuffers_.push_back(tempBuffer);
+				m_vertexBuffers.push_back(tempBuffer);
 				break;
 
 			case PixelShader:
-				PixelBuffers_.push_back(tempBuffer);
+				m_pixelBuffers.push_back(tempBuffer);
 				break;
 
 			case HullShader:
-				HullBuffers_.push_back(tempBuffer);
+				m_hullBuffers.push_back(tempBuffer);
 				break;
 
 			case DomainShader:
-				DomainBuffers_.push_back(tempBuffer);
+				m_domainBuffers.push_back(tempBuffer);
 				break;
 		}
 	}
 
 	template <class T>
-	void UpdateBuffer(ShaderType shaderType, int bufferSlot, T bufferData)
+	void updateBuffer(ShaderType shaderType, int bufferSlot, T bufferData)
 	{
 		switch (shaderType)
 		{
 			case VertexShader:
-				VertexBuffers_[bufferSlot]->MapBuffer(bufferData);
+				m_vertexBuffers[bufferSlot]->map(bufferData);
 				break;
 
 			case PixelShader:
-				PixelBuffers_[bufferSlot]->MapBuffer(bufferData);
+				m_pixelBuffers[bufferSlot]->map(bufferData);
 				break;
 
 			case HullShader:
-				HullBuffers_[bufferSlot]->MapBuffer(bufferData);
+				m_hullBuffers[bufferSlot]->map(bufferData);
 				break;
 
 			case DomainShader:
-				DomainBuffers_[bufferSlot]->MapBuffer(bufferData);
+				m_domainBuffers[bufferSlot]->map(bufferData);
 				break;
 		}
 	}
 
 protected:
 	// Error Handling
-	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, const WCHAR* shaderFilename);
+	void outputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, const WCHAR* shaderFilename);
 
-	// Set up
-	HRESULT CompileShader(HWND hwnd, string filename, LPCSTR EntryPoint, LPCSTR Version, ID3D10Blob** Buffer);
-	bool Result_;
+	// set up
+	HRESULT compileShader(HWND hwnd, string filename, LPCSTR EntryPoint, LPCSTR Version, ID3D10Blob** Buffer);
+	bool m_result;
 	
 	// Shader
-	ID3D11VertexShader* VertexShader_;
-	ID3D11PixelShader* PixelShader_;
-	ID3D11HullShader* HullShader_;
-	ID3D11DomainShader* DomainShader_;
+	ID3D11VertexShader* m_vertexShader;
+	ID3D11PixelShader* m_pixelShader;
+	ID3D11HullShader* m_hullShader;
+	ID3D11DomainShader* m_domainShader;
 
 	// Interface
-	ID3D11InputLayout* Layout_;
+	ID3D11InputLayout* m_layout;
 
 	// Storage for compiling the shader
-	vector<string> ShaderFiles_;
-	vector<D3D11_INPUT_ELEMENT_DESC> LayoutElement_;
-	vector<ID3D11SamplerState*> SampleStates_;
+	vector<string> m_shaderFiles;
+	vector<D3D11_INPUT_ELEMENT_DESC> m_inputElements;
+	vector<ID3D11SamplerState*> m_samplerStates;
 
 	// Buffers
-	vector<ConstantBuffer*> VertexBuffers_;
-	vector<ConstantBuffer*> PixelBuffers_;
-	vector<ConstantBuffer*> HullBuffers_;
-	vector<ConstantBuffer*> DomainBuffers_;
+	vector<ConstantBuffer*> m_vertexBuffers;
+	vector<ConstantBuffer*> m_pixelBuffers;
+	vector<ConstantBuffer*> m_hullBuffers;
+	vector<ConstantBuffer*> m_domainBuffers;
 
 	// Matrix Buffer
-	MatrixBuffer MatrixBuffer_;
+	MatrixBuffer m_matrixBuffer;
 };

@@ -9,100 +9,100 @@ Fire::~Fire()
 }
 
 // Initialising
-bool Fire::Initialise(char* modelFilename, std::string textureFilename, std::string noiseFilename, std::string alphaFilename)
+bool Fire::initialise(char* modelFilename, std::string textureFilename, std::string noiseFilename, std::string alphaFilename)
 {
-	TXTLoader txtLoader;
+	TXTloader txtloader;
 
 	//========================
-	// Set up Fire Properties
+	// set up Fire Properties
 	//========================
 
 	// Define how fast to offset each noise texture
-	TranslationSpeed_ = D3DXVECTOR3(1.3f, 2.1f, 2.3f);
+	m_translationSpeed = D3DXVECTOR3(1.3f, 2.1f, 2.3f);
 
 	// Define how much to tile each noise texture
-	Tiling_ = D3DXVECTOR3(1.0f, 2.0f, 3.0f);
+	m_tiling = D3DXVECTOR3(1.0f, 2.0f, 3.0f);
 
 	// Define the distortion factor for each texture
-	DistortionA_ = D3DXVECTOR2(0.1f, 0.2f);
-	DistortionB_ = D3DXVECTOR2(0.1f, 0.3f);
-	DistortionC_ = D3DXVECTOR2(0.1f, 0.1f);
+	m_distortionA = D3DXVECTOR2(0.1f, 0.2f);
+	m_distortionB = D3DXVECTOR2(0.1f, 0.3f);
+	m_distortionC = D3DXVECTOR2(0.1f, 0.1f);
 
 	// Define how much to distort the perturb texture
-	DistortionAmount_ = 0.8f;
+	m_distortionAmount = 0.8f;
 
 	// Define where the fire needs to be more solid
-	DistortionBias_ = 0.5f;
+	m_distortionBias = 0.5f;
 
 	//==============
-	// Create Model
+	// create Model
 	//==============
 
-	Model_ = new Model;
-	if (!Model_)
+	m_model = new Model;
+	if (!m_model)
 	{
 		return false;
 	}
 
-	// Load Model
-	Result_ = txtLoader.LoadModel(modelFilename, *Model_);
-	if (!Result_)
+	// onload Model
+	m_result = txtloader.loadModel(modelFilename, *m_model);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//=================
-	// Create Material
+	// create Material
 	//=================
 
 	Material* newMaterial = new Material;
-	Result_ = newMaterial->SetBaseTexture(textureFilename);
-	if (!Result_)
+	m_result = newMaterial->setBaseTexture(textureFilename);
+	if (!m_result)
 	{
 		return false;
 	}
 
-	Result_ = newMaterial->SetAlphaTexture(alphaFilename);
-	if (!Result_)
+	m_result = newMaterial->setAlphaTexture(alphaFilename);
+	if (!m_result)
 	{
 		return false;
 	}
 
-	Result_ = newMaterial->SetNoiseTexture(noiseFilename);
-	if (!Result_)
+	m_result = newMaterial->setNoiseTexture(noiseFilename);
+	if (!m_result)
 	{
 		return false;
 	}
-	Model_->AddMaterial(newMaterial);
+	m_model->addMaterial(newMaterial);
 
 	//==================
-	// Create Transform
+	// create Transform
 	//==================
 
-	Transform_ = new Transform;
-	if (!Transform_)
+	m_transform = new Transform;
+	if (!m_transform)
 	{
 		return false;
 	}
 
 	//=================
-	// Initialise Vars
+	// initialise Vars
 	//=================
 
-	Frame_ = 0;
+	m_frame = 0;
 	
-	IsReflective_ = RenderMode::Off;
-	UseCulling_ = RenderMode::Off;
-	UseDepth_ = RenderMode::On;
-	BlendMode_ = BlendMode::AlphaMasked;
+	m_reflective = renderMode::Off;
+	m_culled = renderMode::Off;
+	m_depth = renderMode::On;
+	m_blendMode = BlendMode::AlphaMasked;
 
-	IsActive_ = true;
+	m_isActive = true;
 	
 	return true;
 }
 
-// Frame
-bool Fire::Frame()
+// update
+bool Fire::update()
 {
 	float angle;
 
@@ -110,50 +110,50 @@ bool Fire::Frame()
 	// Animate Fire
 	//==============
 	
-	Frame_ += 0.01f;
-	Wrap(Frame_, 0, 1000);
+	m_frame += 0.01f;
+	wrap(m_frame, 0, 1000);
 
 	//===========
 	// Billboard
 	//===========
 
 	// Calculate the angle between the model and the camera
-	angle = atan2(Transform_->GetX() - Camera::Instance()->GetTransform()->GetPosition().x,
-				  Transform_->GetZ() - Camera::Instance()->GetTransform()->GetPosition().z);
+	angle = atan2(m_transform->getX() - Camera::getInstance()->getTransform()->getPosition().x,
+				  m_transform->getZ() - Camera::getInstance()->getTransform()->getPosition().z);
 
 	// Convert to Degrees
 	angle = D3DXToDegree(angle);
 
 	// Apply the rotation to the model
-	Transform_->SetRotationY(angle);
+	m_transform->setRotationY(angle);
 
 	return true;
 }
 
-// Property Getters
-D3DXVECTOR3 Fire::GetSpeed()
+// Property getters
+D3DXVECTOR3 Fire::getSpeed()
 {
-	return TranslationSpeed_;
+	return m_translationSpeed;
 }
 
-D3DXVECTOR3 Fire::GetTiling()
+D3DXVECTOR3 Fire::getTiling()
 {
-	return Tiling_;
+	return m_tiling;
 }
 
-void Fire::GetDistortion(D3DXVECTOR2& DistortionA, D3DXVECTOR2& DistortionB, D3DXVECTOR2& DistortionC)
+void Fire::getDistortion(D3DXVECTOR2& DistortionA, D3DXVECTOR2& DistortionB, D3DXVECTOR2& DistortionC)
 {
-	DistortionA = DistortionA_;
-	DistortionB = DistortionB_;
-	DistortionC = DistortionC_;
+	DistortionA = m_distortionA;
+	DistortionB = m_distortionB;
+	DistortionC = m_distortionC;
 }
 
-float Fire::GetDistortionAmount()
+float Fire::getDistortionAmount()
 {
-	return DistortionAmount_;
+	return m_distortionAmount;
 }
 
-float Fire::GetDistortionBias()
+float Fire::getDistortionBias()
 {
-	return DistortionBias_;
+	return m_distortionBias;
 }

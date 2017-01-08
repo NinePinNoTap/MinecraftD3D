@@ -2,28 +2,28 @@
 
 AudioClip::AudioClip()
 {
-	SoundBuffer_ = 0;
-	SoundBuffer3D_ = 0;
-	Position_ = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_soundBuffer = 0;
+	m_soundBuffer3D = 0;
+	m_position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 AudioClip::~AudioClip()
 {
-	if (SoundBuffer_)
+	if (m_soundBuffer)
 	{
-		SoundBuffer_->Release();
-		SoundBuffer_ = 0;
+		m_soundBuffer->Release();
+		m_soundBuffer = 0;
 	}
 
-	if (SoundBuffer3D_)
+	if (m_soundBuffer3D)
 	{
-		SoundBuffer3D_->Release();
-		SoundBuffer3D_ = 0;
+		m_soundBuffer3D->Release();
+		m_soundBuffer3D = 0;
 	}
 }
 
 // Initialising
-bool AudioClip::LoadFile(const char* filename, bool Is3D)
+bool AudioClip::loadFile(const char* filename, bool is3D)
 {
 	int error;
 	FILE* filePtr;
@@ -37,7 +37,7 @@ bool AudioClip::LoadFile(const char* filename, bool Is3D)
 	unsigned long bufferSize;
 
 	// Store whether its a 3D sound or not
-	Is3DSound_ = Is3D;
+	m_is3D = is3D;
 
 	//==================
 	// Reading the file
@@ -71,7 +71,7 @@ bool AudioClip::LoadFile(const char* filename, bool Is3D)
 	}
 
 	//=====================
-	// Create Descriptions
+	// create Descriptions
 	//=====================
 
 	// Define the format of the loaded sound file
@@ -83,7 +83,7 @@ bool AudioClip::LoadFile(const char* filename, bool Is3D)
 	waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
 	waveFormat.cbSize = 0;
 
-	// Create the description for the sound buffer
+	// create the description for the sound buffer
 	bufferDesc.dwSize = sizeof(DSBUFFERDESC);
 	bufferDesc.dwFlags = DSBCAPS_CTRLVOLUME;
 	bufferDesc.dwBufferBytes = waveFileHeader.dataSize;
@@ -92,21 +92,21 @@ bool AudioClip::LoadFile(const char* filename, bool Is3D)
 	bufferDesc.guid3DAlgorithm = GUID_NULL;
 
 	// If its a 3D sound, add the flag for it
-	if (Is3DSound_)
+	if (m_is3D)
 	{
 		bufferDesc.dwFlags += DSBCAPS_CTRL3D;
 	}
 
-	// Create a temporary sound buffer
-	Result_ = DirectSound::Instance()->GetDirectSound()->CreateSoundBuffer(&bufferDesc, &tempBuffer, NULL);
-	if (FAILED(Result_))
+	// create a temporary sound buffer
+	m_result = DirectSound::getInstance()->getDirectSound()->CreateSoundBuffer(&bufferDesc, &tempBuffer, NULL);
+	if (FAILED(m_result))
 	{
 		return false;
 	}
 
 	// Test the temporary buffer against the sound interface
-	Result_ = tempBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&SoundBuffer_);
-	if (FAILED(Result_))
+	m_result = tempBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&m_soundBuffer);
+	if (FAILED(m_result))
 	{
 		return false;
 	}
@@ -115,10 +115,10 @@ bool AudioClip::LoadFile(const char* filename, bool Is3D)
 	// Read the File into Memory
 	//===========================
 
-	// Move to the data chunk
+	// move to the data chunk
 	fseek(filePtr, sizeof(WaveHeaderType), SEEK_SET);
 
-	// Create the data storage
+	// create the data storage
 	waveData = new unsigned char[waveFileHeader.dataSize];
 	if (!waveData) 
 	{
@@ -140,12 +140,12 @@ bool AudioClip::LoadFile(const char* filename, bool Is3D)
 	}
 
 	//==================
-	// Load into Buffer
+	// onload into Buffer
 	//==================
 
 	// Lock the sound buffer
-	Result_ = SoundBuffer_->Lock(0, waveFileHeader.dataSize, (void**)&bufferPtr, (DWORD*)&bufferSize, NULL, 0, 0);
-	if (FAILED(Result_))
+	m_result = m_soundBuffer->Lock(0, waveFileHeader.dataSize, (void**)&bufferPtr, (DWORD*)&bufferSize, NULL, 0, 0);
+	if (FAILED(m_result))
 	{
 		return false;
 	}
@@ -154,26 +154,26 @@ bool AudioClip::LoadFile(const char* filename, bool Is3D)
 	memcpy(bufferPtr, waveData, waveFileHeader.dataSize);
 
 	// Unlock the sound buffer
-	Result_ = SoundBuffer_->Unlock((void*)bufferPtr, bufferSize, NULL, 0);
-	if (FAILED(Result_))
+	m_result = m_soundBuffer->Unlock((void*)bufferPtr, bufferSize, NULL, 0);
+	if (FAILED(m_result))
 	{
 		return false;
 	}
 
-	// Create a 3D sound buffer if required
-	if (Is3DSound_)
+	// create a 3D sound buffer if required
+	if (m_is3D)
 	{
-		// Get the 3D interface to the secondary sound buffer.
-		Result_ = SoundBuffer_->QueryInterface(IID_IDirectSound3DBuffer8, (void**)&SoundBuffer3D_);
-		if (FAILED(Result_))
+		// get the 3D interface to the secondary sound buffer.
+		m_result = m_soundBuffer->QueryInterface(IID_IDirectSound3DBuffer8, (void**)&m_soundBuffer3D);
+		if (FAILED(m_result))
 		{
 			return false;
 		}
 	}
 
-	// Set default volume
-	Result_ = SoundBuffer_->SetVolume(DSBVOLUME_MAX);
-	if (FAILED(Result_))
+	// set default volume
+	m_result = m_soundBuffer->SetVolume(DSBVOLUME_MAX);
+	if (FAILED(m_result))
 	{
 		return false;
 	}
@@ -188,45 +188,45 @@ bool AudioClip::LoadFile(const char* filename, bool Is3D)
 	return true;
 }
 
-void AudioClip::Shutdown()
+void AudioClip::terminate()
 {
-	if (SoundBuffer_)
+	if (m_soundBuffer)
 	{
-		SoundBuffer_->Release();
-		SoundBuffer_ = 0;
+		m_soundBuffer->Release();
+		m_soundBuffer = 0;
 	}
 
-	if (SoundBuffer3D_)
+	if (m_soundBuffer3D)
 	{
-		SoundBuffer3D_->Release();
-		SoundBuffer3D_ = 0;
+		m_soundBuffer3D->Release();
+		m_soundBuffer3D = 0;
 	}
 }
 
 // Controls
-bool AudioClip::Play(bool Loop)
+bool AudioClip::play(bool Loop)
 {
-	if (!SoundBuffer_)
+	if (!m_soundBuffer)
 	{
 		return false; 
 	}
 
-	// Set the buffer to start from the beginning
-	Result_ = SoundBuffer_->SetCurrentPosition(0);
-	if (FAILED(Result_))
+	// set the buffer to start from the beginning
+	m_result = m_soundBuffer->SetCurrentPosition(0);
+	if (FAILED(m_result))
 	{
 		return false;
 	}
 
-	// Set the position of the sound
-	if (Is3DSound_)
+	// set the position of the sound
+	if (m_is3D)
 	{
-		SoundBuffer3D_->SetPosition(Position_.x, Position_.y, Position_.z, DS3D_IMMEDIATE);
+		m_soundBuffer3D->SetPosition(m_position.x, m_position.y, m_position.z, DS3D_IMMEDIATE);
 	}
 
-	// Play the sound clip
-	Result_ = SoundBuffer_->Play(0, 0, Loop);
-	if (FAILED(Result_))
+	// play the sound clip
+	m_result = m_soundBuffer->Play(0, 0, Loop);
+	if (FAILED(m_result))
 	{
 		return false;
 	}
@@ -234,10 +234,10 @@ bool AudioClip::Play(bool Loop)
 	return true;
 }
 
-bool AudioClip::Stop()
+bool AudioClip::stop()
 {
-	Result_ = SoundBuffer_->Stop();
-	if (FAILED(Result_))
+	m_result = m_soundBuffer->Stop();
+	if (FAILED(m_result))
 	{
 		return false;
 	}
@@ -245,20 +245,20 @@ bool AudioClip::Stop()
 	return true;
 }
 
-bool AudioClip::SetVolume(float Vol)
+bool AudioClip::setVolume(float Vol)
 {
 	// Convert from a percentage of normal volume to a percentage of reduction
 	Vol = 1.0f - Vol;
 
 	// Keep within a range of 0 to 1
-	Clamp(Vol, 0, 1);
+	clamp(Vol, 0, 1);
 
 	// Convert to a decimal reduction
 	Vol *= -10000;
 
 	// Apply the volume change to the buffer
-	Result_ = SoundBuffer_->SetVolume(Vol);
-	if (FAILED(Result_))
+	m_result = m_soundBuffer->SetVolume(Vol);
+	if (FAILED(m_result))
 	{
 		return false;
 	}
@@ -266,17 +266,17 @@ bool AudioClip::SetVolume(float Vol)
 	return true;
 }
 
-// Setters
-void AudioClip::SetPosition(D3DXVECTOR3 Position)
+// setters
+void AudioClip::setPosition(D3DXVECTOR3 Position)
 {
-	Position_ = Position;
+	m_position = Position;
 }
 
-// Getters
-bool AudioClip::IsPlaying()
+// getters
+bool AudioClip::isPlaying()
 {
 	DWORD dwStatus = 0;
-	SoundBuffer_->GetStatus(&dwStatus);
+	m_soundBuffer->GetStatus(&dwStatus);
 
 	return ((dwStatus & DSBSTATUS_PLAYING) != 0);
 }

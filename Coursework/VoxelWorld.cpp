@@ -3,131 +3,131 @@
 
 VoxelWorld::VoxelWorld()
 {
-	ChunkGenerator_ = 0;
-	ThreadHandler_ = 0;
-	Player_ = 0;
+	m_chunkGenerator = 0;
+	m_threadhandler = 0;
+	m_player = 0;
 }
 
 VoxelWorld::~VoxelWorld()
 {
 }
 
-void VoxelWorld::Initialise()
+void VoxelWorld::initialise()
 {
-	ManagedThread<void()>* initialChunkLoading;
+	ManagedThread<void()>* initialChunkloading;
 	SYSTEM_INFO systemInfo;
 
 	//===================
-	// Initialise Player
+	// initialise Player
 	//===================
 
-	Player_ = new Player;
-	Player_->Initialise();
-	Player_->SetHeight(2.0f);
+	m_player = new Player;
+	m_player->initialise();
+	m_player->setHeight(2.0f);
 
 	//===========================
-	// Initialise Terrain Layers
+	// initialise Terrain Layers
 	//===========================
 
-	ChunkGenerator_ = new ChunkGenerator;
+	m_chunkGenerator = new ChunkGenerator;
 
 	// LayerType						 (LayerName,         Block,      H,   Freq,   Amp, Exp,       Type)
-	ChunkGenerator_->AddLayer(TerrainLayer("Bedrock", "bedrock", 1, 0.1f, 2, 1, LayerType::Absolute));
-	ChunkGenerator_->AddLayer(TerrainLayer("Base Stone", "stone", 39, 64.0f, 9, 1, LayerType::Absolute));
-	ChunkGenerator_->AddLayer(TerrainLayer("Mountain 1", "stone", 1, 129.0f, 60, 1, LayerType::Absolute));
-	ChunkGenerator_->AddLayer(TerrainLayer("Mountain 2", "stone", 4, 111.0f, 58, 1, LayerType::Absolute));
-	ChunkGenerator_->AddLayer(TerrainLayer("Base Dirt 1", "dirt", 60, 16.0f, 4, 1, LayerType::Absolute));
-	ChunkGenerator_->AddLayer(TerrainLayer("Base Dirt 2", "dirt", 59, 25.0f, 6, 1, LayerType::Absolute));
-	ChunkGenerator_->AddLayer(TerrainLayer("Surface", "dirt", 1, 1.0f, 1, 1, LayerType::Additive));
-	ChunkGenerator_->AddLayer(TerrainLayer("cave", "air", 1, 10.0f, 10, 10, LayerType::Absolute));
+	m_chunkGenerator->addLayer(TerrainLayer("Bedrock", "bedrock", 1, 0.1f, 2, 1, LayerType::Absolute));
+	m_chunkGenerator->addLayer(TerrainLayer("Base Stone", "stone", 39, 64.0f, 9, 1, LayerType::Absolute));
+	m_chunkGenerator->addLayer(TerrainLayer("Mountain 1", "stone", 1, 129.0f, 60, 1, LayerType::Absolute));
+	m_chunkGenerator->addLayer(TerrainLayer("Mountain 2", "stone", 4, 111.0f, 58, 1, LayerType::Absolute));
+	m_chunkGenerator->addLayer(TerrainLayer("Base Dirt 1", "dirt", 60, 16.0f, 4, 1, LayerType::Absolute));
+	m_chunkGenerator->addLayer(TerrainLayer("Base Dirt 2", "dirt", 59, 25.0f, 6, 1, LayerType::Absolute));
+	m_chunkGenerator->addLayer(TerrainLayer("Surface", "dirt", 1, 1.0f, 1, 1, LayerType::Additive));
+	m_chunkGenerator->addLayer(TerrainLayer("cave", "air", 1, 10.0f, 10, 10, LayerType::Absolute));
 
 
 	//===========================
-	// Initialise Chunk Building
+	// initialise Chunk Building
 	//===========================
 
 	// Positions within a radius around us
-	for (int y = World::LoadRadius; y >= -World::LoadRadius; y--)
+	for (int y = World::loadRadius; y >= -World::loadRadius; y--)
 	{
-		for (int z = -World::LoadRadius; z <= World::LoadRadius; z++)
+		for (int z = -World::loadRadius; z <= World::loadRadius; z++)
 		{
-			for (int x = -World::LoadRadius; x <= World::LoadRadius; x++)
+			for (int x = -World::loadRadius; x <= World::loadRadius; x++)
 			{
-				LocalChunks_.push_back(D3DXVECTOR3(x, y, z));
+				m_localChunks.push_back(D3DXVECTOR3(x, y, z));
 			}
 		}
 	}
 
-	GenerateLocalChunks();
+	generateLocalChunks();
 
-	// Set starting stats
-	AverageLoadTime_ = 0.0f;
-	BuildCount_ = 0;
+	// set starting stats
+	m_averageloadTime = 0.0f;
+	m_buildCount = 0;
 
 	//======================
-	// Initialise Threading
+	// initialise Threading
 	//======================
 
 	// Retrieve system Information
 	GetSystemInfo(&systemInfo);
 
 	// Store how many threads we have, reserve one for thread handler
-	MaxThreads_ = systemInfo.dwNumberOfProcessors - 2;
+	m_maxThreads = systemInfo.dwNumberOfProcessors - 2;
 
-	// Run a thread to handle initial worker threads
-	initialChunkLoading = new ManagedThread<void()>;
-	initialChunkLoading->SetFunction(std::bind(&VoxelWorld::HandleThreads, this));
-	initialChunkLoading->Start(true);
+	// run a thread to handle initial worker threads
+	initialChunkloading = new ManagedThread<void()>;
+	initialChunkloading->setFunction(std::bind(&VoxelWorld::handleThreads, this));
+	initialChunkloading->begin(true);
 
 	// Force a wait until initial terrain built
 	while (true)
 	{
-		if (ChunkQueue_.empty())
+		if (m_chunkQueue.empty())
 			break;
 	}
 
-	initialChunkLoading->ForceClose();
-	initialChunkLoading = 0;
+	initialChunkloading->forceQuit();
+	initialChunkloading = 0;
 }
 
-bool VoxelWorld::Frame()
+bool VoxelWorld::update()
 {
-	// Handle Player Input
-	Player_->Frame();
+	// handle Player Input
+	m_player->update();
 
 	//=========================
-	// Handle Chunk Generation
+	// handle Chunk Generation
 	//=========================
 
-	GenerateLocalChunks();
+	generateLocalChunks();
 
 	//=======================
-	// Handle Chunk Updating
+	// handle Chunk Updating
 	//=======================
 
-	HandleChunks();
+	handleChunks();
 
 	//==================
-	// Handle Building
+	// handle Building
 	//==================
 
-	HandleThreads();
+	handleThreads();
 
 	return true;
 }
 
-bool VoxelWorld::Render()
+bool VoxelWorld::render()
 {
 	//======================
-	// Render Active Chunks
+	// render Active Chunks
 	//======================
 
-	for (it_wc it = Map_.begin(); it != Map_.end(); it++)
+	for (it_wc it = m_chunkMap.begin(); it != m_chunkMap.end(); it++)
 	{
 		if (it->second)
 		{
-			Result_ = it->second->Render();
-			if (!Result_)
+			m_result = it->second->render();
+			if (!m_result)
 			{
 				return false;
 			}
@@ -137,31 +137,31 @@ bool VoxelWorld::Render()
 	return true;
 }
 
-void VoxelWorld::HandleThreads()
+void VoxelWorld::handleThreads()
 {
-	HandleActiveThreads();
-	HandleBuildList();
+	handleActiveThreads();
+	handleBuildList();
 }
 
-void VoxelWorld::HandleActiveThreads()
+void VoxelWorld::handleActiveThreads()
 {
-	if (ManagedThreads_.empty())
+	if (m_managedThreads.empty())
 	{
 		return;
 	}
 
 	//=========================
-	// Remove Finished Threads
+	// Remove isComplete Threads
 	//=========================
 
-	for (vector<ManagedThread<void()>*>::iterator it = ManagedThreads_.begin(); it != ManagedThreads_.end();)
+	for (vector<ManagedThread<void()>*>::iterator it = m_managedThreads.begin(); it != m_managedThreads.end();)
 	{
 		ManagedThread<void()>* chunkThread = *it;
 
 		// Remove finished threads
-		if (chunkThread->TryJoin())
+		if (chunkThread->tryJoin())
 		{
-			it = ManagedThreads_.erase(it);
+			it = m_managedThreads.erase(it);
 		}
 		else
 		{
@@ -173,83 +173,83 @@ void VoxelWorld::HandleActiveThreads()
 	}
 }
 
-void VoxelWorld::HandleBuildList()
+void VoxelWorld::handleBuildList()
 {
 	D3DXVECTOR3 buildTarget;
 	WorkerType workerType;
 	ManagedThread<void()>* chunkThread;
 
 	// Make sure we have chunks to deal with
-	if (ChunkQueue_.empty())
+	if (m_chunkQueue.empty())
 	{
 		return;
 	}
 
 	// Make sure we have available threads
-	if (ManagedThreads_.size() >= MaxThreads_)
+	if (m_managedThreads.size() >= m_maxThreads)
 	{
 		return;
 	}
 
-	// Get the first job
-	buildTarget = ChunkQueue_.front().chunkTarget;
-	workerType = ChunkQueue_.front().workerType;
+	// get the first job
+	buildTarget = m_chunkQueue.front().chunkTarget;
+	workerType = m_chunkQueue.front().workerType;
 
 	//============
-	// Handle Job
+	// handle Job
 	//============
 
-	if (workerType == WorkerType::Build)
+	if (workerType == WorkerType::build)
 	{
-		// Create a build thread
+		// create a build thread
 		chunkThread = new ManagedThread<void()>;
-		chunkThread->SetFunction(std::bind(&VoxelWorld::BuildChunk, this, buildTarget));
-		chunkThread->Start();
-		ManagedThreads_.push_back(chunkThread);
+		chunkThread->setFunction(std::bind(&VoxelWorld::buildChunk, this, buildTarget));
+		chunkThread->begin();
+		m_managedThreads.push_back(chunkThread);
 	}
-	else if (workerType == WorkerType::Update)
+	else if (workerType == WorkerType::update)
 	{
-		// Run a thread to update the chunk
+		// run a thread to update the chunk
 	}
 
 	// Remove chunk from build list
-	ChunkQueue_.erase(ChunkQueue_.begin());
+	m_chunkQueue.erase(m_chunkQueue.begin());
 
 	return;
 }
 
-void VoxelWorld::BuildChunk(D3DXVECTOR3 chunkIndex)
+void VoxelWorld::buildChunk(D3DXVECTOR3 chunkIndex)
 {
 	string chunkKey;
 	Chunk* createdChunk;
 
-	// Generate a key for the chunk
-	chunkKey = GetKey(chunkIndex.x, chunkIndex.y, chunkIndex.z);
+	// generate a key for the chunk
+	chunkKey = getKey(chunkIndex.x, chunkIndex.y, chunkIndex.z);
 
 	// Search for the chunk
-	it_wc iterator = Map_.find(chunkKey);
-	if (iterator == Map_.end())
+	it_wc iterator = m_chunkMap.find(chunkKey);
+	if (iterator == m_chunkMap.end())
 	{
 		float time = timeGetTime();
 
-		// Create the chunk
+		// create the chunk
 		createdChunk = new Chunk;
-		createdChunk->Initialise(chunkIndex.x, chunkIndex.y, chunkIndex.z);
-		ChunkGenerator_->GenerateChunk(*createdChunk);
-		createdChunk->RefreshVisible();
+		createdChunk->initialise(chunkIndex.x, chunkIndex.y, chunkIndex.z);
+		m_chunkGenerator->generateChunk(*createdChunk);
+		createdChunk->refreshVisible();
 
-		Map_[chunkKey] = createdChunk;
+		m_chunkMap[chunkKey] = createdChunk;
 		createdChunk = 0;
 
-		OutputToDebug("Created Chunk : " + chunkKey);
-		OutputTimeDelay("Time Taken : ", time, timeGetTime());
+		outputToDebug("created Chunk : " + chunkKey);
+		outputTimeDelay("Time Taken : ", time, timeGetTime());
 
-		AverageLoadTime_ += timeGetTime() - time;
-		BuildCount_++;
+		m_averageloadTime += timeGetTime() - time;
+		m_buildCount++;
 	}
 	else
 	{
-		OutputToDebug("Found Existing Chunk : " + chunkKey);
+		outputToDebug("Found Existing Chunk : " + chunkKey);
 
 		// Check if we have loaded it
 		if (iterator->second)
@@ -261,23 +261,23 @@ void VoxelWorld::BuildChunk(D3DXVECTOR3 chunkIndex)
 		{
 			string chunkFilename = "chunks/" + chunkKey + ".bin";
 
-			// Load chunk from bin
+			// onload chunk from bin
 			FILE* pFile;
 			fopen_s(&pFile, chunkFilename.c_str(), "rb");
 
 			if (pFile != NULL)
 			{
-				//loadedChunk->Initialise(chunkIndex.x, chunkIndex.y, chunkIndex.z);
+				//loadedChunk->initialise(chunkIndex.x, chunkIndex.y, chunkIndex.z);
 
-				Map_[chunkKey] = new Chunk;
-				Map_[chunkKey]->Initialise(chunkIndex.x, chunkIndex.y, chunkIndex.z);
+				m_chunkMap[chunkKey] = new Chunk;
+				m_chunkMap[chunkKey]->initialise(chunkIndex.x, chunkIndex.y, chunkIndex.z);
 
-				// Load file into new chunk
-				fread(Map_[chunkKey], sizeof(Chunk), 1, pFile);
+				// onload file into new chunk
+				fread(m_chunkMap[chunkKey], sizeof(Chunk), 1, pFile);
 
 				// Close File
 				fclose(pFile);
-				OutputToDebug("File Loaded!");
+				outputToDebug("File loaded!");
 			}
 			else
 			{
@@ -287,36 +287,36 @@ void VoxelWorld::BuildChunk(D3DXVECTOR3 chunkIndex)
 	}
 }
 
-void VoxelWorld::HandleChunks()
+void VoxelWorld::handleChunks()
 {
 	D3DXVECTOR3 chunkKey;
 
 	//===============
-	// Update Chunks
+	// update Chunks
 	//===============
 
-	for (it_wc it = Map_.begin(); it != Map_.end(); it++)
+	for (it_wc it = m_chunkMap.begin(); it != m_chunkMap.end(); it++)
 	{
 		// Make sure we have a chunk to update
 		if (it->second)
 		{
-			// Update the chunk
-			it->second->Frame();
+			// update the chunk
+			it->second->update();
 
 			// Convert key from string to vector3
-			chunkKey = GetKey(it->first);
+			chunkKey = getKey(it->first);
 
-			if (it->second->IsDirty())
+			if (it->second->isDirty())
 			{
 				// Add to list for refreshing
-				ChunkQueue_.push_back(ChunkTarget(chunkKey, WorkerType::Update));
+				m_chunkQueue.push_back(ChunkTarget(chunkKey, WorkerType::update));
 			}
-			else if (it->second->IsOutOfRange())
+			else if (it->second->isOutOfRange())
 			{
 				// Add extension
 				string chunkFilename = "chunks/" + it->first + ".bin";
 
-				// Run a thread to unload the chunk
+				// run a thread to unload the chunk
 				FILE* pFile = fopen(chunkFilename.c_str(), "wb");
 
 				if (pFile != NULL)
@@ -325,8 +325,8 @@ void VoxelWorld::HandleChunks()
 					fwrite(it->second, sizeof(Chunk), 1, pFile);
 					fclose(pFile);
 
-					// Shutdown chunk
-					it->second->Shutdown();
+					// terminate chunk
+					it->second->terminate();
 					it->second = 0;
 				}
 			}
@@ -334,59 +334,59 @@ void VoxelWorld::HandleChunks()
 	}
 }
 
-void VoxelWorld::GenerateLocalChunks()
+void VoxelWorld::generateLocalChunks()
 {
 	D3DXVECTOR3 chunkIndex;
 
 	//================
-	// Check Movement
+	// Check movement
 	//================
 
 	// Calculate the chunk column we are in
-	chunkIndex.x = floor(Camera::Instance()->GetTransform()->GetPosition().x / (float)World::ChunkSize);
-	chunkIndex.y = floor(Camera::Instance()->GetTransform()->GetPosition().y / (float)World::ChunkSize);
-	chunkIndex.z = floor(Camera::Instance()->GetTransform()->GetPosition().z / (float)World::ChunkSize);
+	chunkIndex.x = floor(Camera::getInstance()->getTransform()->getPosition().x / (float)World::ChunkSize);
+	chunkIndex.y = floor(Camera::getInstance()->getTransform()->getPosition().y / (float)World::ChunkSize);
+	chunkIndex.z = floor(Camera::getInstance()->getTransform()->getPosition().z / (float)World::ChunkSize);
 
 	// Check if we have moved chunk since last check
-	if (chunkIndex == LastChunkPosition_)
+	if (chunkIndex == m_lastChunkPosition)
 	{
 		return;
 	}
 
 	// Store the new chunk we are in
-	LastChunkPosition_ = chunkIndex;
+	m_lastChunkPosition = chunkIndex;
 
 	//================
 	// Chunk Building
 	//================
 
 	// Force to load centre first
-	ChunkQueue_.push_back(ChunkTarget(chunkIndex + Vector::Zero, WorkerType::Build));
+	m_chunkQueue.push_back(ChunkTarget(chunkIndex + Vector::Zero, WorkerType::build));
 
-	// Load chunks around us
-	for (unsigned int i = 0; i < LocalChunks_.size(); i++)
+	// onload chunks around us
+	for (unsigned int i = 0; i < m_localChunks.size(); i++)
 	{
 		// Add to build list
-		ChunkQueue_.push_back(ChunkTarget(chunkIndex + LocalChunks_[i], WorkerType::Build));
+		m_chunkQueue.push_back(ChunkTarget(chunkIndex + m_localChunks[i], WorkerType::build));
 	}
 }
 
-void VoxelWorld::SetBlock(int x, int y, int z, string blockName)
+void VoxelWorld::setBlock(int x, int y, int z, string blockName)
 {
 	Block* currentBlock;
 
-	// Get the block
-	currentBlock = GetBlock(x, y, z);
+	// get the block
+	currentBlock = getBlock(x, y, z);
 
 	// Make sure its a valid block
 	if (!currentBlock)
 		return;
 
-	// Update the block
-	currentBlock->CopyFrom(World::Blocks[blockName]);
+	// update the block
+	currentBlock->clone(World::Blocks[blockName]);
 }
 
-Block* VoxelWorld::GetBlock(int x, int y, int z)
+Block* VoxelWorld::getBlock(int x, int y, int z)
 {
 	float chunkX, chunkY, chunkZ, blockX, blockY, blockZ;
 	Chunk* currentChunk;
@@ -406,17 +406,17 @@ Block* VoxelWorld::GetBlock(int x, int y, int z)
 	chunkZ = floor(chunkZ);
 
 	//===========
-	// Get Chunk
+	// get Chunk
 	//===========
 
 	// Find the chunk
-	it_wc it = Map_.find(GetKey(chunkX, chunkY, chunkZ));
-	if (it == Map_.end())
+	it_wc it = m_chunkMap.find(getKey(chunkX, chunkY, chunkZ));
+	if (it == m_chunkMap.end())
 	{
 		return 0;
 	}
 
-	// Get the chunk
+	// get the chunk
 	currentChunk = it->second;
 	if (!currentChunk)
 	{
@@ -424,16 +424,16 @@ Block* VoxelWorld::GetBlock(int x, int y, int z)
 	}
 
 	//===========
-	// Get Block
+	// get Block
 	//===========
 
 	// Calculate block index
-	blockX = x - currentChunk->GetPosition().x;
-	blockY = y - currentChunk->GetPosition().y;
-	blockZ = z - currentChunk->GetPosition().z;
+	blockX = x - currentChunk->getPosition().x;
+	blockY = y - currentChunk->getPosition().y;
+	blockZ = z - currentChunk->getPosition().z;
 
 	// Try and get block
-	currentBlock = currentChunk->GetBlock(blockX, blockY, blockZ);
+	currentBlock = currentChunk->getBlock(blockX, blockY, blockZ);
 	if (!currentBlock)
 	{
 		return 0;

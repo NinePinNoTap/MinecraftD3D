@@ -2,41 +2,41 @@
 
 ConstantBuffer::ConstantBuffer()
 {
-	Buffer_ = 0;
+	m_buffer = 0;
 }
 
 ConstantBuffer::~ConstantBuffer()
 {
 }
 
-// Shutdown
-void ConstantBuffer::Shutdown()
+// terminate
+void ConstantBuffer::terminate()
 {
-	if (Buffer_)
+	if (m_buffer)
 	{
-		Buffer_->Release();
-		Buffer_ = 0;
+		m_buffer->Release();
+		m_buffer = 0;
 	}
 }
 
-void ConstantBuffer::SendToRender(ShaderType Type, int Slot, int NoOfBuffers)
+void ConstantBuffer::submit(ShaderType Type, int Slot, int NoOfBuffers)
 {
 	switch (Type)
 	{
 		case VertexShader:
-			DirectXManager::Instance()->GetDeviceContext()->VSSetConstantBuffers(Slot, NoOfBuffers, &Buffer_);
+			DirectXManager::getInstance()->getDeviceContext()->VSSetConstantBuffers(Slot, NoOfBuffers, &m_buffer);
 			break;
 
 		case PixelShader:
-			DirectXManager::Instance()->GetDeviceContext()->PSSetConstantBuffers(Slot, NoOfBuffers, &Buffer_);
+			DirectXManager::getInstance()->getDeviceContext()->PSSetConstantBuffers(Slot, NoOfBuffers, &m_buffer);
 			break;
 
 		case HullShader:
-			DirectXManager::Instance()->GetDeviceContext()->HSSetConstantBuffers(Slot, NoOfBuffers, &Buffer_);
+			DirectXManager::getInstance()->getDeviceContext()->HSSetConstantBuffers(Slot, NoOfBuffers, &m_buffer);
 			break;
 
 		case DomainShader:
-			DirectXManager::Instance()->GetDeviceContext()->DSSetConstantBuffers(Slot, NoOfBuffers, &Buffer_);
+			DirectXManager::getInstance()->getDeviceContext()->DSSetConstantBuffers(Slot, NoOfBuffers, &m_buffer);
 			break;
 	}
 }

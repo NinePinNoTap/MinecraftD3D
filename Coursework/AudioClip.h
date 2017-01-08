@@ -16,31 +16,31 @@ public:
 	~AudioClip();
 
 	// Initialising
-	bool LoadFile(const char* filename, bool Is3D);
-	void Shutdown();
+	bool loadFile(const char* filename, bool is3D);
+	void terminate();
 
 	// Controls
-	bool Play(bool Loop);
-	bool Stop();
+	bool play(bool Loop);
+	bool stop();
 
-	// Setters
-	void SetPosition(D3DXVECTOR3 Position);
-	bool SetVolume(float Vol);
+	// setters
+	void setPosition(D3DXVECTOR3 Position);
+	bool setVolume(float Vol);
 
-	// Getters
-	bool IsPlaying();
+	// getters
+	bool isPlaying();
 
 private:
 	// Buffers
-	IDirectSoundBuffer8* SoundBuffer_;
-	IDirectSound3DBuffer8* SoundBuffer3D_;
+	IDirectSoundBuffer8* m_soundBuffer;
+	IDirectSound3DBuffer8* m_soundBuffer3D;
 
 	// Flags
-	bool Is3DSound_;
-	HRESULT Result_;
+	bool m_is3D;
+	HRESULT m_result;
 
 	// Properties
-	D3DXVECTOR3 Position_;
+	D3DXVECTOR3 m_position;
 };
 
 

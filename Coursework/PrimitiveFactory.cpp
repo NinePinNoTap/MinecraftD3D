@@ -10,7 +10,7 @@ PrimitiveFactory::~PrimitiveFactory()
 
 
 // Procedurally Generating Mesh3D
-bool PrimitiveFactory::CreateSphere(Rect3D sphereSections, float sphereRadius, Model& model)
+bool PrimitiveFactory::createSphere(Rect3D sphereSections, float sphereRadius, Model& model)
 {
 	vector<D3DXVECTOR3> vertexPositions;
 	vector<D3DXVECTOR2> textureCoordinates;
@@ -77,14 +77,14 @@ bool PrimitiveFactory::CreateSphere(Rect3D sphereSections, float sphereRadius, M
 	}
 
 	//=============
-	// Build Model
+	// build Model
 	//=============
 
 	// Count how many vertices and indices we have
 	vertexCount = vertexPositions.size();
 	indexCount = vertexIndices.size();
 
-	// Create the data arrays
+	// create the data arrays
 	Indices = new unsigned long[indexCount];
 	if (!Indices)
 	{
@@ -97,7 +97,7 @@ bool PrimitiveFactory::CreateSphere(Rect3D sphereSections, float sphereRadius, M
 		return false;
 	}
 
-	// Set up the model
+	// set up the model
 	for (int i = 0; i < indexCount; i++)
 	{
 		curIndex = vertexIndices[i];
@@ -116,26 +116,26 @@ bool PrimitiveFactory::CreateSphere(Rect3D sphereSections, float sphereRadius, M
 	vertexIndices.clear();
 
 	//=============
-	// Create Mesh
+	// create Mesh
 	//=============
 
 	Mesh3D* newMesh = new Mesh3D;
-	newMesh->SetMesh(primitiveMesh, Indices);
-	newMesh->SetIndexCount(indexCount);
-	newMesh->SetVertexCount(vertexCount);
-	Result_ = newMesh->Build();
-	if (!Result_)
+	newMesh->setMesh(primitiveMesh, Indices);
+	newMesh->setIndexCount(indexCount);
+	newMesh->setVertexCount(vertexCount);
+	m_result = newMesh->build();
+	if (!m_result)
 	{
 		return false;
 	}
 
 	// Add mesh to model
-	model.AddMesh(newMesh);
+	model.addMesh(newMesh);
 
 	return true;
 }
 
-bool PrimitiveFactory::CreatePlane(Rect3D planeSize, Rect3D tileCount, float textureRepeat, Model& model)
+bool PrimitiveFactory::createPlane(Rect3D planeSize, Rect3D tileCount, float textureRepeat, Model& model)
 {
 	vector<D3DXVECTOR3> vertexPositions;
 	vector<D3DXVECTOR2> textureCoordinates;
@@ -197,14 +197,14 @@ bool PrimitiveFactory::CreatePlane(Rect3D planeSize, Rect3D tileCount, float tex
 	}
 
 	//=============
-	// Build Model
+	// build Model
 	//=============
 
 	// Count how many vertices and indices we have
 	vertexCount = vertexPositions.size();
 	indexCount = vertexIndices.size();
 
-	// Create the data arrays
+	// create the data arrays
 	Indices = new unsigned long[indexCount];
 	if (!Indices)
 	{
@@ -216,7 +216,7 @@ bool PrimitiveFactory::CreatePlane(Rect3D planeSize, Rect3D tileCount, float tex
 		return false;
 	}
 
-	// Set up the model
+	// set up the model
 	for (int i = 0; i < indexCount; i++)
 	{
 		curIndex = vertexIndices[i];
@@ -235,45 +235,45 @@ bool PrimitiveFactory::CreatePlane(Rect3D planeSize, Rect3D tileCount, float tex
 	vertexIndices.clear();
 
 	//=============
-	// Create Mesh
+	// create Mesh
 	//=============
 
 	Mesh3D* newMesh = new Mesh3D;
-	newMesh->SetMesh(primitiveMesh, Indices);
-	newMesh->SetIndexCount(indexCount);
-	newMesh->SetVertexCount(vertexCount);
-	Result_ = newMesh->Build();
-	if (!Result_)
+	newMesh->setMesh(primitiveMesh, Indices);
+	newMesh->setIndexCount(indexCount);
+	newMesh->setVertexCount(vertexCount);
+	m_result = newMesh->build();
+	if (!m_result)
 	{
 		return false;
 	}
 
 	// Add mesh to model
-	model.AddMesh(newMesh);
+	model.addMesh(newMesh);
 
 	return true;
 }
 
-bool PrimitiveFactory::Create2DBox(Rect3D planeSize, Model& model)
+bool PrimitiveFactory::create2DBox(Rect3D planeSize, Model& model)
 {
 	int vertexCount, indexCount;
 	VertexData* primitiveMesh;
 	unsigned long* Indices;
 
-	// Set the number of vertices in the vertex array.
+	// set the number of vertices in the vertex array.
 	vertexCount = 6;
 
-	// Set the number of indices in the index array.
+	// set the number of indices in the index array.
 	indexCount = 6;
 
-	// Create the vertex array.
+	// create the vertex array.
 	primitiveMesh = new VertexData[vertexCount];
 	if (!primitiveMesh)
 	{
 		return false;
 	}
 
-	// Create the index array.
+	// create the index array.
 	Indices = new unsigned long[indexCount];
 	if (!Indices)
 	{
@@ -283,7 +283,7 @@ bool PrimitiveFactory::Create2DBox(Rect3D planeSize, Model& model)
 	float halfW = planeSize.width / 2;
 	float halfH = planeSize.height / 2;
 
-	// Load the vertex array with data.
+	// onload the vertex array with data.
 	primitiveMesh[0].position = D3DXVECTOR3(-halfW, halfH, 0.0f);  // Top left
 	primitiveMesh[1].position = D3DXVECTOR3(halfW, halfH, 0.0f);  // Top right
 	primitiveMesh[2].position = D3DXVECTOR3(halfW, -halfH, 0.0f);  // Bottom right
@@ -298,7 +298,7 @@ bool PrimitiveFactory::Create2DBox(Rect3D planeSize, Model& model)
 	primitiveMesh[4].texture = D3DXVECTOR2(0.0f, 0.0f); // Top left
 	primitiveMesh[5].texture = D3DXVECTOR2(1.0f, 1.0f); // Bottom right
 
-	// Load the index array with data.
+	// onload the index array with data.
 	Indices[0] = 0;  // Top left
 	Indices[1] = 1;  // Top right
 	Indices[2] = 2;  // Bottom right
@@ -307,26 +307,26 @@ bool PrimitiveFactory::Create2DBox(Rect3D planeSize, Model& model)
 	Indices[5] = 5;  // Bottom right
 
 	//=============
-	// Create Mesh
+	// create Mesh
 	//=============
 
 	Mesh3D* newMesh = new Mesh3D;
-	newMesh->SetMesh(primitiveMesh, Indices);
-	newMesh->SetIndexCount(indexCount);
-	newMesh->SetVertexCount(vertexCount);
-	Result_ = newMesh->Build();
-	if (!Result_)
+	newMesh->setMesh(primitiveMesh, Indices);
+	newMesh->setIndexCount(indexCount);
+	newMesh->setVertexCount(vertexCount);
+	m_result = newMesh->build();
+	if (!m_result)
 	{
 		return false;
 	}
 
 	// Add mesh to model
-	model.AddMesh(newMesh);
+	model.addMesh(newMesh);
 
 	return true;
 }
 
-bool PrimitiveFactory::Create3DBox(Rect3D BoxSize, float tileFactor, Model& model)
+bool PrimitiveFactory::create3DBox(Rect3D BoxSize, float tileFactor, Model& model)
 {
 	vector<D3DXVECTOR3> vertexPositions;
 	vector<D3DXVECTOR3> TextureCoords;
@@ -350,7 +350,7 @@ bool PrimitiveFactory::Create3DBox(Rect3D BoxSize, float tileFactor, Model& mode
 	vertexCount = 24;
 	indexCount = 36;
 
-	// Create the vertex array.
+	// create the vertex array.
 	primitiveMesh = new VertexData[vertexCount];
 	if (!primitiveMesh)
 	{
@@ -427,7 +427,7 @@ bool PrimitiveFactory::Create3DBox(Rect3D BoxSize, float tileFactor, Model& mode
 	primitiveMesh[22].texture = D3DXVECTOR2(0.0f, textureRepeat.z);
 	primitiveMesh[23].texture = D3DXVECTOR2(textureRepeat.x, textureRepeat.z);
 
-	// Create the index array.
+	// create the index array.
 	Indices = new unsigned long[indexCount]
 	{
 		0, 1, 3, 2, 0, 3, // Front
@@ -439,29 +439,29 @@ bool PrimitiveFactory::Create3DBox(Rect3D BoxSize, float tileFactor, Model& mode
 	};
 
 	// Calculate normals, tangent and binormals
-	CalculateHardNormals(vertexCount, primitiveMesh);
+	calculateHardNormals(vertexCount, primitiveMesh);
 
 	//=============
-	// Create Mesh
+	// create Mesh
 	//=============
 
 	Mesh3D* newMesh = new Mesh3D;
-	newMesh->SetMesh(primitiveMesh, Indices);
-	newMesh->SetIndexCount(indexCount);
-	newMesh->SetVertexCount(vertexCount);
-	Result_ = newMesh->Build();
-	if (!Result_)
+	newMesh->setMesh(primitiveMesh, Indices);
+	newMesh->setIndexCount(indexCount);
+	newMesh->setVertexCount(vertexCount);
+	m_result = newMesh->build();
+	if (!m_result)
 	{
 		return false;
 	}
 
 	// Add mesh to model
-	model.AddMesh(newMesh);
+	model.addMesh(newMesh);
 
 	return true;
 }
 
-bool PrimitiveFactory::CreateSkyPlane(float quadCount, float planeWidth, float maxHeight, float textureRepeat, Model& model)
+bool PrimitiveFactory::createSkyPlane(float quadCount, float planeWidth, float maxHeight, float textureRepeat, Model& model)
 {
 	float quadSize, radius, constant, textureDelta;
 	D3DXVECTOR3 position;
@@ -474,10 +474,10 @@ bool PrimitiveFactory::CreateSkyPlane(float quadCount, float planeWidth, float m
 	unsigned long* Indices;
 
 	//====================
-	// Create Vertex Data
+	// create Vertex Data
 	//====================
 
-	// Create the array to hold the sky plane coordinates.
+	// create the array to hold the sky plane coordinates.
 	meshData = new VertexData[(quadCount + 1) * (quadCount + 1)];
 	if (!meshData)
 	{
@@ -520,33 +520,33 @@ bool PrimitiveFactory::CreateSkyPlane(float quadCount, float planeWidth, float m
 	}
 
 	//=================
-	// Build the Model
+	// build the Model
 	//=================
 
 	// Calculate the number of vertices in the sky plane mesh.
 	vertexCount = (quadCount + 1) * (quadCount + 1) * 6;
 
-	// Set the index count to the same as the vertex count.
+	// set the index count to the same as the vertex count.
 	indexCount = vertexCount;
 
-	// Create the vertex array.
+	// create the vertex array.
 	primitiveMesh = new VertexData[vertexCount];
 	if (!primitiveMesh)
 	{
 		return false;
 	}
 
-	// Create the index array.
+	// create the index array.
 	Indices = new unsigned long[indexCount];
 	if (!Indices)
 	{
 		return false;
 	}
 
-	// Initialise the index into the vertex array.
+	// initialise the index into the vertex array.
 	index = 0;
 
-	// Load the vertex and index array with the sky plane array data.
+	// onload the vertex and index array with the sky plane array data.
 	for (int j = 0; j<quadCount; j++)
 	{
 		for (int i = 0; i<quadCount; i++)
@@ -595,26 +595,26 @@ bool PrimitiveFactory::CreateSkyPlane(float quadCount, float planeWidth, float m
 	}
 
 	//=============
-	// Create Mesh
+	// create Mesh
 	//=============
 
 	Mesh3D* newMesh = new Mesh3D;
-	newMesh->SetMesh(primitiveMesh, Indices);
-	newMesh->SetIndexCount(indexCount);
-	newMesh->SetVertexCount(vertexCount);
-	Result_ = newMesh->Build();
-	if (!Result_)
+	newMesh->setMesh(primitiveMesh, Indices);
+	newMesh->setIndexCount(indexCount);
+	newMesh->setVertexCount(vertexCount);
+	m_result = newMesh->build();
+	if (!m_result)
 	{
 		return false;
 	}
 
 	// Add mesh to model
-	model.AddMesh(newMesh);
+	model.addMesh(newMesh);
 
 	return true;
 }
 
-void PrimitiveFactory::CalculateHardNormals(int vertexCount, VertexData* mesh)
+void PrimitiveFactory::calculateHardNormals(int vertexCount, VertexData* mesh)
 {
 	int faceCount, index;
 	VertexData vertex1, vertex2, vertex3;
@@ -623,13 +623,13 @@ void PrimitiveFactory::CalculateHardNormals(int vertexCount, VertexData* mesh)
 	// Calculate the number of faces in the model.
 	faceCount = vertexCount / 3;
 
-	// Initialise the index to the model data.
+	// initialise the index to the model data.
 	index = 0;
 
 	// Go through all the faces and calculate the the tangent, binormal, and normal vectors.
 	for (int i = 0; i<faceCount; i++)
 	{
-		// Get the three vertices for this face from the model.
+		// get the three vertices for this face from the model.
 		vertex1 = mesh[index];
 		index++;
 
@@ -640,10 +640,10 @@ void PrimitiveFactory::CalculateHardNormals(int vertexCount, VertexData* mesh)
 		index++;
 
 		// Calculate tangent and binormals for the current face
-		CalculateTangentBinormal(vertex1, vertex2, vertex3, tangent, binormal);
+		calculateTangentBinormal(vertex1, vertex2, vertex3, tangent, binormal);
 
 		// Calculate normals using tangent and binormal
-		CalculateHardNormal(tangent, binormal, normal);
+		calculateHardNormal(tangent, binormal, normal);
 		mesh[index - 1].normal = normal;
 		mesh[index - 2].normal = normal;
 		mesh[index - 3].normal = normal;

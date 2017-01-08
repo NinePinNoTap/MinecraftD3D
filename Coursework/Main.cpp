@@ -2,30 +2,30 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-	bool Result_;
+	bool m_result;
 	WindowManager* windowManager;
 
 	//===================
-	// Create the window
+	// create the window
 	//===================
 
 	windowManager = new WindowManager;
 	if (!windowManager)
 		return 0;
 
-	// Initialise it
-	Result_ = windowManager->Initialise();
-	if (Result_)
+	// initialise it
+	m_result = windowManager->initialise();
+	if (m_result)
 	{
-		// Run the window
-		windowManager->Run();
+		// run the window
+		windowManager->run();
 	}
 
 	//==========
-	// Shutdown
+	// terminate
 	//==========
 
-	windowManager->Shutdown();
+	windowManager->terminate();
 	delete windowManager;
 	windowManager = 0;
 

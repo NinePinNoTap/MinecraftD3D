@@ -14,13 +14,13 @@ public:
 	ViewFrustumManager();
 	~ViewFrustumManager();
 
-	void Frame();
+	void update();
 
-	bool CheckPoint(D3DXVECTOR3 position);
-	bool CheckCube(D3DXVECTOR3 position, float radius);
+	bool checkPoint(D3DXVECTOR3 position);
+	bool checkCube(D3DXVECTOR3 position, float radius);
 
 private:
 	static const int NO_OF_PLANES = 6;
-	D3DXPLANE ViewPlanes_[NO_OF_PLANES];
+	D3DXPLANE m_viewPlanes[NO_OF_PLANES];
 };
 

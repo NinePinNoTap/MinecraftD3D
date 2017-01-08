@@ -16,45 +16,45 @@ AssetManager::~AssetManager()
 
 }
 
-void AssetManager::Shutdown()
+void AssetManager::terminate()
 {
 	// De-allocate all audio clips
-	for (std::map<string, AudioClip*>::iterator it = AudioDatabase_.begin(); it != AudioDatabase_.end(); ++it)
+	for (std::map<string, AudioClip*>::iterator it = m_audioClips.begin(); it != m_audioClips.end(); ++it)
 	{
 		if (it->second)
 		{
-			it->second->Shutdown();
+			it->second->terminate();
 			it->second = 0;
 		}
 	}
 
 	// De-allocate all fonts
-	for (std::map<string, Font*>::iterator it = FontDatabase_.begin(); it != FontDatabase_.end(); ++it)
+	for (std::map<string, Font*>::iterator it = m_fonts.begin(); it != m_fonts.end(); ++it)
 	{
 		if (it->second)
 		{
-			it->second->Shutdown();
+			it->second->terminate();
 			it->second = 0;
 		}
 	}
 
 	// De-allocate all model
-	for (std::map<string, Model*>::iterator it = ModelDatabase_.begin(); it != ModelDatabase_.end(); ++it)
+	for (std::map<string, Model*>::iterator it = m_models.begin(); it != m_models.end(); ++it)
 	{
 		if (it->second)
 		{
-			it->second->Shutdown();
+			it->second->terminate();
 			it->second = 0;
 		}
 	}
 }
 
-void AssetManager::LoadAudio(AudioClip** audioClip, std::string filename, bool is3D)
+void AssetManager::loadAudio(AudioClip** audioClip, std::string filename, bool is3D)
 {
 	// Check if the font already exists
-	if (AudioDatabase_.count(filename))
+	if (m_audioClips.count(filename))
 	{
-		*audioClip = AudioDatabase_[filename];
+		*audioClip = m_audioClips[filename];
 
 		return;
 	}
@@ -63,77 +63,77 @@ void AssetManager::LoadAudio(AudioClip** audioClip, std::string filename, bool i
 	std::string audioPath = Directory::Audio + filename;
 	const char* audioFilePath = audioPath.c_str();
 
-	// Create audio clip
+	// create audio clip
 	AudioClip* loadedClip = new AudioClip;
-	Result_ = loadedClip->LoadFile(audioFilePath, is3D);
-	if (!Result_)
+	m_result = loadedClip->loadFile(audioFilePath, is3D);
+	if (!m_result)
 	{
-		OutputToDebug("(AUDIO) Could not load : " + filename);
+		outputToDebug("(AUDIO) Could not load : " + filename);
 		audioClip = 0;
 		return;
 	}
 
 	// Add to map
-	AudioDatabase_[filename] = loadedClip;
+	m_audioClips[filename] = loadedClip;
 
 	*audioClip = loadedClip;
 
-	OutputToDebug("(AUDIO) Loaded : " + filename);
+	outputToDebug("(AUDIO) loaded : " + filename);
 
 	return;
 }
 
-void AssetManager::LoadFont(Font** font, std::string filename, int letterCount)
+void AssetManager::loadFont(Font** font, std::string filename, int letterCount)
 {
 	// Check if the font already exists
-	if (FontDatabase_.count(filename))
+	if (m_fonts.count(filename))
 	{
 		// Don't continue
-		*font = FontDatabase_[filename];
+		*font = m_fonts[filename];
 		return;
 	}
 
 	//===============
-	// Load the Font
+	// onload the Font
 	//===============
 
 	// Construct filename path to txt
 	std::string txtPath = Directory::Font + filename;
 	const char* txtFilePath = txtPath.c_str();
 
-	// Create Font
+	// create Font
 	Font* loadedFont = new Font;
 	if (!loadedFont)
 	{
 		*font = 0;
 		return;
 	}
-	Result_ = loadedFont->Initialise(txtFilePath, letterCount);
-	if (!Result_)
+	m_result = loadedFont->initialise(txtFilePath, letterCount);
+	if (!m_result)
 	{
-		OutputToDebug("(FONT) Could not load : " + filename);
+		outputToDebug("(FONT) Could not load : " + filename);
 		*font = 0;
 		return;
 	}
 
 	// Add to map
-	FontDatabase_[filename] = loadedFont;
+	m_fonts[filename] = loadedFont;
 	
-	// Set font and return
+	// set font and return
 	*font = loadedFont;
 
-	OutputToDebug("(FONT) Loaded : " + filename);
+	outputToDebug("(FONT) loaded : " + filename);
 
 	return;
 }
 
-void AssetManager::LoadModel(Model** model, std::string filename)
+void AssetManager::loadModel(Model** model, std::string filename)
 {
 	// Check if the model already exists
-	if (ModelDatabase_.count(filename))
+	if (m_models.count(filename))
 	{
-		vector<Mesh3D*> modelMesh = ModelDatabase_[filename]->GetAllMeshes();
-		vector<Material*> modelMaterial = ModelDatabase_[filename]->GetAllMaterials();
+		vector<Mesh3D*> modelMesh = m_models[filename]->getAllMeshes();
+		vector<Material*> modelMaterial = m_models[filename]->getAllMaterials();
 
 		(*model) = new Model;
 		
@@ -141,12 +141,12 @@ void AssetManager::LoadModel(Model** model, std::string filename)
 		{
 			// Take a copy of the mesh
 			Mesh3D* tempMesh = new Mesh3D(*modelMesh[i]);
-			(*model)->AddMesh(tempMesh);
+			(*model)->addMesh(tempMesh);
 		}
 
 		for (unsigned int i = 0; i < modelMaterial.size(); i++)
 		{
-			(*model)->AddMaterial(modelMaterial[i]);
+			(*model)->addMaterial(modelMaterial[i]);
 		}
 
 		// Cleanup
@@ -156,83 +156,83 @@ void AssetManager::LoadModel(Model** model, std::string filename)
 		return;
 	}
 
-	OBJLoader objLoader;
-	TXTLoader txtLoader;
+	OBJloader objloader;
+	TXTloader txtloader;
 
-	// Create the Model
+	// create the Model
 	Model* loadedModel = new Model;
 
 	// Check what format we are dealing with
 	if (string(filename).find(".txt") != std::string::npos)
 	{
-		// Load TXT File
-		Result_ = txtLoader.LoadModel(filename.c_str(), *loadedModel);
+		// onload TXT File
+		m_result = txtloader.loadModel(filename.c_str(), *loadedModel);
 	}
 	else
 	{
-		// Load Obj File
-		Result_ = objLoader.LoadModel(filename.c_str(), *loadedModel);
+		// onload Obj File
+		m_result = objloader.loadModel(filename.c_str(), *loadedModel);
 	}
 
 	// Check if we loaded the model properly
-	if (Result_)
+	if (m_result)
 	{
 		*model = loadedModel;
 
-		OutputToDebug("(MODEL) Loaded : " + filename);
+		outputToDebug("(MODEL) loaded : " + filename);
 
 		// Add to the map
-		ModelDatabase_[filename] = loadedModel;
+		m_models[filename] = loadedModel;
 	}
 	else
 	{
-		OutputToDebug("(MODEL) Could not load : " + filename);
+		outputToDebug("(MODEL) Could not load : " + filename);
 		*model = 0;
 	}
 
 	return;
 }
 
-void AssetManager::LoadTexture(Texture** texture, std::string filename)
+void AssetManager::loadTexture(Texture** texture, std::string filename)
 {
 	// Check if the font already exists
-	if (TextureDatabase_.count(filename))
+	if (m_textures.count(filename))
 	{
-		*texture = TextureDatabase_[filename];
+		*texture = m_textures[filename];
 
 		return;
 	}
 
-	// Create the texture
+	// create the texture
 	Texture* loadedTexture = new Texture;
-	Result_ = loadedTexture->Initialise(Directory::Texture + filename);
-	if (!Result_)
+	m_result = loadedTexture->initialise(Directory::Texture + filename);
+	if (!m_result)
 	{
 		*texture = 0;
-		OutputToDebug("(TEXTURE) Could not load : " + filename);
+		outputToDebug("(TEXTURE) Could not load : " + filename);
 		return;
 	}
 
 	// Add to the map
-	TextureDatabase_[filename] = loadedTexture;
+	m_textures[filename] = loadedTexture;
 
 	*texture = loadedTexture;
 
-	OutputToDebug("(TEXTURE) Loaded : " + filename);
+	outputToDebug("(TEXTURE) loaded : " + filename);
 
 	return;
 }
 
-void AssetManager::LoadTexture(Texture** texture, string keyName, Rect2D textureResolution)
+void AssetManager::loadTexture(Texture** texture, string keyName, Rect2D textureResolution)
 {
 	// Check if the texture is in the database
-	if (TextureDatabase_.count(keyName))
+	if (m_textures.count(keyName))
 	{
-		*texture = TextureDatabase_[keyName];
+		*texture = m_textures[keyName];
 		return;
 	}
 
-	// Create the texture
+	// create the texture
 	Texture* createdTexture = new Texture;
 	if (!createdTexture)
 	{
@@ -240,9 +240,9 @@ void AssetManager::LoadTexture(Texture** texture, string keyName, Rect2D texture
 		return;
 	}
 
-	// Initialise it
-	Result_ = createdTexture->Initialise(textureResolution);
-	if (!Result_)
+	// initialise it
+	m_result = createdTexture->initialise(textureResolution);
+	if (!m_result)
 	{
 		// Couldn't create
 		*texture = 0;
@@ -252,10 +252,10 @@ void AssetManager::LoadTexture(Texture** texture, string keyName, Rect2D texture
 	}
 
 	// Add to the map
-	TextureDatabase_[keyName] = createdTexture;
+	m_textures[keyName] = createdTexture;
 
 	// Return it
 	*texture = createdTexture;
 
-	OutputToDebug("(RENDER TEXTURE) Created : " + keyName);
+	outputToDebug("(RENDER TEXTURE) created : " + keyName);
 }

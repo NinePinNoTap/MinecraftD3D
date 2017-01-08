@@ -5,7 +5,6 @@
 #include <windows.h>
 
 #include "ApplicationManager.h"
-
 #include "Rect.h"
 #include "Singleton.h"
 
@@ -16,25 +15,25 @@ public:
 	WindowManager(const WindowManager&);
 	~WindowManager();
 
-	bool Initialise();
-	void Shutdown();
-	void Run();
+	bool initialise();
+	void terminate();
+	void run();
 
-	inline Rect2D GetWindowResolution() { return WindowResolution_; }
-	inline HWND GetHWND() { return HWND_; }
+	inline Rect2D getWindowResolution() { return m_windowResolution; }
+	inline HWND getHWND() { return m_hwnd; }
 
-	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
+	LRESULT CALLBACK Messagehandler(HWND, UINT, WPARAM, LPARAM);
 
 private:
-	void InitialiseWindows(int&, int&);
+	void createWindow(int&, int&);
 
-	LPCWSTR ApplicationManagerName_;
-	HINSTANCE HInstance_;
-	HWND HWND_;
-	ApplicationManager* ApplicationManager_;
-	Rect2D WindowResolution_;
+	LPCWSTR m_applicationName;
+	HINSTANCE m_hinstance;
+	HWND m_hwnd;
+	ApplicationManager* m_applicationManager;
+	Rect2D m_windowResolution;
 
-	bool Result_;
+	bool m_result;
 };
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

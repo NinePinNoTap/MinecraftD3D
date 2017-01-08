@@ -17,30 +17,30 @@ public:
 	~Camera();
 
 	// Initialising
-	bool Initialise();
+	bool initialise();
 
-	// Frame
-	bool Frame();
+	// update
+	bool update();
 
 	// Matrices
-	bool Render();
-	void GetViewMatrix(D3DXMATRIX& ViewMatrix);
-	void Render2DViewMatrix();
-	void Get2DViewMatrix(D3DXMATRIX& ViewMatrix);
-	void RenderReflection(float);
-	void GetReflectionMatrix(D3DXMATRIX& ViewMatrix);
+	bool render();
+	void getViewMatrix(D3DXMATRIX& ViewMatrix);
+	void render2DViewMatrix();
+	void get2DViewMatrix(D3DXMATRIX& ViewMatrix);
+	void renderReflection(float);
+	void getReflectionMatrix(D3DXMATRIX& ViewMatrix);
 
 private:
 	// Generation
-	D3DXMATRIX GenerateMatrix(D3DXVECTOR3 upVector, D3DXVECTOR3 positionVector, D3DXVECTOR3 lookAtVector, bool isReflection = false);
+	D3DXMATRIX generateMatrix(D3DXVECTOR3 upVector, D3DXVECTOR3 positionVector, D3DXVECTOR3 lookAtVector, bool isReflection = false);
 
 	// Vectors
-	D3DXVECTOR3 Position2D_;
+	D3DXVECTOR3 m_position2D;
 
 	// Matrices
-	D3DXMATRIX ViewMatrix_;
-	D3DXMATRIX ViewMatrix2D_;
-	D3DXMATRIX ReflectionViewMatrix_;
+	D3DXMATRIX m_viewMatrix;
+	D3DXMATRIX m_baseViewMatrix;
+	D3DXMATRIX m_reflectionViewMatrix;
 };
 
 

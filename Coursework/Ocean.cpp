@@ -14,84 +14,84 @@ Ocean::~Ocean()
 }
 
 // Initialising
-bool Ocean::Initialise(string textureFilename, Rect3D waterResolution)
+bool Ocean::initialise(string textureFilename, Rect3D waterResolution)
 {
 	PrimitiveFactory primitiveFactory;
 	Texture* refractionTexture;
 	Texture* reflectionTexture;
 	
 	//==============
-	// Create Model
+	// create Model
 	//==============
 
-	Model_ = new Model;
-	if (!Model_)
+	m_model = new Model;
+	if (!m_model)
 	{
 		return false;
 	}
 
-	// Load Model
-	Result_ = primitiveFactory.CreatePlane(waterResolution, Rect3D(1, 1), 1.0f, *Model_);
-	if (!Result_)
+	// onload Model
+	m_result = primitiveFactory.createPlane(waterResolution, Rect3D(1, 1), 1.0f, *m_model);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//=================
-	// Create Material
+	// create Material
 	//=================
 
 	// Retrieve refraction and reflection texture pointers
-	AssetManager::Instance()->LoadTexture(&refractionTexture, "RefractionTexture");
-	AssetManager::Instance()->LoadTexture(&reflectionTexture, "ReflectionTexture");
+	AssetManager::getInstance()->loadTexture(&refractionTexture, "RefractionTexture");
+	AssetManager::getInstance()->loadTexture(&reflectionTexture, "ReflectionTexture");
 
-	// Create material
+	// create material
 	Material* newMaterial = new Material;
-	Result_ = newMaterial->SetNormalTexture(textureFilename);
-	if (!Result_)
+	m_result = newMaterial->setNormalTexture(textureFilename);
+	if (!m_result)
 	{
 		return false;
 	}
-	newMaterial->SetTexture("RefractionTexture", refractionTexture);
-	newMaterial->SetTexture("ReflectionTexture", reflectionTexture);
+	newMaterial->setTexture("RefractionTexture", refractionTexture);
+	newMaterial->setTexture("ReflectionTexture", reflectionTexture);
 
-	newMaterial->SetFloat("WaterHeight", waterResolution.depth);
-	newMaterial->SetVector2("NormalMapTiling", D3DXVECTOR2(0.01f, 0.02f));
-	newMaterial->SetFloat("WaterTranslation", 0.0f);
-	newMaterial->SetFloat("ReflectRefractScale", 0.03f);
-	newMaterial->SetVector4("RefractionTint", D3DXVECTOR4(0.0f, 0.8f, 1.0f, 1.0f));
-	newMaterial->SetFloat("WaveHeight", 1.5f);
-	newMaterial->SetFloat("TessellationAmount", 58.0f);
+	newMaterial->setFloat("WaterHeight", waterResolution.depth);
+	newMaterial->setVector2("NormalMapTiling", D3DXVECTOR2(0.01f, 0.02f));
+	newMaterial->setFloat("WaterTranslation", 0.0f);
+	newMaterial->setFloat("ReflectRefractScale", 0.03f);
+	newMaterial->setVector4("RefractionTint", D3DXVECTOR4(0.0f, 0.8f, 1.0f, 1.0f));
+	newMaterial->setFloat("WaveHeight", 1.5f);
+	newMaterial->setFloat("TessellationAmount", 58.0f);
 
-	Model_->AddMaterial(newMaterial);
+	m_model->addMaterial(newMaterial);
 
 	//==================
-	// Create Transform
+	// create Transform
 	//==================
 
-	Transform_ = new Transform;
-	if (!Transform_)
+	m_transform = new Transform;
+	if (!m_transform)
 	{
 		return false;
 	}
 
 	//=================
-	// Initialise Vars
+	// initialise Vars
 	//=================
 
-	Frame_ = 0.0f;
-	WaveSpeed_ = 0.025f;
-	WaterTranslation_ = 0.0f;
+	m_frame = 0.0f;
+	m_waveSpeed = 0.025f;
+	m_waterTranslation = 0.0f;
 
-	IsReflective_ = RenderMode::Off;
-	UseCulling_ = RenderMode::Off;
-	UseDepth_ = RenderMode::On;
-	IsPostProcessed_ = RenderMode::On;
-	BlendMode_ = BlendMode::NoBlending;
+	m_reflective = renderMode::Off;
+	m_culled = renderMode::Off;
+	m_depth = renderMode::On;
+	m_postprocessing = renderMode::On;
+	m_blendMode = BlendMode::NoBlending;
 
-	IsActive_ = true;
+	m_isActive = true;
 
-	SetShader("ocean");
+	setShader("ocean");
 
 	// Clean Up
 	newMaterial = 0;
@@ -101,143 +101,143 @@ bool Ocean::Initialise(string textureFilename, Rect3D waterResolution)
 	return true;
 }
 
-// Shutdown
-void Ocean::Shutdown()
+// terminate
+void Ocean::terminate()
 {
 	// Release the texture object
-	if (Model_)
+	if (m_model)
 	{
-		Model_->Shutdown();
-		delete Model_;
-		Model_ = 0;
+		m_model->terminate();
+		delete m_model;
+		m_model = 0;
 	}
 
-	if (Transform_)
+	if (m_transform)
 	{
-		delete Transform_;
-		Transform_ = 0;
+		delete m_transform;
+		m_transform = 0;
 	}
 
 	return;
 }
 
-// Frame
-bool Ocean::Frame()
+// update
+bool Ocean::update()
 {
-	// Update the position of the water to simulate motion
-	WaterTranslation_ += 0.003f;
-	Wrap(WaterTranslation_, 0, 1.0f);
+	// update the position of the water to simulate motion
+	m_waterTranslation += 0.003f;
+	wrap(m_waterTranslation, 0, 1.0f);
 
-	// Update the waater time to simulate waves
-	Frame_ += WaveSpeed_;
+	// update the waater time to simulate waves
+	m_frame += m_waveSpeed;
 
-	// Update Material
-	Model_->GetMaterial()->SetFloat("Frame", Frame_);
-	Model_->GetMaterial()->SetFloat("WaterTranslation", WaterTranslation_);
+	// update Material
+	m_model->getMaterial()->setFloat("update", m_frame);
+	m_model->getMaterial()->setFloat("WaterTranslation", m_waterTranslation);
 
 	return true;
 }
 
-bool Ocean::Render()
+bool Ocean::render()
 {
-	if (!IsActive_ || !Shader_ || !Model_)
+	if (!m_isActive || !m_shader || !m_model)
 		return true;
 
 	// Define how we want the model to be rendered
-	SetRenderModes();
+	setrenderModes();
 
 	// Define how we want to see the model
-	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
+	m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::View);
 
-	// Render to Render Texture
-	if (IsPostProcessed_ == RenderMode::On)
+	// render to render Texture
+	if (m_postprocessing == renderMode::On)
 	{
-		// Get and set render texture
+		// get and set render texture
 		Texture* renderTexture;
-		AssetManager::Instance()->LoadTexture(&renderTexture, "RenderTexture");
-		renderTexture->SetRenderTarget();
+		AssetManager::getInstance()->loadTexture(&renderTexture, "renderTexture");
+		renderTexture->setRenderTarget();
 
-		// Render the model
-		RenderMeshes();
+		// render the model
+		renderMeshes();
 
-		// Reset Render Target
-		DirectXManager::Instance()->SetBackBufferRenderTarget();
-		DirectXManager::Instance()->ResetViewport();
+		// Reset render Target
+		DirectXManager::getInstance()->setBackBufferRenderTarget();
+		DirectXManager::getInstance()->ResetViewport();
 
 		// Clean Up
 		renderTexture = 0;
 	}
 
-	// Render Mesh
-	RenderMeshes();
+	// render Mesh
+	renderMeshes();
 
-	// Reset Pipeline Settings
-	ResetRenderModes();
+	// Reset Pipeline settings
+	resetRenderModes();
 
 	return true;
 }
 
-bool Ocean::RenderMeshes()
+bool Ocean::renderMeshes()
 {
-	// Render the model
-	for (int i = 0; i < Model_->GetMeshCount(); i++)
+	// render the model
+	for (int i = 0; i < m_model->getMeshCount(); i++)
 	{
 		// Make sure the mesh is active for it to be rendered
-		if (Model_->GetMesh(i)->IsActive())
+		if (m_model->getMesh(i)->isActive())
 		{
 			// Send model to pipeline
-			SendModelToPipeline(Model_->GetMesh(i));
+			sendModelToPipeline(m_model->getMesh(i));
 
 			// Send material to shader
-			Shader_->Prepare(Model_->GetMaterial(i), Transform_);
+			m_shader->prepare(m_model->getMaterial(i), m_transform);
 
-			// Render Object
-			Shader_->Render(Model_->GetMesh(i)->GetIndexCount());
+			// render Object
+			m_shader->render(m_model->getMesh(i)->getIndexCount());
 		}
 	}
 
 	return true;
 }
 
-bool Ocean::SendModelToPipeline(Mesh3D* objMesh)
+bool Ocean::sendModelToPipeline(Mesh3D* objMesh)
 {
 	unsigned int stride;
 	unsigned int offset;
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
 
-	// Set vertex buffer stride and offset
+	// set vertex buffer stride and offset
 	stride = sizeof(VertexData);
 	offset = 0;
 
-	// Get Mesh Buffers
-	vertexBuffer = objMesh->GetVertexBuffer();
-	indexBuffer = objMesh->GetIndexBuffer();
+	// get Mesh Buffers
+	vertexBuffer = objMesh->getVertexBuffer();
+	indexBuffer = objMesh->getIndexBuffer();
 
-	// Set the vertex buffer to active in the InputManager assembler so it can be rendered
-	DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	// set the vertex buffer to active in the InputManager assembler so it can be rendered
+	DirectXManager::getInstance()->getDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 
-	// Set the index buffer to active in the InputManager assembler so it can be rendered
-	DirectXManager::Instance()->GetDeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	// set the index buffer to active in the InputManager assembler so it can be rendered
+	DirectXManager::getInstance()->getDeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	// Set the type of primitive that should be rendered from this vertex buffer
-	DirectXManager::Instance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
+	// set the type of primitive that should be rendered from this vertex buffer
+	DirectXManager::getInstance()->getDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 
 	return true;
 }
 
-// Game Settings
-void Ocean::ToggleTime(bool NightTimeMode)
+// Game settings
+void Ocean::toggleTime(bool NightTimeMode)
 {
 	// Toggle between good weather and bad weather
 	if (NightTimeMode)
 	{
-		WaveSpeed_ = 0.06f;
-		Model_->GetMaterial()->SetFloat("WaveHeight", 2.0f);
+		m_waveSpeed = 0.06f;
+		m_model->getMaterial()->setFloat("WaveHeight", 2.0f);
 	}
 	else
 	{
-		Model_->GetMaterial()->SetFloat("WaveHeight", 1.5f);
-		WaveSpeed_ = 0.025f;
+		m_model->getMaterial()->setFloat("WaveHeight", 1.5f);
+		m_waveSpeed = 0.025f;
 	}
 }

@@ -12,137 +12,137 @@ MainMenuScene::~MainMenuScene()
 }
 
 // Initialising
-bool MainMenuScene::Initialise(HWND hwnd)
+bool MainMenuScene::initialise(HWND hwnd)
 {
 	//===================
-	// Create Background
+	// create Background
 	//===================
 
-	Background_ = new Sprite;
-	if (!Background_)
+	m_background = new Sprite;
+	if (!m_background)
 	{
 		return false;
 	}
 
-	Result_ = Background_->Initialise(Rect3D(WindowManager::Instance()->GetWindowResolution()), "bg_mainmenu.dds");
-	if (!Result_)
+	m_result = m_background->initialise(Rect3D(WindowManager::getInstance()->getWindowResolution()), "bg_mainmenu.dds");
+	if (!m_result)
 	{
 		return false;
 	}
-	Background_->SetShader("texture");
+	m_background->setShader("texture");
 
 	//===============
-	// Create Buttons
+	// create Buttons
 	//===============
 
-	CreateButton("PLAY GAME", 350, 325, SceneState::MINECRAFT);
-	CreateButton("EXIT GAME", 350, 475, SceneState::EXIT);
+	createButton("PLAY GAME", 350, 325, SceneState::MINECRAFT);
+	createButton("EXIT GAME", 350, 475, SceneState::EXIT);
 
 	//=================
-	// Initialise Vars
+	// initialise Vars
 	//=================
 
 	ShowCursor(true);
-	IsLoaded_ = true;
+	m_isloaded = true;
 
 	return true;
 }
 
-// Shutdown
-void MainMenuScene::Shutdown()
+// terminate
+void MainMenuScene::terminate()
 {
 
 }
 
-// Frame
-bool MainMenuScene::Frame()
+// update
+bool MainMenuScene::update()
 {
-	// Update Input
-	InputManager::Instance()->Frame();
+	// update Input
+	InputManager::getInstance()->update();
 
-	// Update Buttons
-	if (!Buttons_.empty())
+	// update Buttons
+	if (!m_buttons.empty())
 	{
-		for (unsigned int i = 0; i < Buttons_.size(); i++)
+		for (unsigned int i = 0; i < m_buttons.size(); i++)
 		{
-			Result_ = Buttons_[i]->Frame();
-			if (!Result_)
+			m_result = m_buttons[i]->update();
+			if (!m_result)
 			{
-				Buttons_[i]->Execute();
+				m_buttons[i]->execute();
 			}
 		}
 	}
 
-	// Render the Menu
-	Render();
+	// render the Menu
+	render();
 
 	return true;
 }
 
-void MainMenuScene::Render()
+void MainMenuScene::render()
 {
-	DirectXManager::Instance()->BeginScene();
+	DirectXManager::getInstance()->beginScene();
 
-	// Render Background
-	Background_->Render();
+	// render Background
+	m_background->render();
 
-	// Render Buttons
-	if (!Buttons_.empty())
+	// render Buttons
+	if (!m_buttons.empty())
 	{
-		for (unsigned int i = 0; i < Buttons_.size(); i++)
+		for (unsigned int i = 0; i < m_buttons.size(); i++)
 		{
-			Buttons_[i]->Render();
+			m_buttons[i]->render();
 		}
 	}
 
-	DirectXManager::Instance()->EndScene();
+	DirectXManager::getInstance()->endScene();
 }
 
-// Load and Unload
-void MainMenuScene::Load()
+// onload and onUnload
+void MainMenuScene::onLoad()
 {
 	SetCursor(LoadCursor(NULL, IDC_ARROW));
 
 	return;
 }
 
-void MainMenuScene::Unload()
+void MainMenuScene::onUnload()
 {
 	return;
 }
 
 // Functionality
-void MainMenuScene::CreateButton(string buttonText, int x, int y, int sceneID)
+void MainMenuScene::createButton(string buttonText, int x, int y, int sceneID)
 {
-	// Create the button
+	// create the button
 	Button* createdButton = new Button;
 	if (!createdButton)
 	{
 		return;
 	}
 
-	// Initialise the button
-	Result_ = createdButton->Initialise(Rect3D(410, 85, 0), "bg_button.dds");
-	if (!Result_)
+	// initialise the button
+	m_result = createdButton->initialise(Rect3D(410, 85, 0), "bg_button.dds");
+	if (!m_result)
 	{
 		return;
 	}
 
-	// Set Data
-	createdButton->SetButton(buttonText, x, y);
-	createdButton->SetHighlightColour(D3DXVECTOR4(.2f, .2f, 1, 0.2f));
+	// set Data
+	createdButton->setButton(buttonText, x, y);
+	createdButton->setHighlightColour(D3DXVECTOR4(.2f, .2f, 1, 0.2f));
 
-	// Set Function
-	createdButton->SetFunction(std::bind(&ApplicationManager::SetScene, ApplicationManager::Instance(), (SceneState)sceneID));
+	// set Function
+	createdButton->setFunction(std::bind(&ApplicationManager::setScene, ApplicationManager::getInstance(), (SceneState)sceneID));
 
-	// Set Shader
-	createdButton->SetShader("tint");
+	// set Shader
+	createdButton->setShader("tint");
 
 	// Enable alpha blending
-	createdButton->SetRenderModes(RenderMode::Off, RenderMode::Off, RenderMode::Off, BlendMode::AlphaMasked);
+	createdButton->setrenderModes(renderMode::Off, renderMode::Off, renderMode::Off, BlendMode::AlphaMasked);
 
 	// Add to list
-	Buttons_.push_back(createdButton);
+	m_buttons.push_back(createdButton);
 
 	// Clean Up
 	createdButton = 0;

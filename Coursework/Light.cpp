@@ -12,92 +12,92 @@ Light::~Light()
 {
 }
 
-bool Light::Initialise()
+bool Light::initialise()
 {
-	// Create a transform
-	Transform_ = new Transform;
-	if (!Transform_)
+	// create a transform
+	m_transform = new Transform;
+	if (!m_transform)
 	{
 		return false;
 	}
 
-	// Set Light Position
-	Transform_->SetPosition(-3500.0f, 9900.0f, 2100.0f);
+	// set Light Position
+	m_transform->setPosition(-3500.0f, 9900.0f, 2100.0f);
 
-	// Initialise the default lighting effects
-	SetAmbientColor(0.5f, 0.5f, 0.5f, 1.0f);
-	SetDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
-	SetDirection(0.5f, -0.75f, 0.25f);
-	SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	SetSpecularPower(32.0f);
+	// initialise the default lighting effects
+	setAmbientColor(0.5f, 0.5f, 0.5f, 1.0f);
+	setDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
+	setDirection(0.5f, -0.75f, 0.25f);
+	setSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	setSpecularPower(32.0f);
 
 	return true;
 }
 
-// Setters
-void Light::SetAmbientColor(float red, float green, float blue, float alpha)
+// setters
+void Light::setAmbientColor(float red, float green, float blue, float alpha)
 {
-	AmbientColour_ = D3DXVECTOR4(red, green, blue, alpha);
+	m_ambientColour = D3DXVECTOR4(red, green, blue, alpha);
 }
 
-void Light::SetDiffuseColor(float red, float green, float blue, float alpha)
+void Light::setDiffuseColor(float red, float green, float blue, float alpha)
 {
-	DiffuseColor_ = D3DXVECTOR4(red, green, blue, alpha);
+	m_diffuseColour = D3DXVECTOR4(red, green, blue, alpha);
 }
 
-void Light::SetDirection(float x, float y, float z)
+void Light::setDirection(float x, float y, float z)
 {
-	Direction_ = D3DXVECTOR3(x, y, z);
+	m_direction = D3DXVECTOR3(x, y, z);
 }
 
-void Light::SetSpecularColor(float red, float green, float blue, float alpha)
+void Light::setSpecularColor(float red, float green, float blue, float alpha)
 {
-	SpecularColour_ = D3DXVECTOR4(red, green, blue, alpha);
+	m_specularColour = D3DXVECTOR4(red, green, blue, alpha);
 }
 
-void Light::SetSpecularPower(float specularPower)
+void Light::setSpecularPower(float specularPower)
 {
-	SpecularPower_ = specularPower;
+	m_specularPower = specularPower;
 }
 
 // Scene Updating
-void Light::ToggleTime(bool NightTimeMode)
+void Light::toggleTime(bool NightTimeMode)
 {
 	// Toggle between good weather and bad weather
 	if (NightTimeMode)
 	{
-		SetAmbientColor(0.25f, 0.25f, 0.25f, 1.0f);
-		SetDiffuseColor(0.25f, 0.25f, 0.25f, 1.0f);
+		setAmbientColor(0.25f, 0.25f, 0.25f, 1.0f);
+		setDiffuseColor(0.25f, 0.25f, 0.25f, 1.0f);
 	}
 	else
 	{
-		SetAmbientColor(0.75f, 0.75f, 0.75f, 1.0f);
-		SetDiffuseColor(0.75f, 0.75f, 0.75f, 1.0f);
+		setAmbientColor(0.75f, 0.75f, 0.75f, 1.0f);
+		setDiffuseColor(0.75f, 0.75f, 0.75f, 1.0f);
 	}
 }
 
 // Returns
-D3DXVECTOR4 Light::GetAmbientColor()
+D3DXVECTOR4 Light::getAmbientColor()
 {
-	return AmbientColour_;
+	return m_ambientColour;
 }
 
-D3DXVECTOR4 Light::GetDiffuseColor()
+D3DXVECTOR4 Light::getDiffuseColor()
 {
-	return DiffuseColor_;
+	return m_diffuseColour;
 }
 
-D3DXVECTOR3 Light::GetDirection()
+D3DXVECTOR3 Light::getDirection()
 {
-	return Direction_;
+	return m_direction;
 }
 
-D3DXVECTOR4 Light::GetSpecularColor()
+D3DXVECTOR4 Light::getSpecularColor()
 {
-	return SpecularColour_;
+	return m_specularColour;
 }
 
-float Light::GetSpecularPower()
+float Light::getSpecularPower()
 {
-	return SpecularPower_;
+	return m_specularPower;
 }

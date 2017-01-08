@@ -14,186 +14,186 @@ Clouds::~Clouds()
 {
 }
 
-// Set up
-bool Clouds::Initialise(string cloudTextureFilename, string perturbTextureFilename)
+// set up
+bool Clouds::initialise(string cloudTextureFilename, string perturbTextureFilename)
 {
 	PrimitiveFactory primitiveFactory;
 
-	// Set Properties
-	ScaleFactor_ = 0.3f;
-	Brightness_ = 0.5f;
+	// set Properties
+	m_scaleFactor = 0.3f;
+	m_brightness = 0.5f;
 
 	//==============
-	// Create Model
+	// create Model
 	//==============
 
-	Model_ = new Model;
-	if (!Model_)
+	m_model = new Model;
+	if (!m_model)
 	{
 		return false;
 	}
 
-	// Load Model
-	Result_ = primitiveFactory.CreateSkyPlane(100, 100.0f, 0.5f, 20, *Model_);
-	if (!Result_)
+	// onload Model
+	m_result = primitiveFactory.createSkyPlane(100, 100.0f, 0.5f, 20, *m_model);
+	if (!m_result)
 	{
 		return false;
 	}
 
-	// Create the material
+	// create the material
 	Material* newMaterial = new Material;
-	Result_ = newMaterial->SetTexture("BaseTexture", cloudTextureFilename);
-	if (!Result_)
+	m_result = newMaterial->setTexture("BaseTexture", cloudTextureFilename);
+	if (!m_result)
 	{
 		return false;
 	}
-	Result_ = newMaterial->SetTexture("PerturbTexture", perturbTextureFilename);
-	if (!Result_)
+	m_result = newMaterial->setTexture("PerturbTexture", perturbTextureFilename);
+	if (!m_result)
 	{
 		return false;
 	}
 
-	// Set material properties
-	newMaterial->SetFloat("TextureScale", ScaleFactor_);
-	newMaterial->SetFloat("TextureBrightness", Brightness_);
-	Model_->AddMaterial(newMaterial);
+	// set material properties
+	newMaterial->setFloat("TextureScale", m_scaleFactor);
+	newMaterial->setFloat("TextureBrightness", m_brightness);
+	m_model->addMaterial(newMaterial);
 
 	//============
-	// Set Shader
+	// set Shader
 	//============
 
-	Shader_ = ShaderManager::Instance()->GetShader("cloud");
-	if (!Shader_)
+	m_shader = ShaderManager::getInstance()->getShader("cloud");
+	if (!m_shader)
 	{
 		return false;
 	}
 
 	//==================
-	// Create Transform
+	// create Transform
 	//==================
 
-	Transform_ = new Transform;
-	if (!Transform_)
+	m_transform = new Transform;
+	if (!m_transform)
 	{
 		return false;
 	}
 
 	//=================
-	// Initialise Vars
+	// initialise Vars
 	//=================
 
-	Frame_ = 0;
+	m_frame = 0;
 
-	IsReflective_ = RenderMode::On;
-	UseCulling_ = RenderMode::Off;
-	UseDepth_ = RenderMode::Off;
-	IsPostProcessed_ = RenderMode::On;
-	BlendMode_ = BlendMode::CloudBlending;
+	m_reflective = renderMode::On;
+	m_culled = renderMode::Off;
+	m_depth = renderMode::Off;
+	m_postprocessing = renderMode::On;
+	m_blendMode = BlendMode::CloudBlending;
 
-	IsActive_ = true;
+	m_isActive = true;
 
 	return true;
 }
 
-// Frame
-bool Clouds::Frame()
+// update
+bool Clouds::update()
 {
 	//================
 	// Animate Clouds
 	//================
 
-	Frame_ += 0.0001f;
-	if (Frame_ > 1.0f)
+	m_frame += 0.0001f;
+	if (m_frame > 1.0f)
 	{
-		Frame_ -= 1.0f;
+		m_frame -= 1.0f;
 	}
 
-	Model_->GetMaterial()->SetFloat("Frame", Frame_);
+	m_model->getMaterial()->setFloat("update", m_frame);
 
 	//==============
 	// Track Camera
 	//==============
 
-	Transform_->SetPosition(Camera::Instance()->GetTransform()->GetPosition());
+	m_transform->setPosition(Camera::getInstance()->getTransform()->getPosition());
 
 	return true;
 }
 
-bool Clouds::Render()
+bool Clouds::render()
 {
-	if (!IsActive_ || !Shader_ || !Model_)
+	if (!m_isActive || !m_shader || !m_model)
 		return true;
 
 	// Define how we want the model to be rendered
-	SetRenderModes();
+	setrenderModes();
 
-	// Render Reflection
-	if (IsReflective_ == RenderMode::On)
+	// render Reflection
+	if (m_reflective == renderMode::On)
 	{
 		// Reverse the camera position as depth buffer and camera tracking is on
-		float currentY = Transform_->GetY();
-		D3DXVECTOR3 reflectedCamera = Camera::Instance()->GetTransform()->GetPosition();
+		float currentY = m_transform->getY();
+		D3DXVECTOR3 reflectedCamera = Camera::getInstance()->getTransform()->getPosition();
 		reflectedCamera.y *= -1;
 
-		Transform_->SetY(reflectedCamera.y);
+		m_transform->setY(reflectedCamera.y);
 
 		// Define how we want to see the model
-		Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
+		m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
 
-		// Get the reflection texture and set it as the render target
+		// get the reflection texture and set it as the render target
 		Texture* reflectionTexture;
-		AssetManager::Instance()->LoadTexture(&reflectionTexture, "ReflectionTexture");
-		reflectionTexture->SetRenderTarget();
+		AssetManager::getInstance()->loadTexture(&reflectionTexture, "ReflectionTexture");
+		reflectionTexture->setRenderTarget();
 
-		// Render the model
-		RenderMeshes();
+		// render the model
+		renderMeshes();
 
-		// Reset Render Target
-		DirectXManager::Instance()->SetBackBufferRenderTarget();
-		DirectXManager::Instance()->ResetViewport();
+		// Reset render Target
+		DirectXManager::getInstance()->setBackBufferRenderTarget();
+		DirectXManager::getInstance()->ResetViewport();
 
 		// Reset Transform
-		Transform_->SetY(currentY);
+		m_transform->setY(currentY);
 	}
 
 	// Define how we want to see the model
-	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
+	m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::View);
 
-	// Render to Render Texture
-	if (IsPostProcessed_ == RenderMode::On)
+	// render to render Texture
+	if (m_postprocessing == renderMode::On)
 	{
-		// Get and set render texture
+		// get and set render texture
 		Texture* renderTexture;
-		AssetManager::Instance()->LoadTexture(&renderTexture, "RenderTexture");
-		renderTexture->SetRenderTarget();
+		AssetManager::getInstance()->loadTexture(&renderTexture, "renderTexture");
+		renderTexture->setRenderTarget();
 
-		// Render the model
-		RenderMeshes();
+		// render the model
+		renderMeshes();
 
-		// Reset Render Target
-		DirectXManager::Instance()->SetBackBufferRenderTarget();
-		DirectXManager::Instance()->ResetViewport();
+		// Reset render Target
+		DirectXManager::getInstance()->setBackBufferRenderTarget();
+		DirectXManager::getInstance()->ResetViewport();
 
 		// Clean Up
 		renderTexture = 0;
 	}
 
-	// Render Mesh
-	RenderMeshes();
+	// render Mesh
+	renderMeshes();
 
-	// Reset Pipeline Settings
-	ResetRenderModes();
+	// Reset Pipeline settings
+	resetRenderModes();
 
 	return true;
 }
 
-// Getters
-float Clouds::GetScale()
+// getters
+float Clouds::getScale()
 {
-	return ScaleFactor_;
+	return m_scaleFactor;
 }
 
-float Clouds::GetBrightness()
+float Clouds::getBrightness()
 {
-	return Brightness_;
+	return m_brightness;
 }

@@ -12,27 +12,27 @@ public:
 	~LoadingScene();
 
 	// Initialising
-	bool Initialise();
+	bool initialise();
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 
-	// Frame
-	bool Frame();
+	// update
+	bool update();
 
-	// Load and Unloading
-	void Load();
-	void Unload();
+	// onload and Unloading
+	void onLoad();
+	void onUnload();
 
 	// Transitions
-	void LoadScene(SceneState sceneState);
+	void loadScene(SceneState sceneState);
 
 private:
-	void Render();
+	void render();
 
-	Sprite* Background_;
+	Sprite* m_background;
 
-	SceneState LoadTarget_;
+	SceneState m_loadTarget;
 };
 
 

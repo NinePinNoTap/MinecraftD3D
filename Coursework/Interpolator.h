@@ -14,25 +14,25 @@ public:
 	Interpolator();
 	~Interpolator();
 
-	void Start(D3DXVECTOR3 start, D3DXVECTOR3 end, float speed, float frames);
+	void begin(D3DXVECTOR3 start, D3DXVECTOR3 end, float speed, float frames);
 
-	D3DXVECTOR3 Frame();
+	D3DXVECTOR3 update();
 
-	bool Finished();
+	bool isComplete();
 
 private:
-	D3DXVECTOR3 Start_;
-	D3DXVECTOR3 Current_;
-	D3DXVECTOR3 Finish_;
+	D3DXVECTOR3 m_start;
+	D3DXVECTOR3 m_current;
+	D3DXVECTOR3 m_finish;
 
-	float Speed_;
-	float Distance_;
-	float StartTime_;
+	float m_speed;
+	float m_distance;
+	float m_startTime;
 
-	bool Finished_;
+	bool m_finished;
 
-	float Frame_;
-	float TotalFrames_;
+	float m_frame;
+	float m_totalFrames;
 };
 
 

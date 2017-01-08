@@ -19,20 +19,20 @@ public:
 	~Clouds();
 
 	// Initialising
-	bool Initialise(string cloudTextureFilename, string perturbTextureFilename);
+	bool initialise(string cloudTextureFilename, string perturbTextureFilename);
 
-	// Frame
-	bool Frame();
-	bool Render();
+	// update
+	bool update();
+	bool render();
 
-	// Getters
-	float GetScale();
-	float GetBrightness();
+	// getters
+	float getScale();
+	float getBrightness();
 
 private:
 	// Properties
-	float ScaleFactor_;
-	float Brightness_;
+	float m_scaleFactor;
+	float m_brightness;
 };
 
 

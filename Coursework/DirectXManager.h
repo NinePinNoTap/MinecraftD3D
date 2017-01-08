@@ -24,81 +24,81 @@ public:
 	~DirectXManager();
 
 	// Initialising
-	bool Initialise(Rect2D WindowDimension, HWND hwnd);
+	bool initialise(Rect2D WindowDimension, HWND hwnd);
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 	
-	// Rendering
-	void BeginScene(D3DXVECTOR4 clearColour = Colour::Black);
-	void EndScene();
+	// rendering
+	void beginScene(D3DXVECTOR4 clearColour = Colour::Black);
+	void endScene();
 
-	// Rendering Toggles
-	void SetDepthBufferOn(bool flag);
-	void SetAlphaBlendingOn(bool flag);
-	void SetBackfaceCullingOn(bool flag);
-	void ToggleWireframe(bool flag);
+	// rendering Toggles
+	void setDepthBufferOn(bool flag);
+	void setAlphaBlendingOn(bool flag);
+	void setBackfaceCullingOn(bool flag);
+	void toggleWireframe(bool flag);
 
 	// Blend States
-	void SetCloudBlendingOn();
-	void SetAlphaMaskingOn();
+	void setCloudBlendingOn();
+	void setAlphaMaskingOn();
 
 	// Misc
-	void SetBackBufferRenderTarget();
+	void setBackBufferRenderTarget();
 	void ResetViewport();
 
-	// DirectXManager Getters
-	ID3D11Device* GetDevice();
-	ID3D11DeviceContext* GetDeviceContext();
+	// DirectXManager getters
+	ID3D11Device* getDevice();
+	ID3D11DeviceContext* getDeviceContext();
 
-	// Matrix Getters
-	void GetProjectionMatrix(D3DXMATRIX& ProjectionMatrix);
-	void GetWorldMatrix(D3DXMATRIX& WorldMatrix);
-	void GetOrthoMatrix(D3DXMATRIX& OrthoMatrix);
+	// Matrix getters
+	void getProjectionMatrix(D3DXMATRIX& ProjectionMatrix);
+	void getWorldMatrix(D3DXMATRIX& WorldMatrix);
+	void getOrthoMatrix(D3DXMATRIX& OrthoMatrix);
 
 	// Wireframe
-	bool GetWireframeStatus();
+	bool getWireframeStatus();
 
 private:
 	// Video Card Information
-	int VideoCardMemory;
-	char VideoCardDescription[128];
+	int m_videoCardMemory;
+	char m_videoCardDescription[128];
 
 	// Viewport
-	D3D11_VIEWPORT Viewport_;
+	D3D11_VIEWPORT m_viewport;
 
 	// Matrices
-	D3DXMATRIX OrthoMatrix_;
-	D3DXMATRIX ProjectionMatrix_;
-	D3DXMATRIX WorldMatrix_;
+	D3DXMATRIX m_orthoMatrix;
+	D3DXMATRIX m_projectionMatrix;
+	D3DXMATRIX m_worldMatrix;
 	
 	// Blend States
-	ID3D11BlendState* AlphaCloudBlendState_;
-	ID3D11BlendState* AlphaEnableBlendingState_;
-	ID3D11BlendState* AlphaFireBlendState_;
-	ID3D11BlendState* NormalBlendingState_;
+	ID3D11BlendState* m_alphaCloudBlendState;
+	ID3D11BlendState* m_alphaEnableBlendState;
+	ID3D11BlendState* m_alphaFireBlendState;
+	ID3D11BlendState* m_normalBlendState;
 
 	// Stencil States
-	ID3D11DepthStencilState* DepthDisabledStencilState_;
-	ID3D11DepthStencilState* DepthStencilState_;
-	ID3D11DepthStencilView* DepthStencilView;
+	ID3D11DepthStencilState* m_depthDisabledStencilState;
+	ID3D11DepthStencilState* m_depthStencilState;
+	ID3D11DepthStencilView* m_depthStencilView;
 
 	// Adapters
-	ID3D11Device* Device_;
-	ID3D11DeviceContext* DeviceContext_;
+	ID3D11Device* m_device;
+	ID3D11DeviceContext* m_deviceContext;
 
 	// Rasterizer States
-	ID3D11RasterizerState* RasterStateNoCulling_;
-	ID3D11RasterizerState* RasterState_;
+	ID3D11RasterizerState* m_rasterStateNoCulling;
+	ID3D11RasterizerState* m_rasterState;
 
-	// Rendering
-	ID3D11RenderTargetView* RenderTargetView_;
-	ID3D11Texture2D* DepthStencilBuffer_;
-	IDXGISwapChain* SwapChain_;
+	// rendering
+	ID3D11RenderTargetView* m_renderTargetView;
+	ID3D11Texture2D* m_depthStencilBuffer;
+	IDXGISwapChain* m_swapChain;
 
 	// Flags
-	bool Wireframe_;
-	bool VSyncEnabled_;
+	bool m_wireframe;
+	bool m_vSyncEnabled;
 };
 
 

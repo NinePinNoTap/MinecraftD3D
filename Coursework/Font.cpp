@@ -2,8 +2,8 @@
 
 Font::Font()
 {
-	// Initialise pointers to null
-	Font_ = 0;
+	// initialise pointers to null
+	m_font = 0;
 }
 
 Font::Font(const Font& other)
@@ -15,15 +15,15 @@ Font::~Font()
 }
 
 // Initialising
-bool Font::Initialise(const string fontFilename, int letterCount)
+bool Font::initialise(const string fontFilename, int letterCount)
 {
 	ifstream fin;
 	int i;
 	char temp;
 
-	// Create the font spacing buffer
-	Font_ = new FontType[letterCount];
-	if (!Font_)
+	// create the font spacing buffer
+	m_font = new FontType[letterCount];
+	if (!m_font)
 	{
 		return false;
 	}
@@ -49,10 +49,10 @@ bool Font::Initialise(const string fontFilename, int letterCount)
 			fin.get(temp);
 		}
 
-		fin >> Font_[i].left;
-		fin >> Font_[i].right;
-		fin >> Font_[i].width;
-		fin >> Font_[i].height;
+		fin >> m_font[i].left;
+		fin >> m_font[i].right;
+		fin >> m_font[i].width;
+		fin >> m_font[i].height;
 	}
 
 	// Close the file
@@ -61,26 +61,26 @@ bool Font::Initialise(const string fontFilename, int letterCount)
 	return true;
 }
 
-// Shutdown
-void Font::Shutdown()
+// terminate
+void Font::terminate()
 {
 	// Release the font data array
-	if (Font_)
+	if (m_font)
 	{
-		delete[] Font_;
-		Font_ = 0;
+		delete[] m_font;
+		m_font = 0;
 	}
 
 	return;
 }
 
 // Building
-void Font::BuildVertexArray(VertexData* vertexData, string sentence, float drawX, float drawY)
+void Font::buildVertexArray(VertexData* vertexData, string sentence, float drawX, float drawY)
 {
 	int index;
 	int letter;
 
-	// Initialise the index to the vertex array
+	// initialise the index to the vertex array
 	index = 0;
 
 	// Draw each letter onto a quad
@@ -91,50 +91,50 @@ void Font::BuildVertexArray(VertexData* vertexData, string sentence, float drawX
 		// If the letter is a space then just move over three pixels
 		if (letter == 0)
 		{
-			drawX = drawX + Font_[letter].width;
+			drawX = drawX + m_font[letter].width;
 		}
 		else
 		{
 			// First triangle in quad.
 			vertexData[index].position = D3DXVECTOR3(drawX, drawY, 0.0f);  // Top left
-			vertexData[index].texture = D3DXVECTOR2(Font_[letter].left, 0.0f);
+			vertexData[index].texture = D3DXVECTOR2(m_font[letter].left, 0.0f);
 			index++;
 
-			vertexData[index].position = D3DXVECTOR3((drawX + Font_[letter].width), (drawY - Font_[letter].height), 0.0f);  // Bottom right
-			vertexData[index].texture = D3DXVECTOR2(Font_[letter].right, 1.0f);
+			vertexData[index].position = D3DXVECTOR3((drawX + m_font[letter].width), (drawY - m_font[letter].height), 0.0f);  // Bottom right
+			vertexData[index].texture = D3DXVECTOR2(m_font[letter].right, 1.0f);
 			index++;
 
-			vertexData[index].position = D3DXVECTOR3(drawX, (drawY - Font_[letter].height), 0.0f);  // Bottom left
-			vertexData[index].texture = D3DXVECTOR2(Font_[letter].left, 1.0f);
+			vertexData[index].position = D3DXVECTOR3(drawX, (drawY - m_font[letter].height), 0.0f);  // Bottom left
+			vertexData[index].texture = D3DXVECTOR2(m_font[letter].left, 1.0f);
 			index++;
 
 			// Second triangle in quad.
 			vertexData[index].position = D3DXVECTOR3(drawX, drawY, 0.0f);  // Top left
-			vertexData[index].texture = D3DXVECTOR2(Font_[letter].left, 0.0f);
+			vertexData[index].texture = D3DXVECTOR2(m_font[letter].left, 0.0f);
 			index++;
 
-			vertexData[index].position = D3DXVECTOR3(drawX + Font_[letter].width, drawY, 0.0f);  // Top right
-			vertexData[index].texture = D3DXVECTOR2(Font_[letter].right, 0.0f);
+			vertexData[index].position = D3DXVECTOR3(drawX + m_font[letter].width, drawY, 0.0f);  // Top right
+			vertexData[index].texture = D3DXVECTOR2(m_font[letter].right, 0.0f);
 			index++;
 
-			vertexData[index].position = D3DXVECTOR3((drawX + Font_[letter].width), (drawY - Font_[letter].height), 0.0f);  // Bottom right
-			vertexData[index].texture = D3DXVECTOR2(Font_[letter].right, 1.0f);
+			vertexData[index].position = D3DXVECTOR3((drawX + m_font[letter].width), (drawY - m_font[letter].height), 0.0f);  // Bottom right
+			vertexData[index].texture = D3DXVECTOR2(m_font[letter].right, 1.0f);
 			index++;
 
-			// Update the x location for drawing by the size of the letter and one pixel
-			drawX = drawX + Font_[letter].width + 1.0f;
+			// update the x location for drawing by the size of the letter and one pixel
+			drawX = drawX + m_font[letter].width + 1.0f;
 		}
 	}
 
 	return;
 }
 
-float Font::GetRenderSize(string text)
+float Font::getRenderLength(string text)
 {
 	int letterID;
 	float totalWidth;
 	
-	// Initialise vars
+	// initialise vars
 	totalWidth = 0;
 
 	// Loop through the sentence and calculate width
@@ -147,12 +147,12 @@ float Font::GetRenderSize(string text)
 		if (letterID == 0)
 		{
 			// Adjust accordingly
-			totalWidth += Font_[letterID].width;
+			totalWidth += m_font[letterID].width;
 		}
 		else
 		{
 			// Adjust by the width of the letter
-			totalWidth += (Font_[letterID].width + 1);
+			totalWidth += (m_font[letterID].width + 1);
 		}
 	}
 

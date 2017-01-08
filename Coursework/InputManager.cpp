@@ -13,79 +13,79 @@ InputManager::~InputManager()
 {
 }
 
-void InputManager::Initialise()
+void InputManager::initialise()
 {
-	// Initialise the keys to 'not currently pressed'
+	// initialise the keys to 'not currently pressed'
 	for (int i = 0; i<256; i++)
 	{
-		Keys_[i] = false;
+		m_keys[i] = false;
 	}
 
 	return;
 }
 
-void InputManager::Frame()
+void InputManager::update()
 {
 	POINT mousePos;
 
-	// Get Mouse Position
+	// get Mouse Position
 	GetCursorPos(&mousePos);
 
 	// Store the position of the mouse
-	MousePosOnScreen_.x = mousePos.x;
-	MousePosOnScreen_.y = mousePos.y;
+	m_mousePositionOnScreen.x = mousePos.x;
+	m_mousePositionOnScreen.y = mousePos.y;
 
 	// Convert to window space
 	ScreenToClient(GetActiveWindow(), &mousePos);
 
 	// Convert to view space
-	MousePosInWindow_.x = ((WindowManager::Instance()->GetWindowResolution().width / 2) * -1) + mousePos.x;
-	MousePosInWindow_.y = (WindowManager::Instance()->GetWindowResolution().height / 2) - mousePos.y;
+	m_mousePositionInWindow.x = ((WindowManager::getInstance()->getWindowResolution().width / 2) * -1) + mousePos.x;
+	m_mousePositionInWindow.y = (WindowManager::getInstance()->getWindowResolution().height / 2) - mousePos.y;
 }
 
-bool InputManager::GetKey(unsigned int key)
+bool InputManager::getKey(unsigned int key)
 {
 	// Make sure we are currently on the ApplicationManager to register key presses
-	if (!WindowActive())
+	if (!windowActive())
 		return false;
 
 	// Check the status of the key and store it
 	if (GetAsyncKeyState(key))
 	{
-		Keys_[key] = true;
+		m_keys[key] = true;
 	}
 	else
 	{
-		Keys_[key] = false;
+		m_keys[key] = false;
 	}
 
-	return Keys_[key];
+	return m_keys[key];
 }
 
-bool InputManager::GetKeyDown(unsigned int key)
+bool InputManager::getKeyDown(unsigned int key)
 {
 	// Make sure we are currently on the ApplicationManager to register key presses
-	if (!WindowActive())
+	if (!windowActive())
 		return false;
 
 	// If the key we want is down
 	if (GetAsyncKeyState(key))
 	{
 		// If the key is already flagged as down
-		if (Keys_[key])
+		if (m_keys[key])
 		{
 			return false;
 		}
-		else if (!Keys_[key])
+		else if (!m_keys[key])
 		{
 			// Key not down so flag that it is
-			Keys_[key] = true;
+			m_keys[key] = true;
 			return true;
 		}
 	}
 	else if (!GetAsyncKeyState(key))
 	{
-		Keys_[key] = false;
+		m_keys[key] = false;
 		return false;
 	}
 

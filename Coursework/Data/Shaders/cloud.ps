@@ -24,7 +24,7 @@ float4 PixelShaderMain(PixelInputType input) : SV_TARGET
 	float4 perturbValue;
 	float4 cloudColor;
 
-	// Move the position of the texture
+	// move the position of the texture
 	input.tex.x += translation;
 
 	// Sample the perturb texture

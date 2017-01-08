@@ -10,8 +10,8 @@
 #include "Model.h"
 #include "Texture.h"
 #include "Rect.h"
-#include "OBJLoader.h"
-#include "TXTLoader.h"
+#include "OBJloader.h"
+#include "TXTloader.h"
 
 using namespace std;
 
@@ -22,21 +22,21 @@ public:
 	AssetManager(const AssetManager&);
 	~AssetManager();
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 
-	// Loaders
-	void LoadAudio(AudioClip** clip, std::string filename, bool is3D = false);
-	void LoadFont(Font** font, std::string fontFilename, int letterCount);
-	void LoadModel(Model** model, std::string filename);
-	void LoadTexture(Texture** texture, std::string filename);
-	void LoadTexture(Texture** texture, string keyName, Rect2D textureResolution);
+	// loaders
+	void loadAudio(AudioClip** clip, std::string filename, bool is3D = false);
+	void loadFont(Font** font, std::string fontFilename, int letterCount);
+	void loadModel(Model** model, std::string filename);
+	void loadTexture(Texture** texture, std::string filename);
+	void loadTexture(Texture** texture, string keyName, Rect2D textureResolution);
 
 private:
-	std::map<std::string, AudioClip*> AudioDatabase_;
-	std::map<std::string, Font*> FontDatabase_;
-	std::map<std::string, Model*> ModelDatabase_;
-	std::map<std::string, Texture*> TextureDatabase_;
+	std::map<std::string, AudioClip*> m_audioClips;
+	std::map<std::string, Font*> m_fonts;
+	std::map<std::string, Model*> m_models;
+	std::map<std::string, Texture*> m_textures;
 
-	bool Result_;
+	bool m_result;
 };

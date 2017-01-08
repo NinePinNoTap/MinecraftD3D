@@ -12,63 +12,63 @@ Sprite::~Sprite()
 {
 }
 
-bool Sprite::Initialise(Rect3D spriteResolution, string textureFilename)
+bool Sprite::initialise(Rect3D spriteResolution, string textureFilename)
 {
 	PrimitiveFactory primitiveFactory;
 
 	//==============
-	// Create Model
+	// create Model
 	//==============
 
-	Model_ = new Model;
-	if (!Model_)
+	m_model = new Model;
+	if (!m_model)
 	{
 		return false;
 	}
 
-	// Load Model
-	Result_ = primitiveFactory.Create2DBox(spriteResolution, *Model_);
-	if (!Result_)
+	// onload Model
+	m_result = primitiveFactory.create2DBox(spriteResolution, *m_model);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//=================
-	// Create Material
+	// create Material
 	//=================
 
 	Material* newMaterial = new Material;
-	newMaterial -> SetBaseTexture(textureFilename);
-	Model_ -> AddMaterial(newMaterial);
+	newMaterial->setBaseTexture(textureFilename);
+	m_model->addMaterial(newMaterial);
 
 	//==================
-	// Create Transform
+	// create Transform
 	//==================
 
-	Transform_ = new Transform;
-	if (!Transform_)
+	m_transform = new Transform;
+	if (!m_transform)
 	{
 		return false;
 	}
 
 	//=================
-	// Initialise Vars
+	// initialise Vars
 	//=================
 	
-	// Render Modes
-	IsReflective_ = RenderMode::Off;
-	UseCulling_ = RenderMode::Off;
-	UseDepth_ = RenderMode::Off;
-	BlendMode_ = BlendMode::NoBlending;
+	// render Modes
+	m_reflective = renderMode::Off;
+	m_culled = renderMode::Off;
+	m_depth = renderMode::Off;
+	m_blendMode = BlendMode::NoBlending;
 
 	// Animations
-	Frame_ = 0;
+	m_frame = 0;
 
 	// Flags
-	IsActive_ = true;
+	m_isActive = true;
 
 	// Define Base Shader
-	SetShader("texture");
+	setShader("texture");
 
 	// Clean Up
 	newMaterial = 0;
@@ -76,22 +76,22 @@ bool Sprite::Initialise(Rect3D spriteResolution, string textureFilename)
 	return true;
 }
 
-bool Sprite::Render()
+bool Sprite::render()
 {
-	if (!IsActive_ || !Shader_ || !Model_)
+	if (!m_isActive || !m_shader || !m_model)
 		return true;
 
 	// Define how we want to see the model
-	Shader_->SetRenderMode(ProjectionMode::Orthographic, ViewMode::BaseView);
+	m_shader->setrenderMode(ProjectionMode::Orthographic, ViewMode::BaseView);
 
 	// Define how we want the model to be rendered
-	SetRenderModes();
+	setrenderModes();
 
-	// Render Mesh
-	RenderMeshes();
+	// render Mesh
+	renderMeshes();
 
-	// Reset Pipeline Settings
-	ResetRenderModes();
+	// Reset Pipeline settings
+	resetRenderModes();
 
 	return true;
 }

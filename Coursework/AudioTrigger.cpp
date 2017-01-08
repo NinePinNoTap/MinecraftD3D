@@ -2,7 +2,7 @@
 
 AudioTrigger::AudioTrigger()
 {
-	Clip_ = 0;
+	m_clip = 0;
 }
 
 AudioTrigger::~AudioTrigger()
@@ -10,31 +10,31 @@ AudioTrigger::~AudioTrigger()
 
 }
 
-void AudioTrigger::Initialise(char* filename, float volume, D3DXVECTOR3 Position, Rect3D box)
+void AudioTrigger::initialise(char* filename, float volume, D3DXVECTOR3 Position, Rect3D box)
 {
-	// Initialise the sound
-	Clip_ = new AudioClip;
-	Clip_->LoadFile(filename, true);
-	Clip_->SetPosition(Position);
-	Clip_->SetVolume(volume);
+	// initialise the sound
+	m_clip = new AudioClip;
+	m_clip->loadFile(filename, true);
+	m_clip->setPosition(Position);
+	m_clip->setVolume(volume);
 
 	// Store the bounding box
-	BoundingBox_ = BoundingBox(box, Position);
+	m_boundingBox = BoundingBox(box, Position);
 
-	// Initialise flags
-	Activated_ = false;
+	// initialise flags
+	m_activated = false;
 }
 
-void AudioTrigger::Frame(D3DXVECTOR3 CameraPosition)
+void AudioTrigger::update(D3DXVECTOR3 CameraPosition)
 {
-	if (Activated_)
+	if (m_activated)
 		return;
 
 	// Check if the camera is inside the bounds of the box
-	if (CheckCollision(BoundingBox_, CameraPosition))
+	if (checkCollision(m_boundingBox, CameraPosition))
 	{
-		// Play the sound
-		Activated_ = true;
-		Clip_->Play(false);
+		// play the sound
+		m_activated = true;
+		m_clip->play(false);
 	}
 }

@@ -3,22 +3,22 @@
 DirectXManager::DirectXManager()
 {
 	// Initiase pointers to null
-	SwapChain_ = 0;
-	Device_ = 0;
-	DeviceContext_ = 0;
-	RenderTargetView_ = 0;
-	DepthStencilBuffer_ = 0;
-	DepthStencilState_ = 0;
-	DepthStencilView = 0;
-	RasterState_ = 0;
-	RasterStateNoCulling_ = 0;
-	DepthDisabledStencilState_ = 0;
-	AlphaEnableBlendingState_ = 0;
-	NormalBlendingState_ = 0;
-	AlphaCloudBlendState_ = 0;
+	m_swapChain = 0;
+	m_device = 0;
+	m_deviceContext = 0;
+	m_renderTargetView = 0;
+	m_depthStencilBuffer = 0;
+	m_depthStencilState = 0;
+	m_depthStencilView = 0;
+	m_rasterState = 0;
+	m_rasterStateNoCulling = 0;
+	m_depthDisabledStencilState = 0;
+	m_alphaEnableBlendState = 0;
+	m_normalBlendState = 0;
+	m_alphaCloudBlendState = 0;
 
 	// Flag that wireframe mode is off
-	Wireframe_ = false;
+	m_wireframe = false;
 }
 
 DirectXManager::DirectXManager(const DirectXManager& other)
@@ -29,7 +29,7 @@ DirectXManager::~DirectXManager()
 {
 }
 
-bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
+bool DirectXManager::initialise(Rect2D WindowResolution, HWND hwnd)
 {
 	HRESULT result;
 	IDXGIFactory* factory;
@@ -51,9 +51,9 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	D3D11_BLEND_DESC blendStateDescription;
 
 	// Store the VSYNC_ENABLED setting.
-	VSyncEnabled_ = System::UseVSync;
+	m_vSyncEnabled = System::UseVSync;
 
-	// Create a DirectXManager graphics interface factory.
+	// create a DirectXManager graphics interface factory.
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
 	if(FAILED(result))
 	{
@@ -61,27 +61,27 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	}
 
 	// Use the factory to create an adapter for the primary graphics interface (video card).
-	result = factory -> EnumAdapters(0, &adapter);
+	result = factory->EnumAdapters(0, &adapter);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	// Enumerate the primary adapter output (monitor).
-	result = adapter -> EnumOutputs(0, &adapterOutput);
+	result = adapter->EnumOutputs(0, &adapterOutput);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Get the number of modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
-	result = adapterOutput -> GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
+	// get the number of modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
+	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Create a list to hold all the possible display modes for this monitor/video card combination.
+	// create a list to hold all the possible display modes for this monitor/video card combination.
 	displayModeList = new DXGI_MODE_DESC[numModes];
 	if(!displayModeList)
 	{
@@ -89,7 +89,7 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	}
 
 	// Now fill the display mode list structures.
-	result = adapterOutput -> GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
+	result = adapterOutput ->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
 	if(FAILED(result))
 	{
 		return false;
@@ -109,18 +109,18 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 		}
 	}
 
-	// Get the adapter (video card) description.
-	result = adapter -> GetDesc(&adapterDesc);
+	// get the adapter (video card) description.
+	result = adapter->GetDesc(&adapterDesc);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	// Store the dedicated video card memory in megabytes.
-	VideoCardMemory = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
+	m_videoCardMemory = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
 
 	// Convert the name of the video card to a character array and store it.
-	error = wcstombs_s(&stringLength, VideoCardDescription, 128, adapterDesc.Description, 128);
+	error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
 	if(error != 0)
 	{
 		return false;
@@ -131,32 +131,32 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	displayModeList = 0;
 
 	// Release the adapter output.
-	adapterOutput -> Release();
+	adapterOutput->Release();
 	adapterOutput = 0;
 
 	// Release the adapter.
-	adapter -> Release();
+	adapter->Release();
 	adapter = 0;
 
 	// Release the factory.
-	factory -> Release();
+	factory->Release();
 	factory = 0;
 
-	// Initialise the swap chain description.
+	// initialise the swap chain description.
     ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 
-	// Set to a single back buffer.
+	// set to a single back buffer.
     swapChainDesc.BufferCount = 1;
 
-	// Set the width and height of the back buffer.
+	// set the width and height of the back buffer.
 	swapChainDesc.BufferDesc.Width = WindowResolution.width;
 	swapChainDesc.BufferDesc.Height = WindowResolution.height;
 
-	// Set regular 32-bit surface for the back buffer.
+	// set regular 32-bit surface for the back buffer.
     swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-	// Set the refresh rate of the back buffer.
-	if(VSyncEnabled_)
+	// set the refresh rate of the back buffer.
+	if(m_vSyncEnabled)
 	{
 	    swapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
@@ -167,17 +167,17 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 	}
 
-	// Set the usage of the back buffer.
+	// set the usage of the back buffer.
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
-	// Set the handle for the window to render to.
+	// set the handle for the window to render to.
     swapChainDesc.OutputWindow = hwnd;
 
 	// Turn multisampling off.
     swapChainDesc.SampleDesc.Count = 1;
     swapChainDesc.SampleDesc.Quality = 0;
 
-	// Set to full screen or windowed mode.
+	// set to full screen or windowed mode.
 	if(System::FullScreen)
 	{
 		swapChainDesc.Windowed = false;
@@ -187,7 +187,7 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 		swapChainDesc.Windowed = true;
 	}
 
-	// Set the scan line ordering and scaling to unspecified.
+	// set the scan line ordering and scaling to unspecified.
 	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
@@ -197,38 +197,38 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	// Don't set the advanced flags.
 	swapChainDesc.Flags = 0;
 
-	// Set the feature level to DirectXManager 11
+	// set the feature level to DirectXManager 11
 	featureLevel = D3D_FEATURE_LEVEL_11_0;
 
-	// Create the swap chain, Direct3D device, and Direct3D device context
-	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1, D3D11_SDK_VERSION, &swapChainDesc, &SwapChain_, &Device_, NULL, &DeviceContext_);
+	// create the swap chain, Direct3D device, and Direct3D device context
+	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1, D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, NULL, &m_deviceContext);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Get the pointer to the back buffer
-	result = SwapChain_ -> GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
+	// get the pointer to the back buffer
+	result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Create the render target view with the back buffer pointer
-	result = Device_ -> CreateRenderTargetView(backBufferPtr, NULL, &RenderTargetView_);
+	// create the render target view with the back buffer pointer
+	result = m_device->CreateRenderTargetView(backBufferPtr, NULL, &m_renderTargetView);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	// Release pointer to the back buffer as we no longer need it
-	backBufferPtr -> Release();
+	backBufferPtr->Release();
 	backBufferPtr = 0;
 
-	// Initialise the description of the depth buffer.
+	// initialise the description of the depth buffer.
 	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
 
-	// Set up the description of the depth buffer.
+	// set up the description of the depth buffer.
 	depthBufferDesc.Width = WindowResolution.width;
 	depthBufferDesc.Height = WindowResolution.height;
 	depthBufferDesc.MipLevels = 1;
@@ -241,17 +241,17 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	depthBufferDesc.CPUAccessFlags = 0;
 	depthBufferDesc.MiscFlags = 0;
 
-	// Create the texture for the depth buffer using the filled out description.
-	result = Device_ -> CreateTexture2D(&depthBufferDesc, NULL, &DepthStencilBuffer_);
+	// create the texture for the depth buffer using the filled out description.
+	result = m_device->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Initialise the description of the stencil state.
+	// initialise the description of the stencil state.
 	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
-	// Set up the description of the stencil state.
+	// set up the description of the stencil state.
 	depthStencilDesc.DepthEnable = true;
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
@@ -272,35 +272,35 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-	// Create the depth stencil state.
-	result = Device_ -> CreateDepthStencilState(&depthStencilDesc, &DepthStencilState_);
+	// create the depth stencil state.
+	result = m_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Set the depth stencil state.
-	DeviceContext_ -> OMSetDepthStencilState(DepthStencilState_, 1);
+	// set the depth stencil state.
+	m_deviceContext->OMSetDepthStencilState(m_depthStencilState, 1);
 
-	// Initialise the depth stencil view.
+	// initialise the depth stencil view.
 	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
 
-	// Set up the depth stencil view description.
+	// set up the depth stencil view description.
 	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-	// Create the depth stencil view.
-	result = Device_ -> CreateDepthStencilView(DepthStencilBuffer_, &depthStencilViewDesc, &DepthStencilView);
+	// create the depth stencil view.
+	result = m_device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
-	DeviceContext_ -> OMSetRenderTargets(1, &RenderTargetView_, DepthStencilView);
+	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
 
-	// Setup the raster description which will determine how and what polygons will be drawn.
+	// setup the raster description which will determine how and what polygons will be drawn.
 	rasterDesc.AntialiasedLineEnable = false;
 	rasterDesc.CullMode = D3D11_CULL_BACK;
 	rasterDesc.DepthBias = 0;
@@ -312,17 +312,17 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	rasterDesc.ScissorEnable = false;
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 
-	// Create the rasterizer state from the description we just filled out.
-	result = Device_ -> CreateRasterizerState(&rasterDesc, &RasterState_);
+	// create the rasterizer state from the description we just filled out.
+	result = m_device->CreateRasterizerState(&rasterDesc, &m_rasterState);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	// Now set the rasterizer state.
-	DeviceContext_ -> RSSetState(RasterState_);
+	m_deviceContext->RSSetState(m_rasterState);
 	
-	// Setup a raster description which turns off back face culling.
+	// setup a raster description which turns off back face culling.
 	rasterDesc.AntialiasedLineEnable = false;
 	rasterDesc.CullMode = D3D11_CULL_NONE;
 	rasterDesc.DepthBias = 0;
@@ -334,36 +334,36 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	rasterDesc.ScissorEnable = false;
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 
-	// Create the no culling rasterizer state.
-	result = Device_ -> CreateRasterizerState(&rasterDesc, &RasterStateNoCulling_);
+	// create the no culling rasterizer state.
+	result = m_device->CreateRasterizerState(&rasterDesc, &m_rasterStateNoCulling);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Setup the viewport for rendering.
-	Viewport_.Width = (float)WindowResolution.width;
-	Viewport_.Height = (float)WindowResolution.height;
-    Viewport_.MinDepth = 0.0f;
-    Viewport_.MaxDepth = 1.0f;
-    Viewport_.TopLeftX = 0.0f;
-    Viewport_.TopLeftY = 0.0f;
+	// setup the viewport for rendering.
+	m_viewport.Width = (float)WindowResolution.width;
+	m_viewport.Height = (float)WindowResolution.height;
+    m_viewport.MinDepth = 0.0f;
+    m_viewport.MaxDepth = 1.0f;
+    m_viewport.TopLeftX = 0.0f;
+    m_viewport.TopLeftY = 0.0f;
 
-	// Create the viewport.
-    DeviceContext_ -> RSSetViewports(1, &Viewport_);
+	// create the viewport.
+    m_deviceContext->RSSetViewports(1, &m_viewport);
 
-	// Setup the projection matrix.
+	// setup the projection matrix.
 	fieldOfView = (float)D3DX_PI / 4.0f;
 	screenAspect = (float)WindowResolution.width / (float)WindowResolution.height;
 
-	// Create the projection matrix for 3D rendering.
-	D3DXMatrixPerspectiveFovLH(&ProjectionMatrix_, fieldOfView, screenAspect, Rendering::NearClipPlane, Rendering::FarClipPlane);
+	// create the projection matrix for 3D rendering.
+	D3DXMatrixPerspectiveFovLH(&m_projectionMatrix, fieldOfView, screenAspect, rendering::NearClipPlane, rendering::FarClipPlane);
 
-    // Initialise the world matrix to the identity matrix.
-    D3DXMatrixIdentity(&WorldMatrix_);
+    // initialise the world matrix to the identity matrix.
+    D3DXMatrixIdentity(&m_worldMatrix);
 
-	// Create an orthographic projection matrix for 2D rendering.
-	D3DXMatrixOrthoLH(&OrthoMatrix_, (float)WindowResolution.width, (float)WindowResolution.height, Rendering::NearClipPlane, Rendering::FarClipPlane);
+	// create an orthographic projection matrix for 2D rendering.
+	D3DXMatrixOrthoLH(&m_orthoMatrix, (float)WindowResolution.width, (float)WindowResolution.height, rendering::NearClipPlane, rendering::FarClipPlane);
 
 	// Clear the second depth stencil state before setting the parameters.
 	ZeroMemory(&depthDisabledStencilDesc, sizeof(depthDisabledStencilDesc));
@@ -385,8 +385,8 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	depthDisabledStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	depthDisabledStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-	// Create the state using the device.
-	result = Device_ -> CreateDepthStencilState(&depthDisabledStencilDesc, &DepthDisabledStencilState_);
+	// create the state using the device.
+	result = m_device->CreateDepthStencilState(&depthDisabledStencilDesc, &m_depthDisabledStencilState);
 	if (FAILED(result))
 	{
 		return false;
@@ -395,7 +395,7 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	// Clear the blend state description.
 	ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
 
-	// Create an alpha enabled blend state description.
+	// create an alpha enabled blend state description.
 	blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
 	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
 	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
@@ -405,8 +405,8 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 
-	// Create the blend state using the description.
-	result = Device_ -> CreateBlendState(&blendStateDescription, &AlphaEnableBlendingState_);
+	// create the blend state using the description.
+	result = m_device->CreateBlendState(&blendStateDescription, &m_alphaEnableBlendState);
 	if (FAILED(result))
 	{
 		return false;
@@ -415,14 +415,14 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	// Modify the description to create an alpha disabled blend state description.
 	blendStateDescription.RenderTarget[0].BlendEnable = FALSE;
 
-	// Create the second blend state using the description.
-	result = Device_ -> CreateBlendState(&blendStateDescription, &NormalBlendingState_);
+	// create the second blend state using the description.
+	result = m_device->CreateBlendState(&blendStateDescription, &m_normalBlendState);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Create a secondary alpha blend state description.
+	// create a secondary alpha blend state description.
 	blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
 	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
 	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
@@ -432,14 +432,14 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 
-	// Create the blend state using the description.
-	result = Device_ -> CreateBlendState(&blendStateDescription, &AlphaCloudBlendState_);
+	// create the blend state using the description.
+	result = m_device->CreateBlendState(&blendStateDescription, &m_alphaCloudBlendState);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Create an fire alpha enabled blend state description.
+	// create an fire alpha enabled blend state description.
 	blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
 	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
@@ -449,8 +449,8 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
 	blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 
-	// Create the blend state using the description.
-	result = Device_ -> CreateBlendState(&blendStateDescription, &AlphaFireBlendState_);
+	// create the blend state using the description.
+	result = m_device->CreateBlendState(&blendStateDescription, &m_alphaFireBlendState);
 	if (FAILED(result))
 	{
 		return false;
@@ -459,208 +459,208 @@ bool DirectXManager::Initialise(Rect2D WindowResolution, HWND hwnd)
     return true;
 }
 
-void DirectXManager::Shutdown()
+void DirectXManager::terminate()
 {
 	// Release swap chain first otherwise it will crash
-	if(SwapChain_)
+	if(m_swapChain)
 	{
-		SwapChain_ -> SetFullscreenState(false, NULL);
+		m_swapChain->SetFullscreenState(false, NULL);
 	}
 
 	// Release everything else
-	if(AlphaCloudBlendState_)
+	if(m_alphaCloudBlendState)
 	{
-		AlphaCloudBlendState_ -> Release();
-		AlphaCloudBlendState_ = 0;
+		m_alphaCloudBlendState->Release();
+		m_alphaCloudBlendState = 0;
 	}
 
-	if(AlphaEnableBlendingState_)
+	if(m_alphaEnableBlendState)
 	{
-		AlphaEnableBlendingState_ -> Release();
-		AlphaEnableBlendingState_ = 0;
+		m_alphaEnableBlendState->Release();
+		m_alphaEnableBlendState = 0;
 	}
 
-	if(NormalBlendingState_)
+	if(m_normalBlendState)
 	{
-		NormalBlendingState_ -> Release();
-		NormalBlendingState_ = 0;
+		m_normalBlendState->Release();
+		m_normalBlendState = 0;
 	}
 
-	if(DepthDisabledStencilState_)
+	if(m_depthDisabledStencilState)
 	{
-		DepthDisabledStencilState_ -> Release();
-		DepthDisabledStencilState_ = 0;
+		m_depthDisabledStencilState->Release();
+		m_depthDisabledStencilState = 0;
 	}
 
-	if(RasterStateNoCulling_)
+	if(m_rasterStateNoCulling)
 	{
-		RasterStateNoCulling_ -> Release();
-		RasterStateNoCulling_ = 0;
+		m_rasterStateNoCulling->Release();
+		m_rasterStateNoCulling = 0;
 	}
 
-	if(RasterState_)
+	if(m_rasterState)
 	{
-		RasterState_ -> Release();
-		RasterState_ = 0;
+		m_rasterState->Release();
+		m_rasterState = 0;
 	}
 
-	if(DepthStencilView)
+	if(m_depthStencilView)
 	{
-		DepthStencilView -> Release();
-		DepthStencilView = 0;
+		m_depthStencilView->Release();
+		m_depthStencilView = 0;
 	}
 
-	if(DepthStencilState_)
+	if(m_depthStencilState)
 	{
-		DepthStencilState_ -> Release();
-		DepthStencilState_ = 0;
+		m_depthStencilState->Release();
+		m_depthStencilState = 0;
 	}
 
-	if(DepthStencilBuffer_)
+	if(m_depthStencilBuffer)
 	{
-		DepthStencilBuffer_ -> Release();
-		DepthStencilBuffer_ = 0;
+		m_depthStencilBuffer->Release();
+		m_depthStencilBuffer = 0;
 	}
 
-	if(RenderTargetView_)
+	if(m_renderTargetView)
 	{
-		RenderTargetView_ -> Release();
-		RenderTargetView_ = 0;
+		m_renderTargetView->Release();
+		m_renderTargetView = 0;
 	}
 
-	if(DeviceContext_)
+	if(m_deviceContext)
 	{
-		DeviceContext_ -> Release();
-		DeviceContext_ = 0;
+		m_deviceContext->Release();
+		m_deviceContext = 0;
 	}
 
-	if(Device_)
+	if(m_device)
 	{
-		Device_ -> Release();
-		Device_ = 0;
+		m_device->Release();
+		m_device = 0;
 	}
 
-	if(SwapChain_)
+	if(m_swapChain)
 	{
-		SwapChain_ -> Release();
-		SwapChain_ = 0;
+		m_swapChain->Release();
+		m_swapChain = 0;
 	}
 
 	return;
 }
 
-void DirectXManager::BeginScene(D3DXVECTOR4 clearColour)
+void DirectXManager::beginScene(D3DXVECTOR4 clearColour)
 {
 	// Clear the back buffer.
-	DeviceContext_->ClearRenderTargetView(RenderTargetView_, clearColour);
+	m_deviceContext->ClearRenderTargetView(m_renderTargetView, clearColour);
     
 	// Clear the depth buffer.
-	DeviceContext_ -> ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	return;
 }
 
-void DirectXManager::EndScene()
+void DirectXManager::endScene()
 {
 	// Present the back buffer to the screen since rendering is complete.
-	if(VSyncEnabled_)
+	if(m_vSyncEnabled)
 	{
-		SwapChain_ -> Present(1, 0); // Lock to screen refresh rate.
+		m_swapChain->Present(1, 0); // Lock to screen refresh rate.
 	}
 	else
 	{
-		SwapChain_ -> Present(0, 0); // Present as fast as possible.
+		m_swapChain->Present(0, 0); // Present as fast as possible.
 	}
 
 	return;
 }
 
-ID3D11Device* DirectXManager::GetDevice()
+ID3D11Device* DirectXManager::getDevice()
 {
-	return Device_;
+	return m_device;
 }
 
-ID3D11DeviceContext* DirectXManager::GetDeviceContext()
+ID3D11DeviceContext* DirectXManager::getDeviceContext()
 {
-	return DeviceContext_;
+	return m_deviceContext;
 }
 
-void DirectXManager::GetProjectionMatrix(D3DXMATRIX& projectionMatrix)
+void DirectXManager::getProjectionMatrix(D3DXMATRIX& projectionMatrix)
 {
-	projectionMatrix = ProjectionMatrix_;
+	projectionMatrix = m_projectionMatrix;
 	return;
 }
 
-void DirectXManager::GetWorldMatrix(D3DXMATRIX& worldMatrix)
+void DirectXManager::getWorldMatrix(D3DXMATRIX& worldMatrix)
 {
-	worldMatrix = WorldMatrix_;
+	worldMatrix = m_worldMatrix;
 	return;
 }
 
-void DirectXManager::GetOrthoMatrix(D3DXMATRIX& orthoMatrix)
+void DirectXManager::getOrthoMatrix(D3DXMATRIX& orthoMatrix)
 {
-	orthoMatrix = OrthoMatrix_;
+	orthoMatrix = m_orthoMatrix;
 	return;
 }
 
-void DirectXManager::SetDepthBufferOn(bool isON)
+void DirectXManager::setDepthBufferOn(bool isON)
 {
 	// Toggle between Z buffer on or off
 	if(isON)
 	{
-		DeviceContext_ -> OMSetDepthStencilState(DepthStencilState_, 1);
+		m_deviceContext->OMSetDepthStencilState(m_depthStencilState, 1);
 	}
 	else
 	{
-		DeviceContext_ -> OMSetDepthStencilState(DepthDisabledStencilState_, 1);
+		m_deviceContext->OMSetDepthStencilState(m_depthDisabledStencilState, 1);
 	}
 }
 
-void DirectXManager::SetAlphaBlendingOn(bool isON)
+void DirectXManager::setAlphaBlendingOn(bool isON)
 {
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	
 	// Toggle between alpha blending on or off
 	if(isON)
 	{
-		DeviceContext_ -> OMSetBlendState(AlphaEnableBlendingState_, blendFactor, 0xffffffff);
+		m_deviceContext->OMSetBlendState(m_alphaEnableBlendState, blendFactor, 0xffffffff);
 	}
 	else
 	{
-		DeviceContext_ -> OMSetBlendState(NormalBlendingState_, blendFactor, 0xffffffff);
+		m_deviceContext->OMSetBlendState(m_normalBlendState, blendFactor, 0xffffffff);
 	}
 }
 
-void DirectXManager::SetBackfaceCullingOn(bool isON)
+void DirectXManager::setBackfaceCullingOn(bool isON)
 {
 	if(isON)
 	{
-		DeviceContext_ -> RSSetState(RasterState_);
+		m_deviceContext->RSSetState(m_rasterState);
 	}
 	else
 	{
-		DeviceContext_ -> RSSetState(RasterStateNoCulling_);
+		m_deviceContext->RSSetState(m_rasterStateNoCulling);
 	}
 
 	// If wireframe mode is on
-	if(Wireframe_)
+	if(m_wireframe)
 	{
 		// Reactive it as it gets deactivated when these are switched
-		ToggleWireframe(true);
+		toggleWireframe(true);
 	}
 }
 
-void DirectXManager::ToggleWireframe(bool isON)
+void DirectXManager::toggleWireframe(bool isON)
 {
 	// Variables to hold the current rasterizer state and its description
 	ID3D11RasterizerState * currentState ;
 	D3D11_RASTERIZER_DESC currentDesc ;
 
 	 // Retrieve the current state
-	DeviceContext_ -> RSGetState( &currentState );
+	m_deviceContext->RSGetState( &currentState );
 
-	// Gets the description for rasterizer state 
-	currentState -> GetDesc( &currentDesc ); 
+	// gets the description for rasterizer state 
+	currentState->GetDesc( &currentDesc ); 
 
 	// Toggle the wireframe
 	if(isON)
@@ -674,50 +674,50 @@ void DirectXManager::ToggleWireframe(bool isON)
 		currentDesc.FillMode = D3D11_FILL_SOLID;
 	}
 	
-	// Update the state
-	Device_ -> CreateRasterizerState( &currentDesc, &currentState );
-	DeviceContext_ -> RSSetState( currentState );
+	// update the state
+	m_device->CreateRasterizerState( &currentDesc, &currentState );
+	m_deviceContext->RSSetState( currentState );
 
 	// Store the wireframe mode state
-	Wireframe_ = isON;
+	m_wireframe = isON;
 }
 
-bool DirectXManager::GetWireframeStatus()
+bool DirectXManager::getWireframeStatus()
 {
 	// Return whether wireframe mode is on or not
-	return Wireframe_;
+	return m_wireframe;
 }
 
-void DirectXManager::SetBackBufferRenderTarget()
+void DirectXManager::setBackBufferRenderTarget()
 {
 	// Bind the render target view and depth stencil buffer to the output render pipeline
-	DeviceContext_ -> OMSetRenderTargets(1, &RenderTargetView_, DepthStencilView);
+	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
 
 	return;
 }
 
 void DirectXManager::ResetViewport()
 {
-	// Set the viewport
-    DeviceContext_ -> RSSetViewports(1, &Viewport_);
+	// set the viewport
+    m_deviceContext->RSSetViewports(1, &m_viewport);
 
 	return;
 }
 
-void DirectXManager::SetCloudBlendingOn()
+void DirectXManager::setCloudBlendingOn()
 {
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	
 	// Turn on the alpha blending
-	DeviceContext_ -> OMSetBlendState(AlphaCloudBlendState_, blendFactor, 0xffffffff);
+	m_deviceContext->OMSetBlendState(m_alphaCloudBlendState, blendFactor, 0xffffffff);
 
 	return;
 }
 
-void DirectXManager::SetAlphaMaskingOn()
+void DirectXManager::setAlphaMaskingOn()
 {
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	// Turn on the alpha blending
-	DeviceContext_ -> OMSetBlendState(AlphaFireBlendState_, blendFactor, 0xffffffff);
+	m_deviceContext->OMSetBlendState(m_alphaFireBlendState, blendFactor, 0xffffffff);
 }

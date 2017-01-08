@@ -23,22 +23,22 @@ enum SceneState
 class GameScene
 {
 public:
-	// Shutdown
-	virtual void Shutdown() = 0;
+	// terminate
+	virtual void terminate() = 0;
 
-	// Frame
-	virtual bool Frame() = 0;
+	// update
+	virtual bool update() = 0;
 
 	// Functionality
-	virtual void Load() = 0;
-	virtual void Unload() = 0;
+	virtual void onLoad() = 0;
+	virtual void onUnload() = 0;
 
-	inline bool IsLoaded() { return IsLoaded_; }
+	inline bool isLoaded() { return m_isloaded; }
 
 protected:
 	// Flags
-	bool Result_;
-	bool IsLoaded_;
+	bool m_result;
+	bool m_isloaded;
 };
 
 

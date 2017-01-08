@@ -14,153 +14,153 @@ SkySphere::~SkySphere()
 {
 }
 
-bool SkySphere::Initialise(const char* filename)
+bool SkySphere::initialise(const char* filename)
 {
-	TXTLoader txtLoader;
+	TXTloader txtloader;
 
 	//==============
-	// Create Model
+	// create Model
 	//==============
 
-	// Load Model
-	AssetManager::Instance()->LoadModel(&Model_, filename);
-	if (!Model_)
+	// onload Model
+	AssetManager::getInstance()->loadModel(&m_model, filename);
+	if (!m_model)
 	{
 		return false;
 	}
 
-	// Create Material
-	Model_->AddMaterial(new Material);
+	// create Material
+	m_model->addMaterial(new Material);
 
 	//============
-	// Set Shader
+	// set Shader
 	//============
 
-	Shader_ = ShaderManager::Instance()->GetShader("skysphere");
+	m_shader = ShaderManager::getInstance()->getShader("skysphere");
 
 	//==================
-	// Create Transform
+	// create Transform
 	//==================
 
-	Transform_ = new Transform;
-	if (!Transform_)
+	m_transform = new Transform;
+	if (!m_transform)
 	{
 		return false;
 	}
 
 	//=================
-	// Initialise Vars
+	// initialise Vars
 	//=================
 
-	Frame_ = 0;
+	m_frame = 0;
 
-	IsReflective_ = RenderMode::On;
-	UseCulling_ = RenderMode::Off;
-	UseDepth_ = RenderMode::Off;
-	IsPostProcessed_ = RenderMode::On;
-	BlendMode_ = BlendMode::NoBlending;
+	m_reflective = renderMode::On;
+	m_culled = renderMode::Off;
+	m_depth = renderMode::Off;
+	m_postprocessing = renderMode::On;
+	m_blendMode = BlendMode::NoBlending;
 
-	IsActive_ = true;
+	m_isActive = true;
 
-	// Initialise sky color for daytime
-	Colors_[0][1] = D3DXVECTOR4(0.65f, 0.77f, 0.85f, 1.0f); //Top
-	Colors_[0][0] = D3DXVECTOR4(0.18f, 0.35f, 0.54f, 1.0f); //Center
+	// initialise sky color for daytime
+	m_colours[0][1] = D3DXVECTOR4(0.65f, 0.77f, 0.85f, 1.0f); //Top
+	m_colours[0][0] = D3DXVECTOR4(0.18f, 0.35f, 0.54f, 1.0f); //Center
 
-	// Initialise the sky color for nighttime
-	Colors_[1][0] = D3DXVECTOR4(0.0f, 0.2f, 0.2f, 1.0f); //Top
-	Colors_[1][1] = D3DXVECTOR4(0.2f, 0.4f, 0.4f, 1.0f); //Center
+	// initialise the sky color for nighttime
+	m_colours[1][0] = D3DXVECTOR4(0.0f, 0.2f, 0.2f, 1.0f); //Top
+	m_colours[1][1] = D3DXVECTOR4(0.2f, 0.4f, 0.4f, 1.0f); //Center
 
-	// Initialise the current color for daytime
-	Model_->GetMaterial()->SetVector4("TopColour", Colors_[0][0]);
-	Model_->GetMaterial()->SetVector4("CenterColour", Colors_[0][1]);
+	// initialise the current color for daytime
+	m_model->getMaterial()->setVector4("TopColour", m_colours[0][0]);
+	m_model->getMaterial()->setVector4("CenterColour", m_colours[0][1]);
 
 	return true;
 }
 
-bool SkySphere::Frame()
+bool SkySphere::update()
 {
 	//==============
 	// Track Camera
 	//==============
 
-	Transform_->SetPosition(Camera::Instance()->GetTransform()->GetPosition());
+	m_transform->setPosition(Camera::getInstance()->getTransform()->getPosition());
 
 	return true;
 }
 
-bool SkySphere::Render()
+bool SkySphere::render()
 {
-	if (!IsActive_ || !Shader_ || !Model_)
+	if (!m_isActive || !m_shader || !m_model)
 		return true;
 
 	// Define how we want the model to be rendered
-	SetRenderModes();
+	setrenderModes();
 
-	// Render Reflection
-	if (IsReflective_ == RenderMode::On)
+	// render Reflection
+	if (m_reflective == renderMode::On)
 	{
 		// Reverse the camera position as depth buffer and camera tracking is on
-		float currentY = Transform_->GetY();
-		D3DXVECTOR3 reflectedCamera = Camera::Instance()->GetTransform()->GetPosition();
+		float currentY = m_transform->getY();
+		D3DXVECTOR3 reflectedCamera = Camera::getInstance()->getTransform()->getPosition();
 		reflectedCamera.y *= -1;
 
-		Transform_->SetY(reflectedCamera.y);
+		m_transform->setY(reflectedCamera.y);
 
 		// Define how we want to see the model
-		Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
+		m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
 
-		// Get the reflection texture and set it as the render target
+		// get the reflection texture and set it as the render target
 		Texture* reflectionTexture;
-		AssetManager::Instance()->LoadTexture(&reflectionTexture, "ReflectionTexture");
-		reflectionTexture->SetRenderTarget();
+		AssetManager::getInstance()->loadTexture(&reflectionTexture, "ReflectionTexture");
+		reflectionTexture->setRenderTarget();
 
-		// Render the model
-		RenderMeshes();
+		// render the model
+		renderMeshes();
 
-		// Reset Render Target
-		DirectXManager::Instance()->SetBackBufferRenderTarget();
-		DirectXManager::Instance()->ResetViewport();
+		// Reset render Target
+		DirectXManager::getInstance()->setBackBufferRenderTarget();
+		DirectXManager::getInstance()->ResetViewport();
 
 		// Reset Transform
-		Transform_->SetY(currentY);
+		m_transform->setY(currentY);
 	}
 
 	// Define how we want to see the model
-	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
+	m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::View);
 
-	// Render to Render Texture
-	if (IsPostProcessed_ == RenderMode::On)
+	// render to render Texture
+	if (m_postprocessing == renderMode::On)
 	{
-		// Get and set render texture
+		// get and set render texture
 		Texture* renderTexture;
-		AssetManager::Instance()->LoadTexture(&renderTexture, "RenderTexture");
-		renderTexture->SetRenderTarget();
+		AssetManager::getInstance()->loadTexture(&renderTexture, "renderTexture");
+		renderTexture->setRenderTarget();
 
-		// Render the model
-		RenderMeshes();
+		// render the model
+		renderMeshes();
 
-		// Reset Render Target
-		DirectXManager::Instance()->SetBackBufferRenderTarget();
-		DirectXManager::Instance()->ResetViewport();
+		// Reset render Target
+		DirectXManager::getInstance()->setBackBufferRenderTarget();
+		DirectXManager::getInstance()->ResetViewport();
 
 		// Clean Up
 		renderTexture = 0;
 	}
 
-	// Render Mesh
-	RenderMeshes();
+	// render Mesh
+	renderMeshes();
 
-	// Reset Pipeline Settings
-	ResetRenderModes();
+	// Reset Pipeline settings
+	resetRenderModes();
 
 	return true;
 }
 
-void SkySphere::ToggleTime(bool timeMode)
+void SkySphere::toggleTime(bool timeMode)
 {
 	int ID = (int)timeMode;
 
-	// Update Material
-	Model_->GetMaterial()->SetVector4("TopColour", Colors_[ID][0]);
-	Model_->GetMaterial()->SetVector4("CenterColour", Colors_[ID][1]);
+	// update Material
+	m_model->getMaterial()->setVector4("TopColour", m_colours[ID][0]);
+	m_model->getMaterial()->setVector4("CenterColour", m_colours[ID][1]);
 }

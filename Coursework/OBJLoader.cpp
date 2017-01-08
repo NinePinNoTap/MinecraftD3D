@@ -1,15 +1,15 @@
-#include "OBJLoader.h"
+#include "OBJloader.h"
 
-OBJLoader::OBJLoader()
+OBJloader::OBJloader()
 {
 }
 
 
-OBJLoader::~OBJLoader()
+OBJloader::~OBJloader()
 {
 }
 
-bool OBJLoader::LoadModel(const char* modelFilename, Model& model)
+bool OBJloader::loadModel(const char* modelFilename, Model& model)
 {
 	ifstream fin;
 	char linebuffer[256];
@@ -27,7 +27,7 @@ bool OBJLoader::LoadModel(const char* modelFilename, Model& model)
 	std::string textureFilename;
 
 	//===================
-	// Load the OBJ File
+	// onload the OBJ File
 	//===================
 
 	// Open the file
@@ -42,7 +42,7 @@ bool OBJLoader::LoadModel(const char* modelFilename, Model& model)
 	// Loop through the file lines 
 	while (!fin.eof())
 	{
-		// Get the current line
+		// get the current line
 		fin.getline(linebuffer, 256);
 
 		if (string(linebuffer).find("v ") == 0) 
@@ -81,8 +81,8 @@ bool OBJLoader::LoadModel(const char* modelFilename, Model& model)
 			// Check if we have face data to process
 			if (faceData.size() > 0)
 			{
-				Result_ = BuildModel(&model, textureFilename, vertexData, textureData, normalData, faceData);
-				if (!Result_)
+				m_result = buildModel(&model, textureFilename, vertexData, textureData, normalData, faceData);
+				if (!m_result)
 				{
 					return false;
 				}
@@ -105,8 +105,8 @@ bool OBJLoader::LoadModel(const char* modelFilename, Model& model)
 	// Check for any remaining models to be created
 	if (faceData.size() > 0)
 	{
-		Result_ = BuildModel(&model, textureFilename, vertexData, textureData, normalData, faceData);
-		if (!Result_)
+		m_result = buildModel(&model, textureFilename, vertexData, textureData, normalData, faceData);
+		if (!m_result)
 		{
 			return false;
 		}
@@ -127,7 +127,7 @@ bool OBJLoader::LoadModel(const char* modelFilename, Model& model)
 	return true;
 }
 
-bool OBJLoader::BuildModel(Model* model, std::string textureFilename, vector<D3DXVECTOR3> vertexData, vector<D3DXVECTOR2> textureData, vector<D3DXVECTOR3> normalData, vector<D3DXVECTOR3> faceData)
+bool OBJloader::buildModel(Model* model, std::string textureFilename, vector<D3DXVECTOR3> vertexData, vector<D3DXVECTOR2> textureData, vector<D3DXVECTOR3> normalData, vector<D3DXVECTOR3> faceData)
 {
 	float vertexID, textureID, normalID;
 	int indexCount, vertexCount;
@@ -179,25 +179,25 @@ bool OBJLoader::BuildModel(Model* model, std::string textureFilename, vector<D3D
 	}
 
 	//=============
-	// Create Mesh
+	// create Mesh
 	//=============
 
-	// Create Mesh
+	// create Mesh
 	Mesh3D* newMesh = new Mesh3D;
-	newMesh->SetIndexCount(indexCount);
-	newMesh->SetVertexCount(vertexCount);
-	newMesh->SetMesh(ObjMesh, Indices);
-	Result_ = newMesh->Build();
-	if (!Result_)
+	newMesh->setIndexCount(indexCount);
+	newMesh->setVertexCount(vertexCount);
+	newMesh->setMesh(ObjMesh, Indices);
+	m_result = newMesh->build();
+	if (!m_result)
 	{
 		return false;
 	}
 
 	// Pass to model
-	model->AddMesh(newMesh);
+	model->addMesh(newMesh);
 
 	//=================
-	// Create Material
+	// create Material
 	//=================
 
 	if (textureFilename.length() > 0)
@@ -205,15 +205,15 @@ bool OBJLoader::BuildModel(Model* model, std::string textureFilename, vector<D3D
 		// Add texture extension
 		textureFilename += ".dds";
 
-		// Create Material
+		// create Material
 		Material* newMaterial = new Material;
-		Result_ = newMaterial->SetBaseTexture(textureFilename);
-		if (!Result_)
+		m_result = newMaterial->setBaseTexture(textureFilename);
+		if (!m_result)
 		{
 			return false;
 		}
 
-		model->AddMaterial(newMaterial);
+		model->addMaterial(newMaterial);
 	}
 
 	return true;

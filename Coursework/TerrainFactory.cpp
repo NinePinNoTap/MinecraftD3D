@@ -9,16 +9,16 @@ TerrainFactory::~TerrainFactory()
 
 }
 
-bool TerrainFactory::CreateTerrain(Rect3D terrainSize, Vector2 textureRepeat, int terrainScale, Model& terrainModel)
+bool TerrainFactory::createTerrain(Rect3D terrainSize, Vector2 textureRepeat, int terrainScale, Model& terrainModel)
 {
 	int index;
 	D3DXVECTOR3 tempVertex;
 	VertexData* modelData;
-	bool Result_;
+	bool m_result;
 
 	const int terrainVertices = terrainSize.width * terrainSize.height;
 
-	// Create the model
+	// create the model
 	modelData = new VertexData[terrainVertices];
 	if (!modelData)
 	{
@@ -37,7 +37,7 @@ bool TerrainFactory::CreateTerrain(Rect3D terrainSize, Vector2 textureRepeat, in
 			// Calculate the index
 			index = (terrainSize.width * j) + i;
 
-			// Create the vertex position
+			// create the vertex position
 			tempVertex.x = (float)i * terrainScale;
 			tempVertex.y = 0;
 			tempVertex.z = (float)j * terrainScale;
@@ -49,15 +49,15 @@ bool TerrainFactory::CreateTerrain(Rect3D terrainSize, Vector2 textureRepeat, in
 	}
 
 	// Calculate terrain normals
-	Result_ = CalculateTerrainNormals(terrainSize, modelData);
-	if (!Result_)
+	m_result = calculateNormals(terrainSize, modelData);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	// Construct the final terrain mesh
-	Result_ = BuildModelFromModelData(terrainSize, modelData, terrainModel);
-	if (!Result_)
+	m_result = buildModelFromData(terrainSize, modelData, terrainModel);
+	if (!m_result)
 	{
 		return false;
 	}
@@ -65,27 +65,27 @@ bool TerrainFactory::CreateTerrain(Rect3D terrainSize, Vector2 textureRepeat, in
 	return true;
 }
 
-bool TerrainFactory::CreateTerrainWithPerlinNoise(const Rect3D terrainSize, Vector2 textureRepeat, int Scale, float Smoothing, Model& model, int Seed)
+bool TerrainFactory::createTerrainWithPerlinNoise(const Rect3D terrainSize, Vector2 textureRepeat, int Scale, float Smoothing, Model& model, int Seed)
 {
 	int index;
 	float noise;
 	D3DXVECTOR3 tempVertex;
-	PerlinNoise NoiseGen;
+	PerlinNoise perlinNoise;
 	VertexData* modelData;
 
 	//===============================
-	// Set Up Perlin Noise Generator
+	// set Up Perlin noise Generator
 	//===============================
 
-	NoiseGen.SetSeed(Seed);
+	perlinNoise.setSeed(Seed);
 
 	//=============================
-	// Create Perlin Noise Terrain
+	// create Perlin noise Terrain
 	//=============================
 
 	const int Size = terrainSize.width * terrainSize.height;
 
-	// Create the model
+	// create the model
 	modelData = new VertexData[Size];
 
 	// Calculate texture tiling
@@ -100,12 +100,12 @@ bool TerrainFactory::CreateTerrainWithPerlinNoise(const Rect3D terrainSize, Vect
 			// Calculate the index
 			index = (terrainSize.width * j) + i;
 
-			// Create noise
+			// create noise
 			double x = (double)j / ((double)terrainSize.width);
 			double y = (double)i / ((double)terrainSize.height);
-			noise = NoiseGen.CreateNoise(10 * x, 10 * y, 0.8f);
+			noise = perlinNoise.createNoise(10 * x, 10 * y, 0.8f);
 
-			// Create the vertex position
+			// create the vertex position
 			tempVertex.x = (float)i * Scale;
 			tempVertex.y = floor(255 * noise) / Smoothing;
 			tempVertex.z = (float)j * Scale;
@@ -117,10 +117,10 @@ bool TerrainFactory::CreateTerrainWithPerlinNoise(const Rect3D terrainSize, Vect
 	}
 
 	// Calculate terrain normals
-	CalculateTerrainNormals(terrainSize, modelData);
+	calculateNormals(terrainSize, modelData);
 
 	// Construct the final terrain mesh
-	BuildModelFromModelData(terrainSize, modelData, model);
+	buildModelFromData(terrainSize, modelData, model);
 
 	// Clean Up
 	delete[] modelData;
@@ -128,34 +128,34 @@ bool TerrainFactory::CreateTerrainWithPerlinNoise(const Rect3D terrainSize, Vect
 	return true;
 }
 
-bool TerrainFactory::BuildModelFromModelData(Rect3D Terrain, VertexData* modelData, Model& model)
+bool TerrainFactory::buildModelFromData(Rect3D Terrain, VertexData* modelData, Model& model)
 {
 	int index, index1, index2, index3, index4;
 	int vertexCount, indexCount;
 	VertexData* terrainMesh;
 	unsigned long* Indices;
 
-	// Set the number of vertices
+	// set the number of vertices
 	vertexCount = (Terrain.width - 1) * (Terrain.height - 1) * 6;
 
-	// Create the vertex array
+	// create the vertex array
 	terrainMesh = new VertexData[vertexCount];
 	if (!terrainMesh)
 	{
 		return false;
 	}
 
-	// Set the index count to the same as the vertex count
+	// set the index count to the same as the vertex count
 	indexCount = vertexCount;
 
-	// Create the index array
+	// create the index array
 	Indices = new unsigned long[indexCount];
 	if (!Indices)
 	{
 		return false;
 	}
 
-	// Load the terrain model with the height map terrain data.
+	// onload the terrain model with the height map terrain data.
 	index = 0;
 
 	// Look through and create the model
@@ -208,25 +208,25 @@ bool TerrainFactory::BuildModelFromModelData(Rect3D Terrain, VertexData* modelDa
 	}
 
 	//=============
-	// Create Mesh
+	// create Mesh
 	//=============
 	
 	Mesh3D* newMesh = new Mesh3D;
-	newMesh->SetMesh(terrainMesh, Indices);
-	newMesh->SetIndexCount(indexCount);
-	newMesh->SetVertexCount(vertexCount);
-	Result_ = newMesh->Build();
-	if (!Result_)
+	newMesh->setMesh(terrainMesh, Indices);
+	newMesh->setIndexCount(indexCount);
+	newMesh->setVertexCount(vertexCount);
+	m_result = newMesh->build();
+	if (!m_result)
 	{
 		return false;
 	}
 
-	model.AddMesh(newMesh);
+	model.addMesh(newMesh);
 
 	return true;
 }
 
-bool TerrainFactory::CalculateTerrainNormals(Rect3D terrainSize, VertexData* modelData)
+bool TerrainFactory::calculateNormals(Rect3D terrainSize, VertexData* modelData)
 {
 	int index, index1, index2, index3;
 	int count;
@@ -241,7 +241,7 @@ bool TerrainFactory::CalculateTerrainNormals(Rect3D terrainSize, VertexData* mod
 	// Calculate Normals
 	//===================
 
-	// Create a temporary array to hold the un-normalized normal vectors.
+	// create a temporary array to hold the un-normalized normal vectors.
 	Normals = new Vector3[(terrainSize.height - 1) * (terrainSize.width - 1)];
 	if (!Normals)
 	{
@@ -258,7 +258,7 @@ bool TerrainFactory::CalculateTerrainNormals(Rect3D terrainSize, VertexData* mod
 			index2 = (j * terrainSize.width) + (i + 1); // Bottom Right
 			index3 = ((j + 1) * terrainSize.width) + i; // Top Left
 
-			// Get the vertices
+			// get the vertices
 			vertex[0] = modelData[index1].position;
 			vertex[1] = modelData[index2].position;
 			vertex[2] = modelData[index3].position;
@@ -289,10 +289,10 @@ bool TerrainFactory::CalculateTerrainNormals(Rect3D terrainSize, VertexData* mod
 	{
 		for (int i = 0; i<terrainSize.width; i++)
 		{
-			// Initialise the totals
+			// initialise the totals
 			sum = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-			// Initialise the count
+			// initialise the count
 			count = 0;
 
 			// Bottom left face
@@ -347,10 +347,10 @@ bool TerrainFactory::CalculateTerrainNormals(Rect3D terrainSize, VertexData* mod
 			// Calculate the length of this normal
 			length = sqrt((sum.x * sum.x) + (sum.y * sum.y) + (sum.z * sum.z));
 
-			// Get an index to the vertex location in the height map array.
+			// get an index to the vertex location in the height map array.
 			index = (j * terrainSize.width) + i;
 
-			// Normalise the normal for this vertex
+			// normalise the normal for this vertex
 			modelData[index].normal = D3DXVECTOR3(sum.x / length, sum.y / length, sum.z / length);
 		}
 	}

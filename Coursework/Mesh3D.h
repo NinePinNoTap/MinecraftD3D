@@ -15,52 +15,52 @@ public:
 	Mesh3D(const Mesh3D& mesh);
 	~Mesh3D();
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 
 	// Functionality
-	bool Build();
+	bool build();
 
-	// Setters
-	void SetIndexCount(int count);
-	void SetVertexCount(int count);
-	void SetMesh(VertexData* mesh, unsigned long* indices);
-	void SetActive(bool flag);
+	// setters
+	void setIndexCount(int count);
+	void setVertexCount(int count);
+	void setMesh(VertexData* mesh, unsigned long* indices);
+	void setActive(bool flag);
 
-	// Getters
-	int GetIndexCount();
-	int GetVertexCount();
-	ID3D11Buffer* GetIndexBuffer();
-	ID3D11Buffer* GetVertexBuffer();
-	BoundingBox GetBoundingBox();
-	bool IsActive();
+	// getters
+	int getIndexCount();
+	int getVertexCount();
+	ID3D11Buffer* getIndexBuffer();
+	ID3D11Buffer* getVertexBuffer();
+	BoundingBox getBoundingBox();
+	bool isActive();
 
 protected:
 	// Initialising
-	bool InitialiseBuffers();
+	bool initialiseBuffers();
 
 	// Vectors
-	void CalculateTangentBinormals();
+	void calculateTangentBinormals();
 
 	// Collision Detection
-	void CalculateBoundingBox();
+	void calculateBoundingBox();
 	
 	// Collision
-	BoundingBox BoundingBox_;
+	BoundingBox m_boundingBox;
 
 	// Mesh3D
-	VertexData* Mesh_;
-	unsigned long* Indices_;
+	VertexData* m_mesh;
+	unsigned long* m_indices;
 
 	// Data Counters
-	int IndexCount_;
-	int VertexCount_;
+	int m_indexCount;
+	int m_vertexCount;
 
 	// Buffers
-	ID3D11Buffer* IndexBuffer_;
-	ID3D11Buffer* VertexBuffer_;
+	ID3D11Buffer* m_indexBuffer;
+	ID3D11Buffer* m_vertexBuffer;
 
 	// Flags
-	bool Result_;
-	bool IsActive_;
+	bool m_result;
+	bool m_isActive;
 };

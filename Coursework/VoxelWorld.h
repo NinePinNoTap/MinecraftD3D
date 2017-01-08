@@ -15,7 +15,7 @@ using namespace Config;
 
 typedef std::map<string, Chunk*>::iterator it_wc;
 
-enum WorkerType { Build, Update, Unload };
+enum WorkerType { build, update, onUnload };
 
 struct ChunkTarget
 {
@@ -34,48 +34,48 @@ public:
 	VoxelWorld();
 	~VoxelWorld();
 
-	void Initialise();
+	void initialise();
 
-	bool Frame();
-	bool Render();
+	bool update();
+	bool render();
 
-	void SetBlock(int x, int y, int z, string blockName);
-	Block* GetBlock(int x, int y, int z);
+	void setBlock(int x, int y, int z, string blockName);
+	Block* getBlock(int x, int y, int z);
 
-	inline float GetBuildTime() { return (int)(AverageLoadTime_ / (float)BuildCount_) / 1000.0f; }
+	inline float getBuildTime() { return (int)(m_averageloadTime / (float)m_buildCount) / 1000.0f; }
 
 private:
-	void HandleThreads();
-	void HandleActiveThreads();
-	void HandleBuildList();
+	void handleThreads();
+	void handleActiveThreads();
+	void handleBuildList();
 
-	void BuildChunk(D3DXVECTOR3 chunkIndex);
+	void buildChunk(D3DXVECTOR3 chunkIndex);
 
-	void HandleChunks();
-	void GenerateLocalChunks();
+	void handleChunks();
+	void generateLocalChunks();
 
 	// Blocks and Chunks
-	map<string, Chunk*> Map_;
-	ChunkGenerator* ChunkGenerator_;
+	map<string, Chunk*> m_chunkMap;
+	ChunkGenerator* m_chunkGenerator;
 
 	// Updating
-	D3DXVECTOR3 LastChunkPosition_;
-	vector<D3DXVECTOR3> UpdateList_;
+	D3DXVECTOR3 m_lastChunkPosition;
+	vector<D3DXVECTOR3> m_updateList;
 
 	// Building
-	vector<D3DXVECTOR3> LocalChunks_;
-	vector<ChunkTarget> ChunkQueue_;
-	vector<ManagedThread<void()>*> ManagedThreads_;
-	ManagedThread<void()>* ThreadHandler_;
-	int MaxThreads_;
+	vector<D3DXVECTOR3> m_localChunks;
+	vector<ChunkTarget> m_chunkQueue;
+	vector<ManagedThread<void()>*> m_managedThreads;
+	ManagedThread<void()>* m_threadhandler;
+	int m_maxThreads;
 
 	// World Player
-	Player* Player_;
+	Player* m_player;
 
 	// Output
-	float AverageLoadTime_;
-	int BuildCount_;
+	float m_averageloadTime;
+	int m_buildCount;
 
 	// Misc
-	bool Result_;
+	bool m_result;
 };

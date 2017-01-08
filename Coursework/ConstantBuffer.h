@@ -12,14 +12,15 @@ public:
 	ConstantBuffer();
 	~ConstantBuffer();
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 
 	// Building
 	template <class T>
-	bool BuildBuffer()
+	bool build()
 	{
 		D3D11_BUFFER_DESC bufferDesc;
+		HRESULT result;
 
 		// Define the buffer description
 		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -29,8 +30,8 @@ public:
 		bufferDesc.MiscFlags = 0;
 		bufferDesc.StructureByteStride = 0;
 
-		// Create the buffer
-		result = DirectXManager::Instance()->GetDevice()->CreateBuffer(&bufferDesc, 0, &Buffer_);
+		// create the buffer
+		result = DirectXManager::getInstance()->getDevice()->CreateBuffer(&bufferDesc, 0, &m_buffer);
 		if (FAILED(result))
 		{
 			return false;
@@ -39,27 +40,26 @@ public:
 		return true;
 	}
 
-	// Rendering
+	// rendering
 	template <class T>
-	void MapBuffer(T Data)
+	void map(T Data)
 	{
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 
 		// Lock the buffer
-		DirectXManager::Instance()->GetDeviceContext()->Map(Buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		DirectXManager::getInstance()->getDeviceContext()->Map(m_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 		// Copy the data to it
 		CopyMemory(mappedResource.pData, &Data, sizeof(T));
 
 		// Unlock the buffer
-		DirectXManager::Instance()->GetDeviceContext()->Unmap(Buffer_, 0);
+		DirectXManager::getInstance()->getDeviceContext()->Unmap(m_buffer, 0);
 	}
 
-	void SendToRender(ShaderType Type, int Slot, int NoOfBuffers = 1);
+	void submit(ShaderType Type, int Slot, int NoOfBuffers = 1);
 
 private:
-	ID3D11Buffer* Buffer_;
-	HRESULT result;
+	ID3D11Buffer* m_buffer;
 };
 
 

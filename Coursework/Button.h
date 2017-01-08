@@ -13,32 +13,32 @@ public:
 	Button();
 	~Button();
 
-	bool Initialise(Rect3D spriteResolution, string textureFilename);
+	bool initialise(Rect3D spriteResolution, string textureFilename);
 
-	// Frame
-	bool Frame();
-	bool Render();
+	// update
+	bool update();
+	bool render();
 
-	// Setters
-	void SetNormalColour(D3DXVECTOR4 normalColour);
-	void SetHighlightColour(D3DXVECTOR4 highlightColour);
-	void SetButton(string buttonText, int x, int y);
+	// setters
+	void setNormalColour(D3DXVECTOR4 normalColour);
+	void setHighlightColour(D3DXVECTOR4 highlightColour);
+	void setButton(string buttonText, int x, int y);
 
-	inline void Execute() { ButtonFunction_(); }
+	inline void execute() { m_buttonFuntion(); }
 
-	inline void SetFunction(function<void()> func)
+	inline void setFunction(function<void()> func)
 	{
-		ButtonFunction_ = func;
+		m_buttonFuntion = func;
 	}
 
 private:
-	BoundingBox Box_;
+	BoundingBox m_boundingBox;
 
-	D3DXVECTOR4 NormalColour_;
-	D3DXVECTOR4 HighlightColour_;
+	D3DXVECTOR4 m_normalColour;
+	D3DXVECTOR4 m_highlightColour;
 
-	Text* ButtonText_;
+	Text* m_buttonText;
 
-	function<void()> ButtonFunction_;
+	function<void()> m_buttonFuntion;
 };
 

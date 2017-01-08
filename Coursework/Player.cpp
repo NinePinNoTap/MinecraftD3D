@@ -3,8 +3,8 @@
 
 Player::Player() : GameObject()
 {
-	Height_ = 1;
-	UseGravity_ = false;
+	m_height = 1;
+	m_useGravity = false;
 }
 
 Player::~Player()
@@ -12,138 +12,138 @@ Player::~Player()
 
 }
 
-bool Player::Initialise()
+bool Player::initialise()
 {
 	// Call parent initialise
-	GameObject::Initialise();
+	GameObject::initialise();
 
-	// Define Start Position
-	Transform_->SetPosition(0, 98, 0);
-	Camera::Instance()->GetTransform()->SetPosition(Transform_->GetPosition() + D3DXVECTOR3(0, Height_, 0));
+	// Define begin Position
+	m_transform->setPosition(0, 98, 0);
+	Camera::getInstance()->getTransform()->setPosition(m_transform->getPosition() + D3DXVECTOR3(0, m_height, 0));
 
 	// Define Vars
-	LookSpeed_ = 10.0f;
-	MoveSpeed_ = 4.137f;
-	JumpPower_ = 15.0f;
-	MoveVelocity_ = Vector::Zero;
+	m_lookSpeed = 10.0f;
+	m_moveSpeed = 4.137f;
+	m_jumpPower = 15.0f;
+	m_moveVelocity = Vector::Zero;
 
 	return true;
 }
 
-bool Player::Frame()
+bool Player::update()
 {
 	//=================
-	// Handle Controls
+	// handle Controls
 	//=================
 
-	HandleMovement();
-	HandleLooking();
-	HandlePhysics();
+	handlemovement();
+	handleLooking();
+	handlePhysics();
 
 	//===========
 	// Debugging -- REMOVE LATER
 	//===========
 
-	if (InputManager::Instance()->GetKeyDown(VK_O))
+	if (InputManager::getInstance()->getKeyDown(VK_O))
 	{
-		SetGravity(!UseGravity_);
+		setGravity(!m_useGravity);
 	}
 
-	Camera::Instance()->Frame();
+	Camera::getInstance()->update();
 
 	return true;
 }
 
-void Player::HandleMovement()
+void Player::handlemovement()
 {
 	// Reset velocity
-	MoveVelocity_.x = MoveVelocity_.z = 0.0f;
+	m_moveVelocity.x = m_moveVelocity.z = 0.0f;
 
 	//=================
 	// Check for Input
 	//=================
 
 	// Forward / Backward
-	HandleMovementKey(VK_W, Transform_->GetForwardVector());
-	HandleMovementKey(VK_S, -Transform_->GetForwardVector());
+	handlemovementKey(VK_W, m_transform->getForwardVector());
+	handlemovementKey(VK_S, -m_transform->getForwardVector());
 
 	// Left / Right
-	HandleMovementKey(VK_A, -Transform_->GetRightVector());
-	HandleMovementKey(VK_D, Transform_->GetRightVector());
+	handlemovementKey(VK_A, -m_transform->getRightVector());
+	handlemovementKey(VK_D, m_transform->getRightVector());
 
-	if (IsGrounded_)
+	if (m_grounded)
 	{
-		HandleMovementKey(VK_SPACE, Transform_->GetUpVector() * JumpPower_);
+		handlemovementKey(VK_SPACE, m_transform->getUpVector() * m_jumpPower);
 		
 		// Sprint
-		if (InputManager::Instance()->GetKey(VK_SHIFT))
+		if (InputManager::getInstance()->getKey(VK_SHIFT))
 		{
-			MoveVelocity_.x *= 2;
-			MoveVelocity_.z *= 2;
+			m_moveVelocity.x *= 2;
+			m_moveVelocity.z *= 2;
 		}
 	}
 	else
 	{
 		// Gravity
-		if (!UseGravity_)
+		if (!m_useGravity)
 		{
 			return;
 		}
 
 		// Apply Gravity
-		MoveVelocity_.y -= Physics::Gravity;
+		m_moveVelocity.y -= Physics::Gravity;
 	}
 
-	if (MoveVelocity_.y < -9)
+	if (m_moveVelocity.y < -9)
 	{
-		MoveVelocity_.y = -9;
+		m_moveVelocity.y = -9;
 	}
 
 	// Check for Ground
 	GroundCheck();
 }
 
-void Player::HandleMovementKey(unsigned int key, D3DXVECTOR3 moveAmount)
+void Player::handlemovementKey(unsigned int key, D3DXVECTOR3 moveAmount)
 {
-	if (!InputManager::Instance()->GetKey(key))
+	if (!InputManager::getInstance()->getKey(key))
 	{
 		return;
 	}
 
-	MoveVelocity_ += (moveAmount * MoveSpeed_);
+	m_moveVelocity += (moveAmount * m_moveSpeed);
 }
 
-void Player::HandleLooking()
+void Player::handleLooking()
 {
 	float deltaX, deltaY;
 
-	if (!WindowActive())
+	if (!windowActive())
 	{
 		return;
 	}
 
 	// Check if we have changed where we are looking
-	if (InputManager::Instance()->GetMousePosOnScreen() == System::CentreScreen)
+	if (InputManager::getInstance()->getMousePosOnScreen() == System::CentreScreen)
 	{
 		return;
 	}
 
 	// Calculate the difference between the position of the mouse and the middle of the screen
-	deltaX = (InputManager::Instance()->GetMousePosOnScreen().x - System::CentreScreen.x) / LookSpeed_;
-	deltaY = (InputManager::Instance()->GetMousePosOnScreen().y - System::CentreScreen.y) / LookSpeed_;
+	deltaX = (InputManager::getInstance()->getMousePosOnScreen().x - System::CentreScreen.x) / m_lookSpeed;
+	deltaY = (InputManager::getInstance()->getMousePosOnScreen().y - System::CentreScreen.y) / m_lookSpeed;
 
-	// Rotate the Player in Y
-	Transform_->RotateY(deltaX);
+	// rotate the Player in Y
+	m_transform->rotateY(deltaX);
 
-	// Rotate the Camera in X and Y
-	Camera::Instance()->GetTransform()->RotateX(deltaY);
-	Camera::Instance()->GetTransform()->RotateY(deltaX);
+	// rotate the Camera in X and Y
+	Camera::getInstance()->getTransform()->rotateX(deltaY);
+	Camera::getInstance()->getTransform()->rotateY(deltaX);
 
 	// Keep Mouse in Center Screen
-	LockMouseToCenter();
+	lockMouseToCenter();
 }
 
-void Player::HandlePhysics()
+void Player::handlePhysics()
 {
 	D3DXVECTOR3 nextStep, blockPos;
 	Block* blockNextStep;
@@ -152,10 +152,10 @@ void Player::HandlePhysics()
 	int solutionID;
 	
 	// Calculate next position
-	nextStep = Transform_->GetPosition() + MoveVelocity_ * PerformanceManager::Instance()->GetDeltaTime();
+	nextStep = m_transform->getPosition() + m_moveVelocity * PerformanceManager::getInstance()->getDeltaTime();
 
 	// Apply to Transforms -- NEED TO FIX PHYSICS
-	UpdatePosition(nextStep);
+	updatePosition(nextStep);
 	return;
 
 
@@ -169,33 +169,33 @@ void Player::HandlePhysics()
 
 
 	// Check if theres a block in the next position
-	blockNextStep = VoxelWorld::Instance()->GetBlock(nextStep.x, nextStep.y, nextStep.z);
+	blockNextStep = VoxelWorld::getInstance()->getBlock(nextStep.x, nextStep.y, nextStep.z);
 	if (!blockNextStep)
 	{
 		// Apply to Transforms
-		UpdatePosition(nextStep);
+		updatePosition(nextStep);
 		return;
 	}
 
 	// Make sure the block is solid
-	if (!blockNextStep->IsSolid())
+	if (!blockNextStep->isSolid())
 	{
 		// Apply to Transforms
-		UpdatePosition(nextStep);
+		updatePosition(nextStep);
 		return;
 	}
 
 	//===================
-	// Handle Collisions
+	// handle Collisions
 	//===================
 
-	Round(nextStep.x, 1);
-	Round(nextStep.y, 1);
-	Round(nextStep.z, 1);
+	roundFloat(nextStep.x, 1);
+	roundFloat(nextStep.y, 1);
+	roundFloat(nextStep.z, 1);
 
 	// Make it easier for readability
-	blockPos = blockNextStep->GetInstance().position;
-	boundingBox = blockNextStep->GetBoundingBox();
+	blockPos = blockNextStep->getInstance().position;
+	boundingBox = blockNextStep->getBoundingBox();
 
 	// Calculate face centres
 	D3DXVECTOR3 boxPositions[6] = {
@@ -217,16 +217,16 @@ void Player::HandlePhysics()
 		D3DXVECTOR3(nextStep.x,			nextStep.y,			boundingBox.back),
 	};
 
-	// Start with a high number
+	// begin with a high number
 	lowestDistance = RAND_MAX;
 
 	// Check if we are colliding with the box
-	if (CheckCollision(boundingBox, nextStep))
+	if (checkCollision(boundingBox, nextStep))
 	{
 		// Find the intersecting side
 		for (int i = 0; i < 6; i++)
 		{
-			currentDistance = Distance(nextStep, boxPositions[i]);
+			currentDistance = distance(nextStep, boxPositions[i]);
 			if (currentDistance < lowestDistance)
 			{
 				// Store lowest
@@ -237,12 +237,12 @@ void Player::HandlePhysics()
 			}
 		}
 
-		// Update to solution
+		// update to solution
 		nextStep = collisionOutcomes[solutionID];
 	}
 
 	// Apply to Transforms
-	UpdatePosition(nextStep);
+	updatePosition(nextStep);
 }
 
 void Player::GroundCheck()
@@ -251,41 +251,41 @@ void Player::GroundCheck()
 	Block* blockNextStep;
 
 	// Reset Flag
-	IsGrounded_ = false;
+	m_grounded = false;
 
 	// Check whats beneath us
-	nextStep = Transform_->GetPosition();// +MoveVelocity_ * PerformanceManager::Instance()->GetDeltaTime();
+	nextStep = m_transform->getPosition();// +m_moveVelocity * PerformanceManager::getInstance()->getDeltaTime();
 	nextStep.y -= 1;
 
-	// Get next step block
-	blockNextStep = VoxelWorld::Instance()->GetBlock(nextStep.x, nextStep.y, nextStep.z);
+	// get next step block
+	blockNextStep = VoxelWorld::getInstance()->getBlock(nextStep.x, nextStep.y, nextStep.z);
 	if (!blockNextStep)
 	{
 		return;
 	}
 
 	// Ensure its not air
-	if (!blockNextStep->IsSolid())
+	if (!blockNextStep->isSolid())
 	{
 		return;
 	}
 
-	// Round to 1 decimal place
-	Round(nextStep.y, 1);
+	// round to 1 decimal place
+	roundFloat(nextStep.y, 1);
 
 	// Check if we are colliding
-	if (nextStep.y < blockNextStep->GetBoundingBox().top)
+	if (nextStep.y < blockNextStep->getBoundingBox().top)
 	{
-		MoveVelocity_.y = 0.0f;
-		IsGrounded_ = true;
+		m_moveVelocity.y = 0.0f;
+		m_grounded = true;
 	}
 }
 
-void Player::UpdatePosition(D3DXVECTOR3 playerPos)
+void Player::updatePosition(D3DXVECTOR3 playerPos)
 {
-	// Set feet position
-	Transform_->SetPosition(playerPos);
+	// set feet position
+	m_transform->setPosition(playerPos);
 
-	// Set head position
-	Camera::Instance()->GetTransform()->SetPosition(Transform_->GetPosition() + D3DXVECTOR3(0, Height_, 0));
+	// set head position
+	Camera::getInstance()->getTransform()->setPosition(m_transform->getPosition() + D3DXVECTOR3(0, m_height, 0));
 }

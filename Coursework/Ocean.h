@@ -20,25 +20,25 @@ public:
 	~Ocean();
 
 	// Initialising
-	bool Initialise(string textureFilename, Rect3D WaterResolution);
+	bool initialise(string textureFilename, Rect3D WaterResolution);
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 
-	// Frame
-	bool Frame();
-	bool Render();
+	// update
+	bool update();
+	bool render();
 
-	// Setter
-	void ToggleTime(bool);
+	// setter
+	void toggleTime(bool);
 
 private:
-	bool RenderMeshes();
-	bool SendModelToPipeline(Mesh3D* objMesh);
+	bool renderMeshes();
+	bool sendModelToPipeline(Mesh3D* objMesh);
 
 	// Properties
-	float WaterTranslation_;
-	float WaveSpeed_;
+	float m_waterTranslation;
+	float m_waveSpeed;
 };
 
 

@@ -29,13 +29,13 @@ ConstantOutputType OceanPatchConstantFunction(InputPatch<HullInputType, 4> input
 {    
     ConstantOutputType output;
 
-    // Set the tessellation factors for the three edges of the triangle.
+    // set the tessellation factors for the three edges of the triangle.
     output.edges[0] = tessellationAmount;
     output.edges[1] = tessellationAmount;
     output.edges[2] = tessellationAmount;
     output.edges[3] = tessellationAmount;
 
-    // Set the tessellation factor for tessallating inside the triangle.
+    // set the tessellation factor for tessallating inside the triangle.
     output.inside[0] = tessellationAmount;
     output.inside[1] = tessellationAmount;
 
@@ -53,7 +53,7 @@ HullOutputType HullShaderMain(InputPatch<HullInputType, 4> patch, uint pointId :
 {
     HullOutputType output;
 
-    // Set the position and texture for this control point
+    // set the position and texture for this control point
     output.position = patch[pointId].position;
     output.tex = patch[pointId].tex;
 

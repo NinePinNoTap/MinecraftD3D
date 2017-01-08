@@ -12,24 +12,24 @@ public:
 	MainMenuScene();
 	~MainMenuScene();
 
-	// Initialise
-	bool Initialise(HWND hwnd);
+	// initialise
+	bool initialise(HWND hwnd);
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 
-	// Frame
-	bool Frame();
+	// update
+	bool update();
 	
 	// Scene Change
-	void Load();
-	void Unload();
+	void onLoad();
+	void onUnload();
 
 private:
-	void CreateButton(string buttonText, int x, int y, int sceneID);
-	void Render();
+	void createButton(string buttonText, int x, int y, int sceneID);
+	void render();
 
-	Sprite* Background_;
-	vector<Button*> Buttons_;
+	Sprite* m_background;
+	vector<Button*> m_buttons;
 };
 

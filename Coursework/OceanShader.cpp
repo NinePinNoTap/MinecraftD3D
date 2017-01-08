@@ -10,43 +10,43 @@ OceanShader::~OceanShader()
 
 }
 
-bool OceanShader::Initialise(HWND hwnd)
+bool OceanShader::initialise(HWND hwnd)
 {
 	// Define Shaders
-	AddShader("ocean.vs");
-	AddShader("ocean.ps");
-	AddShader("ocean.hs");
-	AddShader("ocean.ds");
+	addShader("ocean.vs");
+	addShader("ocean.ps");
+	addShader("ocean.hs");
+	addShader("ocean.ds");
 
 	// Define Input Layout
-	AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 
 	// Define Buffers
-	AddBuffer<MatrixBuffer>(DomainShader);
-	AddBuffer<CameraBuffer>(DomainShader);
-	AddBuffer<WaveBuffer>(DomainShader);
-	AddBuffer<OceanBuffer>(PixelShader);
-	AddBuffer<TessellationBuffer>(HullShader);
+	addBuffer<MatrixBuffer>(DomainShader);
+	addBuffer<CameraBuffer>(DomainShader);
+	addBuffer<WaveBuffer>(DomainShader);
+	addBuffer<OceanBuffer>(PixelShader);
+	addBuffer<TessellationBuffer>(HullShader);
 
 	// Define Sample State
-	AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	addSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
 
-	// Build Shader
-	Result_ = BuildShader(hwnd);
-	if (!Result_)
+	// build Shader
+	m_result = buildShader(hwnd);
+	if (!m_result)
 	{
-		OutputToDebug("Could not initialise ocean shader.");
+		outputToDebug("Could not initialise ocean shader.");
 		return false;
 	}
 
 	return true;
 }
 
-bool OceanShader::Prepare(Material* objMaterial, Transform* objTransform)
+bool OceanShader::prepare(Material* objMaterial, Transform* objTransform)
 {
 	if (!objMaterial)
 	{
@@ -55,53 +55,53 @@ bool OceanShader::Prepare(Material* objMaterial, Transform* objTransform)
 	}
 
 	// Retrieve variables for rendering
-	ID3D11ShaderResourceView* refractionTexture = objMaterial->GetTexture("RefractionTexture")->GetTexture();
-	ID3D11ShaderResourceView* reflectionTexture = objMaterial->GetTexture("ReflectionTexture")->GetTexture();
-	ID3D11ShaderResourceView* normalTexture = objMaterial->GetNormalTexture();
+	ID3D11ShaderResourceView* refractionTexture = objMaterial->getTexture("RefractionTexture")->getTexture();
+	ID3D11ShaderResourceView* reflectionTexture = objMaterial->getTexture("ReflectionTexture")->getTexture();
+	ID3D11ShaderResourceView* normalTexture = objMaterial->getNormalTexture();
 
-	// Create camera buffer
+	// create camera buffer
 	CameraBuffer cameraBuffer;
-	cameraBuffer.cameraPosition = Camera::Instance()->GetTransform()->GetPosition();
-	cameraBuffer.normalMapTiling = objMaterial->GetVector2("NormalMapTiling");// D3DXVECTOR2(0.01f, 0.02f);
+	cameraBuffer.cameraPosition = Camera::getInstance()->getTransform()->getPosition();
+	cameraBuffer.normalMapTiling = objMaterial->getVector2("NormalMapTiling");// D3DXVECTOR2(0.01f, 0.02f);
 	cameraBuffer.padding = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-	// Create ocean buffer
+	// create ocean buffer
 	OceanBuffer oceanBuffer;
-	oceanBuffer.waterTranslation = objMaterial->GetFloat("WaterTranslation");// 0.0f;
-	oceanBuffer.reflectRefractScale = objMaterial->GetFloat("ReflectRefractScale");// 0.03f;
-	oceanBuffer.refractionTint = objMaterial->GetVector4("RefractionTint");// D3DXVECTOR4(0.0f, 0.8f, 1.0f, 1.0f);
-	oceanBuffer.lightDirection = Light::Instance()->GetDirection();
-	oceanBuffer.specularShininess = Light::Instance()->GetSpecularPower();
+	oceanBuffer.waterTranslation = objMaterial->getFloat("WaterTranslation");// 0.0f;
+	oceanBuffer.reflectRefractScale = objMaterial->getFloat("ReflectRefractScale");// 0.03f;
+	oceanBuffer.refractionTint = objMaterial->getVector4("RefractionTint");// D3DXVECTOR4(0.0f, 0.8f, 1.0f, 1.0f);
+	oceanBuffer.lightDirection = Light::getInstance()->getDirection();
+	oceanBuffer.specularShininess = Light::getInstance()->getSpecularPower();
 	oceanBuffer.padding = D3DXVECTOR2(0.0f, 0.0f);
 
-	// Create wave buffer
+	// create wave buffer
 	WaveBuffer waveBuffer;
-	waveBuffer.waveTime = objMaterial->GetFloat("Frame");
-	waveBuffer.waveHeight = objMaterial->GetFloat("WaveHeight") / 2;
+	waveBuffer.waveTime = objMaterial->getFloat("update");
+	waveBuffer.waveHeight = objMaterial->getFloat("WaveHeight") / 2;
 	waveBuffer.padding = D3DXVECTOR2(0.0f, 0.0f);
 
-	// Create tessellation buffer
+	// create tessellation buffer
 	TessellationBuffer tessellationBuffer;
-	tessellationBuffer.tessellationAmount = objMaterial->GetFloat("TessellationAmount");// 58;// gameObject->GetTessellation();
+	tessellationBuffer.tessellationAmount = objMaterial->getFloat("TessellationAmount");// 58;// gameObject->getTessellation();
 	tessellationBuffer.padding = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-	// Create the world matrix for the model
-	MatrixBuffer matrixBuffer = MatrixBuffer_;
-	objTransform->GetWorldMatrix(matrixBuffer.world);
-	TransposeMatrix(matrixBuffer);
+	// create the world matrix for the model
+	MatrixBuffer matrixBuffer = m_matrixBuffer;
+	objTransform->getWorldMatrix(matrixBuffer.world);
+	transposeMatrixBuffer(matrixBuffer);
 
 	// Pass the baseTextures to the shader
-	SendTextureToShader(0, refractionTexture);
-	SendTextureToShader(1, reflectionTexture);
-	SendTextureToShader(2, normalTexture);
+	sendTextureToShader(0, refractionTexture);
+	sendTextureToShader(1, reflectionTexture);
+	sendTextureToShader(2, normalTexture);
 
-	// Update Buffers
-	UpdateBuffer(DomainShader, 0, matrixBuffer);
-	UpdateBuffer(DomainShader, 1, cameraBuffer);
-	UpdateBuffer(DomainShader, 2, waveBuffer);
-	UpdateBuffer(PixelShader, 0, oceanBuffer);
-	UpdateBuffer(HullShader, 0, tessellationBuffer);
-	SendBuffersToShader();
+	// update Buffers
+	updateBuffer(DomainShader, 0, matrixBuffer);
+	updateBuffer(DomainShader, 1, cameraBuffer);
+	updateBuffer(DomainShader, 2, waveBuffer);
+	updateBuffer(PixelShader, 0, oceanBuffer);
+	updateBuffer(HullShader, 0, tessellationBuffer);
+	sendBuffersToShader();
 
 	return true;
 }

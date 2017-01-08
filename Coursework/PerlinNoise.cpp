@@ -1,9 +1,9 @@
-#include "PerlinNoise.h"
+#include "perlinNoise.h"
 
 PerlinNoise::PerlinNoise()
 {
 	// Initialize the permutation vector with the reference values
-	HashMap_ = {
+	m_hashMap = {
 		151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142,
 		8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117,
 		35, 11, 32, 57, 177, 33, 88, 237, 149, 56, 87, 174, 20, 125, 136, 171, 168, 68, 175, 74, 165, 71,
@@ -19,23 +19,23 @@ PerlinNoise::PerlinNoise()
 	};
 
 	// Duplicate the permutation vector
-	HashMap_.insert(HashMap_.end(), HashMap_.begin(), HashMap_.end());
+	m_hashMap.insert(m_hashMap.end(), m_hashMap.begin(), m_hashMap.end());
 }
 
 PerlinNoise::~PerlinNoise()
 {
 }
 
-void PerlinNoise::SetSeed(int Seed)
+void PerlinNoise::setSeed(int Seed)
 {
 	// Initialize a random engine with seed
 	std::default_random_engine engine(Seed);
 
 	// Suffle  using the above random engine
-	std::shuffle(HashMap_.begin(), HashMap_.end(), engine);
+	std::shuffle(m_hashMap.begin(), m_hashMap.end(), engine);
 }
 
-double PerlinNoise::CreateNoise(double x, double y, double z)
+double PerlinNoise::createNoise(double x, double y, double z)
 {
 	// Find the unit cube that contains the point
 	int X = (int)floor(x) & 255;
@@ -48,34 +48,34 @@ double PerlinNoise::CreateNoise(double x, double y, double z)
 	z -= floor(z);
 
 	// Compute fade curves for each of x, y, z
-	double u = Fade(x);
-	double v = Fade(y);
-	double w = Fade(z);
+	double u = fade(x);
+	double v = fade(y);
+	double w = fade(z);
 
 	// Hash coordinates of the 8 cube corners
-	int A = HashMap_[X] + Y;
-	int AA = HashMap_[A] + Z;
-	int AB = HashMap_[A + 1] + Z;
-	int B = HashMap_[X + 1] + Y;
-	int BA = HashMap_[B] + Z;
-	int BB = HashMap_[B + 1] + Z;
+	int A = m_hashMap[X] + Y;
+	int AA = m_hashMap[A] + Z;
+	int AB = m_hashMap[A + 1] + Z;
+	int B = m_hashMap[X + 1] + Y;
+	int BA = m_hashMap[B] + Z;
+	int BB = m_hashMap[B + 1] + Z;
 
 	// Add blended results from 8 corners of cube
-	double res = Lerp(w, Lerp(v, Lerp(u, Gradient(HashMap_[AA], x, y, z), Gradient(HashMap_[BA], x - 1, y, z)), Lerp(u, Gradient(HashMap_[AB], x, y - 1, z), Gradient(HashMap_[BB], x - 1, y - 1, z))), Lerp(v, Lerp(u, Gradient(HashMap_[AA + 1], x, y, z - 1), Gradient(HashMap_[BA + 1], x - 1, y, z - 1)), Lerp(u, Gradient(HashMap_[AB + 1], x, y - 1, z - 1), Gradient(HashMap_[BB + 1], x - 1, y - 1, z - 1))));
+	double res = lerp(w, lerp(v, lerp(u, gradient(m_hashMap[AA], x, y, z), gradient(m_hashMap[BA], x - 1, y, z)), lerp(u, gradient(m_hashMap[AB], x, y - 1, z), gradient(m_hashMap[BB], x - 1, y - 1, z))), lerp(v, lerp(u, gradient(m_hashMap[AA + 1], x, y, z - 1), gradient(m_hashMap[BA + 1], x - 1, y, z - 1)), lerp(u, gradient(m_hashMap[AB + 1], x, y - 1, z - 1), gradient(m_hashMap[BB + 1], x - 1, y - 1, z - 1))));
 	return (res + 1.0) / 2.0;
 }
 
-double PerlinNoise::Fade(double t)
+double PerlinNoise::fade(double t)
 {
 	return t * t * t * (t * (t * 6 - 15) + 10);
 }
 
-double PerlinNoise::Lerp(double t, double a, double b)
+double PerlinNoise::lerp(double t, double a, double b)
 {
 	return a + t * (b - a);
 }
 
-double PerlinNoise::Gradient(int hash, double x, double y, double z)
+double PerlinNoise::gradient(int hash, double x, double y, double z)
 {
 	int h = hash & 15;
 

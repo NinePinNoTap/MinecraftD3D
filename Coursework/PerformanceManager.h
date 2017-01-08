@@ -13,34 +13,34 @@ public:
 	PerformanceManager();
 	~PerformanceManager();
 
-	void Initialise();
-	void Shutdown();
+	void initialise();
+	void terminate();
 
-	bool Frame();
+	bool update();
 
-	// Getters
-	int GetFPS();
-	int GetUsage();
-	float GetDeltaTime();
+	// getters
+	int getFPS();
+	int getUsage();
+	float getDeltaTime();
 
 private:
 	// FPS
-	int FPS_;
-	int FrameCount_;
-	unsigned long FPSStart_;
+	int m_fps;
+	int m_frameCount;
+	unsigned long m_fpsStart;
 
 	// CPU
-	bool CanReadCPU_;
-	HQUERY QueryHandle_;
-	HCOUNTER CounterHandle_;
-	unsigned long LastSampleTime_;
-	long Usage_;
+	bool m_canAccessCPU;
+	HQUERY m_queryHandle;
+	HCOUNTER m_counterHandle;
+	unsigned long m_lastSampleTime;
+	long m_usage;
 
 	// Timer
-	INT64 Frequency_;
-	float TicksPerMs_;
-	INT64 TimerStart_;
-	float FrameTime_;
+	INT64 m_frequency;
+	float m_ticksPerMs;
+	INT64 m_timerStart;
+	float m_frameTime;
 };
 
 

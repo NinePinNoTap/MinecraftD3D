@@ -17,20 +17,20 @@ public:
 	~SkySphere();
 
 	// Initialising
-	bool Initialise(const char* filename);
+	bool initialise(const char* filename);
 
-	// Frame
-	bool Frame();
-	bool Render();
+	// update
+	bool update();
+	bool render();
 
-	// Setters
-	void ToggleTime(bool);
+	// setters
+	void toggleTime(bool);
 
-	// Getter
-	D3DXVECTOR4 GetTopColor();
-	D3DXVECTOR4 GetCenterColor();
+	// getter
+	D3DXVECTOR4 getTopColor();
+	D3DXVECTOR4 getCenterColor();
 
 private:
 	// Properties
-	D3DXVECTOR4 Colors_[2][2];
+	D3DXVECTOR4 m_colours[2][2];
 };

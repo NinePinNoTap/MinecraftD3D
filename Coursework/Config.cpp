@@ -32,7 +32,7 @@ float Config::Physics::Gravity = 9.80665f;
 
 
 //==================================================================
-// Rendering
+// rendering
 //==================================================================
 
 float Config::Rendering::NearClipPlane = 0.1f;
@@ -66,7 +66,7 @@ D3DXVECTOR3 Config::Vector::Zero = D3DXVECTOR3(0, 0, 0);
 
 int Config::World::ChunkSize = 16;
 int Config::World::BlockSize = 1;
-int Config::World::LoadRadius = 1;
+int Config::World::loadRadius = 1;
 int Config::World::UnloadRadius = 3;
 int Config::World::ColumnHeight = 8;
 

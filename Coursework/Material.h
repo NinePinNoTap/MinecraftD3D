@@ -15,69 +15,69 @@ public:
 	Material(const Material& material);
 	~Material();
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 
 	// Colours
-	void SetColour(D3DXVECTOR4 tint);
-	void SetSpecular(float amount);
+	void setColour(D3DXVECTOR4 tint);
+	void setSpecular(float amount);
 
 	// Textures
-	bool SetBaseTexture(std::string textureFilename);
-	bool SetNormalTexture(std::string textureFilename);
-	bool SetAlphaTexture(std::string textureFilename);
-	bool SetNoiseTexture(std::string textureFilename);
-	bool SetDistortionTexture(std::string textureFilename);
-	bool SetPerturbTexture(std::string textureFilename);
+	bool setBaseTexture(std::string textureFilename);
+	bool setNormalTexture(std::string textureFilename);
+	bool setAlphaTexture(std::string textureFilename);
+	bool setNoiseTexture(std::string textureFilename);
+	bool setDistortionTexture(std::string textureFilename);
+	bool setPerturbTexture(std::string textureFilename);
 
-	// Getters
-	D3DXVECTOR4 GetTint();
-	float GetSpecular();
-	ID3D11ShaderResourceView* GetBaseTexture();
-	ID3D11ShaderResourceView* GetNormalTexture();
-	ID3D11ShaderResourceView* GetAlphaTexture();
-	ID3D11ShaderResourceView* GetNoiseTexture();
-	ID3D11ShaderResourceView* GetDistortionTexture();
-	ID3D11ShaderResourceView* GetPerturbTexture();
+	// getters
+	D3DXVECTOR4 getTint();
+	float getSpecular();
+	ID3D11ShaderResourceView* getBaseTexture();
+	ID3D11ShaderResourceView* getNormalTexture();
+	ID3D11ShaderResourceView* getAlphaTexture();
+	ID3D11ShaderResourceView* getNoiseTexture();
+	ID3D11ShaderResourceView* getDistortionTexture();
+	ID3D11ShaderResourceView* getPerturbTexture();
 
-	// Setters
-	void SetFloat(string keyName, float value);
-	bool SetTexture(string keyName, string value);
-	void SetTexture(string keyName, Texture* value);
-	void SetVector2(string keyName, D3DXVECTOR2 value);
-	void SetVector3(string keyName, D3DXVECTOR3 value);
-	void SetVector4(string keyName, D3DXVECTOR4 value);
+	// setters
+	void setFloat(string keyName, float value);
+	bool setTexture(string keyName, string value);
+	void setTexture(string keyName, Texture* value);
+	void setVector2(string keyName, D3DXVECTOR2 value);
+	void setVector3(string keyName, D3DXVECTOR3 value);
+	void setVector4(string keyName, D3DXVECTOR4 value);
 
-	// Getters
-	float GetFloat(string keyName);
-	Texture* GetTexture(string keyName);
-	D3DXVECTOR2 GetVector2(string keyName);
-	D3DXVECTOR3 GetVector3(string keyName);
-	D3DXVECTOR4 GetVector4(string keyName);
+	// getters
+	float getFloat(string keyName);
+	Texture* getTexture(string keyName);
+	D3DXVECTOR2 getVector2(string keyName);
+	D3DXVECTOR3 getVector3(string keyName);
+	D3DXVECTOR4 getVector4(string keyName);
 
 private:
 	// Colour
-	D3DXVECTOR4 Tint_;
-	float SpecularAmount_;
+	D3DXVECTOR4 m_tint;
+	float m_specularAmount;
 
 	// Textures
-	Texture* BaseTexture_;
-	Texture* NormalTexture_;
-	Texture* AlphaTexture_;
-	Texture* NoiseTexture_;
-	Texture* DistortionTexture_;
-	Texture* PerturbTexture_;
+	Texture* m_baseTexture;
+	Texture* m_normalTexture;
+	Texture* m_alphaTexture;
+	Texture* m_noiseTexture;
+	Texture* m_distortionTexture;
+	Texture* m_perturbTexture;
 
-	Texture* RenderTexture_;
-	Texture* ReflectionRenderTexture_;
-	Texture* RefractionRenderTexture_;
+	Texture* m_renderTexture;
+	Texture* m_reflectionRenderTexture;
+	Texture* m_refractionRenderTexture;
 
 	// Databases
-	std::map<string, float> FloatDatabase_;
-	std::map<string, D3DXVECTOR2> Vector2Database_;
-	std::map<string, D3DXVECTOR3> Vector3Database_;
-	std::map<string, D3DXVECTOR4> Vector4Database_;
-	std::map<string, Texture*> TextureDatabase_;
+	std::map<string, float> m_floatProperties;
+	std::map<string, D3DXVECTOR2> m_vector2Properties;
+	std::map<string, D3DXVECTOR3> m_vector3Properties;
+	std::map<string, D3DXVECTOR4> m_vector4Properties;
+	std::map<string, Texture*> m_textureProperties;
 };
 
 

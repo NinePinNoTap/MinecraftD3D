@@ -3,111 +3,111 @@
 
 InstancedGameObject::InstancedGameObject() : GameObject()
 {
-	InstanceBuffer_ = 0;
-	InstanceCount_ = 0;
+	m_instanceBuffer = 0;
+	m_instanceCount = 0;
 }
 
 InstancedGameObject::~InstancedGameObject()
 {
 }
 
-bool InstancedGameObject::Render()
+bool InstancedGameObject::render()
 {
-	if (!IsActive_ || !Shader_ || !Model_)
+	if (!m_isActive || !m_shader || !m_model)
 		return true;
 
 	// Define how we want the model to be rendered
-	SetRenderModes();
+	setrenderModes();
 
-	// Render Reflection
-	if (IsReflective_ == RenderMode::On)
+	// render Reflection
+	if (m_reflective == renderMode::On)
 	{
-		Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
+		m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
 
 		Texture* reflectionTexture;
-		AssetManager::Instance()->LoadTexture(&reflectionTexture, "ReflectionTexture");
-		reflectionTexture->SetRenderTarget();
+		AssetManager::getInstance()->loadTexture(&reflectionTexture, "ReflectionTexture");
+		reflectionTexture->setRenderTarget();
 
-		RenderMeshes();
+		renderMeshes();
 
-		DirectXManager::Instance()->SetBackBufferRenderTarget();
-		DirectXManager::Instance()->ResetViewport();
+		DirectXManager::getInstance()->setBackBufferRenderTarget();
+		DirectXManager::getInstance()->ResetViewport();
 	}
 
 	// Define how we want to see the model
-	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
+	m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::View);
 
-	// Render to Render Texture
-	if (IsPostProcessed_ == RenderMode::On)
+	// render to render Texture
+	if (m_postprocessing == renderMode::On)
 	{
-		// Get and set render texture
+		// get and set render texture
 		Texture* renderTexture;
-		AssetManager::Instance()->LoadTexture(&renderTexture, "RenderTexture");
-		renderTexture->SetRenderTarget();
+		AssetManager::getInstance()->loadTexture(&renderTexture, "renderTexture");
+		renderTexture->setRenderTarget();
 
-		// Render the model
-		RenderMeshes();
+		// render the model
+		renderMeshes();
 
-		// Reset Render Target
-		DirectXManager::Instance()->SetBackBufferRenderTarget();
-		DirectXManager::Instance()->ResetViewport();
+		// Reset render Target
+		DirectXManager::getInstance()->setBackBufferRenderTarget();
+		DirectXManager::getInstance()->ResetViewport();
 
 		// Clean Up
 		renderTexture = 0;
 	}
 
-	// Render Mesh
-	RenderMeshes();
+	// render Mesh
+	renderMeshes();
 
-	// Reset Pipeline Settings
-	ResetRenderModes();
+	// Reset Pipeline settings
+	resetRenderModes();
 
 	return true;
 }
 
-bool InstancedGameObject::RenderMeshes()
+bool InstancedGameObject::renderMeshes()
 {
-	// Render the model
-	for (int i = 0; i < Model_->GetMeshCount(); i++)
+	// render the model
+	for (int i = 0; i < m_model->getMeshCount(); i++)
 	{
 		// Make sure the mesh is active for it to be rendered
-		if (Model_->GetMesh(i)->IsActive())
+		if (m_model->getMesh(i)->isActive())
 		{
 			// Send model to pipeline
-			SendModelToPipeline(Model_->GetMesh(i));
+			sendModelToPipeline(m_model->getMesh(i));
 
 			// Send material to shader
-			Shader_->Prepare(Model_->GetMaterial(i), Transform_);
+			m_shader->prepare(m_model->getMaterial(i), m_transform);
 
-			// Render Object
-			Shader_->Render(Model_->GetMesh(i)->GetVertexCount(), InstanceCount_);
+			// render Object
+			m_shader->render(m_model->getMesh(i)->getVertexCount(), m_instanceCount);
 		}
 	}
 
 	return true;
 }
 
-bool InstancedGameObject::SendModelToPipeline(Mesh3D* objMesh)
+bool InstancedGameObject::sendModelToPipeline(Mesh3D* objMesh)
 {
 	unsigned int strides[2];
 	unsigned int offsets[2];
 	ID3D11Buffer* bufferPointers[2];
 
-	// Set vertex buffer stride and offset
+	// set vertex buffer stride and offset
 	strides[0] = sizeof(VertexData);
 	strides[1] = sizeof(InstanceData);
 	offsets[0] = 0;
 	offsets[1] = 0;
 
-	// Get data buffers
-	bufferPointers[0] = objMesh->GetVertexBuffer();
-	bufferPointers[1] = InstanceBuffer_;
+	// get data buffers
+	bufferPointers[0] = objMesh->getVertexBuffer();
+	bufferPointers[1] = m_instanceBuffer;
 
-	// Set the vertex buffer to active in the input assembler so it can be rendered
-	DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
+	// set the vertex buffer to active in the input assembler so it can be rendered
+	DirectXManager::getInstance()->getDeviceContext()->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
 
-	// Set the type of primitive that should be rendered from this vertex buffer
-	DirectXManager::Instance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	// set the type of primitive that should be rendered from this vertex buffer
+	DirectXManager::getInstance()->getDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Clean Up
 	bufferPointers[0] = 0;
@@ -116,36 +116,36 @@ bool InstancedGameObject::SendModelToPipeline(Mesh3D* objMesh)
 	return true;
 }
 
-void InstancedGameObject::AddInstance(InstanceData instanceData)
+void InstancedGameObject::addInstance(InstanceData instanceData)
 {
 	// Add to list
-	Instances_.push_back(instanceData);
+	m_instances.push_back(instanceData);
 
 	// Store number of instances
-	InstanceCount_ = Instances_.size();
+	m_instanceCount = m_instances.size();
 }
 
-void InstancedGameObject::AddInstance(D3DXVECTOR3 position, D3DXVECTOR2 textureOffset, D3DXVECTOR2 textureTotal)
+void InstancedGameObject::addInstance(D3DXVECTOR3 position, D3DXVECTOR2 textureOffset, D3DXVECTOR2 textureTotal)
 {
-	// Create Instance
+	// create getInstance
 	InstanceData instanceData;
 	instanceData.position = position;
 	instanceData.textureOffset = textureOffset;
 	instanceData.textureTotal = textureTotal;
 
 	// Add to list
-	Instances_.push_back(instanceData);
+	m_instances.push_back(instanceData);
 
 	// Store number of instances
-	InstanceCount_ = Instances_.size();
+	m_instanceCount = m_instances.size();
 }
 
-void InstancedGameObject::ClearInstances()
+void InstancedGameObject::clearInstances()
 {
-	Instances_.clear();
+	m_instances.clear();
 }
 
-void InstancedGameObject::RebuildInstanceBuffer()
+void InstancedGameObject::rebuildInstanceBuffer()
 {
 	InstanceData* instances = 0;
 	D3D11_BUFFER_DESC instanceBufferDesc;
@@ -153,36 +153,36 @@ void InstancedGameObject::RebuildInstanceBuffer()
 	HRESULT result;
 
 	// Define how many instances we have
-	InstanceCount_ = Instances_.size();
+	m_instanceCount = m_instances.size();
 
 	// Make sure we have instances to buffer
-	if (InstanceCount_ == 0)
+	if (m_instanceCount == 0)
 	{
 		return;
 	}
 
 	// Check if we have already created instances
-	if (InstanceBuffer_)
+	if (m_instanceBuffer)
 	{
-		InstanceBuffer_->Release();
-		InstanceBuffer_ = 0;
+		m_instanceBuffer->Release();
+		m_instanceBuffer = 0;
 	}
 
-	// Create the instance array.
-	instances = new InstanceData[InstanceCount_];
+	// create the instance array.
+	instances = new InstanceData[m_instanceCount];
 	if (!instances)
 	{
 		return;
 	}
 
-	for (int i = 0; i < InstanceCount_; i++)
+	for (int i = 0; i < m_instanceCount; i++)
 	{
-		instances[i] = Instances_[i];
+		instances[i] = m_instances[i];
 	}
 
-	// Set up the description of the instance buffer.
+	// set up the description of the instance buffer.
 	instanceBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	instanceBufferDesc.ByteWidth = sizeof(InstanceData) * InstanceCount_;
+	instanceBufferDesc.ByteWidth = sizeof(InstanceData) * m_instanceCount;
 	instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	instanceBufferDesc.CPUAccessFlags = 0;
 	instanceBufferDesc.MiscFlags = 0;
@@ -193,8 +193,8 @@ void InstancedGameObject::RebuildInstanceBuffer()
 	instanceData.SysMemPitch = 0;
 	instanceData.SysMemSlicePitch = 0;
 
-	// Create the instance buffer.
-	result = DirectXManager::Instance()->GetDevice()->CreateBuffer(&instanceBufferDesc, &instanceData, &InstanceBuffer_);
+	// create the instance buffer.
+	result = DirectXManager::getInstance()->getDevice()->CreateBuffer(&instanceBufferDesc, &instanceData, &m_instanceBuffer);
 	if (FAILED(result))
 	{
 		return;
@@ -207,15 +207,15 @@ void InstancedGameObject::RebuildInstanceBuffer()
 	delete[] instances;
 	instances = 0;
 
-	Instances_.clear();
+	m_instances.clear();
 }
 
-int InstancedGameObject::GetInstanceCount()
+int InstancedGameObject::getInstanceCount()
 {
-	return InstanceCount_;
+	return m_instanceCount;
 }
 
-ID3D11Buffer* InstancedGameObject::GetInstanceBuffer()
+ID3D11Buffer* InstancedGameObject::getInstanceBuffer()
 {
-	return InstanceBuffer_;
+	return m_instanceBuffer;
 }

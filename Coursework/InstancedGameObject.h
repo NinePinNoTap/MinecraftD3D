@@ -9,25 +9,25 @@ public:
 	InstancedGameObject();
 	~InstancedGameObject();
 
-	// Frame
-	bool Render();
+	// update
+	bool render();
 
-	// Instance Management
-	void AddInstance(InstanceData instanceData);
-	void AddInstance(D3DXVECTOR3 position, D3DXVECTOR2 textureOffset, D3DXVECTOR2 textureTotal);
-	void ClearInstances();
-	void RebuildInstanceBuffer();
+	// getInstance Management
+	void addInstance(InstanceData instanceData);
+	void addInstance(D3DXVECTOR3 position, D3DXVECTOR2 textureOffset, D3DXVECTOR2 textureTotal);
+	void clearInstances();
+	void rebuildInstanceBuffer();
 
-	// Getters
-	int GetInstanceCount();
-	ID3D11Buffer* GetInstanceBuffer();
+	// getters
+	int getInstanceCount();
+	ID3D11Buffer* getInstanceBuffer();
 
 protected:
-	bool RenderMeshes();
-	bool SendModelToPipeline(Mesh3D* objMesh);
+	bool renderMeshes();
+	bool sendModelToPipeline(Mesh3D* objMesh);
 
-	ID3D11Buffer* InstanceBuffer_;
-	int InstanceCount_;
-	std::vector<InstanceData> Instances_;
+	ID3D11Buffer* m_instanceBuffer;
+	int m_instanceCount;
+	std::vector<InstanceData> m_instances;
 };
 

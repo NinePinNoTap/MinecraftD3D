@@ -35,10 +35,10 @@ float4 PixelShaderMain(PixelInputType input) : SV_TARGET
 	// Sample the texture
     textureColor = shaderTexture.Sample(SampleType, input.tex);
 
-    // Create default lighting using the ambient color
+    // create default lighting using the ambient color
     lighting = ambientColor;
 
-    // Initialise the specular color
+    // initialise the specular color
     specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
     // Calculate the light intensity

@@ -12,26 +12,26 @@ public:
 	Model(const Model& model);
 	~Model();
 
-	void Shutdown();
+	void terminate();
 
-	void AddMesh(Mesh3D* mesh);
-	void AddMaterial(Material* material);
+	void addMesh(Mesh3D* mesh);
+	void addMaterial(Material* material);
 
-	void UpdateMesh(int index, Mesh3D* mesh);
-	void UpdateMaterial(int index, Material* material);
+	void updateMesh(int index, Mesh3D* mesh);
+	void updateMaterial(int index, Material* material);
 
-	void ClearMeshes();
-	void ClearMaterials();
+	void clearMeshes();
+	void clearMaterials();
 
-	Mesh3D* GetMesh(int index = 0);
-	Material* GetMaterial(int index = 0);
+	Mesh3D* getMesh(int index = 0);
+	Material* getMaterial(int index = 0);
 
-	vector<Mesh3D*> GetAllMeshes() { return Meshes_; }
-	vector<Material*> GetAllMaterials() { return Materials_; }
+	vector<Mesh3D*> getAllMeshes() { return m_meshes; }
+	vector<Material*> getAllMaterials() { return m_materials; }
 
-	int GetMeshCount();
+	int getMeshCount();
 
 protected:
-	std::vector<Mesh3D*> Meshes_;
-	std::vector<Material*> Materials_;
+	std::vector<Mesh3D*> m_meshes;
+	std::vector<Material*> m_materials;
 };

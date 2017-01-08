@@ -3,12 +3,12 @@
 
 GameShader::GameShader()
 {
-	// Initialise pointers to 0
-	VertexShader_ = 0;
-	PixelShader_ = 0;
-	HullShader_ = 0;
-	DomainShader_ = 0;
-	Layout_ = 0;
+	// initialise pointers to 0
+	m_vertexShader = 0;
+	m_pixelShader = 0;
+	m_hullShader = 0;
+	m_domainShader = 0;
+	m_layout = 0;
 }
 
 GameShader::GameShader(const GameShader& other)
@@ -19,201 +19,201 @@ GameShader::~GameShader()
 {
 }
 
-bool GameShader::Initialise(HWND hwnd)
+bool GameShader::initialise(HWND hwnd)
 {
 	return true;
 }
 
-// Shutdown
-void GameShader::Shutdown()
+// terminate
+void GameShader::terminate()
 {
-	// Shutdown Shaders
-	if (VertexShader_)
+	// terminate Shaders
+	if (m_vertexShader)
 	{
-		VertexShader_->Release();
-		VertexShader_ = 0;
+		m_vertexShader->Release();
+		m_vertexShader = 0;
 	}
 
-	if (PixelShader_)
+	if (m_pixelShader)
 	{
-		PixelShader_->Release();
-		PixelShader_ = 0;
+		m_pixelShader->Release();
+		m_pixelShader = 0;
 	}
 
-	if (HullShader_)
+	if (m_hullShader)
 	{
-		HullShader_->Release();
-		HullShader_ = 0;
+		m_hullShader->Release();
+		m_hullShader = 0;
 	}
 
-	if (DomainShader_)
+	if (m_domainShader)
 	{
-		DomainShader_->Release();
-		DomainShader_ = 0;
+		m_domainShader->Release();
+		m_domainShader = 0;
 	}
 
-	// Shutdown InputManager Layout
-	if (Layout_)
+	// terminate InputManager Layout
+	if (m_layout)
 	{
-		Layout_->Release();
-		Layout_ = 0;
+		m_layout->Release();
+		m_layout = 0;
 	}
 
-	// Shutdown Sample States
-	if (!SampleStates_.empty())
+	// terminate Sample States
+	if (!m_samplerStates.empty())
 	{
-		for (unsigned int i = 0; i < SampleStates_.size(); i++)
+		for (unsigned int i = 0; i < m_samplerStates.size(); i++)
 		{
-			SampleStates_[i]->Release();
-			SampleStates_.erase(SampleStates_.begin() + i);
+			m_samplerStates[i]->Release();
+			m_samplerStates.erase(m_samplerStates.begin() + i);
 		}
 	}
 }
 
-// Rendering
-void GameShader::Render(int indexCount)
+// rendering
+void GameShader::render(int indexCount)
 {
-	// Set the vertex InputManager layout
-	DirectXManager::Instance()->GetDeviceContext()->IASetInputLayout(Layout_);
+	// set the vertex InputManager layout
+	DirectXManager::getInstance()->getDeviceContext()->IASetInputLayout(m_layout);
 
 	//=============
-	// Set Shaders
+	// set Shaders
 	//=============
 
 	// Base Shaders
-	DirectXManager::Instance()->GetDeviceContext()->VSSetShader(VertexShader_, NULL, 0);
-	DirectXManager::Instance()->GetDeviceContext()->PSSetShader(PixelShader_, NULL, 0);
+	DirectXManager::getInstance()->getDeviceContext()->VSSetShader(m_vertexShader, NULL, 0);
+	DirectXManager::getInstance()->getDeviceContext()->PSSetShader(m_pixelShader, NULL, 0);
 
 	// Hull and Domain if required, set to NULL if so the engine doesn't previous passed
-	if (HullShader_)
+	if (m_hullShader)
 	{
-		DirectXManager::Instance()->GetDeviceContext()->HSSetShader(HullShader_, NULL, 0);
+		DirectXManager::getInstance()->getDeviceContext()->HSSetShader(m_hullShader, NULL, 0);
 	}
 	else
 	{
-		DirectXManager::Instance()->GetDeviceContext()->HSSetShader(NULL, NULL, 0);
+		DirectXManager::getInstance()->getDeviceContext()->HSSetShader(NULL, NULL, 0);
 	}
 
-	if (DomainShader_)
+	if (m_domainShader)
 	{
-		DirectXManager::Instance()->GetDeviceContext()->DSSetShader(DomainShader_, NULL, 0);
+		DirectXManager::getInstance()->getDeviceContext()->DSSetShader(m_domainShader, NULL, 0);
 	}
 	else
 	{
-		DirectXManager::Instance()->GetDeviceContext()->DSSetShader(NULL, NULL, 0);
+		DirectXManager::getInstance()->getDeviceContext()->DSSetShader(NULL, NULL, 0);
 	}
 
 	//====================
-	// Set Sampler States
+	// set Sampler States
 	//====================
 
-	for (unsigned int i = 0; i < SampleStates_.size(); i++)
+	for (unsigned int i = 0; i < m_samplerStates.size(); i++)
 	{
-		DirectXManager::Instance()->GetDeviceContext()->PSSetSamplers(i, 1, &SampleStates_[i]);
+		DirectXManager::getInstance()->getDeviceContext()->PSSetSamplers(i, 1, &m_samplerStates[i]);
 	}
 
-	// Render the object
-	DirectXManager::Instance()->GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
+	// render the object
+	DirectXManager::getInstance()->getDeviceContext()->DrawIndexed(indexCount, 0, 0);
 
 	return;
 }
 
-void GameShader::Render(int vertexCount, int instanceCount)
+void GameShader::render(int vertexCount, int instanceCount)
 {
-	// Set the vertex InputManager layout
-	DirectXManager::Instance()->GetDeviceContext()->IASetInputLayout(Layout_);
+	// set the vertex InputManager layout
+	DirectXManager::getInstance()->getDeviceContext()->IASetInputLayout(m_layout);
 
 	//=============
-	// Set Shaders
+	// set Shaders
 	//=============
 
 	// Base Shaders
-	DirectXManager::Instance()->GetDeviceContext()->VSSetShader(VertexShader_, NULL, 0);
-	DirectXManager::Instance()->GetDeviceContext()->PSSetShader(PixelShader_, NULL, 0);
+	DirectXManager::getInstance()->getDeviceContext()->VSSetShader(m_vertexShader, NULL, 0);
+	DirectXManager::getInstance()->getDeviceContext()->PSSetShader(m_pixelShader, NULL, 0);
 
 	// Hull and Domain if required, set to NULL if so the engine doesn't previous passed
-	if (HullShader_)
+	if (m_hullShader)
 	{
-		DirectXManager::Instance()->GetDeviceContext()->HSSetShader(HullShader_, NULL, 0);
+		DirectXManager::getInstance()->getDeviceContext()->HSSetShader(m_hullShader, NULL, 0);
 	}
 	else
 	{
-		DirectXManager::Instance()->GetDeviceContext()->HSSetShader(NULL, NULL, 0);
+		DirectXManager::getInstance()->getDeviceContext()->HSSetShader(NULL, NULL, 0);
 	}
 
-	if (DomainShader_)
+	if (m_domainShader)
 	{
-		DirectXManager::Instance()->GetDeviceContext()->DSSetShader(DomainShader_, NULL, 0);
+		DirectXManager::getInstance()->getDeviceContext()->DSSetShader(m_domainShader, NULL, 0);
 	}
 	else
 	{
-		DirectXManager::Instance()->GetDeviceContext()->DSSetShader(NULL, NULL, 0);
+		DirectXManager::getInstance()->getDeviceContext()->DSSetShader(NULL, NULL, 0);
 	}
 
 	//====================
-	// Set Sampler States
+	// set Sampler States
 	//====================
 
-	for (unsigned int i = 0; i < SampleStates_.size(); i++)
+	for (unsigned int i = 0; i < m_samplerStates.size(); i++)
 	{
-		DirectXManager::Instance()->GetDeviceContext()->PSSetSamplers(i, 1, &SampleStates_[i]);
+		DirectXManager::getInstance()->getDeviceContext()->PSSetSamplers(i, 1, &m_samplerStates[i]);
 	}
 
-	// Render the object
-	DirectXManager::Instance()->GetDeviceContext()->DrawInstanced(vertexCount, instanceCount, 0, 0);
+	// render the object
+	DirectXManager::getInstance()->getDeviceContext()->DrawInstanced(vertexCount, instanceCount, 0, 0);
 
 	return;
 }
 
-bool GameShader::Prepare(Material* objMaterial, Transform* objTransform)
+bool GameShader::prepare(Material* objMaterial, Transform* objTransform)
 {
 	return true;
 }
 
-void GameShader::SetRenderMode(ProjectionMode projMode, ViewMode viewMode)
+void GameShader::setrenderMode(ProjectionMode projMode, ViewMode viewMode)
 {
-	DirectXManager::Instance()->GetWorldMatrix(MatrixBuffer_.world);
+	DirectXManager::getInstance()->getWorldMatrix(m_matrixBuffer.world);
 
 	switch (projMode)
 	{
 		case ProjectionMode::Perspective:
-			DirectXManager::Instance()->GetProjectionMatrix(MatrixBuffer_.projection);
+			DirectXManager::getInstance()->getProjectionMatrix(m_matrixBuffer.projection);
 			break;
 
 		case ProjectionMode::Orthographic:
-			DirectXManager::Instance()->GetOrthoMatrix(MatrixBuffer_.projection);
+			DirectXManager::getInstance()->getOrthoMatrix(m_matrixBuffer.projection);
 			break;
 	}
 
 	switch (viewMode)
 	{
 		case ViewMode::BaseView:
-			Camera::Instance()->Get2DViewMatrix(MatrixBuffer_.view);
+			Camera::getInstance()->get2DViewMatrix(m_matrixBuffer.view);
 			break;
 
 		case ViewMode::View:
-			Camera::Instance()->GetViewMatrix(MatrixBuffer_.view);
+			Camera::getInstance()->getViewMatrix(m_matrixBuffer.view);
 			break;
 
 		case ViewMode::Reflection:
-			Camera::Instance()->GetReflectionMatrix(MatrixBuffer_.view);
+			Camera::getInstance()->getReflectionMatrix(m_matrixBuffer.view);
 			break;
 	}
 
-	Camera::Instance()->GetReflectionMatrix(MatrixBuffer_.reflection);
+	Camera::getInstance()->getReflectionMatrix(m_matrixBuffer.reflection);
 }
 
 // Shader Management
-void GameShader::AddShader(string shaderName)
+void GameShader::addShader(string shaderName)
 {
-	ShaderFiles_.push_back(shaderName);
+	m_shaderFiles.push_back(shaderName);
 }
 
-void GameShader::AddLayout(LPCSTR semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot, UINT alignedByteOffset, D3D11_INPUT_CLASSIFICATION inputSlotClass, UINT instanceDataStepRate)
+void GameShader::addLayout(LPCSTR semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot, UINT alignedByteOffset, D3D11_INPUT_CLASSIFICATION inputSlotClass, UINT instanceDataStepRate)
 {
 	D3D11_INPUT_ELEMENT_DESC layoutDesc;
 
-	// Set up the description of the element
+	// set up the description of the element
 	layoutDesc.SemanticName = semanticName;
 	layoutDesc.SemanticIndex = semanticIndex;
 	layoutDesc.Format = format;
@@ -222,16 +222,16 @@ void GameShader::AddLayout(LPCSTR semanticName, UINT semanticIndex, DXGI_FORMAT 
 	layoutDesc.InputSlotClass = inputSlotClass;
 	layoutDesc.InstanceDataStepRate = instanceDataStepRate;
 	
-	LayoutElement_.push_back(layoutDesc);
+	m_inputElements.push_back(layoutDesc);
 }
 
-void GameShader::AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE AddressUVW, FLOAT MipLODBias, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC ComparisonFunc, D3DXVECTOR4 borderColor, FLOAT MinLOD, FLOAT MaxLOD)
+void GameShader::addSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE AddressUVW, FLOAT MipLODBias, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC ComparisonFunc, D3DXVECTOR4 borderColor, FLOAT MinLOD, FLOAT MaxLOD)
 {
 	HRESULT result;
 	D3D11_SAMPLER_DESC samplerDesc;
 	ID3D11SamplerState* samplerState;
 
-	// Create a description
+	// create a description
 	samplerDesc.Filter = Filter;
 	samplerDesc.AddressU = AddressUVW;
 	samplerDesc.AddressV = AddressUVW;
@@ -246,18 +246,18 @@ void GameShader::AddSamplerState(D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE
 	samplerDesc.MinLOD = MinLOD;
 	samplerDesc.MaxLOD = MaxLOD;
 
-	// Create the sampler state using the above description
-	result = DirectXManager::Instance()->GetDevice()->CreateSamplerState(&samplerDesc, &samplerState);
+	// create the sampler state using the above description
+	result = DirectXManager::getInstance()->getDevice()->CreateSamplerState(&samplerDesc, &samplerState);
 	if (FAILED(result))
 	{
-		OutputToDebug("Could not create sampler state");
+		outputToDebug("Could not create sampler state");
 	}
 
 	// Add to the vector
-	SampleStates_.push_back(samplerState);
+	m_samplerStates.push_back(samplerState);
 }
 
-bool GameShader::BuildShader(HWND hwnd)
+bool GameShader::buildShader(HWND hwnd)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;
@@ -268,7 +268,7 @@ bool GameShader::BuildShader(HWND hwnd)
 	D3D11_INPUT_ELEMENT_DESC* polygonLayout;
 	unsigned int numElements;
 
-	// Initialise the pointers to null
+	// initialise the pointers to null
 	errorMessage = 0;
 	vertexShaderBuffer = 0;
 	hullShaderBuffer = 0;
@@ -276,7 +276,7 @@ bool GameShader::BuildShader(HWND hwnd)
 	pixelShaderBuffer = 0;
 
 	// Make sure we have shader files to build
-	if (ShaderFiles_.empty())
+	if (m_shaderFiles.empty())
 	{
 		return false;
 	}
@@ -285,56 +285,56 @@ bool GameShader::BuildShader(HWND hwnd)
 	// Compile Shader
 	//================
 
-	for (unsigned int i = 0; i < ShaderFiles_.size(); i++)
+	for (unsigned int i = 0; i < m_shaderFiles.size(); i++)
 	{
 		// Find out the type and compile it
-		if (ShaderFiles_[i].find(".vs") != std::string::npos)
+		if (m_shaderFiles[i].find(".vs") != std::string::npos)
 		{
-			result = CompileShader(hwnd, ShaderFiles_[i], "VertexShaderMain", "vs_5_0", &vertexShaderBuffer);
+			result = compileShader(hwnd, m_shaderFiles[i], "VertexShaderMain", "vs_5_0", &vertexShaderBuffer);
 			if (FAILED(result))
 			{
 				return false;
 			}
-			result = DirectXManager::Instance()->GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &VertexShader_);
+			result = DirectXManager::getInstance()->getDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
 			if (FAILED(result))
 			{
 				return false;
 			}
 		}
-		else if (ShaderFiles_[i].find(".ps") != std::string::npos)
+		else if (m_shaderFiles[i].find(".ps") != std::string::npos)
 		{
-			result = CompileShader(hwnd, ShaderFiles_[i], "PixelShaderMain", "ps_5_0", &pixelShaderBuffer);
+			result = compileShader(hwnd, m_shaderFiles[i], "PixelShaderMain", "ps_5_0", &pixelShaderBuffer);
 			if (FAILED(result))
 			{
 				return false;
 			}
-			result = DirectXManager::Instance()->GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &PixelShader_);
+			result = DirectXManager::getInstance()->getDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
 			if (FAILED(result))
 			{
 				return false;
 			}
 		}
-		else if (ShaderFiles_[i].find(".hs") != std::string::npos)
+		else if (m_shaderFiles[i].find(".hs") != std::string::npos)
 		{
-			result = CompileShader(hwnd, ShaderFiles_[i], "HullShaderMain", "hs_5_0", &hullShaderBuffer);
+			result = compileShader(hwnd, m_shaderFiles[i], "HullShaderMain", "hs_5_0", &hullShaderBuffer);
 			if (FAILED(result))
 			{
 				return false;
 			}
-			result = DirectXManager::Instance()->GetDevice()->CreateHullShader(hullShaderBuffer->GetBufferPointer(), hullShaderBuffer->GetBufferSize(), NULL, &HullShader_);
+			result = DirectXManager::getInstance()->getDevice()->CreateHullShader(hullShaderBuffer->GetBufferPointer(), hullShaderBuffer->GetBufferSize(), NULL, &m_hullShader);
 			if (FAILED(result))
 			{
 				return false;
 			}
 		}
-		else if (ShaderFiles_[i].find(".ds") != std::string::npos)
+		else if (m_shaderFiles[i].find(".ds") != std::string::npos)
 		{
-			result = CompileShader(hwnd, ShaderFiles_[i], "DomainShaderMain", "ds_5_0", &domainShaderBuffer);
+			result = compileShader(hwnd, m_shaderFiles[i], "DomainShaderMain", "ds_5_0", &domainShaderBuffer);
 			if (FAILED(result))
 			{
 				return false;
 			}
-			result = DirectXManager::Instance()->GetDevice()->CreateDomainShader(domainShaderBuffer->GetBufferPointer(), domainShaderBuffer->GetBufferSize(), NULL, &DomainShader_);
+			result = DirectXManager::getInstance()->getDevice()->CreateDomainShader(domainShaderBuffer->GetBufferPointer(), domainShaderBuffer->GetBufferSize(), NULL, &m_domainShader);
 			if (FAILED(result))
 			{
 				return false;
@@ -343,27 +343,27 @@ bool GameShader::BuildShader(HWND hwnd)
 	}
 
 	//=======================
-	// Create Polygon Layout
+	// create Polygon Layout
 	//=======================
 
-	if (LayoutElement_.empty())
+	if (m_inputElements.empty())
 	{
 		return false;
 	}
 
 	// Access how many layout settings we have
-	numElements = LayoutElement_.size();
+	numElements = m_inputElements.size();
 
-	// Create the layout description
+	// create the layout description
 	polygonLayout = new D3D11_INPUT_ELEMENT_DESC[numElements];
 
-	for (unsigned int i = 0; i < LayoutElement_.size(); i++)
+	for (unsigned int i = 0; i < m_inputElements.size(); i++)
 	{
-		polygonLayout[i] = LayoutElement_[i];
+		polygonLayout[i] = m_inputElements[i];
 	}
 	
-	// Create the vertex input layout
-	result = DirectXManager::Instance()->GetDevice()->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &Layout_);
+	// create the vertex input layout
+	result = DirectXManager::getInstance()->getDevice()->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &m_layout);
 	if (FAILED(result))
 	{
 		return false;
@@ -397,64 +397,64 @@ bool GameShader::BuildShader(HWND hwnd)
 		domainShaderBuffer = 0;
 	}
 
-	ShaderFiles_.clear();
-	LayoutElement_.clear();
+	m_shaderFiles.clear();
+	m_inputElements.clear();
 
 	return true;
 }
 
-void GameShader::SendBuffersToShader()
+void GameShader::sendBuffersToShader()
 {
 	// Vertex Shader
-	if (!VertexBuffers_.empty())
+	if (!m_vertexBuffers.empty())
 	{
-		for (unsigned int i = 0; i < VertexBuffers_.size(); i++)
+		for (unsigned int i = 0; i < m_vertexBuffers.size(); i++)
 		{
-			VertexBuffers_[i]->SendToRender(VertexShader, i);
+			m_vertexBuffers[i]->submit(VertexShader, i);
 		}
 	}
 
 	// Pixel Shader
-	if (!PixelBuffers_.empty())
+	if (!m_pixelBuffers.empty())
 	{
-		for (unsigned int i = 0; i < PixelBuffers_.size(); i++)
+		for (unsigned int i = 0; i < m_pixelBuffers.size(); i++)
 		{
-			PixelBuffers_[i]->SendToRender(PixelShader, i);
+			m_pixelBuffers[i]->submit(PixelShader, i);
 		}
 	}
 
 	// Hull Shader
-	if (!HullBuffers_.empty())
+	if (!m_hullBuffers.empty())
 	{
-		for (unsigned int i = 0; i < HullBuffers_.size(); i++)
+		for (unsigned int i = 0; i < m_hullBuffers.size(); i++)
 		{
-			HullBuffers_[i]->SendToRender(HullShader, i);
+			m_hullBuffers[i]->submit(HullShader, i);
 		}
 	}
 
 	// Domain Shader
-	if (!DomainBuffers_.empty())
+	if (!m_domainBuffers.empty())
 	{
-		for (unsigned int i = 0; i < DomainBuffers_.size(); i++)
+		for (unsigned int i = 0; i < m_domainBuffers.size(); i++)
 		{
-			DomainBuffers_[i]->SendToRender(DomainShader, i);
+			m_domainBuffers[i]->submit(DomainShader, i);
 		}
 	}
 }
 
-void GameShader::SendTextureToShader(int shaderSlot, ID3D11ShaderResourceView* shaderTexture)
+void GameShader::sendTextureToShader(int shaderSlot, ID3D11ShaderResourceView* shaderTexture)
 {
 	// Send the texture to the shader
-	DirectXManager::Instance()->GetDeviceContext()->PSSetShaderResources(shaderSlot, 1, &shaderTexture);
+	DirectXManager::getInstance()->getDeviceContext()->PSSetShaderResources(shaderSlot, 1, &shaderTexture);
 }
 
-HRESULT GameShader::CompileShader(HWND hwnd, string filename, LPCSTR EntryPoint, LPCSTR Version, ID3D10Blob** Buffer)
+HRESULT GameShader::compileShader(HWND hwnd, string filename, LPCSTR EntryPoint, LPCSTR Version, ID3D10Blob** Buffer)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;
 	std::wstring output;
 	
-	// Create the full extension
+	// create the full extension
 	string compiledFilename = Directory::Shader + filename;
 
 	// Add the shader directory to the filename
@@ -469,7 +469,7 @@ HRESULT GameShader::CompileShader(HWND hwnd, string filename, LPCSTR EntryPoint,
 		if (errorMessage)
 		{
 			// Output the error message to a text file
-			OutputShaderErrorMessage(errorMessage, hwnd, output.c_str());
+			outputShaderErrorMessage(errorMessage, hwnd, output.c_str());
 		}
 		else
 		{
@@ -484,16 +484,16 @@ HRESULT GameShader::CompileShader(HWND hwnd, string filename, LPCSTR EntryPoint,
 }
 
 // Error Handling
-void GameShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, const WCHAR* shaderFilename)
+void GameShader::outputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, const WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long bufferSize, i;
 	ofstream fout;
 
-	// Get a pointer to the error message text buffer
+	// get a pointer to the error message text buffer
 	compileErrors = (char*)(errorMessage->GetBufferPointer());
 
-	// Get the length of the message.
+	// get the length of the message.
 	bufferSize = errorMessage->GetBufferSize();
 
 	// Open a file to write the error message to.

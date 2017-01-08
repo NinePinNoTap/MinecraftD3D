@@ -3,12 +3,12 @@
 
 Texture::Texture()
 {
-	// Initialise pointers
-	RenderTargetTexture_ = 0;
-	RenderTargetView_ = 0;
-	Texture_ = 0;
-	DepthStencilBuffer_ = 0;
-	DepthStencilView_ = 0;
+	// initialise pointers
+	m_renderTargetTexture = 0;
+	m_renderTargetView = 0;
+	m_texture = 0;
+	m_depthStencilBuffer = 0;
+	m_depthStencilView = 0;
 }
 
 Texture::Texture(const Texture& other)
@@ -20,15 +20,15 @@ Texture::~Texture()
 }
 
 // Initialising
-bool Texture::Initialise(string filename)
+bool Texture::initialise(string filename)
 {
 	HRESULT result;
 
 	// Convert to correct format
 	std::wstring textureFilename = std::wstring(filename.begin(), filename.end());
 
-	// Load the texture in
-	result = D3DX11CreateShaderResourceViewFromFile(DirectXManager::Instance()->GetDevice(), textureFilename.c_str(), NULL, NULL, &Texture_, NULL);
+	// onload the texture in
+	result = D3DX11CreateShaderResourceViewFromFile(DirectXManager::getInstance()->getDevice(), textureFilename.c_str(), NULL, NULL, &m_texture, NULL);
 	if (FAILED(result))
 	{
 		return false;
@@ -37,7 +37,7 @@ bool Texture::Initialise(string filename)
 	return true;
 }
 
-bool Texture::Initialise(Rect2D textureResolution)
+bool Texture::initialise(Rect2D textureResolution)
 {
 	D3D11_TEXTURE2D_DESC textureDesc;
 	HRESULT result;
@@ -47,10 +47,10 @@ bool Texture::Initialise(Rect2D textureResolution)
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 	float aspectRatio;
 
-	// Initialise the render target texture description.
+	// initialise the render target texture description.
 	ZeroMemory(&textureDesc, sizeof(textureDesc));
 
-	// Setup the render target texture description.
+	// setup the render target texture description.
 	textureDesc.Width = textureResolution.width;
 	textureDesc.Height = textureResolution.height;
 	textureDesc.MipLevels = 1;
@@ -62,42 +62,42 @@ bool Texture::Initialise(Rect2D textureResolution)
 	textureDesc.CPUAccessFlags = 0;
     textureDesc.MiscFlags = 0;
 
-	// Create the render target texture.
-	result = DirectXManager::Instance()->GetDevice()-> CreateTexture2D(&textureDesc, NULL, &RenderTargetTexture_);
+	// create the render target texture.
+	result = DirectXManager::getInstance()->getDevice()-> CreateTexture2D(&textureDesc, NULL, &m_renderTargetTexture);
 	if(FAILED(result))
 	{
 		return false;
 	}
 
-	// Setup the description of the render target view.
+	// setup the description of the render target view.
 	renderTargetViewDesc.Format = textureDesc.Format;
 	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
-	// Create the render target view.
-	result = DirectXManager::Instance()->GetDevice() -> CreateRenderTargetView(RenderTargetTexture_, &renderTargetViewDesc, &RenderTargetView_);
+	// create the render target view.
+	result = DirectXManager::getInstance()->getDevice()->CreateRenderTargetView(m_renderTargetTexture, &renderTargetViewDesc, &m_renderTargetView);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Setup the description of the shader resource view.
+	// setup the description of the shader resource view.
 	shaderResourceViewDesc.Format = textureDesc.Format;
 	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
 	shaderResourceViewDesc.Texture2D.MipLevels = 1;
 
-	// Create the shader resource view.
-	result = DirectXManager::Instance()->GetDevice()->CreateShaderResourceView(RenderTargetTexture_, &shaderResourceViewDesc, &Texture_);
+	// create the shader resource view.
+	result = DirectXManager::getInstance()->getDevice()->CreateShaderResourceView(m_renderTargetTexture, &shaderResourceViewDesc, &m_texture);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Initialise the description of the depth buffer.
+	// initialise the description of the depth buffer.
 	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
 
-	// Set up the description of the depth buffer.
+	// set up the description of the depth buffer.
 	depthBufferDesc.Width = textureResolution.width;
 	depthBufferDesc.Height = textureResolution.height;
 	depthBufferDesc.MipLevels = 1;
@@ -110,8 +110,8 @@ bool Texture::Initialise(Rect2D textureResolution)
 	depthBufferDesc.CPUAccessFlags = 0;
 	depthBufferDesc.MiscFlags = 0;
 
-	// Create the texture for the depth buffer using the filled out description.
-	result = DirectXManager::Instance()->GetDevice()->CreateTexture2D(&depthBufferDesc, NULL, &DepthStencilBuffer_);
+	// create the texture for the depth buffer using the filled out description.
+	result = DirectXManager::getInstance()->getDevice()->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
 	if (FAILED(result))
 	{
 		return false;
@@ -120,109 +120,109 @@ bool Texture::Initialise(Rect2D textureResolution)
 	// Initailze the depth stencil view description.
 	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
 
-	// Set up the depth stencil view description.
+	// set up the depth stencil view description.
 	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-	// Create the depth stencil view.
-	result = DirectXManager::Instance()->GetDevice() -> CreateDepthStencilView(DepthStencilBuffer_, &depthStencilViewDesc, &DepthStencilView_);
+	// create the depth stencil view.
+	result = DirectXManager::getInstance()->getDevice()->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Setup the viewport for rendering.
-	Viewport_.Width = (float)textureResolution.width;
-	Viewport_.Height = (float)textureResolution.height;
-    Viewport_.MinDepth = 0.0f;
-    Viewport_.MaxDepth = 1.0f;
-    Viewport_.TopLeftX = 0.0f;
-    Viewport_.TopLeftY = 0.0f;
+	// setup the viewport for rendering.
+	m_viewport.Width = (float)textureResolution.width;
+	m_viewport.Height = (float)textureResolution.height;
+    m_viewport.MinDepth = 0.0f;
+    m_viewport.MaxDepth = 1.0f;
+    m_viewport.TopLeftX = 0.0f;
+    m_viewport.TopLeftY = 0.0f;
 
 	aspectRatio = ((float)textureResolution.width / (float)textureResolution.height);
 
-	// Setup the projection matrix.
-	D3DXMatrixPerspectiveFovLH(&ProjectionMatrix_, ((float)D3DX_PI / 4.0f), aspectRatio, Rendering::NearClipPlane, Rendering::FarClipPlane);
+	// setup the projection matrix.
+	D3DXMatrixPerspectiveFovLH(&m_projectionMatrix, ((float)D3DX_PI / 4.0f), aspectRatio, rendering::NearClipPlane, rendering::FarClipPlane);
 
-	// Create an orthographic projection matrix for 2D rendering.
-	D3DXMatrixOrthoLH(&OrthoMatrix_, (float)textureResolution.width, (float)textureResolution.height, Rendering::NearClipPlane, Rendering::FarClipPlane);
+	// create an orthographic projection matrix for 2D rendering.
+	D3DXMatrixOrthoLH(&m_orthoMatrix, (float)textureResolution.width, (float)textureResolution.height, rendering::NearClipPlane, rendering::FarClipPlane);
 
 	return true;
 }
 
-// Shutdown
-void Texture::Shutdown()
+// terminate
+void Texture::terminate()
 {
-	if(DepthStencilView_)
+	if(m_depthStencilView)
 	{
-		DepthStencilView_ -> Release();
-		DepthStencilView_ = 0;
+		m_depthStencilView->Release();
+		m_depthStencilView = 0;
 	}
 
-	if(DepthStencilBuffer_)
+	if(m_depthStencilBuffer)
 	{
-		DepthStencilBuffer_ -> Release();
-		DepthStencilBuffer_ = 0;
+		m_depthStencilBuffer->Release();
+		m_depthStencilBuffer = 0;
 	}
 
-	if(Texture_)
+	if(m_texture)
 	{
-		Texture_ -> Release();
-		Texture_ = 0;
+		m_texture->Release();
+		m_texture = 0;
 	}
 
-	if(RenderTargetView_)
+	if(m_renderTargetView)
 	{
-		RenderTargetView_ -> Release();
-		RenderTargetView_ = 0;
+		m_renderTargetView->Release();
+		m_renderTargetView = 0;
 	}
 
-	if(RenderTargetTexture_)
+	if(m_renderTargetTexture)
 	{
-		RenderTargetTexture_ -> Release();
-		RenderTargetTexture_ = 0;
+		m_renderTargetTexture->Release();
+		m_renderTargetTexture = 0;
 	}
 
 	return;
 }
 
-void Texture::SetRenderTarget()
+void Texture::setRenderTarget()
 {
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
-	DirectXManager::Instance()->GetDeviceContext()->OMSetRenderTargets(1, &RenderTargetView_, DepthStencilView_);
+	DirectXManager::getInstance()->getDeviceContext()->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
 	
-	// Set the viewport.
-	DirectXManager::Instance()->GetDeviceContext()->RSSetViewports(1, &Viewport_);
+	// set the viewport.
+	DirectXManager::getInstance()->getDeviceContext()->RSSetViewports(1, &m_viewport);
 	
 	return;
 }
 
-void Texture::ClearRenderTarget(D3DXVECTOR4 clearColour)
+void Texture::clearRenderTarget(D3DXVECTOR4 clearColour)
 {
 	// Clear the back buffer to the colour
-	DirectXManager::Instance()->GetDeviceContext()->ClearRenderTargetView(RenderTargetView_, clearColour);
+	DirectXManager::getInstance()->getDeviceContext()->ClearRenderTargetView(m_renderTargetView, clearColour);
     
 	// Clear the depth buffer
-	DirectXManager::Instance()->GetDeviceContext()->ClearDepthStencilView(DepthStencilView_, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	DirectXManager::getInstance()->getDeviceContext()->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	return;
 }
 
-// Getters
-ID3D11ShaderResourceView* Texture::GetTexture()
+// getters
+ID3D11ShaderResourceView* Texture::getTexture()
 {
-	return Texture_;
+	return m_texture;
 }
 
-void Texture::GetProjectionMatrix(D3DXMATRIX& projectionMatrix)
+void Texture::getProjectionMatrix(D3DXMATRIX& projectionMatrix)
 {
-	projectionMatrix = ProjectionMatrix_;
+	projectionMatrix = m_projectionMatrix;
 	return;
 }
 
-void Texture::GetOrthoMatrix(D3DXMATRIX& orthoMatrix)
+void Texture::getOrthoMatrix(D3DXMATRIX& orthoMatrix)
 {
-	orthoMatrix = OrthoMatrix_;
+	orthoMatrix = m_orthoMatrix;
 	return;
 }

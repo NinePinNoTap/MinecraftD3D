@@ -24,22 +24,22 @@ public:
 	~Font();
 
 	// Initialising
-	bool Initialise(const string fontFilename, int letterCount);
+	bool initialise(const string fontFilename, int letterCount);
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 	
 	// Building
-	void BuildVertexArray(VertexData* vertices, string sentence, float drawX, float drawY);
+	void buildVertexArray(VertexData* vertices, string sentence, float drawX, float drawY);
 
-	// Getter
-	float GetRenderSize(string text);
+	// getter
+	float getRenderLength(string text);
 
 private:
 	// Font Data
-	FontType* Font_;
+	FontType* m_font;
 	
-	bool Result_;
+	bool m_result;
 };
 
 

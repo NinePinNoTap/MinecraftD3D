@@ -10,14 +10,14 @@ public:
 	AudioTrigger();
 	~AudioTrigger();
 
-	void Initialise(char* filename, float volume, D3DXVECTOR3 Position, Rect3D box);
+	void initialise(char* filename, float volume, D3DXVECTOR3 Position, Rect3D box);
 
-	void Frame(D3DXVECTOR3 CameraPosition);
+	void update(D3DXVECTOR3 CameraPosition);
 
 private:
-	AudioClip* Clip_;
-	BoundingBox BoundingBox_;
-	bool Activated_;
+	AudioClip* m_clip;
+	BoundingBox m_boundingBox;
+	bool m_activated;
 };
 
 

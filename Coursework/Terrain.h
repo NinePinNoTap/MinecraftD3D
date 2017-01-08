@@ -8,7 +8,7 @@
 #include "Texture.h"
 #include "TerrainFactory.h"
 
-enum TerrainType { FLAT, PERLIN };
+enum TerrainType { FlatTerrain, PerlinTerrain };
 
 class Terrain : public GameObject
 {
@@ -17,8 +17,8 @@ public:
 	Terrain(const Terrain&);
 	~Terrain();
 
-	// Initialise
-	bool Initialise(Rect3D terrainSize, TerrainType type, string textureFilename, string normalTextureFilename, Vector2 textureRepeat, float terrainScale = 1.0f, float terrainSmoothing = 1.0f);
+	// initialise
+	bool initialise(Rect3D terrainSize, TerrainType type, string textureFilename, string normalTextureFilename, Vector2 textureRepeat, float terrainScale = 1.0f, float terrainSmoothing = 1.0f);
 };
 
 

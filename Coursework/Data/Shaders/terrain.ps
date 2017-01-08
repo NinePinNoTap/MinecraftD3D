@@ -36,7 +36,7 @@ float4 PixelShaderMain(PixelInputType input) : SV_TARGET
 	float4 lightColor;
 	float diffuseColor;
 
-	// Create lighting
+	// create lighting
 	lightColor = lightAmbientColor;
 	lightIntensity1 = saturate(dot(input.normal, input.lightPos));
 	lightColor += (lightDiffuseColor * lightIntensity1);

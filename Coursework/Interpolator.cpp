@@ -8,48 +8,48 @@ Interpolator::~Interpolator()
 {
 }
 
-void Interpolator::Start(D3DXVECTOR3 start, D3DXVECTOR3 end, float speed, float frames)
+void Interpolator::begin(D3DXVECTOR3 start, D3DXVECTOR3 end, float speed, float frames)
 {
 	// Store start / end positions
-	Current_ = start;
-	Finish_ = end;
+	m_current = start;
+	m_finish = end;
 
-	// Movement
-	Speed_ = speed;
+	// movement
+	m_speed = speed;
 
 	// Counters
-	Frame_ = 0;
-	TotalFrames_ = frames;
+	m_frame = 0;
+	m_totalFrames = frames;
 
 	// Flags
-	Finished_ = false;
+	m_finished = false;
 }
 
-D3DXVECTOR3 Interpolator::Frame()
+D3DXVECTOR3 Interpolator::update()
 {
-	// Move to next frame
-	Frame_ += Speed_;
+	// move to next frame
+	m_frame += m_speed;
 
 	// Calculate the percentage we are at
-	float t = Frame_ / TotalFrames_;
+	float t = m_frame / m_totalFrames;
 
 	// Calculate the distance before we reach the target
-	float DistanceLeft = Distance(Current_, Finish_);
+	float DistanceLeft = distance(m_current, m_finish);
 
-	// Round to 1 decimal place to stop e numbers
-	Round(DistanceLeft, 1);
+	// round to 1 decimal place to stop e numbers
+	roundFloat(DistanceLeft, 1);
 
 	// Check if we have reached the target
 	if (DistanceLeft == 0)
-		Finished_ = true;
+		m_finished = true;
 
 	// Interpolate towards target
-	Current_ = Finish_*t + Current_*(1.0f - t);
+	m_current = m_finish*t + m_current*(1.0f - t);
 
-	return Current_;
+	return m_current;
 }
 
-bool Interpolator::Finished()
+bool Interpolator::isComplete()
 {
-	return Finished_;
+	return m_finished;
 }

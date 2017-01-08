@@ -13,132 +13,132 @@ Model::~Model()
 {
 }
 
-void Model::Shutdown()
+void Model::terminate()
 {
-	// Shutdown meshes
-	if (Meshes_.size() > 0)
+	// terminate meshes
+	if (m_meshes.size() > 0)
 	{
-		for (unsigned int i = 0; i < Meshes_.size(); i++)
+		for (unsigned int i = 0; i < m_meshes.size(); i++)
 		{
-			if (Meshes_[i])
+			if (m_meshes[i])
 			{
-				Meshes_[i]->Shutdown();
-				delete Meshes_[i];
-				Meshes_[i] = 0;
+				m_meshes[i]->terminate();
+				delete m_meshes[i];
+				m_meshes[i] = 0;
 			}
 		}
 
-		Meshes_.clear();
+		m_meshes.clear();
 	}
 
-	// Shutdown materials
-	if (Materials_.size() > 0)
+	// terminate materials
+	if (m_materials.size() > 0)
 	{
-		for (unsigned int i = 0; i < Materials_.size(); i++)
+		for (unsigned int i = 0; i < m_materials.size(); i++)
 		{
-			if (Materials_[i])
+			if (m_materials[i])
 			{
-				Materials_[i]->Shutdown();
-				delete Materials_[i];
-				Materials_[i] = 0;
+				m_materials[i]->terminate();
+				delete m_materials[i];
+				m_materials[i] = 0;
 			}
 		}
 
-		Materials_.clear();
+		m_materials.clear();
 	}
 }
 
-void Model::AddMesh(Mesh3D* mesh)
+void Model::addMesh(Mesh3D* mesh)
 {
-	Meshes_.push_back(mesh);
+	m_meshes.push_back(mesh);
 }
 
-void Model::AddMaterial(Material* material)
+void Model::addMaterial(Material* material)
 {
-	Materials_.push_back(material);
+	m_materials.push_back(material);
 }
 
-void Model::UpdateMesh(int index, Mesh3D* mesh)
+void Model::updateMesh(int index, Mesh3D* mesh)
 {
 	// Check if we can access the element
-	if (index >= Meshes_.size())
+	if (index >= m_meshes.size())
 	{
-		Meshes_.push_back(mesh);
+		m_meshes.push_back(mesh);
 		return;
 	}
 
 	// Delete Old Mesh
-	Meshes_[index]->Shutdown();
-	Meshes_[index] = 0;
+	m_meshes[index]->terminate();
+	m_meshes[index] = 0;
 
 	// Add New Mesh
-	Meshes_[index] = mesh;
+	m_meshes[index] = mesh;
 }
 
-void Model::UpdateMaterial(int index, Material* material)
+void Model::updateMaterial(int index, Material* material)
 {
 	// Make sure we have materials to update
-	if (Materials_.empty())
+	if (m_materials.empty())
 	{
 		// Add material
-		Materials_.push_back(material);
+		m_materials.push_back(material);
 		return;
 	}
 
 	// Make sure the index isn't out of range
-	if (index >= Materials_.size())
+	if (index >= m_materials.size())
 	{
 		// Add material
-		Materials_.push_back(material);
+		m_materials.push_back(material);
 		return;
 	}
 
 	// Delete Old Mesh
-	delete Materials_[index];
-	Materials_[index] = 0;
+	delete m_materials[index];
+	m_materials[index] = 0;
 
 	// Add New Mesh
-	Materials_[index] = material;
+	m_materials[index] = material;
 }
 
-void Model::ClearMeshes()
+void Model::clearMeshes()
 {
 	// Clean Up
-	for (unsigned int i = 0; i < Meshes_.size(); i++)
+	for (unsigned int i = 0; i < m_meshes.size(); i++)
 	{
-		Meshes_[i]->Shutdown();
-		delete Meshes_[i];
-		Meshes_[i] = 0;
+		m_meshes[i]->terminate();
+		delete m_meshes[i];
+		m_meshes[i] = 0;
 	}
 
-	Meshes_.clear();
+	m_meshes.clear();
 }
 
-void Model::ClearMaterials()
+void Model::clearMaterials()
 {
 	// Clean Up
-	for (unsigned int i = 0; i < Meshes_.size(); i++)
+	for (unsigned int i = 0; i < m_meshes.size(); i++)
 	{
-		delete Materials_[i];
-		Materials_[i] = 0;
+		delete m_materials[i];
+		m_materials[i] = 0;
 	}
 
-	Materials_.clear();
+	m_materials.clear();
 }
 
-Mesh3D* Model::GetMesh(int index)
+Mesh3D* Model::getMesh(int index)
 {
-	return Meshes_[index];
+	return m_meshes[index];
 }
 
-Material* Model::GetMaterial(int index)
+Material* Model::getMaterial(int index)
 {
-	Clamp(index, 0, Materials_.size() - 1);
+	clamp(index, 0, m_materials.size() - 1);
 
-	return Materials_[index];
+	return m_materials[index];
 }
 
-int Model::GetMeshCount()
+int Model::getMeshCount()
 {
-	return Meshes_.size();
+	return m_meshes.size();
 }

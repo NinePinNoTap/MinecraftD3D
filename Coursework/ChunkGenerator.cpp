@@ -9,66 +9,66 @@ ChunkGenerator::~ChunkGenerator()
 {
 }
 
-void ChunkGenerator::AddLayer(TerrainLayer terrainLayer)
+void ChunkGenerator::addLayer(TerrainLayer terrainLayer)
 {
-	Layers_.push_back(terrainLayer);
+	m_layers.push_back(terrainLayer);
 }
 
-void ChunkGenerator::GenerateChunk(Chunk& chunk)
+void ChunkGenerator::generateChunk(Chunk& chunk)
 {
 	// Make sure we have layers to work with
-	if (Layers_.empty())
+	if (m_layers.empty())
 	{
 		// Add default layers
-		Layers_.push_back(TerrainLayer("Layer 1", "bedrock", 1, 1, 1, 1, LayerType::Additive));
-		Layers_.push_back(TerrainLayer("Layer 2", "stone", 1, 1, 1, 1, LayerType::Additive));
-		Layers_.push_back(TerrainLayer("Layer 3", "dirt", 1, 1, 1, 1, LayerType::Additive));
-		OutputToDebug("No layers found. Creating default terrain.");
+		m_layers.push_back(TerrainLayer("Layer 1", "bedrock", 1, 1, 1, 1, LayerType::Additive));
+		m_layers.push_back(TerrainLayer("Layer 2", "stone", 1, 1, 1, 1, LayerType::Additive));
+		m_layers.push_back(TerrainLayer("Layer 3", "dirt", 1, 1, 1, 1, LayerType::Additive));
+		outputToDebug("No layers found. Creating default terrain.");
 	}
 
 	//==================
-	// Generate Terrain
+	// generate Terrain
 	//==================
 
-	for (int x = chunk.GetPosition().x; x < chunk.GetPosition().x + World::ChunkSize; x++)
+	for (int x = chunk.getPosition().x; x < chunk.getPosition().x + World::ChunkSize; x++)
 	{
-		for (int z = chunk.GetPosition().z; z < chunk.GetPosition().z + World::ChunkSize; z++)
+		for (int z = chunk.getPosition().z; z < chunk.getPosition().z + World::ChunkSize; z++)
 		{
-			GenerateColumn(&chunk, x, z);
+			generateColumn(&chunk, x, z);
 		}
 	}
 }
 
-void ChunkGenerator::GenerateColumn(Chunk* chunk, int x, int z)
+void ChunkGenerator::generateColumn(Chunk* chunk, int x, int z)
 {
 	int currentHeight;
 
-	// Set the starting height we will work with
+	// set the starting height we will work with
 	currentHeight = 0;
 
 	// Loop through and generate terrain using layers
-	for (unsigned int i = 0; i < Layers_.size(); i++)
+	for (unsigned int i = 0; i < m_layers.size(); i++)
 	{
-		if (Layers_[i].blockName == "air")
+		if (m_layers[i].blockName == "air")
 		{
-			GenerateCave(chunk, x, z, currentHeight);
+			generateCave(chunk, x, z, currentHeight);
 		}
 		else
 		{
-			GenerateLayer(chunk, Layers_[i], x, z, currentHeight);
+			generateLayer(chunk, m_layers[i], x, z, currentHeight);
 		}
 	}
 }
 
-void ChunkGenerator::GenerateLayer(Chunk* chunk, TerrainLayer terrainLayer, int x, int z, int& currentHeight)
+void ChunkGenerator::generateLayer(Chunk* chunk, TerrainLayer terrainLayer, int x, int z, int& currentHeight)
 {
 	int maxHeight;
 	int baseNoise;
 	D3DXVECTOR3 blockLocal;
 	Block* currentTarget;
 
-	// Generate noise using layer settings
-	baseNoise = GetNoise(x, 0, z, terrainLayer.frequency, terrainLayer.amplitude, terrainLayer.exponent);
+	// generate noise using layer settings
+	baseNoise = getNoise(x, 0, z, terrainLayer.frequency, terrainLayer.amplitude, terrainLayer.exponent);
 
 	//=============================
 	// Define Maximum Layer Height
@@ -86,35 +86,35 @@ void ChunkGenerator::GenerateLayer(Chunk* chunk, TerrainLayer terrainLayer, int 
 	}
 
 	//======================
-	// Create Terrain Layer
+	// create Terrain Layer
 	//======================
 
 	for (float y = currentHeight; y < maxHeight; y++)
 	{
 		// Calculate its local position in the chunk
-		blockLocal = D3DXVECTOR3(x, y, z) - chunk->GetPosition();
+		blockLocal = D3DXVECTOR3(x, y, z) - chunk->getPosition();
 
-		// Update the block
-		currentTarget = chunk->GetBlock(blockLocal.x, blockLocal.y, blockLocal.z);
+		// update the block
+		currentTarget = chunk->getBlock(blockLocal.x, blockLocal.y, blockLocal.z);
 		if (currentTarget)
 		{
-			currentTarget->CopyFrom(World::Blocks[terrainLayer.blockName]);
+			currentTarget->clone(World::Blocks[terrainLayer.blockName]);
 		}
 	}
 
-	// Update returned value
+	// update returned value
 	currentHeight = maxHeight;
 }
 
-void ChunkGenerator::GenerateCave(Chunk* chunk, int x, int z, int& currentHeight)
+void ChunkGenerator::generateCave(Chunk* chunk, int x, int z, int& currentHeight)
 {
 	Block* currentTarget;
 	D3DXVECTOR3 blockLocal;
 	int caveBottom, caveHeight;
 	
 	// Calculate noise height
-	caveBottom = GetNoise(x, -1000, z, 500, 70, 1);
-	caveHeight = caveBottom + GetNoise(x, 1000, z, 50, 35, 1) - 17;
+	caveBottom = getNoise(x, -1000, z, 500, 70, 1);
+	caveHeight = caveBottom + getNoise(x, 1000, z, 50, 35, 1) - 17;
 
 	if (caveHeight > caveBottom)
 	{
@@ -124,13 +124,13 @@ void ChunkGenerator::GenerateCave(Chunk* chunk, int x, int z, int& currentHeight
 		for (int y = caveBottom; y < caveTop; y++)
 		{
 			// Calculate its local position in the chunk
-			blockLocal = D3DXVECTOR3(x, y, z) - chunk->GetPosition();
+			blockLocal = D3DXVECTOR3(x, y, z) - chunk->getPosition();
 
-			// Update the block
-			currentTarget = chunk->GetBlock(blockLocal.x, blockLocal.y, blockLocal.z);
+			// update the block
+			currentTarget = chunk->getBlock(blockLocal.x, blockLocal.y, blockLocal.z);
 			if (currentTarget)
 			{
-				currentTarget->CopyFrom(World::Blocks["air"]);
+				currentTarget->clone(World::Blocks["air"]);
 			}
 		}
 

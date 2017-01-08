@@ -37,42 +37,42 @@ public:
 	~Text();
 
 	// Initialising
-	bool Initialise(HWND hwnd, string fontName, string fontTexture, int letterCount);
+	bool initialise(HWND hwnd, string fontName, string fontTexture, int letterCount);
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 
 	// Text Creation
-	void CreateText(string text, Vector2 position, D3DXVECTOR4 colour, Alignment align = LEFT);
+	void createText(string text, Vector2 position, D3DXVECTOR4 colour, Alignment align = LEFT);
 
-	// Rendering
-	bool Render();
+	// rendering
+	bool render();
 
 	// Updating
-	bool SetText(int ID, string text);
-	bool SetValue(int ID, float value);
-	bool SetPosition(int ID, Vector2 position);
-	void SetColour(int ID, D3DXVECTOR4 colour);
-	void DisableValue(int ID);
+	bool setText(int ID, string text);
+	bool setValue(int ID, float value);
+	bool setPosition(int ID, Vector2 position);
+	void setColour(int ID, D3DXVECTOR4 colour);
+	void disableValue(int ID);
 
 private:
-	bool BuildSentence(SentenceType sentence);
-	bool PrepareSentence(int index);
+	bool buildSentence(SentenceType sentence);
+	bool prepareSentence(int index);
 
 	// Window Size
-	Rect2D WindowResolution_;
+	Rect2D m_windowResolution;
 
 	// Font Data
-	Font* Font_;
+	Font* m_font;
 
 	// Model
-	Model* Model_;
-	Material* FontMaterial_;
-	GameShader* Shader_;
+	Model* m_model;
+	Material* m_material;
+	GameShader* m_shader;
 
 	// Sentences
-	vector<SentenceType> Sentences_;
+	vector<SentenceType> m_sentences;
 
 	// Flags
-	bool Result_;
+	bool m_result;
 };

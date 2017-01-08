@@ -10,40 +10,40 @@ FireShader::~FireShader()
 
 }
 
-bool FireShader::Initialise(HWND hwnd)
+bool FireShader::initialise(HWND hwnd)
 {
 	// Define Shaders
-	AddShader("fire.vs");
-	AddShader("fire.ps");
+	addShader("fire.vs");
+	addShader("fire.ps");
 	
 	// Define Input Layout
-	AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	
 	// Define Buffers
-	AddBuffer<MatrixBuffer>(VertexShader);
-	AddBuffer<NoiseBuffer>(VertexShader);
-	AddBuffer<DistortionBuffer>(PixelShader);
+	addBuffer<MatrixBuffer>(VertexShader);
+	addBuffer<NoiseBuffer>(VertexShader);
+	addBuffer<DistortionBuffer>(PixelShader);
 	
 	// Define Sampler States
-	AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
-	AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	addSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	addSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
 	
-	// Build Shader
-	Result_ = BuildShader(hwnd);
-	if (!Result_)
+	// build Shader
+	m_result = buildShader(hwnd);
+	if (!m_result)
 	{
-		OutputToDebug("Could not initialise fire shader.");
+		outputToDebug("Could not initialise fire shader.");
 		return false;
 	}
 
 	return true;
 }
 
-bool FireShader::Prepare(Material* objMaterial, Transform* objTransform)
+bool FireShader::prepare(Material* objMaterial, Transform* objTransform)
 {
 	if (!objMaterial)
 	{
@@ -51,40 +51,40 @@ bool FireShader::Prepare(Material* objMaterial, Transform* objTransform)
 		return false;
 	}
 
-	ID3D11ShaderResourceView* baseTexture = objMaterial->GetBaseTexture();
-	ID3D11ShaderResourceView* noiseTexture = objMaterial->GetNoiseTexture();
-	ID3D11ShaderResourceView* alphaTexture = objMaterial->GetAlphaTexture();
+	ID3D11ShaderResourceView* baseTexture = objMaterial->getBaseTexture();
+	ID3D11ShaderResourceView* noiseTexture = objMaterial->getNoiseTexture();
+	ID3D11ShaderResourceView* alphaTexture = objMaterial->getAlphaTexture();
 
-	// Create noise buffer
+	// create noise buffer
 	NoiseBuffer noiseBuffer;
-	noiseBuffer.frameTime = objMaterial->GetFloat("Frame");// gameObject->GetFrame();
-	noiseBuffer.scrollSpeeds = objMaterial->GetVector3("TextureOffsetSpeed"); // gameObject->GetSpeed();
-	noiseBuffer.scales = objMaterial->GetVector3("TextureTiling"); // gameObject->GetTiling();
+	noiseBuffer.frameTime = objMaterial->getFloat("update");// gameObject->getFrame();
+	noiseBuffer.scrollSpeeds = objMaterial->getVector3("TextureOffsetSpeed"); // gameObject->getSpeed();
+	noiseBuffer.scales = objMaterial->getVector3("TextureTiling"); // gameObject->getTiling();
 	noiseBuffer.padding = 0.0f;
 
-	// Create the distortion buffer
+	// create the distortion buffer
 	DistortionBuffer distortionBuffer;
-	distortionBuffer.distortion1 = objMaterial->GetVector2("DistortionA");
-	distortionBuffer.distortion2 = objMaterial->GetVector2("DistortionB");
-	distortionBuffer.distortion3 = objMaterial->GetVector2("DistortionC");
-	distortionBuffer.distortionScale = objMaterial->GetFloat("DistortionAmount"); // gameObject->GetDistortionAmount();
-	distortionBuffer.distortionBias = objMaterial->GetFloat("DistortionBias"); // gameObject->GetDistortionBias();
+	distortionBuffer.distortion1 = objMaterial->getVector2("DistortionA");
+	distortionBuffer.distortion2 = objMaterial->getVector2("DistortionB");
+	distortionBuffer.distortion3 = objMaterial->getVector2("DistortionC");
+	distortionBuffer.distortionScale = objMaterial->getFloat("DistortionAmount"); // gameObject->getDistortionAmount();
+	distortionBuffer.distortionBias = objMaterial->getFloat("DistortionBias"); // gameObject->getDistortionBias();
 
-	// Create matrix buffer
-	MatrixBuffer matrixBuffer = MatrixBuffer_;
-	objTransform->GetWorldMatrix(matrixBuffer.world);
-	TransposeMatrix(matrixBuffer);
+	// create matrix buffer
+	MatrixBuffer matrixBuffer = m_matrixBuffer;
+	objTransform->getWorldMatrix(matrixBuffer.world);
+	transposeMatrixBuffer(matrixBuffer);
 
-	// Update Buffers
-	UpdateBuffer(VertexShader, 0, matrixBuffer);
-	UpdateBuffer(VertexShader, 1, noiseBuffer);
-	UpdateBuffer(PixelShader, 0, distortionBuffer);
-	SendBuffersToShader();
+	// update Buffers
+	updateBuffer(VertexShader, 0, matrixBuffer);
+	updateBuffer(VertexShader, 1, noiseBuffer);
+	updateBuffer(PixelShader, 0, distortionBuffer);
+	sendBuffersToShader();
 
 	// Send baseTextures
-	SendTextureToShader(0, baseTexture);
-	SendTextureToShader(1, noiseTexture);
-	SendTextureToShader(2, alphaTexture);
+	sendTextureToShader(0, baseTexture);
+	sendTextureToShader(1, noiseTexture);
+	sendTextureToShader(2, alphaTexture);
 
 	return true;
 }

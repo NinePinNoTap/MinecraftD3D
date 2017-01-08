@@ -12,19 +12,19 @@ WindowManager::~WindowManager()
 {
 }
 
-bool WindowManager::Initialise()
+bool WindowManager::initialise()
 {
-	// Initialise the width and height of the screen to zero before sending the variables into the function
-	InitialiseWindows(WindowResolution_.width, WindowResolution_.height);
+	// initialise the width and height of the screen to zero before sending the variables into the function
+	createWindow(m_windowResolution.width, m_windowResolution.height);
 
-	// Initialise application
-	ApplicationManager_ = new ApplicationManager;
-	if (!ApplicationManager_)
+	// initialise application
+	m_applicationManager = new ApplicationManager;
+	if (!m_applicationManager)
 		return false;
 
-	// Initialise the ApplicationManager
-	Result_ = ApplicationManager_->Initialise(HWND_, WindowResolution_);
-	if(!Result_)
+	// initialise the ApplicationManager
+	m_result = m_applicationManager->initialise(m_hwnd, m_windowResolution);
+	if(!m_result)
 	{
 		return false;
 	}
@@ -32,30 +32,30 @@ bool WindowManager::Initialise()
 	return true;
 }
 
-void WindowManager::InitialiseWindows(int& screenWidth, int& screenHeight)
+void WindowManager::createWindow(int& screenWidth, int& screenHeight)
 {
 	WNDCLASSEX wc;
-	DEVMODE dmScreenSettings;
+	DEVMODE dmScreensettings;
 	D3DXVECTOR2 screenPosition;
 
-	// Get the instance of this ApplicationManager.
-	HInstance_ = GetModuleHandle(NULL);
+	// get the instance of this ApplicationManager.
+	m_hinstance = GetModuleHandle(NULL);
 
 	// Give the ApplicationManager a name.
-	ApplicationManagerName_ = L"Programming Games in DirectXManager";
+	m_applicationName = L"Programming Games in DirectX";
 
-	// Setup the windows class with default settings.
+	// setup the windows class with default settings.
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = WndProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hInstance = HInstance_;
+	wc.hInstance = m_hinstance;
 	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
 	wc.hIconSm = wc.hIcon;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wc.lpszMenuName = NULL;
-	wc.lpszClassName = ApplicationManagerName_;
+	wc.lpszClassName = m_applicationName;
 	wc.cbSize = sizeof(WNDCLASSEX);
 
 	// Register the window class.
@@ -65,26 +65,26 @@ void WindowManager::InitialiseWindows(int& screenWidth, int& screenHeight)
 	screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
+	// setup the screen settings depending on whether it is running in full screen or in windowed mode.
 	if (System::FullScreen)
 	{
 		// If full screen set the screen to maximum size of the users desktop and 32bit.
-		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
-		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
-		dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
-		dmScreenSettings.dmBitsPerPel = 32;
-		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+		memset(&dmScreensettings, 0, sizeof(dmScreensettings));
+		dmScreensettings.dmSize = sizeof(dmScreensettings);
+		dmScreensettings.dmPelsWidth = (unsigned long)screenWidth;
+		dmScreensettings.dmPelsHeight = (unsigned long)screenHeight;
+		dmScreensettings.dmBitsPerPel = 32;
+		dmScreensettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
 		// Change the display settings to full screen.
-		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
+		ChangeDisplaySettings(&dmScreensettings, CDS_FULLSCREEN);
 
-		// Set the position of the window to the top left corner.
+		// set the position of the window to the top left corner.
 		screenPosition.x = screenPosition.y = 0;
 	}
 	else
 	{
-		// Set to default window resolution
+		// set to default window resolution
 		screenWidth = System::ScreenWidth;
 		screenHeight = System::ScreenHeight;
 
@@ -92,38 +92,38 @@ void WindowManager::InitialiseWindows(int& screenWidth, int& screenHeight)
 		screenPosition.x = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
 		screenPosition.y = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
 
-		// Get size of the task bar
+		// get size of the task bar
 		RECT rect;
 		HWND taskBar = FindWindow(L"Shell_traywnd", NULL);
 		if (taskBar && GetWindowRect(taskBar, &rect))
 		{
-			// Move the window up
+			// move the window up
 			float taskbarHeight = (rect.bottom - rect.top);
 			screenPosition.y -= (taskbarHeight / 2);
 		}
 	}
 
-	// Create the window with the screen settings and get the handle to it.
-	HWND_ = CreateWindowEx(WS_EX_APPWINDOW, ApplicationManagerName_, ApplicationManagerName_,
+	// create the window with the screen settings and get the handle to it.
+	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
 		screenPosition.x, screenPosition.y, screenWidth, screenHeight,
-		NULL, NULL, HInstance_, NULL);
+		NULL, NULL, m_hinstance, NULL);
 
 	// Bring the window up on the screen and set it as main focus.
-	ShowWindow(HWND_, SW_SHOW);
-	SetForegroundWindow(HWND_);
-	SetFocus(HWND_);
+	ShowWindow(m_hwnd, SW_SHOW);
+	SetForegroundWindow(m_hwnd);
+	SetFocus(m_hwnd);
 
 	return;
 }
 
-void WindowManager::Shutdown()
+void WindowManager::terminate()
 {
-	// Shutdown scenes
-	ApplicationManager::Instance()->Shutdown();
+	// terminate scenes
+	ApplicationManager::getInstance()->terminate();
 
 	//=====================
-	// Shutdown the Window
+	// terminate the Window
 	//=====================
 
 	// Show the mouse cursor
@@ -136,46 +136,46 @@ void WindowManager::Shutdown()
 	}
 
 	// Remove the window
-	DestroyWindow(HWND_);
-	HWND_ = NULL;
+	DestroyWindow(m_hwnd);
+	m_hwnd = NULL;
 
 	// Remove the ApplicationManager instance
-	UnregisterClass(ApplicationManagerName_, HInstance_);
-	HInstance_ = NULL;
+	UnregisterClass(m_applicationName, m_hinstance);
+	m_hinstance = NULL;
 
 	return;
 	
 	return;
 }
 
-void WindowManager::Run()
+void WindowManager::run()
 {
 	MSG msg;
 	bool Running = true;
 
-	// Initialise the message structure.
+	// initialise the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
 	
 	// Keep running until an escape is processed
 	while(Running)
 	{
-		// Handle the windows messages.
+		// handle the windows messages.
 		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
 
-		// If windows signals to end the ApplicationManager then exit out.
+		// If windows signals to end the application then exit out.
 		if(msg.message == WM_QUIT)
 		{
 			Running = false;
 		}
 		else
 		{
-			// Do the frame processing for the ApplicationManager object.
-			Result_ = ApplicationManager_->Frame();
-			if (!Result_)
+			// Do the frame processing for the application object.
+			m_result = m_applicationManager->update();
+			if (!m_result)
 			{
 				Running = false;
 			}
@@ -185,7 +185,7 @@ void WindowManager::Run()
 	return;
 }
 
-LRESULT CALLBACK WindowManager::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK WindowManager::Messagehandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	switch(umsg)
 	{
@@ -208,6 +208,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 	}
 	else
 	{
-		return WindowManager::Instance() -> MessageHandler(hwnd, umessage, wparam, lparam);
+		return WindowManager::getInstance()->Messagehandler(hwnd, umessage, wparam, lparam);
 	}
 }

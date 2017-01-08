@@ -11,60 +11,60 @@ Button::~Button()
 {
 }
 
-bool Button::Initialise(Rect3D spriteResolution, string textureFilename)
+bool Button::initialise(Rect3D spriteResolution, string textureFilename)
 {
 	// Call parent initialise
-	Sprite::Initialise(spriteResolution, textureFilename);
+	Sprite::initialise(spriteResolution, textureFilename);
 
-	NormalColour_ = D3DXVECTOR4(0, 0, 0, 0);
-	HighlightColour_ = D3DXVECTOR4(1, 1, 1, 0.5f);
+	m_normalColour = D3DXVECTOR4(0, 0, 0, 0);
+	m_highlightColour = D3DXVECTOR4(1, 1, 1, 0.5f);
 
-	ButtonText_ = new Text;
-	if (!ButtonText_)
+	m_buttonText = new Text;
+	if (!m_buttonText)
 	{
 		return false;
 	}
-	Result_ = ButtonText_->Initialise(WindowManager::Instance()->GetHWND(), "minecraftia.txt", "minecraftia.dds", 89);
-	if (!Result_)
+	m_result = m_buttonText->initialise(WindowManager::getInstance()->getHWND(), "minecraftia.txt", "minecraftia.dds", 89);
+	if (!m_result)
 	{
 		return false;
 	}
 
-	ButtonText_->CreateText("TEXT NOT SET", Vector2(0, 0), Colour::White, Alignment::CENTRE);
+	m_buttonText->createText("TEXT NOT SET", Vector2(0, 0), Colour::White, Alignment::CENTRE);
 
 	return true;
 }
 
-bool Button::Frame()
+bool Button::update()
 {
 	// Check if we are mousing over
-	if (CheckCollision(Box_, InputManager::Instance()->GetMousePosInWindow()))
+	if (checkCollision(m_boundingBox, InputManager::getInstance()->getMousePosInWindow()))
 	{
-		Model_->GetMaterial()->SetVector4("BaseColour", HighlightColour_);
+		m_model->getMaterial()->setVector4("BaseColour", m_highlightColour);
 
-		if (InputManager::Instance()->GetKeyDown(VK_LBUTTON))
+		if (InputManager::getInstance()->getKeyDown(VK_LBUTTON))
 		{
 			return false;
 		}
 	}
 	else
 	{
-		Model_->GetMaterial()->SetVector4("BaseColour", NormalColour_);
+		m_model->getMaterial()->setVector4("BaseColour", m_normalColour);
 	}
 
 	return true;
 }
 
-bool Button::Render()
+bool Button::render()
 {
-	Result_ = Sprite::Render();
-	if (!Result_)
+	m_result = Sprite::render();
+	if (!m_result)
 	{
 		return false;
 	}
 
-	Result_ = ButtonText_->Render();
-	if (!Result_)
+	m_result = m_buttonText->render();
+	if (!m_result)
 	{
 		return false;
 	}
@@ -72,37 +72,37 @@ bool Button::Render()
 	return true;
 }
 
-void Button::SetNormalColour(D3DXVECTOR4 normalColour)
+void Button::setNormalColour(D3DXVECTOR4 normalColour)
 {
-	NormalColour_ = normalColour;
+	m_normalColour = normalColour;
 }
 
-void Button::SetHighlightColour(D3DXVECTOR4 highlightColour)
+void Button::setHighlightColour(D3DXVECTOR4 highlightColour)
 {
-	HighlightColour_ = highlightColour;
+	m_highlightColour = highlightColour;
 }
 
-void Button::SetButton(string buttonText, int x, int y)
+void Button::setButton(string buttonText, int x, int y)
 {
 	//====================
-	// Update Positioning
+	// update Positioning
 	//====================
 
 	// Calculate the X and Y pixel position on the screen to start drawing to.
-	float drawX = (float)(((WindowManager::Instance()->GetWindowResolution().width / 2) * -1) + x);
-	float drawY = (float)((WindowManager::Instance()->GetWindowResolution().height / 2) - y);
+	float drawX = (float)(((WindowManager::getInstance()->getWindowResolution().width / 2) * -1) + x);
+	float drawY = (float)((WindowManager::getInstance()->getWindowResolution().height / 2) - y);
 
-	// Set sprite position
-	Transform_->SetPosition(drawX, drawY, 0);
+	// set sprite position
+	m_transform->setPosition(drawX, drawY, 0);
 
-	// Update bounding box
-	Box_ = Model_->GetMesh()->GetBoundingBox();
-	Box_.SetPosition(D3DXVECTOR3(drawX, drawY, 0));
+	// update bounding box
+	m_boundingBox = m_model->getMesh()->getBoundingBox();
+	m_boundingBox.setPosition(D3DXVECTOR3(drawX, drawY, 0));
 
 	//=============
-	// Update Text
+	// update Text
 	//=============
 
-	ButtonText_->SetText(0, buttonText);
-	ButtonText_->SetPosition(0, Vector2(x, y - 20));
+	m_buttonText->setText(0, buttonText);
+	m_buttonText->setPosition(0, Vector2(x, y - 20));
 }

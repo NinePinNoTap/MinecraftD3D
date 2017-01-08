@@ -5,12 +5,12 @@
 
 
 #include "Model.h"
-#include "OBJLoader.h"
+#include "OBJloader.h"
 #include "Transform.h"
 #include "Utilities.h"
 #include "GameShader.h"
 
-enum RenderMode { On, Off };
+enum renderMode { On, Off };
 enum BlendMode { NoBlending, AlphaBlending, AlphaMasked, CloudBlending };
 
 class GameObject
@@ -20,61 +20,61 @@ public:
 	~GameObject();
 
 	// Initialising
-	virtual bool Initialise();
-	virtual bool Initialise(const char* filename);
-	virtual bool Initialise(const char* filename, string textureFilename);
+	virtual bool initialise();
+	virtual bool initialise(const char* filename);
+	virtual bool initialise(const char* filename, string textureFilename);
 	
-	// Shutdown
-	virtual void Shutdown();
+	// terminate
+	virtual void terminate();
 
 	// Frames
-	virtual bool Frame();
-	virtual bool Render();
+	virtual bool update();
+	virtual bool render();
 
-	// Rendering
-	void SetShader(string shaderName);
-	void SetRenderModes(RenderMode canReflect, RenderMode useCulling, RenderMode useDepth, BlendMode blendMode);
-	void SetReflectionMode(RenderMode canReflect);
-	void SetCullingMode(RenderMode useCulling);
-	void SetDepthMode(RenderMode useDepth);
-	void SetBlendMode(BlendMode blendMode);
-	void SetActive(bool Flag);
+	// rendering
+	void setShader(string shaderName);
+	void setrenderModes(renderMode canReflect, renderMode useCulling, renderMode useDepth, BlendMode blendMode);
+	void setReflectionMode(renderMode canReflect);
+	void setCullingMode(renderMode useCulling);
+	void setDepthMode(renderMode useDepth);
+	void setBlendMode(BlendMode blendMode);
+	void setActive(bool Flag);
 
-	// Setters
-	void SetModel(Model* model);
+	// setters
+	void setModel(Model* model);
 
-	// Getters
-	Model* GetModel();
-	Transform* GetTransform();
+	// getters
+	Model* getModel();
+	Transform* getTransform();
 
-	bool IsActive();
-	float GetFrame();
+	bool isActive();
+	float getFrame();
 
 protected:
-	virtual bool RenderMeshes();
-	bool SendModelToPipeline(Mesh3D* objMesh);
+	virtual bool renderMeshes();
+	bool sendModelToPipeline(Mesh3D* objMesh);
 
-	void SetRenderModes();
-	void ResetRenderModes();
+	void setrenderModes();
+	void resetRenderModes();
 
 	// Model
-	Model* Model_;
+	Model* m_model;
 
 	// Shader
-	GameShader* Shader_;
+	GameShader* m_shader;
 
 	// Transform
-	Transform* Transform_;
+	Transform* m_transform;
 
 	// Animations
-	float Frame_;
+	float m_frame;
 	
 	// Flags
-	bool Result_;
-	bool IsActive_;
-	RenderMode IsReflective_;
-	RenderMode UseCulling_;
-	RenderMode UseDepth_;
-	RenderMode IsPostProcessed_;
-	BlendMode BlendMode_;
+	bool m_result;
+	bool m_isActive;
+	renderMode m_reflective;
+	renderMode m_culled;
+	renderMode m_depth;
+	renderMode m_postprocessing;
+	BlendMode m_blendMode;
 };

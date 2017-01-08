@@ -24,17 +24,17 @@ public:
 	DirectSound(const DirectSound&);
 	~DirectSound();
 
-	bool Initialise(HWND);
-	void Shutdown();
+	bool initialise(HWND);
+	void terminate();
 
-	void SetListenerPosition(D3DXVECTOR3 Position);
+	void setListenerPosition(D3DXVECTOR3 Position);
 
-	IDirectSound8* GetDirectSound();
+	IDirectSound8* getDirectSound();
 
 private:
-	IDirectSound8* DirectSound_;
-	IDirectSoundBuffer* ListenerBuffer_;
-	IDirectSound3DListener8* Listener_;
+	IDirectSound8* m_directSound;
+	IDirectSoundBuffer* m_listenerBuffer;
+	IDirectSound3DListener8* m_listener;
 };
 
 

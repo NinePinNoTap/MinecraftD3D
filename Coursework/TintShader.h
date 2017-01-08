@@ -8,8 +8,8 @@ public:
 	TintShader();
 	~TintShader();
 
-	bool Initialise(HWND hwnd);
+	bool initialise(HWND hwnd);
 
-	bool Prepare(Material* objMaterial, Transform* objTransform);
+	bool prepare(Material* objMaterial, Transform* objTransform);
 };
 

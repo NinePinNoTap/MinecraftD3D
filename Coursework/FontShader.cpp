@@ -10,38 +10,38 @@ FontShader::~FontShader()
 
 }
 
-bool FontShader::Initialise(HWND hwnd)
+bool FontShader::initialise(HWND hwnd)
 {
 	// Define Shaders
-	AddShader("font.vs");
-	AddShader("font.ps");
+	addShader("font.vs");
+	addShader("font.ps");
 	
 	// Define Input Layout
-	AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	
 	// Define Buffers
-	AddBuffer<MatrixBuffer>(VertexShader);
-	AddBuffer<PixelBuffer>(PixelShader);
+	addBuffer<MatrixBuffer>(VertexShader);
+	addBuffer<PixelBuffer>(PixelShader);
 
 	// Define Sampler State
-	AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	addSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
 	
-	// Build Shader
-	Result_ = BuildShader(hwnd);
-	if (!Result_)
+	// build Shader
+	m_result = buildShader(hwnd);
+	if (!m_result)
 	{
-		OutputToDebug("Could not initialise font shader.");
+		outputToDebug("Could not initialise font shader.");
 		return false;
 	}
 
 	return true;
 }
 
-bool FontShader::Prepare(Material* objMaterial, Transform* objTransform)
+bool FontShader::prepare(Material* objMaterial, Transform* objTransform)
 {
 	if (!objMaterial)
 	{
@@ -50,23 +50,23 @@ bool FontShader::Prepare(Material* objMaterial, Transform* objTransform)
 	}
 
 	// Model Properties
-	ID3D11ShaderResourceView* baseTexture = objMaterial->GetBaseTexture();
+	ID3D11ShaderResourceView* baseTexture = objMaterial->getBaseTexture();
 
-	// Create the pixel buffer
+	// create the pixel buffer
 	PixelBuffer pixelBuffer;
-	pixelBuffer.pixelColor = objMaterial->GetVector4("BaseColour");
+	pixelBuffer.pixelColor = objMaterial->getVector4("BaseColour");
 
-	// Create matrix buffer
-	MatrixBuffer matrixBuffer = MatrixBuffer_;
-	TransposeMatrix(matrixBuffer);
+	// create matrix buffer
+	MatrixBuffer matrixBuffer = m_matrixBuffer;
+	transposeMatrixBuffer(matrixBuffer);
 
-	// Update Buffers
-	UpdateBuffer(VertexShader, 0, matrixBuffer);
-	UpdateBuffer(PixelShader, 0, pixelBuffer);
-	SendBuffersToShader();
+	// update Buffers
+	updateBuffer(VertexShader, 0, matrixBuffer);
+	updateBuffer(PixelShader, 0, pixelBuffer);
+	sendBuffersToShader();
 
 	// Pass the baseTexture to the shader
-	SendTextureToShader(0, baseTexture);
+	sendTextureToShader(0, baseTexture);
 
 	return true;
 }

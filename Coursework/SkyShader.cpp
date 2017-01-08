@@ -10,38 +10,38 @@ SkyShader::~SkyShader()
 
 }
 
-bool SkyShader::Initialise(HWND hwnd)
+bool SkyShader::initialise(HWND hwnd)
 {
 	// Define Shaders
-	AddShader("skysphere.vs");
-	AddShader("skysphere.ps");
+	addShader("skysphere.vs");
+	addShader("skysphere.ps");
 
 	// Define Input Layout
-	AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	
 	// Define Buffers
-	AddBuffer<MatrixBuffer>(VertexShader);
-	AddBuffer<GradientBuffer>(PixelShader);
+	addBuffer<MatrixBuffer>(VertexShader);
+	addBuffer<GradientBuffer>(PixelShader);
 	
 	// Define Sampler State
-	AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	addSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
 	
-	// Build Shader
-	Result_ = BuildShader(hwnd);
-	if (!Result_)
+	// build Shader
+	m_result = buildShader(hwnd);
+	if (!m_result)
 	{
-		OutputToDebug("Could not initialise sky sphere shader.");
+		outputToDebug("Could not initialise sky sphere shader.");
 		return false;
 	}
 
 	return true;
 }
 
-bool SkyShader::Prepare(Material* objMaterial, Transform* objTransform)
+bool SkyShader::prepare(Material* objMaterial, Transform* objTransform)
 {
 	if (!objMaterial)
 	{
@@ -49,20 +49,20 @@ bool SkyShader::Prepare(Material* objMaterial, Transform* objTransform)
 		return false;
 	}
 
-	// Create matrixBuffer Buffer
-	MatrixBuffer matrixBuffer = MatrixBuffer_;
-	objTransform->GetTranslationMatrix(matrixBuffer.world);
-	TransposeMatrix(matrixBuffer);
+	// create matrixBuffer Buffer
+	MatrixBuffer matrixBuffer = m_matrixBuffer;
+	objTransform->getTranslationMatrix(matrixBuffer.world);
+	transposeMatrixBuffer(matrixBuffer);
 
-	// Create the sky buffer
+	// create the sky buffer
 	GradientBuffer gradientBuffer;
-	gradientBuffer.topColor = objMaterial->GetVector4("TopColour");
-	gradientBuffer.centerColor = objMaterial->GetVector4("CenterColour");
+	gradientBuffer.topColor = objMaterial->getVector4("TopColour");
+	gradientBuffer.centerColor = objMaterial->getVector4("CenterColour");
 
-	// Update Buffers
-	UpdateBuffer(VertexShader, 0, matrixBuffer);
-	UpdateBuffer(PixelShader, 0, gradientBuffer);
-	SendBuffersToShader();
+	// update Buffers
+	updateBuffer(VertexShader, 0, matrixBuffer);
+	updateBuffer(PixelShader, 0, gradientBuffer);
+	sendBuffersToShader();
 
 	return true;
 }

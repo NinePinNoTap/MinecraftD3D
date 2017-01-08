@@ -1,14 +1,14 @@
-#include "TXTLoader.h"
+#include "TXTloader.h"
 
-TXTLoader::TXTLoader()
+TXTloader::TXTloader()
 {
 }
 
-TXTLoader::~TXTLoader()
+TXTloader::~TXTloader()
 {
 }
 
-bool TXTLoader::LoadModel(const char* filename, Model& model)
+bool TXTloader::loadModel(const char* filename, Model& model)
 {
 	ifstream fin;
 	char input;
@@ -39,10 +39,10 @@ bool TXTLoader::LoadModel(const char* filename, Model& model)
 	// Read in the vertex count
 	fin >> vertexCount;
 
-	// Set the number of indices to be the same as the vertex count
+	// set the number of indices to be the same as the vertex count
 	indexCount = vertexCount;
 
-	// Create the model using the vertex count that was read in
+	// create the model using the vertex count that was read in
 	mesh = new VertexData[vertexCount];
 	if (!mesh)
 	{
@@ -88,19 +88,19 @@ bool TXTLoader::LoadModel(const char* filename, Model& model)
 	// Finalise Model
 	//================
 
-	// Create Mesh
+	// create Mesh
 	Mesh3D* newMesh = new Mesh3D;
-	newMesh->SetMesh(mesh, Indices);
-	newMesh->SetVertexCount(vertexCount);
-	newMesh->SetIndexCount(indexCount);
-	Result_ = newMesh->Build();
-	if (!Result_)
+	newMesh->setMesh(mesh, Indices);
+	newMesh->setVertexCount(vertexCount);
+	newMesh->setIndexCount(indexCount);
+	m_result = newMesh->build();
+	if (!m_result)
 	{
 		return false;
 	}
 
 	// Add mesh to model
-	model.AddMesh(newMesh);
+	model.addMesh(newMesh);
 
 	return true;
 }

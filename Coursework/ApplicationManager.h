@@ -10,7 +10,7 @@
 #include "MinecraftScene.h"
 #include "PerformanceManager.h"
 #include "GameScene.h"
-#include "LoadingScene.h"
+#include "loadingScene.h"
 #include "MainMenuScene.h"
 #include "ShaderManager.h"
 #include "ViewFrustumManager.h"
@@ -23,51 +23,51 @@ public:
 	~ApplicationManager();
 
 	// Initialising
-	bool Initialise(HWND hwnd, Rect2D WindowResolution);
+	bool initialise(HWND hwnd, Rect2D WindowResolution);
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 
-	// Frame
-	bool Frame();
+	// update
+	bool update();
 
 	// Scene Switching
-	void SetScene(SceneState scene);
+	void setScene(SceneState scene);
 
-	// Scene Finished
-	bool CheckSceneLoaded(SceneState scene);
+	// Scene isComplete
+	bool checkSceneLoaded(SceneState scene);
 	
 private:
-	// Update
-	void UpdateScene();
+	// update
+	void updateScene();
 
 	// Variables
-	bool Result_; 
+	bool m_result; 
 
 	// Manager
-	AssetManager* AssetManager_;
-	DirectXManager* DirectXManager_;
-	DirectSound* DirectSound_;
-	InputManager* InputManager_;
-	ShaderManager* ShaderManager_;
-	PerformanceManager* PerformanceManager_;
-	ViewFrustumManager* ViewFrustumManager_;
+	AssetManager* m_assetManager;
+	DirectXManager* m_directX;
+	DirectSound* m_directSound;
+	InputManager* m_inputManager;
+	ShaderManager* m_shaderManager;
+	PerformanceManager* m_performanceManager;
+	ViewFrustumManager* m_viewFrustumManager;
 	
 	// Scenes
-	MainMenuScene* MainMenuScene_;
-	MinecraftScene* MinecraftScene_;
-	LoadingScene* LoadingScene_;
-	ManagedThread<bool()>* LoadingScreenThread_;
+	MainMenuScene* m_mainMenuScene;
+	MinecraftScene* m_minecraftScene;
+	LoadingScene* m_loadingScene;
+	ManagedThread<bool()>* m_loadingSceneThread;
 
 	// Global Objects
-	Camera* Camera_;
-	Light* Light_;
+	Camera* m_camera;
+	Light* m_light;
 
 	// Scene Switching
-	GameScene* CurrentScene_;
-	SceneState CurrentState_;
-	SceneState NewSceneState_;
-	bool ChangeScene_;
+	GameScene* m_currentScene;
+	SceneState m_currentState;
+	SceneState m_newSceneState;
+	bool m_changeScene;
 };
 
 

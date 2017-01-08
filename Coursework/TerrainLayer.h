@@ -19,7 +19,7 @@ struct TerrainLayer
 		layerName = name;
 		blockName = block;
 
-		// Simplex Noise
+		// Simplex noise
 		baseHeight = h;
 		frequency = f;
 		amplitude = a;
@@ -35,7 +35,7 @@ struct TerrainLayer
 		layerName = name;
 		blockName = block;
 
-		// Simplex Noise
+		// Simplex noise
 		baseHeight = h;
 		frequency = f;
 		amplitude = a;

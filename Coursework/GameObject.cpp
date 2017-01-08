@@ -3,112 +3,112 @@
 
 GameObject::GameObject()
 {
-	// Initialise the pointers
-	Model_ = 0;
-	Shader_ = 0;
-	Transform_ = 0;
+	// initialise the pointers
+	m_model = 0;
+	m_shader = 0;
+	m_transform = 0;
 
-	// Initialise default flags
-	IsActive_ = true;
+	// initialise default flags
+	m_isActive = true;
 }
 
 GameObject::~GameObject()
 {
 }
 
-bool GameObject::Initialise()
+bool GameObject::initialise()
 {
 	//==================
-	// Create Transform
+	// create Transform
 	//==================
 
-	Transform_ = new Transform;
-	if (!Transform_)
+	m_transform = new Transform;
+	if (!m_transform)
 	{
 		return false;
 	}
 
 	//=================
-	// Initialise Vars
+	// initialise Vars
 	//=================
 
-	Frame_ = 0;
+	m_frame = 0;
 
-	IsReflective_ = RenderMode::Off;
-	UseCulling_ = RenderMode::Off;
-	UseDepth_ = RenderMode::On;
-	IsPostProcessed_ = RenderMode::On;
-	BlendMode_ = BlendMode::NoBlending;
+	m_reflective = renderMode::Off;
+	m_culled = renderMode::Off;
+	m_depth = renderMode::On;
+	m_postprocessing = renderMode::On;
+	m_blendMode = BlendMode::NoBlending;
 
-	IsActive_ = true;
+	m_isActive = true;
 
 	return true;
 }
 
-bool GameObject::Initialise(const char* filename)
+bool GameObject::initialise(const char* filename)
 {
-	OBJLoader objLoader;
+	OBJloader objloader;
 
 	//==============
-	// Create Model
+	// create Model
 	//==============
 
-	AssetManager::Instance()->LoadModel(&Model_, filename);
-	if (!Model_)
+	AssetManager::getInstance()->loadModel(&m_model, filename);
+	if (!m_model)
 	{
 		return false;
 	}
 
 	//==================
-	// Create Transform
+	// create Transform
 	//==================
 
-	Transform_ = new Transform;
-	if (!Transform_)
+	m_transform = new Transform;
+	if (!m_transform)
 	{
 		return false;
 	}
 	
 	//=================
-	// Initialise Vars
+	// initialise Vars
 	//=================
 
-	Frame_ = 0;
+	m_frame = 0;
 
-	IsReflective_ = RenderMode::Off;
-	UseCulling_ = RenderMode::Off;
-	UseDepth_ = RenderMode::On;
-	IsPostProcessed_ = RenderMode::On;
-	BlendMode_ = BlendMode::NoBlending;
+	m_reflective = renderMode::Off;
+	m_culled = renderMode::Off;
+	m_depth = renderMode::On;
+	m_postprocessing = renderMode::On;
+	m_blendMode = BlendMode::NoBlending;
 
-	IsActive_ = true;
+	m_isActive = true;
 	
 	return true;
 }
 
-bool GameObject::Initialise(const char* filename, string textureFilename)
+bool GameObject::initialise(const char* filename, string textureFilename)
 {
 	Material* createdMaterial;
 
 	// Call parent function
-	Result_ = GameObject::Initialise(filename);
-	if (!Result_)
+	m_result = GameObject::initialise(filename);
+	if (!m_result)
 	{
 		return false;
 	}
 
-	// Create a Material
+	// create a Material
 	createdMaterial = new Material;
 	if (!createdMaterial)
 	{
 		return false;
 	}
-	Result_ = createdMaterial->SetBaseTexture(textureFilename);
-	if (!Result_)
+	m_result = createdMaterial->setBaseTexture(textureFilename);
+	if (!m_result)
 	{
 		return false;
 	}
-	Model_->AddMaterial(createdMaterial);
+	m_model->addMaterial(createdMaterial);
 
 	// Clean Up
 	createdMaterial = 0;
@@ -116,124 +116,124 @@ bool GameObject::Initialise(const char* filename, string textureFilename)
 	return true;
 }
 
-// Shutdown
-void GameObject::Shutdown()
+// terminate
+void GameObject::terminate()
 {
 	// Delete the transform
-	if (Transform_)
+	if (m_transform)
 	{
-		Transform_ = 0;
+		m_transform = 0;
 	}
 }
 
-// Frame
-bool GameObject::Frame()
+// update
+bool GameObject::update()
 {
 	return true;
 }
 
-bool GameObject::Render()
+bool GameObject::render()
 {
-	if (!IsActive_ || !Shader_ || !Model_)
+	if (!m_isActive || !m_shader || !m_model)
 		return true;
 
 	// Define how we want the model to be rendered
-	SetRenderModes();
+	setrenderModes();
 
-	// Render Reflection
-	if (IsReflective_ == RenderMode::On)
+	// render Reflection
+	if (m_reflective == renderMode::On)
 	{
 		// Define how we want to see the model
-		Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
+		m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
 
-		// Get and set the reflection texture
+		// get and set the reflection texture
 		Texture* reflectionTexture;
-		AssetManager::Instance()->LoadTexture(&reflectionTexture, "ReflectionTexture");
-		reflectionTexture->SetRenderTarget();
+		AssetManager::getInstance()->loadTexture(&reflectionTexture, "ReflectionTexture");
+		reflectionTexture->setRenderTarget();
 
-		// Render Model
-		RenderMeshes();
+		// render Model
+		renderMeshes();
 
-		DirectXManager::Instance()->SetBackBufferRenderTarget();
-		DirectXManager::Instance()->ResetViewport();
+		DirectXManager::getInstance()->setBackBufferRenderTarget();
+		DirectXManager::getInstance()->ResetViewport();
 
 		// Clean Up
 		reflectionTexture = 0;
 	}
 
 	// Define how we want to see the model
-	Shader_->SetRenderMode(ProjectionMode::Perspective, ViewMode::View);
+	m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::View);
 	
-	if (IsPostProcessed_ == RenderMode::On)
+	if (m_postprocessing == renderMode::On)
 	{
-		// Get and set the reflection texture
+		// get and set the reflection texture
 		Texture* renderTexture;
-		AssetManager::Instance()->LoadTexture(&renderTexture, "RenderTexture");
-		renderTexture->SetRenderTarget();
+		AssetManager::getInstance()->loadTexture(&renderTexture, "renderTexture");
+		renderTexture->setRenderTarget();
 
-		RenderMeshes();
+		renderMeshes();
 
-		DirectXManager::Instance()->SetBackBufferRenderTarget();
-		DirectXManager::Instance()->ResetViewport();
+		DirectXManager::getInstance()->setBackBufferRenderTarget();
+		DirectXManager::getInstance()->ResetViewport();
 
 		// Clean Up
 		renderTexture = 0;
 	}
 
-	// Render Mesh
-	RenderMeshes();
+	// render Mesh
+	renderMeshes();
 
-	// Reset Pipeline Settings
-	ResetRenderModes();
+	// Reset Pipeline settings
+	resetRenderModes();
 
 	return true;
 }
 
-bool GameObject::RenderMeshes()
+bool GameObject::renderMeshes()
 {
-	// Render the model
-	for (int i = 0; i < Model_->GetMeshCount(); i++)
+	// render the model
+	for (int i = 0; i < m_model->getMeshCount(); i++)
 	{
 		// Make sure the mesh is active for it to be rendered
-		if (Model_->GetMesh(i)->IsActive())
+		if (m_model->getMesh(i)->isActive())
 		{
 			// Send model to pipeline
-			SendModelToPipeline(Model_->GetMesh(i));
+			sendModelToPipeline(m_model->getMesh(i));
 
 			// Send material to shader
-			Shader_->Prepare(Model_->GetMaterial(i), Transform_);
+			m_shader->prepare(m_model->getMaterial(i), m_transform);
 
-			// Render Object
-			Shader_->Render(Model_->GetMesh(i)->GetIndexCount());
+			// render Object
+			m_shader->render(m_model->getMesh(i)->getIndexCount());
 		}
 	}
 
 	return true;
 }
 
-bool GameObject::SendModelToPipeline(Mesh3D* objMesh)
+bool GameObject::sendModelToPipeline(Mesh3D* objMesh)
 {
 	unsigned int stride;
 	unsigned int offset;
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
 
-	// Set vertex buffer stride and offset
+	// set vertex buffer stride and offset
 	stride = sizeof(VertexData);
 	offset = 0;
 
-	// Get mesh buffers
-	vertexBuffer = objMesh->GetVertexBuffer();
-	indexBuffer = objMesh->GetIndexBuffer();
+	// get mesh buffers
+	vertexBuffer = objMesh->getVertexBuffer();
+	indexBuffer = objMesh->getIndexBuffer();
 
-	// Set the vertex buffer to active in the input assembler so it can be rendered
-	DirectXManager::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	// set the vertex buffer to active in the input assembler so it can be rendered
+	DirectXManager::getInstance()->getDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 
-	// Set the index buffer to active in the input assembler so it can be rendered
-	DirectXManager::Instance()->GetDeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	// set the index buffer to active in the input assembler so it can be rendered
+	DirectXManager::getInstance()->getDeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	// Set the type of primitive that should be rendered from this vertex buffer
-	DirectXManager::Instance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	// set the type of primitive that should be rendered from this vertex buffer
+	DirectXManager::getInstance()->getDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	vertexBuffer = 0;
 	indexBuffer = 0;
@@ -241,122 +241,122 @@ bool GameObject::SendModelToPipeline(Mesh3D* objMesh)
 	return true;
 }
 
-void GameObject::SetRenderModes()
+void GameObject::setrenderModes()
 {
 	// Backface Culling
-	if (UseCulling_ == RenderMode::On)
+	if (m_culled == renderMode::On)
 	{
-		DirectXManager::Instance()->SetBackfaceCullingOn(true);
+		DirectXManager::getInstance()->setBackfaceCullingOn(true);
 	}
 	else
 	{
-		DirectXManager::Instance()->SetBackfaceCullingOn(false);
+		DirectXManager::getInstance()->setBackfaceCullingOn(false);
 	}
 
 	// Z Buffer
-	if (UseDepth_ == RenderMode::On)
+	if (m_depth == renderMode::On)
 	{
-		DirectXManager::Instance()->SetDepthBufferOn(true);
+		DirectXManager::getInstance()->setDepthBufferOn(true);
 	}
 	else
 	{
-		DirectXManager::Instance()->SetDepthBufferOn(false);
+		DirectXManager::getInstance()->setDepthBufferOn(false);
 	}
 	
 	// Blending
-	switch (BlendMode_)
+	switch (m_blendMode)
 	{
 		case BlendMode::NoBlending:
-			DirectXManager::Instance()->SetAlphaBlendingOn(false);
+			DirectXManager::getInstance()->setAlphaBlendingOn(false);
 			break;
 
 		case BlendMode::AlphaBlending:
-			DirectXManager::Instance()->SetAlphaBlendingOn(true);
+			DirectXManager::getInstance()->setAlphaBlendingOn(true);
 			break;
 
 		case BlendMode::CloudBlending:
-			DirectXManager::Instance()->SetCloudBlendingOn();
+			DirectXManager::getInstance()->setCloudBlendingOn();
 			break;
 
 		case BlendMode::AlphaMasked:
-			DirectXManager::Instance()->SetAlphaMaskingOn();
+			DirectXManager::getInstance()->setAlphaMaskingOn();
 			break;
 	}
 }
 
-void GameObject::ResetRenderModes()
+void GameObject::resetRenderModes()
 {
-	DirectXManager::Instance()->SetAlphaBlendingOn(false);
-	DirectXManager::Instance()->SetDepthBufferOn(true);
-	DirectXManager::Instance()->SetBackfaceCullingOn(false);
+	DirectXManager::getInstance()->setAlphaBlendingOn(false);
+	DirectXManager::getInstance()->setDepthBufferOn(true);
+	DirectXManager::getInstance()->setBackfaceCullingOn(false);
 }
 
-// Setters
-void GameObject::SetShader(string shaderName)
+// setters
+void GameObject::setShader(string shaderName)
 {
-	Shader_ = ShaderManager::Instance()->GetShader(shaderName);
+	m_shader = ShaderManager::getInstance()->getShader(shaderName);
 
-	if (!Shader_)
+	if (!m_shader)
 	{
-		OutputToDebug("Could not set shader");
+		outputToDebug("Could not set shader");
 	}
 }
 
-void GameObject::SetRenderModes(RenderMode canReflect, RenderMode useCulling, RenderMode useDepth, BlendMode blendMode)
+void GameObject::setrenderModes(renderMode canReflect, renderMode useCulling, renderMode useDepth, BlendMode blendMode)
 {
-	IsReflective_ = canReflect;
-	UseCulling_ = useCulling;
-	UseDepth_ = useDepth;
-	BlendMode_ = blendMode;
+	m_reflective = canReflect;
+	m_culled = useCulling;
+	m_depth = useDepth;
+	m_blendMode = blendMode;
 }
 
-void GameObject::SetReflectionMode(RenderMode canReflect)
+void GameObject::setReflectionMode(renderMode canReflect)
 {
-	IsReflective_ = canReflect;
+	m_reflective = canReflect;
 }
 
-void GameObject::SetCullingMode(RenderMode useCulling)
+void GameObject::setCullingMode(renderMode useCulling)
 {
-	UseCulling_ = useCulling;
+	m_culled = useCulling;
 }
 
-void GameObject::SetDepthMode(RenderMode useDepth)
+void GameObject::setDepthMode(renderMode useDepth)
 {
-	UseDepth_ = useDepth;
+	m_depth = useDepth;
 }
 
-void GameObject::SetBlendMode(BlendMode blendMode)
+void GameObject::setBlendMode(BlendMode blendMode)
 {
-	BlendMode_ = blendMode;
+	m_blendMode = blendMode;
 }
 
-void GameObject::SetActive(bool Flag)
+void GameObject::setActive(bool Flag)
 {
-	IsActive_ = Flag;
+	m_isActive = Flag;
 }
 
-void GameObject::SetModel(Model* model)
+void GameObject::setModel(Model* model)
 {
-	Model_ = model;
+	m_model = model;
 }
 
-// Getters
-Model* GameObject::GetModel()
+// getters
+Model* GameObject::getModel()
 {
-	return Model_;
+	return m_model;
 }
 
-Transform* GameObject::GetTransform()
+Transform* GameObject::getTransform()
 {	
-	return Transform_;
+	return m_transform;
 }
 
-bool GameObject::IsActive()
+bool GameObject::isActive()
 {
-	return IsActive_;
+	return m_isActive;
 }
 
-float GameObject::GetFrame()
+float GameObject::getFrame()
 {
-	return Frame_;
+	return m_frame;
 }

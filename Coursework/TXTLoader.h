@@ -14,14 +14,14 @@
 
 using namespace Config;
 
-class TXTLoader
+class TXTloader
 {
 public:
-	TXTLoader();
-	~TXTLoader();
+	TXTloader();
+	~TXTloader();
 
-	bool LoadModel(const char* filename, Model& model);
+	bool loadModel(const char* filename, Model& model);
 
 private:
-	bool Result_;
+	bool m_result;
 };

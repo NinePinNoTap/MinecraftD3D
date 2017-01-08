@@ -14,94 +14,94 @@ Camera::~Camera()
 }
 
 // Initialising
-bool Camera::Initialise()
+bool Camera::initialise()
 {
 	//=======================
-	// Initialise Properties
+	// initialise Properties
 	//=======================
 
-	// Create the transform
-	Transform_ = new Transform;
+	// create the transform
+	m_transform = new Transform;
 	
-	// Set position to view 2D objects
-	Position2D_ = D3DXVECTOR3(0, 0, -10);
+	// set position to view 2D objects
+	m_position2D = D3DXVECTOR3(0, 0, -10);
 
 	//=========================
-	// Generate 2D View Matrix
+	// generate 2D View Matrix
 	//=========================
 
-	Render2DViewMatrix();
+	render2DViewMatrix();
 
 	return true;
 }
 
-// Frame
-bool Camera::Frame()
+// update
+bool Camera::update()
 {
-	// Render the view matrix
-	Render();
+	// render the view matrix
+	render();
 
 	return true;
 }
 
-// Rendering
-bool Camera::Render()
+// rendering
+bool Camera::render()
 {
-	// Create the view matrix
-	ViewMatrix_ = GenerateMatrix(Vector::Up, Transform_->GetPosition(), Vector::Forward);
+	// create the view matrix
+	m_viewMatrix = generateMatrix(Vector::Up, m_transform->getPosition(), Vector::Forward);
 
 	return true;
 }
 
-void Camera::GetViewMatrix(D3DXMATRIX& viewMatrix)
+void Camera::getViewMatrix(D3DXMATRIX& viewMatrix)
 {
 	// Return the view matrix
-	viewMatrix = ViewMatrix_;
+	viewMatrix = m_viewMatrix;
 
 	return;
 }
 
-void Camera::Render2DViewMatrix()
+void Camera::render2DViewMatrix()
 {
-	// Generate the 2D view matrix
-	ViewMatrix2D_ = GenerateMatrix(Vector::Up, Position2D_, Vector::Forward);
+	// generate the 2D view matrix
+	m_baseViewMatrix = generateMatrix(Vector::Up, m_position2D, Vector::Forward);
 
 	return;
 }
 
-void Camera::Get2DViewMatrix(D3DXMATRIX& viewMatrix)
+void Camera::get2DViewMatrix(D3DXMATRIX& viewMatrix)
 {
 	// Return the 2D view matrix
-	viewMatrix = ViewMatrix2D_;
+	viewMatrix = m_baseViewMatrix;
 
 	return;
 }
 
-void Camera::RenderReflection(float ReflectionHeight)
+void Camera::renderReflection(float ReflectionHeight)
 {
 	D3DXVECTOR3 ReflectedPosition;
 
 	// Retrieve our current position
-	ReflectedPosition = Transform_->GetPosition();
+	ReflectedPosition = m_transform->getPosition();
 
 	// Reflect the Y-Axis
 	ReflectedPosition.y = -ReflectedPosition.y + (ReflectionHeight * 2.0f);
 
-	// Generate the reflection matrix
-	ReflectionViewMatrix_ = GenerateMatrix(Vector::Up, ReflectedPosition, Vector::Forward, true);
+	// generate the reflection matrix
+	m_reflectionViewMatrix = generateMatrix(Vector::Up, ReflectedPosition, Vector::Forward, true);
 
 	return;
 }
 
-void Camera::GetReflectionMatrix(D3DXMATRIX& viewMatrix)
+void Camera::getReflectionMatrix(D3DXMATRIX& viewMatrix)
 {
 	// Return the reflection matrix
-	viewMatrix = ReflectionViewMatrix_;
+	viewMatrix = m_reflectionViewMatrix;
 
 	return;
 }
 
-D3DXMATRIX Camera::GenerateMatrix(D3DXVECTOR3 UpVector, D3DXVECTOR3 PositionVector, D3DXVECTOR3 LookAtVector, bool isReflection)
+D3DXMATRIX Camera::generateMatrix(D3DXVECTOR3 UpVector, D3DXVECTOR3 PositionVector, D3DXVECTOR3 LookAtVector, bool isReflection)
 {
 	float Yaw;
 	float Pitch;
@@ -110,13 +110,13 @@ D3DXMATRIX Camera::GenerateMatrix(D3DXVECTOR3 UpVector, D3DXVECTOR3 PositionVect
 	D3DXMATRIX ViewMatrix; 
 
 	//==========================
-	// Create a Rotation Matrix
+	// create a Rotation Matrix
 	//==========================
 
 	// Convert each axis from degrees to radians
-	Pitch = D3DXToRadian(Transform_->GetPitch());
-	Yaw = D3DXToRadian(Transform_->GetYaw());
-	Roll = D3DXToRadian(Transform_->GetRoll());
+	Pitch = D3DXToRadian(m_transform->getPitch());
+	Yaw = D3DXToRadian(m_transform->getYaw());
+	Roll = D3DXToRadian(m_transform->getRoll());
 
 	// Invert the pitch if we are reflecting
 	if (isReflection)
@@ -124,11 +124,11 @@ D3DXMATRIX Camera::GenerateMatrix(D3DXVECTOR3 UpVector, D3DXVECTOR3 PositionVect
 		Pitch *= -1;
 	}
 	
-	// Generate the rotation matrix
+	// generate the rotation matrix
 	D3DXMatrixRotationYawPitchRoll(&RotationMatrix, Yaw, Pitch, Roll);
 
 	//===========================
-	// Create the Look At Vector
+	// create the Look At Vector
 	//===========================
 
 	// Calculate the forward vector
@@ -137,10 +137,10 @@ D3DXMATRIX Camera::GenerateMatrix(D3DXVECTOR3 UpVector, D3DXVECTOR3 PositionVect
 	// Calculate the up vector
 	D3DXVec3TransformCoord(&UpVector, &UpVector, &RotationMatrix);
 
-	// Move the position of the camera to the viewer
+	// move the position of the camera to the viewer
 	LookAtVector = PositionVector + LookAtVector;
 
-	// Create our final view matrix
+	// create our final view matrix
 	D3DXMatrixLookAtLH(&ViewMatrix, &PositionVector, &LookAtVector, &UpVector);
 
 	return ViewMatrix;

@@ -28,7 +28,7 @@ struct BoundingBox
 		back = position.z + (rect.depth / 2.0f);
 	}
 
-	void SetPosition(D3DXVECTOR3 position)
+	void setPosition(D3DXVECTOR3 position)
 	{
 		left += position.x;
 		right += position.x;

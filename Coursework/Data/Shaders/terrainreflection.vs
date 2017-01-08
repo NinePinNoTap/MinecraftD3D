@@ -60,7 +60,7 @@ PixelInputType VertexShaderMain(VertexInputType input)
     output.binormal = mul(input.binormal, (float3x3)worldMatrix);
     output.binormal = normalize(output.binormal);
 
-	// Set the clipping plane.
+	// set the clipping plane.
     output.clip = dot(mul(input.position, worldMatrix), clipPlane);
 
     return output;

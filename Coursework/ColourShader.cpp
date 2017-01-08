@@ -10,35 +10,35 @@ ColourShader::~ColourShader()
 
 }
 
-bool ColourShader::Initialise(HWND hwnd)
+bool ColourShader::initialise(HWND hwnd)
 {
 	// Define Shaders
-	AddShader("colour.vs");
-	AddShader("colour.ps");
+	addShader("colour.vs");
+	addShader("colour.ps");
 
 	// Define Input Layout
-	AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 	
 	// Define Buffers
-	AddBuffer<MatrixBuffer>(VertexShader);
-	AddBuffer<PixelBuffer>(PixelShader);
+	addBuffer<MatrixBuffer>(VertexShader);
+	addBuffer<PixelBuffer>(PixelShader);
 	
-	// Build Shader
-	Result_ = BuildShader(hwnd);
-	if (!Result_)
+	// build Shader
+	m_result = buildShader(hwnd);
+	if (!m_result)
 	{
-		OutputToDebug("Could not initialise colour shader.");
+		outputToDebug("Could not initialise colour shader.");
 		return false;
 	}
 
 	return true;
 }
 
-bool ColourShader::Prepare(Material* objMaterial, Transform* objTransform)
+bool ColourShader::prepare(Material* objMaterial, Transform* objTransform)
 {
 	if (!objMaterial)
 	{
@@ -46,19 +46,19 @@ bool ColourShader::Prepare(Material* objMaterial, Transform* objTransform)
 		return false;
 	}
 
-	// Create the world matrix for the model
-	MatrixBuffer matrixBuffer = MatrixBuffer_;
-	objTransform->GetWorldMatrix(matrixBuffer.world);
-	TransposeMatrix(matrixBuffer);
+	// create the world matrix for the model
+	MatrixBuffer matrixBuffer = m_matrixBuffer;
+	objTransform->getWorldMatrix(matrixBuffer.world);
+	transposeMatrixBuffer(matrixBuffer);
 
-	// Create pixel buffer
+	// create pixel buffer
 	PixelBuffer pixelBuffer;
-	pixelBuffer.pixelColor = objMaterial->GetVector4("BaseColour");
+	pixelBuffer.pixelColor = objMaterial->getVector4("BaseColour");
 
-	// Update Buffers
-	UpdateBuffer(VertexShader, 0, matrixBuffer);
-	UpdateBuffer(PixelShader, 0, pixelBuffer);
-	SendBuffersToShader();
+	// update Buffers
+	updateBuffer(VertexShader, 0, matrixBuffer);
+	updateBuffer(PixelShader, 0, pixelBuffer);
+	sendBuffersToShader();
 
 	return true;
 }

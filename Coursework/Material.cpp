@@ -3,20 +3,20 @@
 
 Material::Material()
 {
-	// Initialise pointers
-	BaseTexture_ = 0;
-	NormalTexture_ = 0;
-	AlphaTexture_ = 0;
-	NoiseTexture_ = 0;
-	DistortionTexture_ = 0;
-	PerturbTexture_ = 0;
+	// initialise pointers
+	m_baseTexture = 0;
+	m_normalTexture = 0;
+	m_alphaTexture = 0;
+	m_noiseTexture = 0;
+	m_distortionTexture = 0;
+	m_perturbTexture = 0;
 
-	// Initialise colours
-	Tint_ = Colour::White;
-	SpecularAmount_ = 32.0f;
+	// initialise colours
+	m_tint = Colour::White;
+	m_specularAmount = 32.0f;
 
 	// Add Default Data
-	SetVector4("BaseColour", D3DXVECTOR4(1,1,1,1));
+	setVector4("BaseColour", D3DXVECTOR4(1,1,1,1));
 }
 
 Material::Material(const Material& material)
@@ -29,29 +29,29 @@ Material::~Material()
 
 }
 
-// Shutdown
-void Material::Shutdown()
+// terminate
+void Material::terminate()
 {
 	
 }
 
-// Setters
-void Material::SetColour(D3DXVECTOR4 tint)
+// setters
+void Material::setColour(D3DXVECTOR4 tint)
 {
-	Tint_ = tint;
+	m_tint = tint;
 }
 
-void Material::SetSpecular(float amount)
+void Material::setSpecular(float amount)
 {
-	SpecularAmount_ = amount;
+	m_specularAmount = amount;
 }
 
-bool Material::SetBaseTexture(std::string textureFilename)
+bool Material::setBaseTexture(std::string textureFilename)
 {
-	// Create the texture
-	AssetManager::Instance()->LoadTexture(&BaseTexture_, textureFilename);
+	// create the texture
+	AssetManager::getInstance()->loadTexture(&m_baseTexture, textureFilename);
 
-	if (!BaseTexture_)
+	if (!m_baseTexture)
 	{
 		return false;
 	}
@@ -59,12 +59,12 @@ bool Material::SetBaseTexture(std::string textureFilename)
 	return true;
 }
 
-bool Material::SetNormalTexture(std::string textureFilename)
+bool Material::setNormalTexture(std::string textureFilename)
 {
-	// Create the texture
-	AssetManager::Instance()->LoadTexture(&NormalTexture_, textureFilename);
+	// create the texture
+	AssetManager::getInstance()->loadTexture(&m_normalTexture, textureFilename);
 
-	if (!NormalTexture_)
+	if (!m_normalTexture)
 	{
 		return false;
 	}
@@ -72,12 +72,12 @@ bool Material::SetNormalTexture(std::string textureFilename)
 	return true;
 }
 
-bool Material::SetAlphaTexture(std::string textureFilename)
+bool Material::setAlphaTexture(std::string textureFilename)
 {
-	// Create the texture
-	AssetManager::Instance()->LoadTexture(&AlphaTexture_, textureFilename);
+	// create the texture
+	AssetManager::getInstance()->loadTexture(&m_alphaTexture, textureFilename);
 
-	if (!AlphaTexture_)
+	if (!m_alphaTexture)
 	{
 		return false;
 	}
@@ -85,12 +85,12 @@ bool Material::SetAlphaTexture(std::string textureFilename)
 	return true;
 }
 
-bool Material::SetNoiseTexture(std::string textureFilename)
+bool Material::setNoiseTexture(std::string textureFilename)
 {
-	// Create the texture
-	AssetManager::Instance()->LoadTexture(&NoiseTexture_, textureFilename);
+	// create the texture
+	AssetManager::getInstance()->loadTexture(&m_noiseTexture, textureFilename);
 
-	if (!NoiseTexture_)
+	if (!m_noiseTexture)
 	{
 		return false;
 	}
@@ -98,12 +98,12 @@ bool Material::SetNoiseTexture(std::string textureFilename)
 	return true;
 }
 
-bool Material::SetDistortionTexture(std::string textureFilename)
+bool Material::setDistortionTexture(std::string textureFilename)
 {
-	// Create the texture
-	AssetManager::Instance()->LoadTexture(&DistortionTexture_, textureFilename);
+	// create the texture
+	AssetManager::getInstance()->loadTexture(&m_distortionTexture, textureFilename);
 
-	if (!DistortionTexture_)
+	if (!m_distortionTexture)
 	{
 		return false;
 	}
@@ -111,12 +111,12 @@ bool Material::SetDistortionTexture(std::string textureFilename)
 	return true;
 }
 
-bool Material::SetPerturbTexture(std::string textureFilename)
+bool Material::setPerturbTexture(std::string textureFilename)
 {
-	// Create the texture
-	AssetManager::Instance()->LoadTexture(&PerturbTexture_, textureFilename);
+	// create the texture
+	AssetManager::getInstance()->loadTexture(&m_perturbTexture, textureFilename);
 
-	if (!PerturbTexture_)
+	if (!m_perturbTexture)
 	{
 		return false;
 	}
@@ -124,163 +124,163 @@ bool Material::SetPerturbTexture(std::string textureFilename)
 	return true;
 }
 
-// Getters
-D3DXVECTOR4 Material::GetTint()
+// getters
+D3DXVECTOR4 Material::getTint()
 {
-	return Tint_;
+	return m_tint;
 }
 
-float Material::GetSpecular()
+float Material::getSpecular()
 {
-	return SpecularAmount_;
+	return m_specularAmount;
 }
 
-ID3D11ShaderResourceView* Material::GetBaseTexture()
+ID3D11ShaderResourceView* Material::getBaseTexture()
 {
-	if (!BaseTexture_)
+	if (!m_baseTexture)
 		return 0;
 
-	return BaseTexture_->GetTexture();
+	return m_baseTexture->getTexture();
 }
 
-ID3D11ShaderResourceView* Material::GetNormalTexture()
+ID3D11ShaderResourceView* Material::getNormalTexture()
 {
-	if (!NormalTexture_)
+	if (!m_normalTexture)
 		return 0;
 
-	return NormalTexture_->GetTexture();
+	return m_normalTexture->getTexture();
 }
 
-ID3D11ShaderResourceView* Material::GetAlphaTexture()
+ID3D11ShaderResourceView* Material::getAlphaTexture()
 {
-	if (!AlphaTexture_)
+	if (!m_alphaTexture)
 		return 0;
 
-	return AlphaTexture_->GetTexture();
+	return m_alphaTexture->getTexture();
 }
 
-ID3D11ShaderResourceView* Material::GetNoiseTexture()
+ID3D11ShaderResourceView* Material::getNoiseTexture()
 {
-	if (!NoiseTexture_)
+	if (!m_noiseTexture)
 		return 0;
 
-	return NoiseTexture_->GetTexture();
+	return m_noiseTexture->getTexture();
 }
 
-ID3D11ShaderResourceView* Material::GetDistortionTexture()
+ID3D11ShaderResourceView* Material::getDistortionTexture()
 {
-	if (!DistortionTexture_)
+	if (!m_distortionTexture)
 		return 0;
 
-	return DistortionTexture_->GetTexture();
+	return m_distortionTexture->getTexture();
 }
 
-ID3D11ShaderResourceView* Material::GetPerturbTexture()
+ID3D11ShaderResourceView* Material::getPerturbTexture()
 {
-	if (!PerturbTexture_)
+	if (!m_perturbTexture)
 		return 0;
 
-	return PerturbTexture_->GetTexture();
+	return m_perturbTexture->getTexture();
 }
 
 //========================================================================
 // NEW STUFF
 //========================================================================
 
-// Setters
-void Material::SetFloat(string keyName, float value)
+// setters
+void Material::setFloat(string keyName, float value)
 {
-	FloatDatabase_[keyName] = value;
+	m_floatProperties[keyName] = value;
 }
 
-bool Material::SetTexture(string keyName, string value)
+bool Material::setTexture(string keyName, string value)
 {
-	if (TextureDatabase_.count(keyName))
+	if (m_textureProperties.count(keyName))
 	{
 		return true;
 	}
 
 	Texture* newTexture = 0;
 
-	// Load Texture
-	AssetManager::Instance()->LoadTexture(&newTexture, value);
+	// onload Texture
+	AssetManager::getInstance()->loadTexture(&newTexture, value);
 
 	if (!newTexture)
 	{
 		return false;
 	}
 
-	TextureDatabase_[keyName] = newTexture;
+	m_textureProperties[keyName] = newTexture;
 
 	return true;
 }
 
-void Material::SetTexture(string keyName, Texture* value)
+void Material::setTexture(string keyName, Texture* value)
 {
-	TextureDatabase_[keyName] = value;
+	m_textureProperties[keyName] = value;
 }
 
-void Material::SetVector2(string keyName, D3DXVECTOR2 value)
+void Material::setVector2(string keyName, D3DXVECTOR2 value)
 {
-	Vector2Database_[keyName] = value;
+	m_vector2Properties[keyName] = value;
 }
 
-void Material::SetVector3(string keyName, D3DXVECTOR3 value)
+void Material::setVector3(string keyName, D3DXVECTOR3 value)
 {
-	Vector3Database_[keyName] = value;
+	m_vector3Properties[keyName] = value;
 }
 
-void Material::SetVector4(string keyName, D3DXVECTOR4 value)
+void Material::setVector4(string keyName, D3DXVECTOR4 value)
 {
-	Vector4Database_[keyName] = value;
+	m_vector4Properties[keyName] = value;
 }
 
-// Getters
-float Material::GetFloat(string keyName)
+// getters
+float Material::getFloat(string keyName)
 {
-	if (FloatDatabase_.count(keyName))
+	if (m_floatProperties.count(keyName))
 	{
-		return FloatDatabase_[keyName];
+		return m_floatProperties[keyName];
 	}
 
 	return 0;
 }
 
-Texture* Material::GetTexture(string keyName)
+Texture* Material::getTexture(string keyName)
 {
-	if (TextureDatabase_.count(keyName))
+	if (m_textureProperties.count(keyName))
 	{
-		return TextureDatabase_[keyName];
+		return m_textureProperties[keyName];
 	}
 
 	return 0;
 }
 
-D3DXVECTOR2 Material::GetVector2(string keyName)
+D3DXVECTOR2 Material::getVector2(string keyName)
 {
-	if (Vector2Database_.count(keyName))
+	if (m_vector2Properties.count(keyName))
 	{
-		return Vector2Database_[keyName];
+		return m_vector2Properties[keyName];
 	}
 
 	return D3DXVECTOR2(0.0f, 0.0f);
 }
 
-D3DXVECTOR3 Material::GetVector3(string keyName)
+D3DXVECTOR3 Material::getVector3(string keyName)
 {
-	if (Vector3Database_.count(keyName))
+	if (m_vector3Properties.count(keyName))
 	{
-		return Vector3Database_[keyName];
+		return m_vector3Properties[keyName];
 	}
 
 	return D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
-D3DXVECTOR4 Material::GetVector4(string keyName)
+D3DXVECTOR4 Material::getVector4(string keyName)
 {
-	if (Vector4Database_.count(keyName))
+	if (m_vector4Properties.count(keyName))
 	{
-		return Vector4Database_[keyName];
+		return m_vector4Properties[keyName];
 	}
 
 	return D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f);

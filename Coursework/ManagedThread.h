@@ -17,54 +17,53 @@ public:
 	{
 	}
 
-	inline void SetFunction(function<T> function) { workerFunction = function; }
+	inline void setFunction(function<T> function) { m_workerFunction = function; }
 
-	inline void Start(bool isLooped = false)
+	inline void begin(bool isLooped = false)
 	{
-		isFinished = false;
+		m_completed = false;
 
-		// Create a thread
-		workerThread = thread([this, isLooped]()
+		// create a thread
+		m_workerThread = thread([this, isLooped]()
 		{
 			// Check if we want 
 			if (isLooped)
 			{
-				while (!isFinished)
+				while (!m_completed)
 				{
-					workerFunction();
+					m_workerFunction();
 				}
 			}
 			else
 			{
 				// Call the function
-				workerFunction();
+				m_workerFunction();
 
 				// Flag its complete
-				isFinished = true;
+				m_completed = true;
 			}
 		});
 	}
 
-	inline bool TryJoin()
+	inline bool tryJoin()
 	{
-		if (isFinished && workerThread.joinable())
+		if (m_completed && m_workerThread.joinable())
 		{
-			workerThread.join();
+			m_workerThread.join();
 			return true;
 		}
 
 		return false;
 	}
 
-	inline void ForceClose()
+	inline void forceQuit()
 	{
-		isFinished = true;
-		TryJoin();
+		m_completed = true;
+		tryJoin();
 	}
 
 private:
-	function<T> workerFunction;
-	thread workerThread;
-
-	bool isFinished;
+	function<T> m_workerFunction;
+	thread m_workerThread;
+	bool m_completed;
 };

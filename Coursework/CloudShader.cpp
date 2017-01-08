@@ -10,38 +10,38 @@ CloudShader::~CloudShader()
 
 }
 
-bool CloudShader::Initialise(HWND hwnd)
+bool CloudShader::initialise(HWND hwnd)
 {
 	// Define Shaders
-	AddShader("cloud.vs");
-	AddShader("cloud.ps");
+	addShader("cloud.vs");
+	addShader("cloud.ps");
 
 	// Define Input Layout
-	AddLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
+	addLayout("BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0);
 
 	// Define Buffers
-	AddBuffer<MatrixBuffer>(VertexShader);
-	AddBuffer<SkyBuffer>(PixelShader);
+	addBuffer<MatrixBuffer>(VertexShader);
+	addBuffer<SkyBuffer>(PixelShader);
 
 	// Define Sampler State
-	AddSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
+	addSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, D3DXVECTOR4(0, 0, 0, 0), 0, D3D11_FLOAT32_MAX);
 
-	// Build Shader
-	Result_ = BuildShader(hwnd);
-	if (!Result_)
+	// build Shader
+	m_result = buildShader(hwnd);
+	if (!m_result)
 	{
-		OutputToDebug("Could not initialise cloud shader.");
+		outputToDebug("Could not initialise cloud shader.");
 		return false;
 	}
 
 	return true;
 }
 
-bool CloudShader::Prepare(Material* objMaterial, Transform* objTransform)
+bool CloudShader::prepare(Material* objMaterial, Transform* objTransform)
 {
 	if (!objMaterial)
 	{
@@ -50,29 +50,29 @@ bool CloudShader::Prepare(Material* objMaterial, Transform* objTransform)
 	}
 
 	// Model Properties
-	ID3D11ShaderResourceView* baseTexture = objMaterial->GetTexture("BaseTexture")->GetTexture();
-	ID3D11ShaderResourceView* perturbTexture = objMaterial->GetTexture("PerturbTexture")->GetTexture();
+	ID3D11ShaderResourceView* baseTexture = objMaterial->getTexture("BaseTexture")->getTexture();
+	ID3D11ShaderResourceView* perturbTexture = objMaterial->getTexture("PerturbTexture")->getTexture();
 
-	// Create matrix buffer
-	MatrixBuffer matrixBuffer = MatrixBuffer_;
-	objTransform->GetTranslationMatrix(matrixBuffer.world);
-	TransposeMatrix(matrixBuffer);
+	// create matrix buffer
+	MatrixBuffer matrixBuffer = m_matrixBuffer;
+	objTransform->getTranslationMatrix(matrixBuffer.world);
+	transposeMatrixBuffer(matrixBuffer);
 
-	// Create the sky buffer
+	// create the sky buffer
 	SkyBuffer skyBuffer;
-	skyBuffer.brightness = objMaterial->GetFloat("TextureBrightness");
-	skyBuffer.scale = objMaterial->GetFloat("TextureScale");
-	skyBuffer.translation = objMaterial->GetFloat("Frame");
+	skyBuffer.brightness = objMaterial->getFloat("TextureBrightness");
+	skyBuffer.scale = objMaterial->getFloat("TextureScale");
+	skyBuffer.translation = objMaterial->getFloat("update");
 	skyBuffer.padding = 0.0f;
 
-	// Update Buffers
-	UpdateBuffer(VertexShader, 0, matrixBuffer);
-	UpdateBuffer(PixelShader, 0, skyBuffer);
-	SendBuffersToShader();
+	// update Buffers
+	updateBuffer(VertexShader, 0, matrixBuffer);
+	updateBuffer(PixelShader, 0, skyBuffer);
+	sendBuffersToShader();
 
 	// Send Textures
-	SendTextureToShader(0, baseTexture);
-	SendTextureToShader(1, perturbTexture);
+	sendTextureToShader(0, baseTexture);
+	sendTextureToShader(1, perturbTexture);
 
 	return true;
 }

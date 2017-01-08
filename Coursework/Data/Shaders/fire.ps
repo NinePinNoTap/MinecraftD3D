@@ -50,10 +50,10 @@ float4 PixelShaderMain(PixelInputType input) : SV_TARGET
 	noise2.xy = noise2.xy * distortion2.xy;
 	noise3.xy = noise3.xy * distortion3.xy;
 
-	// Create a final noise value
+	// create a final noise value
 	finalNoise = noise1 + noise2 + noise3;
 
-	// Create a perturb value where 0 is more distortion and 1 is less disorted
+	// create a perturb value where 0 is more distortion and 1 is less disorted
 	perturb = ((1.0f - input.tex.y) * distortionScale) + distortionBias;
 
 	// Apply the perturb to the noise to get the final sample texture coordinates

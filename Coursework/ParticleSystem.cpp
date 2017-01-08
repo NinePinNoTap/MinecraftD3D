@@ -14,51 +14,51 @@ ParticleSystem::~ParticleSystem()
 }
 
 // Initialising
-bool ParticleSystem::Initialise(string textureFilename)
+bool ParticleSystem::initialise(string textureFilename)
 {
 	//=======================
-	// Create Particle Model
+	// create Particle Model
 	//=======================
 
-	// Create Model
-	Model_ = new Model;
+	// create Model
+	m_model = new Model;
 
 	// Give the model a blank mesh
-	Model_->AddMesh(new Mesh3D);
+	m_model->addMesh(new Mesh3D);
 
-	// Create Material
+	// create Material
 	Material* createdMaterial = new Material;
-	Result_ = createdMaterial->SetBaseTexture(textureFilename);
-	if (!Result_)
+	m_result = createdMaterial->setBaseTexture(textureFilename);
+	if (!m_result)
 	{
 		return false;
 	}
-	Model_->AddMaterial(createdMaterial);
+	m_model->addMaterial(createdMaterial);
 
 	//======================
-	// Initialise Particles
+	// initialise Particles
 	//======================
 
-	// Set the random deviation of where the particles can be located when emitted
-	Deviation_.x = 1.0f;
-	Deviation_.y = 0.5f;
-	Deviation_.z = 1.0f;
+	// set the random deviation of where the particles can be located when emitted
+	m_deviation.x = 1.0f;
+	m_deviation.y = 0.5f;
+	m_deviation.z = 1.0f;
 
 	// Define particle properties
-	Velocity_ = D3DXVECTOR3(0.25, 0.25, 0);
-	ParticleSize_ = 0.1f;
-	ParticlesPerSecond_ = 250.0f;
-	MaxParticles_ = 10000;
+	m_velocity = D3DXVECTOR3(0.25, 0.25, 0);
+	m_particleSize = 0.1f;
+	m_particlesPerSecond = 250.0f;
+	m_maxParticles = 10000;
 
 	// Define emission rate
-	AccumulatedTime_ = 0.0f;
+	m_accumulatedTime = 0.0f;
 
 	//======================
-	// Initialise Transform
+	// initialise Transform
 	//======================
 
-	Transform_ = new Transform;
-	if (!Transform_)
+	m_transform = new Transform;
+	if (!m_transform)
 	{
 		return false;
 	}
@@ -66,45 +66,45 @@ bool ParticleSystem::Initialise(string textureFilename)
 	return true;
 }
 
-// Shutdown
-void ParticleSystem::Shutdown()
+// terminate
+void ParticleSystem::terminate()
 {
-	GameObject::Shutdown();
+	GameObject::terminate();
 
 	// Clear particles
-	ParticleList_.clear();
+	m_particles.clear();
 
 	return;
 }
 
-// Frame
-bool ParticleSystem::Frame()
+// update
+bool ParticleSystem::update()
 {
 	// Increment the frame time
-	AccumulatedTime_ += PerformanceManager::Instance()->GetDeltaTime() / 1000.0f;
+	m_accumulatedTime += PerformanceManager::getInstance()->getDeltaTime() / 1000.0f;
 
 	// Check if it is time to emit a new particle or not
-	if (AccumulatedTime_ > (1000.0f / ParticlesPerSecond_))
+	if (m_accumulatedTime > (1000.0f / m_particlesPerSecond))
 	{
 		// Emit new particles
-		EmitParticle();
+		emitParticle();
 
 		// Reset timer
-		AccumulatedTime_ = 0.0f;
+		m_accumulatedTime = 0.0f;
 	}
 	
 	// Make sure we have particles to update
-	if (ParticleList_.empty())
+	if (m_particles.empty())
 	{
 		return true;
 	}
 
-	// Update the position of the particles
-	UpdateParticles();
+	// update the position of the particles
+	updateParticles();
 
-	// Update the dynamic vertex buffer with the new position of each particle
-	Result_ = UpdateBuffers();
-	if (!Result_)
+	// update the dynamic vertex buffer with the new position of each particle
+	m_result = updateBuffers();
+	if (!m_result)
 	{
 		return false;
 	}
@@ -113,39 +113,39 @@ bool ParticleSystem::Frame()
 }
 
 // Particles
-void ParticleSystem::EmitParticle()
+void ParticleSystem::emitParticle()
 {
 	ParticleType createdParticle;
 
 	//=================
-	// Create Particle
+	// create Particle
 	//=================
 
-	// Generate a random position
-	createdParticle.position.x = (((float)rand() - (float)rand()) / RAND_MAX) * Deviation_.x;
-	createdParticle.position.y = (((float)rand() - (float)rand()) / RAND_MAX) * Deviation_.y;
-	createdParticle.position.z = (((float)rand() - (float)rand()) / RAND_MAX) * Deviation_.z;
+	// generate a random position
+	createdParticle.position.x = (((float)rand() - (float)rand()) / RAND_MAX) * m_deviation.x;
+	createdParticle.position.y = (((float)rand() - (float)rand()) / RAND_MAX) * m_deviation.y;
+	createdParticle.position.z = (((float)rand() - (float)rand()) / RAND_MAX) * m_deviation.z;
 
 	// Define movement velocity
-	createdParticle.velocity = Velocity_;
+	createdParticle.velocity = m_velocity;
 	createdParticle.lifetime = 0.0f;
 	createdParticle.maxLifetime = 5000.0f;
 
 	// Add to the list
-	ParticleList_.push_back(createdParticle);
+	m_particles.push_back(createdParticle);
 
 	return;
 }
 
-void ParticleSystem::UpdateParticles()
+void ParticleSystem::updateParticles()
 {
 	float frameTime;
 
-	// Get delta time
-	frameTime = PerformanceManager::Instance()->GetDeltaTime() / 1000.0f;
+	// get delta time
+	frameTime = PerformanceManager::getInstance()->getDeltaTime() / 1000.0f;
 
-	// Update all particles
-	for (std::list<ParticleType>::iterator it = ParticleList_.begin(); it != ParticleList_.end(); it++)
+	// update all particles
+	for (std::list<ParticleType>::iterator it = m_particles.begin(); it != m_particles.end(); it++)
 	{
 		// Apply velocity
 		it->position += it->velocity * frameTime;
@@ -153,22 +153,22 @@ void ParticleSystem::UpdateParticles()
 	}
 
 	// Sort active particles
-	ParticleList_.sort();
+	m_particles.sort();
 
 	return;
 }
 
-bool ParticleSystem::UpdateBuffers()
+bool ParticleSystem::updateBuffers()
 {
 	VertexData* particleMesh;
 	unsigned long* indices;
 	int vertexCount, indexCount, index;
 
 	// Define counters
-	vertexCount = ParticleList_.size() * 6;
+	vertexCount = m_particles.size() * 6;
 	indexCount = vertexCount;
 
-	// Create buffer space
+	// create buffer space
 	particleMesh = new VertexData[vertexCount];
 	if (!particleMesh)
 	{
@@ -179,40 +179,40 @@ bool ParticleSystem::UpdateBuffers()
 	// Each particle is a quad made out of two triangles
 	index = 0;
 
-	for (std::list<ParticleType>::iterator it = ParticleList_.begin(); it != ParticleList_.end(); ++it)
+	for (std::list<ParticleType>::iterator it = m_particles.begin(); it != m_particles.end(); ++it)
 	{
 		// Bottom left
-		particleMesh[index].position = D3DXVECTOR3(it->position.x - ParticleSize_, it->position.y - ParticleSize_, it->position.z);
+		particleMesh[index].position = D3DXVECTOR3(it->position.x - m_particleSize, it->position.y - m_particleSize, it->position.z);
 		particleMesh[index].texture = D3DXVECTOR2(0.0f, 1.0f);
 		index++;
 
 		// Top left
-		particleMesh[index].position = D3DXVECTOR3(it->position.x - ParticleSize_, it->position.y + ParticleSize_, it->position.z);
+		particleMesh[index].position = D3DXVECTOR3(it->position.x - m_particleSize, it->position.y + m_particleSize, it->position.z);
 		particleMesh[index].texture = D3DXVECTOR2(0.0f, 0.0f);
 		index++;
 
 		// Bottom right
-		particleMesh[index].position = D3DXVECTOR3(it->position.x + ParticleSize_, it->position.y - ParticleSize_, it->position.z);
+		particleMesh[index].position = D3DXVECTOR3(it->position.x + m_particleSize, it->position.y - m_particleSize, it->position.z);
 		particleMesh[index].texture = D3DXVECTOR2(1.0f, 1.0f);
 		index++;
 
 		// Bottom right
-		particleMesh[index].position = D3DXVECTOR3(it->position.x + ParticleSize_, it->position.y - ParticleSize_, it->position.z);
+		particleMesh[index].position = D3DXVECTOR3(it->position.x + m_particleSize, it->position.y - m_particleSize, it->position.z);
 		particleMesh[index].texture = D3DXVECTOR2(1.0f, 1.0f);
 		index++;
 
 		// Top left
-		particleMesh[index].position = D3DXVECTOR3(it->position.x - ParticleSize_, it->position.y + ParticleSize_, it->position.z);
+		particleMesh[index].position = D3DXVECTOR3(it->position.x - m_particleSize, it->position.y + m_particleSize, it->position.z);
 		particleMesh[index].texture = D3DXVECTOR2(0.0f, 0.0f);
 		index++;
 
 		// Top right
-		particleMesh[index].position = D3DXVECTOR3(it->position.x + ParticleSize_, it->position.y + ParticleSize_, it->position.z);
+		particleMesh[index].position = D3DXVECTOR3(it->position.x + m_particleSize, it->position.y + m_particleSize, it->position.z);
 		particleMesh[index].texture = D3DXVECTOR2(1.0f, 0.0f);
 		index++;
 	}
 
-	// Create index buffer
+	// create index buffer
 	indices = new unsigned long[indexCount];
 	if (!indices)
 	{
@@ -224,12 +224,12 @@ bool ParticleSystem::UpdateBuffers()
 		indices[i] = i;
 	}
 	
-	// Update Mesh
-	Model_->GetMesh()->SetIndexCount(indexCount);
-	Model_->GetMesh()->SetVertexCount(vertexCount);
-	Model_->GetMesh()->SetMesh(particleMesh, indices);
-	Result_ = Model_->GetMesh()->Build();
-	if (!Result_)
+	// update Mesh
+	m_model->getMesh()->setIndexCount(indexCount);
+	m_model->getMesh()->setVertexCount(vertexCount);
+	m_model->getMesh()->setMesh(particleMesh, indices);
+	m_result = m_model->getMesh()->build();
+	if (!m_result)
 	{
 		return false;
 	}
@@ -243,13 +243,13 @@ bool ParticleSystem::ParticleType::operator<(const ParticleType& other)
 	float particleDistance;
 	float otherDistance;
 
-	cameraPosition = Camera::Instance()->GetTransform()->GetPosition();
+	cameraPosition = Camera::getInstance()->getTransform()->getPosition();
 
 	// Calculate distance from camera to this particle
-	particleDistance = Distance(position, cameraPosition);
+	particleDistance = distance(position, cameraPosition);
 
 	// Calculate distance from camera to other particle
-	otherDistance = Distance(other.position, cameraPosition);
+	otherDistance = distance(other.position, cameraPosition);
 
 	return particleDistance > otherDistance;
 }

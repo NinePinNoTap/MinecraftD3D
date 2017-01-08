@@ -13,74 +13,74 @@ Terrain::~Terrain()
 {
 }
 
-bool Terrain::Initialise(Rect3D terrainSize, TerrainType type, string textureFilename, string normalTextureFilename, Vector2 textureRepeat, float terrainScale, float terrainSmoothing)
+bool Terrain::initialise(Rect3D terrainSize, TerrainType type, string textureFilename, string normalTextureFilename, Vector2 textureRepeat, float terrainScale, float terrainSmoothing)
 {
 	TerrainFactory TerrainFactory;
 	int terrainSeed;
 
 	//==============
-	// Create Model
+	// create Model
 	//==============
 
-	Model_ = new Model;
-	if (!Model_)
+	m_model = new Model;
+	if (!m_model)
 	{
 		return false;
 	}
 
-	// Create Terrain
-	if (type == TerrainType::FLAT)
+	// create Terrain
+	if (type == TerrainType::FlatTerrain)
 	{
-		TerrainFactory.CreateTerrain(terrainSize, textureRepeat, terrainScale, *Model_);
+		TerrainFactory.createTerrain(terrainSize, textureRepeat, terrainScale, *m_model);
 	}
-	else if (type == TerrainType::PERLIN)
+	else if (type == TerrainType::PerlinTerrain)
 	{
 		terrainSeed = rand() % 100000;
 
-		TerrainFactory.CreateTerrainWithPerlinNoise(terrainSize, textureRepeat, terrainScale, terrainSmoothing * 15, *Model_, terrainSeed);
+		TerrainFactory.createTerrainWithPerlinNoise(terrainSize, textureRepeat, terrainScale, terrainSmoothing * 15, *m_model, terrainSeed);
 	}
 
 	//=================
-	// Create Material
+	// create Material
 	//=================
 
 	Material* newMaterial = new Material;
-	Result_ = newMaterial->SetBaseTexture(textureFilename);
-	if (!Result_)
+	m_result = newMaterial->setBaseTexture(textureFilename);
+	if (!m_result)
 	{
 		return false;
 	}
 
-	Result_ = newMaterial->SetNormalTexture(normalTextureFilename);
-	if (!Result_)
+	m_result = newMaterial->setNormalTexture(normalTextureFilename);
+	if (!m_result)
 	{
 		return false;
 	}
 
-	Model_->AddMaterial(newMaterial);
+	m_model->addMaterial(newMaterial);
 
 	//==================
-	// Create Transform
+	// create Transform
 	//==================
 
-	Transform_ = new Transform;
-	if (!Transform_)
+	m_transform = new Transform;
+	if (!m_transform)
 	{
 		return false;
 	}
 
 	//=================
-	// Initialise Vars
+	// initialise Vars
 	//=================
 
-	Frame_ = 0;
+	m_frame = 0;
 
-	IsReflective_ = RenderMode::Off;
-	UseCulling_ = RenderMode::Off;
-	UseDepth_ = RenderMode::On;
-	BlendMode_ = BlendMode::NoBlending;
+	m_reflective = renderMode::Off;
+	m_culled = renderMode::Off;
+	m_depth = renderMode::On;
+	m_blendMode = BlendMode::NoBlending;
 
-	IsActive_ = true;
+	m_isActive = true;
 
 	return true;
 }

@@ -2,9 +2,9 @@
 
 Transform::Transform()
 {
-	SetPosition(0, 0, 0);
-	SetRotation(0, 0, 0);
-	SetScale(1, 1, 1);
+	setPosition(0, 0, 0);
+	setRotation(0, 0, 0);
+	setScale(1, 1, 1);
 }
 
 Transform::~Transform()
@@ -12,180 +12,180 @@ Transform::~Transform()
 }
 
 
-// Overall Setters
-void Transform::SetPosition(D3DXVECTOR3 Position)
+// Overall setters
+void Transform::setPosition(D3DXVECTOR3 Position)
 {
-	Position_ = Position;
+	m_position = Position;
 }
 
-void Transform::SetRotation(D3DXVECTOR3 Rotation)
+void Transform::setRotation(D3DXVECTOR3 Rotation)
 {
-	Rotation_ = Rotation;
+	m_rotation = Rotation;
 }
 
-void Transform::SetScale(D3DXVECTOR3 Scale)
+void Transform::setScale(D3DXVECTOR3 Scale)
 {
-	Scale_ = Scale;
+	m_scale = Scale;
 }
 
-void Transform::SetPosition(float x, float y, float z)
+void Transform::setPosition(float x, float y, float z)
 {
-	Position_ = D3DXVECTOR3(x, y, z);
+	m_position = D3DXVECTOR3(x, y, z);
 }
 
-void Transform::SetRotation(float x, float y, float z)
+void Transform::setRotation(float x, float y, float z)
 {
-	Rotation_ = D3DXVECTOR3(x, y, z);
+	m_rotation = D3DXVECTOR3(x, y, z);
 
 	// Keep rotation values between 0 and 360
-	Wrap(Rotation_.x, 0, 360);
-	Wrap(Rotation_.y, 0, 360);
-	Wrap(Rotation_.z, 0, 360);
+	wrap(m_rotation.x, 0, 360);
+	wrap(m_rotation.y, 0, 360);
+	wrap(m_rotation.z, 0, 360);
 }
 
-void Transform::SetScale(float x, float y, float z)
+void Transform::setScale(float x, float y, float z)
 {
-	Scale_ = D3DXVECTOR3(x, y, z);
+	m_scale = D3DXVECTOR3(x, y, z);
 }
 
-// Individual Position Setters
-void Transform::SetX(float x)
+// Individual Position setters
+void Transform::setX(float x)
 {
-	Position_.x = x;
+	m_position.x = x;
 }
 
-void Transform::SetY(float y)
+void Transform::setY(float y)
 {
-	Position_.y = y;
+	m_position.y = y;
 }
 
-void Transform::SetZ(float z)
+void Transform::setZ(float z)
 {
-	Position_.z = z;
+	m_position.z = z;
 }
 
-// Individual Rotation Setters
-void Transform::SetRotationX(float x)
+// Individual Rotation setters
+void Transform::setRotationX(float x)
 {
-	Rotation_.x = x;
+	m_rotation.x = x;
 }
 
-void Transform::SetRotationY(float y)
+void Transform::setRotationY(float y)
 {
-	Rotation_.y = y;
+	m_rotation.y = y;
 }
 
-void Transform::SetRotationZ(float z)
+void Transform::setRotationZ(float z)
 {
-	Rotation_.z = z;
+	m_rotation.z = z;
 }
 
 // Overall Changer
-void Transform::Move(D3DXVECTOR3 amount)
+void Transform::move(D3DXVECTOR3 amount)
 {
-	Position_ += amount;
+	m_position += amount;
 }
 
-void Transform::Rotate(D3DXVECTOR3 amount)
+void Transform::rotate(D3DXVECTOR3 amount)
 {
-	Rotation_ += amount;
+	m_rotation += amount;
 
 	// Keep rotation values between 0 and 360
-	Wrap(Rotation_.x, 0, 360);
-	Wrap(Rotation_.y, 0, 360);
-	Wrap(Rotation_.z, 0, 360);
+	wrap(m_rotation.x, 0, 360);
+	wrap(m_rotation.y, 0, 360);
+	wrap(m_rotation.z, 0, 360);
 }
 
-void Transform::Move(float x, float y, float z)
+void Transform::move(float x, float y, float z)
 {
-	Position_.x += x;
-	Position_.y += y;
-	Position_.z += z;
+	m_position.x += x;
+	m_position.y += y;
+	m_position.z += z;
 }
 
-void Transform::Rotate(float x, float y, float z)
+void Transform::rotate(float x, float y, float z)
 {
-	Rotation_.x += x;
-	Rotation_.y += y;
-	Rotation_.z += z;
+	m_rotation.x += x;
+	m_rotation.y += y;
+	m_rotation.z += z;
 
-	// Clamp looking up and down
-	Clamp(Rotation_.x, -89, 90);
+	// clamp looking up and down
+	clamp(m_rotation.x, -89, 90);
 
 	// Keep rotation values between 0 and 360
-	Wrap(Rotation_.y, 0, 360);
-	Wrap(Rotation_.z, 0, 360);
+	wrap(m_rotation.y, 0, 360);
+	wrap(m_rotation.z, 0, 360);
 }
 
 // Individual Position Changer
-void Transform::MoveX(float x)
+void Transform::moveX(float x)
 {
-	Position_.x += x;
+	m_position.x += x;
 }
 
-void Transform::MoveY(float y)
+void Transform::moveY(float y)
 {
-	Position_.y += y;
+	m_position.y += y;
 }
 
-void Transform::MoveZ(float z)
+void Transform::moveZ(float z)
 {
-	Position_.z += z;
+	m_position.z += z;
 }
 
 // Individual Rotation Changer
-void Transform::RotateX(float x)
+void Transform::rotateX(float x)
 {
-	Rotation_.x += x;
+	m_rotation.x += x;
 
-	// Clamp looking up and down
-	Clamp(Rotation_.x, -89, 90);
+	// clamp looking up and down
+	clamp(m_rotation.x, -89, 90);
 }
 
-void Transform::RotateY(float y)
+void Transform::rotateY(float y)
 {
-	Rotation_.y += y;
+	m_rotation.y += y;
 
 	// Make sure rotation is between 0 and 360
-	Wrap(Rotation_.y, 0, 360);
+	wrap(m_rotation.y, 0, 360);
 }
 
-void Transform::RotateZ(float z)
+void Transform::rotateZ(float z)
 {
-	Rotation_.z += z;
+	m_rotation.z += z;
 
 	// Make sure rotation is between 0 and 360
-	Wrap(Rotation_.z, 0, 360);
+	wrap(m_rotation.z, 0, 360);
 }
 
-// Transformation Getters
-D3DXVECTOR3 Transform::GetPosition()
+// Transformation getters
+D3DXVECTOR3 Transform::getPosition()
 {
-	return Position_;
+	return m_position;
 }
 
-D3DXVECTOR3 Transform::GetRotation()
+D3DXVECTOR3 Transform::getRotation()
 {
-	return Rotation_;
+	return m_rotation;
 }
 
-D3DXVECTOR3 Transform::GetScale()
+D3DXVECTOR3 Transform::getScale()
 {
-	return Scale_;
+	return m_scale;
 }
 
-// Vector Getters
-D3DXVECTOR3 Transform::GetForwardVector()
+// Vector getters
+D3DXVECTOR3 Transform::getForwardVector()
 {
 	D3DXVECTOR3 ForwardVector;
 	D3DXMATRIX RotationMatrix;
 
 	//===========================
-	// Create the Forward Vector
+	// create the Forward Vector
 	//===========================
 
-	// Create a rotation matrix based on pitch/yaw/roll
-	GetRotationMatrix(RotationMatrix);
+	// create a rotation matrix based on pitch/yaw/roll
+	getRotationMatrix(RotationMatrix);
 
 	// Apply rotation to the vector
 	D3DXVec3TransformCoord(&ForwardVector, &Vector::Forward, &RotationMatrix);
@@ -193,17 +193,17 @@ D3DXVECTOR3 Transform::GetForwardVector()
 	return ForwardVector;
 }
 
-D3DXVECTOR3 Transform::GetRightVector()
+D3DXVECTOR3 Transform::getRightVector()
 {
 	D3DXVECTOR3 RightVector;
 	D3DXMATRIX RotationMatrix;
 
 	//=========================
-	// Create the Right Vector
+	// create the Right Vector
 	//=========================
 
-	// Create a rotation matrix based on pitch/yaw/roll
-	GetRotationMatrix(RotationMatrix);
+	// create a rotation matrix based on pitch/yaw/roll
+	getRotationMatrix(RotationMatrix);
 
 	// Apply rotation to the vector
 	D3DXVec3TransformCoord(&RightVector, &Vector::Right, &RotationMatrix);
@@ -211,17 +211,17 @@ D3DXVECTOR3 Transform::GetRightVector()
 	return RightVector;
 }
 
-D3DXVECTOR3 Transform::GetUpVector()
+D3DXVECTOR3 Transform::getUpVector()
 {
 	D3DXVECTOR3 UpVector;
 	D3DXMATRIX RotationMatrix;
 
 	//======================
-	// Create the Up Vector
+	// create the Up Vector
 	//======================
 
-	// Create a rotation matrix based on pitch/yaw/roll
-	GetRotationMatrix(RotationMatrix);
+	// create a rotation matrix based on pitch/yaw/roll
+	getRotationMatrix(RotationMatrix);
 
 	// Apply rotation to the vector
 	D3DXVec3TransformCoord(&UpVector, &Vector::Up, &RotationMatrix);
@@ -229,70 +229,70 @@ D3DXVECTOR3 Transform::GetUpVector()
 	return UpVector;
 }
 
-// Individual Position Getters
-float Transform::GetX()
+// Individual Position getters
+float Transform::getX()
 {
-	return Position_.x;
+	return m_position.x;
 }
 
-float Transform::GetY()
+float Transform::getY()
 {
-	return Position_.y;
+	return m_position.y;
 }
 
-float Transform::GetZ()
+float Transform::getZ()
 {
-	return Position_.z;
+	return m_position.z;
 }
 
-// Individual Rotation Getters
-float Transform::GetPitch()
+// Individual Rotation getters
+float Transform::getPitch()
 {
-	return Rotation_.x;
+	return m_rotation.x;
 }
 
-float Transform::GetYaw()
+float Transform::getYaw()
 {
-	return Rotation_.y;
+	return m_rotation.y;
 }
 
-float Transform::GetRoll()
+float Transform::getRoll()
 {
-	return Rotation_.z;
+	return m_rotation.z;
 }
 
-// Matrix Getters
-void Transform::GetTranslationMatrix(D3DXMATRIX& TranslationMatrix)
+// Matrix getters
+void Transform::getTranslationMatrix(D3DXMATRIX& TranslationMatrix)
 {
-	D3DXMatrixTranslation(&TranslationMatrix, Position_.x, Position_.y, Position_.z);
+	D3DXMatrixTranslation(&TranslationMatrix, m_position.x, m_position.y, m_position.z);
 }
 
-void Transform::GetRotationMatrix(D3DXMATRIX& RotationMatrix)
+void Transform::getRotationMatrix(D3DXMATRIX& RotationMatrix)
 {
 	// Convert degrees to radians
-	float Pitch = D3DXToRadian(Rotation_.x);
-	float Yaw = D3DXToRadian(Rotation_.y);
-	float Roll = D3DXToRadian(Rotation_.z);
+	float Pitch = D3DXToRadian(m_rotation.x);
+	float Yaw = D3DXToRadian(m_rotation.y);
+	float Roll = D3DXToRadian(m_rotation.z);
 
 	D3DXMatrixRotationYawPitchRoll(&RotationMatrix, Yaw, Pitch, Roll);
 }
 
-void Transform::GetScaleMatrix(D3DXMATRIX& ScaleMatrix)
+void Transform::getScaleMatrix(D3DXMATRIX& ScaleMatrix)
 {
 	// Crate matrices using the vectors
-	D3DXMatrixScaling(&ScaleMatrix, Scale_.x, Scale_.y, Scale_.z);
+	D3DXMatrixScaling(&ScaleMatrix, m_scale.x, m_scale.y, m_scale.z);
 }
 
-void Transform::GetWorldMatrix(D3DXMATRIX& WorldMatrix)
+void Transform::getWorldMatrix(D3DXMATRIX& WorldMatrix)
 {
 	D3DXMATRIX ScaleMatrix;
 	D3DXMATRIX RotationMatrix;
 	D3DXMATRIX TranslationMatrix;
 
 	// Retrieve each transformation matrix
-	GetScaleMatrix(ScaleMatrix);
-	GetRotationMatrix(RotationMatrix);
-	GetTranslationMatrix(TranslationMatrix);
+	getScaleMatrix(ScaleMatrix);
+	getRotationMatrix(RotationMatrix);
+	getTranslationMatrix(TranslationMatrix);
 
 	// Apply each matrix to the world matrix
 	D3DXMatrixMultiply(&WorldMatrix, &WorldMatrix, &ScaleMatrix);
@@ -303,15 +303,15 @@ void Transform::GetWorldMatrix(D3DXMATRIX& WorldMatrix)
 // Reset
 void Transform::ResetPosition()
 {
-	Position_ = D3DXVECTOR3(0, 0, 0);
+	m_position = D3DXVECTOR3(0, 0, 0);
 }
 
 void Transform::ResetRotation()
 {
-	Rotation_ = D3DXVECTOR3(0, 0, 0);
+	m_rotation = D3DXVECTOR3(0, 0, 0);
 }
 
 void Transform::ResetScale()
 {
-	Scale_ = D3DXVECTOR3(1, 1, 1);
+	m_scale = D3DXVECTOR3(1, 1, 1);
 }

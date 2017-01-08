@@ -2,19 +2,19 @@
 
 ShaderManager::ShaderManager()
 {
-	// Initialise pointers to 0
-	CloudShader_ = 0;
-	ColourShader_ = 0;
-	FireShader_ = 0;
-	FontShader_ = 0;
-	InstancedLightShader_ = 0;
-	InstancedTextureShader_ = 0;
-	LightShader_ = 0;
-	OceanShader_ = 0;
-	SkySphereShader_ = 0;
-	TerrainShader_ = 0;
-	TerrainReflectionShader_ = 0;
-	TextureShader_ = 0;
+	// initialise pointers to 0
+	m_cloudShader = 0;
+	m_colourShader = 0;
+	m_fireShader = 0;
+	m_fontShader = 0;
+	m_instancedLightShader = 0;
+	m_instancedTextureShader = 0;
+	m_lightShader = 0;
+	m_oceanShader = 0;
+	m_skySphereShader = 0;
+	m_terrainShader = 0;
+	m_terrainReflectionShader = 0;
+	m_textureShader = 0;
 }
 
 ShaderManager::ShaderManager(const ShaderManager& other)
@@ -26,314 +26,314 @@ ShaderManager::~ShaderManager()
 }
 
 // Initialising
-bool ShaderManager::Initialise(HWND hwnd)
+bool ShaderManager::initialise(HWND hwnd)
 {
 	//=============================
-	// Initialise the Cloud Shader
+	// initialise the Cloud Shader
 	//=============================
 
-	CloudShader_ = new CloudShader;
-	if (!CloudShader_)
+	m_cloudShader = new CloudShader;
+	if (!m_cloudShader)
 	{
 		return false;
 	}
-	Result_ = CloudShader_->Initialise(hwnd);
-	if (!Result_)
+	m_result = m_cloudShader->initialise(hwnd);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//==============================
-	// Initialise the Colour Shader
+	// initialise the Colour Shader
 	//==============================
 
-	ColourShader_ = new ColourShader;
-	if (!ColourShader_)
+	m_colourShader = new ColourShader;
+	if (!m_colourShader)
 	{
 		return false;
 	}
-	Result_ = ColourShader_->Initialise(hwnd);
-	if (!Result_)
-	{
-		return false;
-	}
-
-	//============================
-	// Initialise the Fire Shader
-	//============================
-
-	FireShader_ = new FireShader;
-	if (!FireShader_)
-	{
-		return false;
-	}
-	Result_ = FireShader_->Initialise(hwnd);
-	if (!Result_)
+	m_result = m_colourShader->initialise(hwnd);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//============================
-	// Initialise the Font Shader
+	// initialise the Fire Shader
 	//============================
 
-	FontShader_ = new FontShader;
-	if (!FontShader_)
+	m_fireShader = new FireShader;
+	if (!m_fireShader)
 	{
 		return false;
 	}
-	Result_ = FontShader_->Initialise(hwnd);
-	if (!Result_)
+	m_result = m_fireShader->initialise(hwnd);
+	if (!m_result)
+	{
+		return false;
+	}
+
+	//============================
+	// initialise the Font Shader
+	//============================
+
+	m_fontShader = new FontShader;
+	if (!m_fontShader)
+	{
+		return false;
+	}
+	m_result = m_fontShader->initialise(hwnd);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//=======================================
-	// Initialise the Instanced Light Shader
+	// initialise the Instanced Light Shader
 	//=======================================
 
-	InstancedLightShader_ = new InstancedLightShader;
-	if (!InstancedLightShader_)
+	m_instancedLightShader = new InstancedLightShader;
+	if (!m_instancedLightShader)
 	{
 		return false;
 	}
-	Result_ = InstancedLightShader_->Initialise(hwnd);
-	if (!Result_)
+	m_result = m_instancedLightShader->initialise(hwnd);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//=========================================
-	// Initialise the Instanced Texture Shader
+	// initialise the Instanced Texture Shader
 	//=========================================
 
-	InstancedTextureShader_ = new InstancedTextureShader;
-	if (!InstancedTextureShader_)
+	m_instancedTextureShader = new InstancedTextureShader;
+	if (!m_instancedTextureShader)
 	{
 		return false;
 	}
-	Result_ = InstancedTextureShader_->Initialise(hwnd);
-	if (!Result_)
-	{
-		return false;
-	}
-
-	//=============================
-	// Initialise the Light Shader
-	//=============================
-
-	LightShader_ = new LightShader;
-	if (!LightShader_)
-	{
-		return false;
-	}
-	Result_ = LightShader_->Initialise(hwnd);
-	if (!Result_)
+	m_result = m_instancedTextureShader->initialise(hwnd);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//=============================
-	// Initialise the Ocean Shader
+	// initialise the Light Shader
 	//=============================
 
-	OceanShader_ = new OceanShader;
-	if (!OceanShader_)
+	m_lightShader = new LightShader;
+	if (!m_lightShader)
 	{
 		return false;
 	}
-	Result_ = OceanShader_->Initialise(hwnd);
-	if (!Result_)
+	m_result = m_lightShader->initialise(hwnd);
+	if (!m_result)
+	{
+		return false;
+	}
+
+	//=============================
+	// initialise the Ocean Shader
+	//=============================
+
+	m_oceanShader = new OceanShader;
+	if (!m_oceanShader)
+	{
+		return false;
+	}
+	m_result = m_oceanShader->initialise(hwnd);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//==================================
-	// Initialise the SkySphere Shader
+	// initialise the SkySphere Shader
 	//==================================
 
-	SkySphereShader_ = new SkyShader;
-	if (!SkySphereShader_)
+	m_skySphereShader = new SkyShader;
+	if (!m_skySphereShader)
 	{
 		return false;
 	}
-	Result_ = SkySphereShader_->Initialise(hwnd);
-	if (!Result_)
+	m_result = m_skySphereShader->initialise(hwnd);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//===============================
-	// Initialise the Terrain Shader
+	// initialise the Terrain Shader
 	//===============================
 
-	TerrainShader_ = new TerrainShader;
-	if (!TerrainShader_)
+	m_terrainShader = new TerrainShader;
+	if (!m_terrainShader)
 	{
 		return false;
 	}
-	Result_ = TerrainShader_->Initialise(hwnd);
-	if (!Result_)
+	m_result = m_terrainShader->initialise(hwnd);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//==========================================
-	// Initialise the Terrain Reflection Shader
+	// initialise the Terrain Reflection Shader
 	//==========================================
 
-	TerrainReflectionShader_ = new TerrainReflectionShader;
-	if (!TerrainReflectionShader_)
+	m_terrainReflectionShader = new TerrainReflectionShader;
+	if (!m_terrainReflectionShader)
 	{
 		return false;
 	}
-	Result_ = TerrainReflectionShader_->Initialise(hwnd);
-	if (!Result_)
+	m_result = m_terrainReflectionShader->initialise(hwnd);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//===============================
-	// Initialise the Texture Shader
+	// initialise the Texture Shader
 	//===============================
 
-	TextureShader_ = new TextureShader;
-	if (!TextureShader_)
+	m_textureShader = new TextureShader;
+	if (!m_textureShader)
 	{
 		return false;
 	}
-	Result_ = TextureShader_->Initialise(hwnd);
-	if (!Result_)
+	m_result = m_textureShader->initialise(hwnd);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//============================
-	// Initialise the Tint Shader
+	// initialise the Tint Shader
 	//============================
 
-	TintShader_ = new TintShader;
-	if (!TintShader_)
+	m_TintShader = new TintShader;
+	if (!m_TintShader)
 	{
 		return false;
 	}
-	Result_ = TintShader_->Initialise(hwnd);
-	if (!Result_)
+	m_result = m_TintShader->initialise(hwnd);
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//=======================
-	// Setup Shader Database
+	// setup Shader Database
 	//=======================
 
-	ShaderDatabase_["cloud"] = CloudShader_;
-	ShaderDatabase_["colour"] = ColourShader_;
-	ShaderDatabase_["font"] = FontShader_;
-	ShaderDatabase_["instancedlight"] = InstancedLightShader_;
-	ShaderDatabase_["instancedtexture"] = InstancedTextureShader_;
-	ShaderDatabase_["ocean"] = OceanShader_;
-	ShaderDatabase_["light"] = LightShader_;
-	ShaderDatabase_["skysphere"] = SkySphereShader_;
-	ShaderDatabase_["texture"] = TextureShader_;
-	ShaderDatabase_["terrain"] = TerrainShader_;
-	ShaderDatabase_["terrainreflection"] = TerrainReflectionShader_;
-	ShaderDatabase_["tint"] = TintShader_;
+	m_shaders["cloud"] = m_cloudShader;
+	m_shaders["colour"] = m_colourShader;
+	m_shaders["font"] = m_fontShader;
+	m_shaders["instancedlight"] = m_instancedLightShader;
+	m_shaders["instancedtexture"] = m_instancedTextureShader;
+	m_shaders["ocean"] = m_oceanShader;
+	m_shaders["light"] = m_lightShader;
+	m_shaders["skysphere"] = m_skySphereShader;
+	m_shaders["texture"] = m_textureShader;
+	m_shaders["terrain"] = m_terrainShader;
+	m_shaders["terrainreflection"] = m_terrainReflectionShader;
+	m_shaders["tint"] = m_TintShader;
 
 	return true;
 }
 
-// Shutdown
-void ShaderManager::Shutdown()
+// terminate
+void ShaderManager::terminate()
 {
 	//==================
-	// Shutdown Shaders
+	// terminate Shaders
 	//==================
 
-	if (ColourShader_)
+	if (m_colourShader)
 	{
-		ColourShader_->Shutdown();
-		delete ColourShader_;
-		ColourShader_ = 0;
+		m_colourShader->terminate();
+		delete m_colourShader;
+		m_colourShader = 0;
 	}
 
-	if (CloudShader_)
+	if (m_cloudShader)
 	{
-		CloudShader_->Shutdown();
-		delete CloudShader_;
-		CloudShader_ = 0;
+		m_cloudShader->terminate();
+		delete m_cloudShader;
+		m_cloudShader = 0;
 	}
 
-	if (FireShader_)
+	if (m_fireShader)
 	{
-		FireShader_->Shutdown();
-		delete FireShader_;
-		FireShader_ = 0;
+		m_fireShader->terminate();
+		delete m_fireShader;
+		m_fireShader = 0;
 	}
 
-	if (FontShader_)
+	if (m_fontShader)
 	{
-		FontShader_->Shutdown();
-		delete FontShader_;
-		FontShader_ = 0;
+		m_fontShader->terminate();
+		delete m_fontShader;
+		m_fontShader = 0;
 	}
 
-	if (LightShader_)
+	if (m_lightShader)
 	{
-		LightShader_->Shutdown();
-		delete LightShader_;
-		LightShader_ = 0;
+		m_lightShader->terminate();
+		delete m_lightShader;
+		m_lightShader = 0;
 	}
 
-	if (OceanShader_)
+	if (m_oceanShader)
 	{
-		OceanShader_->Shutdown();
-		delete OceanShader_;
-		OceanShader_ = 0;
+		m_oceanShader->terminate();
+		delete m_oceanShader;
+		m_oceanShader = 0;
 	}
 
-	if (SkySphereShader_)
+	if (m_skySphereShader)
 	{
-		SkySphereShader_->Shutdown();
-		delete SkySphereShader_;
-		SkySphereShader_ = 0;
+		m_skySphereShader->terminate();
+		delete m_skySphereShader;
+		m_skySphereShader = 0;
 	}
 
-	if (TerrainShader_)
+	if (m_terrainShader)
 	{
-		TerrainShader_->Shutdown();
-		delete TerrainShader_;
-		TerrainShader_ = 0;
+		m_terrainShader->terminate();
+		delete m_terrainShader;
+		m_terrainShader = 0;
 	}
 
-	if (TerrainReflectionShader_)
+	if (m_terrainReflectionShader)
 	{
-		TerrainReflectionShader_->Shutdown();
-		delete TerrainReflectionShader_;
-		TerrainReflectionShader_ = 0;
+		m_terrainReflectionShader->terminate();
+		delete m_terrainReflectionShader;
+		m_terrainReflectionShader = 0;
 	}
 
-	if (TextureShader_)
+	if (m_textureShader)
 	{
-		TextureShader_->Shutdown();
-		delete TextureShader_;
-		TextureShader_ = 0;
+		m_textureShader->terminate();
+		delete m_textureShader;
+		m_textureShader = 0;
 	}
 }
 
-bool ShaderManager::TextureRender(ParticleSystem* gameObject)
+bool ShaderManager::ParticleRender(ParticleSystem* gameObject)
 {
 	//Mesh3D* objMesh;
 	//Material* objMaterial;
 
 	//// Model Properties
-	//objMesh = gameObject->GetModel()->GetMesh();
+	//objMesh = gameObject->getModel()->getMesh();
 	//if (!objMesh)
 	//{
 	//	MessageBox(NULL, L"No Model Attached - Texture", L"Error", MB_OK);
 	//	return false;
 	//}
-	//objMaterial = gameObject->GetModel()->GetMaterial();
+	//objMaterial = gameObject->getModel()->getMaterial();
 	//if (!objMaterial)
 	//{
 	//	MessageBox(NULL, L"No Material Attached - Texture", L"Error", MB_OK);
@@ -341,24 +341,24 @@ bool ShaderManager::TextureRender(ParticleSystem* gameObject)
 	//}
 
 	//// Model Properties
-	//int indexCount = objMesh->GetIndexCount();
-	//ID3D11ShaderResourceView* texture = objMaterial->GetBaseTexture();
+	//int indexCount = objMesh->getIndexCount();
+	//ID3D11ShaderResourceView* texture = objMaterial->getBaseTexture();
 
-	//// Create matrix buffer
-	//MatrixBuffer matrixBuffer = MatrixBuffer_;;
-	//gameObject->GetTransform()->GetTranslationMatrix(matrixBuffer.world);
-	//TransposeMatrix(matrixBuffer);
+	//// create matrix buffer
+	//MatrixBuffer matrixBuffer = m_matrixBuffer;;
+	//gameObject->getTransform()->getTranslationMatrix(matrixBuffer.world);
+	//transposeMatrixBuffer(matrixBuffer);
 
-	//// Update Buffers
-	//TextureShader_->UpdateBuffer(VertexShader, 0, matrixBuffer);
-	//TextureShader_->SendBuffersToShader();
+	//// update Buffers
+	//m_textureShader->updateBuffer(VertexShader, 0, matrixBuffer);
+	//m_textureShader->sendBuffersToShader();
 
 	//// Send Textures
-	//TextureShader_->SendTextureToShader(0, texture);
+	//m_textureShader->sendTextureToShader(0, texture);
 
-	//// Render using shader
-	//gameObject->Render();
-	//TextureShader_->Render(indexCount);
+	//// render using shader
+	//gameObject->render();
+	//m_textureShader->render(indexCount);
 
 	return true;
 }

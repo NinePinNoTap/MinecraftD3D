@@ -28,47 +28,47 @@ public:
 	MinecraftScene();
 	~MinecraftScene();
 
-	// Initialise
-	bool Initialise(HWND hwnd);
+	// initialise
+	bool initialise(HWND hwnd);
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 
-	// Frame
-	bool Frame();
+	// update
+	bool update();
 	
 	// Scene Change
-	void Load();
-	void Unload();
+	void onLoad();
+	void onUnload();
 
 private:
-	bool HandleObjects();
-	bool HandleText();
-	bool HandleInput();
+	bool handleObjects();
+	bool handleText();
+	bool handleInput();
 
-	bool Render();
-	bool RenderScene();
+	bool render();
+	bool renderScene();
 
-	// Rendering
-	D3DXVECTOR4 ClipPlane_;
+	// rendering
+	D3DXVECTOR4 m_clipPlane;
 
 	// Objects
-	AudioClip* AmbientSound_;
-	Clouds* Clouds_;
-	Fire* Fire_;
-	Model* CampFire_;
+	AudioClip* m_ambientSound;
+	Clouds* m_clouds;
+	Fire* m_fire;
+	Model* m_campFire;
 	Ocean* Ocean_;
-	Sprite* Cursor_;
-	Sprite* WindowSprite_;
-	SkySphere* SkySphere_;
-	Text* Text_;
-	Texture* RenderTexture_;
-	Texture* RefractionTexture_;
-	Texture* ReflectionTexture_;
-	Toolbar* ToolbarUI_;
-	VoxelWorld* World_;
+	Sprite* m_cursor;
+	Sprite* m_windowSprite;
+	SkySphere* m_skySphere;
+	Text* m_text;
+	Texture* m_renderTexture;
+	Texture* m_refractionTexture;
+	Texture* m_reflectionTexture;
+	Toolbar* m_toolbarInterface;
+	VoxelWorld* m_voxelWorld;
 
 	// Flags
-	bool WhiteOut_;
-	bool NightTimeMode_;
+	bool m_whiteOut;
+	bool m_nightTime;
 };

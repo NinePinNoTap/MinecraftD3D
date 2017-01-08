@@ -12,25 +12,25 @@ public:
 	~Toolbar();
 
 	// Initialising
-	bool Initialise();
-	void Shutdown();
+	bool initialise();
+	void terminate();
 
-	// Frame
-	bool Frame();
-	bool Render();
+	// update
+	bool update();
+	bool render();
 
-	inline int GetTool() { return SelectedTool_; }
+	inline int getTool() { return m_selectedIndex; }
 
 private:
-	void HandleToolUpdate(unsigned int key, int index);
-	void RefreshTools();
+	void handleToolSelection(unsigned int key, int index);
+	void refresh();
 
-	Sprite* Background_;
-	Sprite* ToolHighlighter_;
-	InstancedSprite* ToolbarIcons_;
+	Sprite* m_background;
+	Sprite* m_highlighter;
+	InstancedSprite* m_toolbarIcons;
 
-	int SelectedTool_;
-	vector<InstanceData> ToolData_;
-	bool Result_;
+	int m_selectedIndex;
+	vector<InstanceData> m_toolData;
+	bool m_result;
 };
 

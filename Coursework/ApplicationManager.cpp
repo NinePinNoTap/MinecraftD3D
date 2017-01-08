@@ -2,17 +2,17 @@
 
 ApplicationManager::ApplicationManager()
 {
-	// Initialise pointers to null
-	Camera_ = 0;
-	CurrentScene_ = 0;
-	DirectXManager_ = 0;
-	DirectSound_ = 0;
-	InputManager_ = 0;
-	Light_ = 0;
-	MinecraftScene_ = 0;
-	ShaderManager_ = 0;
-	PerformanceManager_ = 0;
-	LoadingScene_ = 0;
+	// initialise pointers to null
+	m_camera = 0;
+	m_currentScene = 0;
+	m_directX = 0;
+	m_directSound = 0;
+	m_inputManager = 0;
+	m_light = 0;
+	m_minecraftScene = 0;
+	m_shaderManager = 0;
+	m_performanceManager = 0;
+	m_loadingScene = 0;
 }
 
 ApplicationManager::ApplicationManager(const ApplicationManager& other)
@@ -23,285 +23,285 @@ ApplicationManager::~ApplicationManager()
 {
 }
 
-// Initialise
-bool ApplicationManager::Initialise(HWND hwnd, Rect2D WindowResolution)
+// initialise
+bool ApplicationManager::initialise(HWND hwnd, Rect2D WindowResolution)
 {
 	//===================
-	// Initialise Camera
+	// initialise Camera
 	//===================
 
-	Camera_ = new Camera;
-	if (!Camera_)
+	m_camera = new Camera;
+	if (!m_camera)
 	{
 		return false;
 	}
-	Camera_->Initialise();
+	m_camera->initialise();
 
 	//=========================
-	// Initialise AssetManager
+	// initialise AssetManager
 	//=========================
 
-	AssetManager_ = new AssetManager;
-	if (!AssetManager_)
+	m_assetManager = new AssetManager;
+	if (!m_assetManager)
 	{
 		MessageBox(hwnd, L"Could not create the Asset Manager.", L"Error", MB_OK);
 		return false;
 	}
 
 	//====================
-	// Initialise DirectX
+	// initialise DirectX
 	//====================
 
-	DirectXManager_ = new DirectXManager;
-	if (!DirectXManager_)
+	m_directX = new DirectXManager;
+	if (!m_directX)
 	{
 		MessageBox(hwnd, L"Could not create the DirectX Manager.", L"Error", MB_OK);
 		return false;
 	}
 
-	Result_ = DirectXManager_->Initialise(WindowResolution, hwnd);
-	if (!Result_)
+	m_result = m_directX->initialise(WindowResolution, hwnd);
+	if (!m_result)
 	{
 		MessageBox(hwnd, L"Could not initialise DirectX Manager.", L"Error", MB_OK);
 		return false;
 	}
 	
 	//========================
-	// Initialise DirectSound
+	// initialise DirectSound
 	//========================
 
-	DirectSound_ = new DirectSound;
-	if (!DirectSound_)
+	m_directSound = new DirectSound;
+	if (!m_directSound)
 	{
 		MessageBox(hwnd, L"Could not create the DirectSound engine.", L"Error", MB_OK);
 		return false;
 	}
 
-	Result_ = DirectSound_->Initialise(hwnd);
-	if (!Result_)
+	m_result = m_directSound->initialise(hwnd);
+	if (!m_result)
 	{
 		MessageBox(hwnd, L"Could not initialise DirectSound.", L"Error", MB_OK);
 		return false;
 	}
 
 	//=========================
-	// Initialise InputManager
+	// initialise InputManager
 	//=========================
 
-	InputManager_ = new InputManager;
-	if (!InputManager_)
+	m_inputManager = new InputManager;
+	if (!m_inputManager)
 	{
 		MessageBox(hwnd, L"Could not create the InputManager Manager", L"Error", MB_OK);
 		return false;
 	}
-	InputManager_->Initialise();
+	m_inputManager->initialise();
 
 	//==================
-	// Initialise Light
+	// initialise Light
 	//==================
 
-	Light_ = new Light;
-	if (!Light_)
+	m_light = new Light;
+	if (!m_light)
 	{
 		return false;
 	}
-	Light_->Initialise();
-	Light_->GetTransform()->SetPosition(-3500.0f, 9900.0f, 2100.0f);
-	Light_->SetAmbientColor(0.5f, 0.5f, 0.5f, 1.0f);
-	Light_->SetDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
-	Light_->SetDirection(0.5f, -0.75f, 0.25f);
-	Light_->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_light->initialise();
+	m_light->getTransform()->setPosition(-3500.0f, 9900.0f, 2100.0f);
+	m_light->setAmbientColor(0.5f, 0.5f, 0.5f, 1.0f);
+	m_light->setDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
+	m_light->setDirection(0.5f, -0.75f, 0.25f);
+	m_light->setSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	//==========================
-	// Initialise ShaderManager
+	// initialise ShaderManager
 	//==========================
 
-	ShaderManager_ = new ShaderManager;
-	if(!ShaderManager_)
+	m_shaderManager = new ShaderManager;
+	if(!m_shaderManager)
 	{
 		MessageBox(hwnd, L"Could not create the Shader engine.", L"Error", MB_OK);
 		return false;
 	}
-	Result_ = ShaderManager_->Initialise(hwnd);
-	if (!Result_)
+	m_result = m_shaderManager->initialise(hwnd);
+	if (!m_result)
 	{
 		MessageBox(hwnd, L"Could not initialise the Shader Engine.", L"Error", MB_OK);
 		return false;
 	}
 
 	//========================
-	// Initialise Performance
+	// initialise Performance
 	//========================
 
-	PerformanceManager_ = new PerformanceManager;
-	if (!PerformanceManager_)
+	m_performanceManager = new PerformanceManager;
+	if (!m_performanceManager)
 	{
 		MessageBox(hwnd, L"Could not create the Shader engine.", L"Error", MB_OK);
 		return false;
 	}
-	PerformanceManager_->Initialise();
+	m_performanceManager->initialise();
 
 	//=========================
-	// Initialise View Frustum
+	// initialise View Frustum
 	//=========================
 
-	ViewFrustumManager_ = new ViewFrustumManager;
+	m_viewFrustumManager = new ViewFrustumManager;
 
 	//===========================
-	// Initialise Loading Screen
+	// initialise loading Screen
 	//===========================
 
-	LoadingScene_ = new LoadingScene;
-	Result_ = LoadingScene_->Initialise();
-	if (!Result_)
+	m_loadingScene = new LoadingScene;
+	m_result = m_loadingScene->initialise();
+	if (!m_result)
 	{
 		MessageBox(hwnd, L"Could not initialise the loading screen", L"Error", MB_OK);
 		return false;
 	}
 
-	// Set starting scene as loading and render it
-	SetScene(LOADING);
+	// set starting scene as loading and render it
+	setScene(LOADING);
 
 	// Refresh current scene
-	UpdateScene();
+	updateScene();
 
-	// Create a thread to keep the application rendering until we have finished loading
-	LoadingScreenThread_ = new ManagedThread < bool() > ;
-	LoadingScreenThread_->SetFunction(std::bind(&ApplicationManager::Frame, this));
-	LoadingScreenThread_->Start(true);
+	// create a thread to keep the application rendering until we have finished loading
+	m_loadingSceneThread = new ManagedThread < bool() > ;
+	m_loadingSceneThread->setFunction(std::bind(&ApplicationManager::update, this));
+	m_loadingSceneThread->begin(true);
 
 	//======================
-	// Initialise Main Menu
+	// initialise Main Menu
 	//======================
 
-	MainMenuScene_ = new MainMenuScene;
-	Result_ = MainMenuScene_->Initialise(hwnd);
-	if (!Result_)
+	m_mainMenuScene = new MainMenuScene;
+	m_result = m_mainMenuScene->initialise(hwnd);
+	if (!m_result)
 	{
 		MessageBox(hwnd, L"Could not initialise the main menu scene", L"Error", MB_OK);
 		return false;
 	}
 
 	//=================
-	// Initialise Game
+	// initialise Game
 	//=================
 	
-	MinecraftScene_ = new MinecraftScene;
-	Result_ = MinecraftScene_->Initialise(hwnd);
-	if (!Result_)
+	m_minecraftScene = new MinecraftScene;
+	m_result = m_minecraftScene->initialise(hwnd);
+	if (!m_result)
 	{
 		MessageBox(hwnd, L"Could not initialise the minecraft scene", L"Error", MB_OK);
 		return false;
 	}
 
 	// Switch once we have loaded
-	SetScene(MAINMENU);
+	setScene(MAINMENU);
 
 	// Close the thread
-	LoadingScreenThread_->ForceClose();
+	m_loadingSceneThread->forceQuit();
 
-	OutputToDebug("Finished Loading");
+	outputToDebug("isComplete loading");
 
 	return true;
 }
 
-// Shutdown
-void ApplicationManager::Shutdown()
+// terminate
+void ApplicationManager::terminate()
 {
 	//=================
-	// Shutdown Scenes
+	// terminate Scenes
 	//=================
 
-	if (MinecraftScene_)
+	if (m_minecraftScene)
 	{
-		MinecraftScene_ -> Shutdown();
-		delete MinecraftScene_;
-		MinecraftScene_ = 0;
+		m_minecraftScene->terminate();
+		delete m_minecraftScene;
+		m_minecraftScene = 0;
 	}
 
-	if (LoadingScene_)
+	if (m_loadingScene)
 	{
-		LoadingScene_->Shutdown();
-		delete LoadingScene_;
-		LoadingScene_ = 0;
+		m_loadingScene->terminate();
+		delete m_loadingScene;
+		m_loadingScene = 0;
 	}
 
 	//=====================
-	// Shutdown Singletons
+	// terminate Singletons
 	//=====================
 
-	if (AssetManager_)
+	if (m_assetManager)
 	{
-		AssetManager_->Shutdown();
-		AssetManager_ = 0;
+		m_assetManager->terminate();
+		m_assetManager = 0;
 	}
-	if (Camera_)
+	if (m_camera)
 	{
-		Camera_->Shutdown();
-		delete Camera_;
-		Camera_ = 0;
-	}
-
-	if (DirectXManager_)
-	{
-		DirectXManager_->Shutdown();
-		DirectXManager_ = 0;
+		m_camera->terminate();
+		delete m_camera;
+		m_camera = 0;
 	}
 
-	if (DirectSound_)
+	if (m_directX)
 	{
-		DirectSound_->Shutdown();
-		DirectSound_ = 0;
+		m_directX->terminate();
+		m_directX = 0;
 	}
 
-	if (InputManager_)
+	if (m_directSound)
 	{
-		delete InputManager_;
-		InputManager_ = 0;
+		m_directSound->terminate();
+		m_directSound = 0;
 	}
 
-	if (Light_)
+	if (m_inputManager)
 	{
-		Light_->Shutdown();
-		delete Light_;
-		Light_ = 0;
+		delete m_inputManager;
+		m_inputManager = 0;
 	}
 
-	if (ShaderManager_)
+	if (m_light)
 	{
-		ShaderManager_->Shutdown();
-		ShaderManager_ = 0;
+		m_light->terminate();
+		delete m_light;
+		m_light = 0;
 	}
-	if (PerformanceManager_)
+
+	if (m_shaderManager)
 	{
-		PerformanceManager_->Shutdown();
-		PerformanceManager_ = 0;
+		m_shaderManager->terminate();
+		m_shaderManager = 0;
+	}
+	if (m_performanceManager)
+	{
+		m_performanceManager->terminate();
+		m_performanceManager = 0;
 	}
 
 	// Clean Up Pointers
-	CurrentScene_ = 0;
+	m_currentScene = 0;
 
 	return;
 }
 
-// Frame
-bool ApplicationManager::Frame()
+// update
+bool ApplicationManager::update()
 {
 	//==========================
 	// Check for a scene change
 	//==========================
 
-	if (ChangeScene_)
+	if (m_changeScene)
 	{
-		UpdateScene();
+		updateScene();
 	}
 
 	//=================
-	// Process a Frame
+	// Process a update
 	//=================
 
-	Result_ = CurrentScene_ -> Frame();
-	if (!Result_)
+	m_result = m_currentScene->update();
+	if (!m_result)
 	{
 		return false;
 	}
@@ -310,32 +310,32 @@ bool ApplicationManager::Frame()
 }
 
 // Scene Management
-void ApplicationManager::UpdateScene()
+void ApplicationManager::updateScene()
 {
-	// Unload the current scene
-	if (CurrentScene_)
+	// onUnload the current scene
+	if (m_currentScene)
 	{
-		CurrentScene_->Unload();
+		m_currentScene->onUnload();
 	}
 
 	// Check which scene to change to
-	switch (NewSceneState_)
+	switch (m_newSceneState)
 	{
 		case MAINMENU:
-			CurrentScene_ = MainMenuScene_;
+			m_currentScene = m_mainMenuScene;
 			break;
 
 		case LOADING:
-			CurrentScene_ = LoadingScene_;
+			m_currentScene = m_loadingScene;
 			break;
 
 		case MINECRAFT:
-			CurrentScene_ = MinecraftScene_;
+			m_currentScene = m_minecraftScene;
 			break;
 
 		case NO_SCENE:
-			NewSceneState_ = MAINMENU;
-			UpdateScene();
+			m_newSceneState = MAINMENU;
+			updateScene();
 			return;
 			break;
 
@@ -345,36 +345,36 @@ void ApplicationManager::UpdateScene()
 			break;
 	}
 
-	// Update current state
-	CurrentState_ = NewSceneState_;
-	NewSceneState_ = SceneState::NO_SCENE;
-	ChangeScene_ = false;
+	// update current state
+	m_currentState = m_newSceneState;
+	m_newSceneState = SceneState::NO_SCENE;
+	m_changeScene = false;
 
-	// Load the new scene
-	CurrentScene_ -> Load();
+	// onload the new scene
+	m_currentScene->onLoad();
 }
 
-void ApplicationManager::SetScene(SceneState scene)
+void ApplicationManager::setScene(SceneState scene)
 {
-	NewSceneState_ = scene;
-	ChangeScene_ = true;
+	m_newSceneState = scene;
+	m_changeScene = true;
 }
 
-bool ApplicationManager::CheckSceneLoaded(SceneState scene)
+bool ApplicationManager::checkSceneLoaded(SceneState scene)
 {
 	// Check which scene to change to
-	switch (NewSceneState_)
+	switch (m_newSceneState)
 	{
 		case MAINMENU:
-			MainMenuScene_->IsLoaded();
+			m_mainMenuScene->isLoaded();
 			break;
 
 		case LOADING:
-			LoadingScene_->IsLoaded();
+			m_loadingScene->isLoaded();
 			break;
 
 		case MINECRAFT:
-			MinecraftScene_->IsLoaded();
+			m_minecraftScene->isLoaded();
 			break;
 
 		default:

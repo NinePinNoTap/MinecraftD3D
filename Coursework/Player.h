@@ -9,45 +9,45 @@ public:
 	Player();
 	~Player();
 
-	bool Initialise();
-	bool Frame();
+	bool initialise();
+	bool update();
 
-	inline void SetHeight(float height)
+	inline void setHeight(float height)
 	{
-		Height_ = height;
+		m_height = height;
 	}
-	inline void SetGravity(bool flag = true)
+	inline void setGravity(bool flag = true)
 	{
-		UseGravity_ = flag;
-		MoveVelocity_.y = 0.0f;
+		m_useGravity = flag;
+		m_moveVelocity.y = 0.0f;
 	}
-	inline void SetMoveSpeed(float moveSpeed)
+	inline void setmoveSpeed(float moveSpeed)
 	{
-		MoveSpeed_ = moveSpeed;
+		m_moveSpeed = moveSpeed;
 	}
-	inline void SetLookSpeed(float lookSpeed)
+	inline void setLookSpeed(float lookSpeed)
 	{
-		LookSpeed_ = lookSpeed;
+		m_lookSpeed = lookSpeed;
 	}
 
 private:
-	void HandleMovement();
-	void HandleLooking();
-	void HandlePhysics();
+	void handlemovement();
+	void handleLooking();
+	void handlePhysics();
 	void GroundCheck();
-	void HandleMovementKey(unsigned int key, D3DXVECTOR3 moveAmount);
-	void UpdatePosition(D3DXVECTOR3 playerPos);
+	void handlemovementKey(unsigned int key, D3DXVECTOR3 moveAmount);
+	void updatePosition(D3DXVECTOR3 playerPos);
 
 	// Attributes
-	float Height_;
-	float MoveSpeed_;
-	float LookSpeed_;
-	D3DXVECTOR3 MoveVelocity_;
+	float m_height;
+	float m_moveSpeed;
+	float m_lookSpeed;
+	D3DXVECTOR3 m_moveVelocity;
 
 	// Jumping
-	float JumpPower_;
-	bool IsGrounded_;
+	float m_jumpPower;
+	bool m_grounded;
 
 	// Physics
-	bool UseGravity_;
+	bool m_useGravity;
 };

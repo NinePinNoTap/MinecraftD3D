@@ -39,7 +39,7 @@ namespace Config
 			static float Gravity;
 	};
 
-	class Rendering
+	class rendering
 	{
 	public:
 		static float NearClipPlane;
@@ -70,7 +70,7 @@ namespace Config
 	public:
 		static int ChunkSize;
 		static int BlockSize;
-		static int LoadRadius;
+		static int loadRadius;
 		static int UnloadRadius;
 		static int ColumnHeight;
 		static int WaterHeight;

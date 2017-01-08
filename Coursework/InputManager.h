@@ -13,21 +13,21 @@ public:
 	~InputManager();
 
 	// Initialising
-	void Initialise();
+	void initialise();
 
-	void Frame();
+	void update();
 
-	// Getters
-	bool GetKeyDown(unsigned int key);
-	bool GetKey(unsigned int key);
+	// getters
+	bool getKeyDown(unsigned int key);
+	bool getKey(unsigned int key);
 
-	inline D3DXVECTOR2 GetMousePosInWindow() { return MousePosInWindow_; }
-	inline D3DXVECTOR2 GetMousePosOnScreen() { return MousePosOnScreen_; }
+	inline D3DXVECTOR2 getMousePosInWindow() { return m_mousePositionInWindow; }
+	inline D3DXVECTOR2 getMousePosOnScreen() { return m_mousePositionOnScreen; }
 
 private:
-	bool Keys_[256];
-	D3DXVECTOR2 MousePosOnScreen_;
-	D3DXVECTOR2 MousePosInWindow_;
+	bool m_keys[256];
+	D3DXVECTOR2 m_mousePositionOnScreen;
+	D3DXVECTOR2 m_mousePositionInWindow;
 };
 
 

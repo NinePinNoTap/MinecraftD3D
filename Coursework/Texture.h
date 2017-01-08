@@ -18,33 +18,33 @@ public:
 	~Texture();
 
 	// Initialising and shutdown
-	bool Initialise(string filename);
-	bool Initialise(Rect2D textureResolution);
-	void Shutdown();
+	bool initialise(string filename);
+	bool initialise(Rect2D textureResolution);
+	void terminate();
 
-	// Render to Texture
-	void SetRenderTarget();
-	void ClearRenderTarget(D3DXVECTOR4 clearColour);
+	// render to Texture
+	void setRenderTarget();
+	void clearRenderTarget(D3DXVECTOR4 clearColour);
 
-	// Getters
-	ID3D11ShaderResourceView* GetTexture();
-	void GetProjectionMatrix(D3DXMATRIX& projectionMatrix);
-	void GetOrthoMatrix(D3DXMATRIX& orthoMatrix);
+	// getters
+	ID3D11ShaderResourceView* getTexture();
+	void getProjectionMatrix(D3DXMATRIX& projectionMatrix);
+	void getOrthoMatrix(D3DXMATRIX& orthoMatrix);
 
 private:
 	// Texture
-	ID3D11ShaderResourceView* Texture_;
+	ID3D11ShaderResourceView* m_texture;
 
-	// Render to Texture
-	ID3D11Texture2D* RenderTargetTexture_;
-	ID3D11RenderTargetView* RenderTargetView_;
+	// render to Texture
+	ID3D11Texture2D* m_renderTargetTexture;
+	ID3D11RenderTargetView* m_renderTargetView;
 
 	// Viewport
-	ID3D11Texture2D* DepthStencilBuffer_;
-	ID3D11DepthStencilView* DepthStencilView_;
-	D3D11_VIEWPORT Viewport_;
-	D3DXMATRIX ProjectionMatrix_;
-	D3DXMATRIX OrthoMatrix_;
+	ID3D11Texture2D* m_depthStencilBuffer;
+	ID3D11DepthStencilView* m_depthStencilView;
+	D3D11_VIEWPORT m_viewport;
+	D3DXMATRIX m_projectionMatrix;
+	D3DXMATRIX m_orthoMatrix;
 };
 
 

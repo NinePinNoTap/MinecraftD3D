@@ -9,42 +9,42 @@ public:
 	Singleton()
 	{
 		// Ensure we don't have an instance already
-		assert(!Instance_);
+		assert(!m_instance);
 
-		// Create an instance
-		Instance_ = static_cast<T*>(this);
+		// create an instance
+		m_instance = static_cast<T*>(this);
 	}
 
 	Singleton(Singleton const&)
 	{
 		// Ensure we don't have an instance already
-		assert(!Instance_);
+		assert(!m_instance);
 
-		// Create an instance
-		Instance_ = static_cast<T*>(this);
+		// create an instance
+		m_instance = static_cast<T*>(this);
 	}
 
 	~Singleton()
 	{
 		// Ensure we don't have an instance already
-		assert(Instance_);
+		assert(m_instance);
 
 		// Delete instance
-		Instance_ = 0;
+		m_instance = 0;
 	}
 
-	static T* Instance()
+	static T* getInstance()
 	{
-		assert(Instance_);
+		assert(m_instance);
 
 		// Returns the only instance of this object
-		return Instance_;
+		return m_instance;
 	}
 
 private:
-	static T* Instance_;
+	static T* m_instance;
 };
 
-template <typename T> T* Singleton<T>::Instance_ = NULL;
+template <typename T> T* Singleton<T>::m_instance = NULL;
 
 

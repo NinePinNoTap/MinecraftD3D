@@ -72,14 +72,14 @@ PixelInputType DomainShaderMain(ConstantOutputType input, float2 UV : SV_DomainL
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
 
-	// Create the reflection matrix
+	// create the reflection matrix
     reflectProjectWorld = mul(reflectionMatrix, projectionMatrix);
     reflectProjectWorld = mul(worldMatrix, reflectProjectWorld);
 
 	// Calculate the reflected position
     output.reflectionPosition = mul(float4(vertexPosition, 1.0f), reflectProjectWorld);
 
-	// Create the refraction view projection world matrix
+	// create the refraction view projection world matrix
     viewProjectWorld = mul(viewMatrix, projectionMatrix);
     viewProjectWorld = mul(worldMatrix, viewProjectWorld);
    

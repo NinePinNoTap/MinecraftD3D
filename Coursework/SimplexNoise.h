@@ -12,7 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // General Public License for more details.
-// This is a clean, fast, modern and free Perlin Simplex Noise class in C++.
+// This is a clean, fast, modern and free Perlin Simplex noise class in C++.
 // Being a stand-alone class with no external dependencies, it is
 // highly reusable without source code modifications.
 // Note:
@@ -25,25 +25,25 @@ public:
 	SimplexNoise() {}
 	~SimplexNoise() {}
 
-	/** 1D, 2D, 3D and 4D float Perlin Noise
+	/** 1D, 2D, 3D and 4D float Perlin noise
 	*/
-	static float Noise(float x);
-	static float Noise(float x, float y);
-	static float Noise(float x, float y, float z);
-	static float Noise(float x, float y, float z, float w);
+	static float noise(float x);
+	static float noise(float x, float y);
+	static float noise(float x, float y, float z);
+	static float noise(float x, float y, float z, float w);
 
-	/** 1D, 2D, 3D and 4D float Perlin Noise, with a specified integer period
+	/** 1D, 2D, 3D and 4D float Perlin noise, with a specified integer period
 	*/
-	static float PerlinNoise(float x, int px);
-	static float PerlinNoise(float x, float y, int px, int py);
-	static float PerlinNoise(float x, float y, float z, int px, int py, int pz);
-	static float PerlinNoise(float x, float y, float z, float w,
+	static float perlinNoise(float x, int px);
+	static float perlinNoise(float x, float y, int px, int py);
+	static float perlinNoise(float x, float y, float z, int px, int py, int pz);
+	static float perlinNoise(float x, float y, float z, float w,
 		int px, int py, int pz, int pw);
 
 private:
 	static unsigned char perm[];
-	static float Gradient(int hash, float x);
-	static float Gradient(int hash, float x, float y);
-	static float Gradient(int hash, float x, float y, float z);
-	static float Gradient(int hash, float x, float y, float z, float t);
+	static float gradient(int hash, float x);
+	static float gradient(int hash, float x, float y);
+	static float gradient(int hash, float x, float y, float z);
+	static float gradient(int hash, float x, float y, float z, float t);
 };

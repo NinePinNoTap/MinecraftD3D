@@ -2,11 +2,11 @@
 
 Mesh3D::Mesh3D()
 {
-	// Initialise pointers
-	Mesh_ = 0;
-	Indices_ = 0;
-	IndexBuffer_ = 0;
-	VertexBuffer_ = 0;
+	// initialise pointers
+	m_mesh = 0;
+	m_indices = 0;
+	m_indexBuffer = 0;
+	m_vertexBuffer = 0;
 }
 
 Mesh3D::Mesh3D(const Mesh3D& mesh)
@@ -20,7 +20,7 @@ Mesh3D::~Mesh3D()
 }
 
 // Initialising
-bool Mesh3D::InitialiseBuffers()
+bool Mesh3D::initialiseBuffers()
 {
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	D3D11_BUFFER_DESC indexBufferDesc;
@@ -28,237 +28,237 @@ bool Mesh3D::InitialiseBuffers()
 	D3D11_SUBRESOURCE_DATA indexData;
 	HRESULT result;
 
-	// Set up the description of the vertex buffer
+	// set up the description of the vertex buffer
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(VertexData)* VertexCount_;
+	vertexBufferDesc.ByteWidth = sizeof(VertexData)* m_vertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data
-	vertexData.pSysMem = Mesh_;
+	vertexData.pSysMem = m_mesh;
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer
-	result = DirectXManager::Instance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &VertexBuffer_);
+	result = DirectXManager::getInstance()->getDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Set up the description of the static index buffer
+	// set up the description of the static index buffer
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long)* IndexCount_;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long)* m_indexCount;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data
-	indexData.pSysMem = Indices_;
+	indexData.pSysMem = m_indices;
 
-	// Create the index buffer
-	result = DirectXManager::Instance()->GetDevice()->CreateBuffer(&indexBufferDesc, &indexData, &IndexBuffer_);
+	// create the index buffer
+	result = DirectXManager::getInstance()->getDevice()->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	// Release the arrays now that the vertex and index buffers have been created and loaded
-	delete[] Mesh_;
-	Mesh_ = 0;
+	delete[] m_mesh;
+	m_mesh = 0;
 
-	delete[] Indices_;
-	Indices_ = 0;
+	delete[] m_indices;
+	m_indices = 0;
 
 	return true;
 }
 
-// Shutdown
-void Mesh3D::Shutdown()
+// terminate
+void Mesh3D::terminate()
 {
-	// Shutdown pointers
-	if (Mesh_)
+	// terminate pointers
+	if (m_mesh)
 	{
-		delete Mesh_;
-		Mesh_ = 0;
+		delete m_mesh;
+		m_mesh = 0;
 	}
 
-	if (IndexBuffer_)
+	if (m_indexBuffer)
 	{
-		IndexBuffer_->Release();
-		IndexBuffer_ = 0;
+		m_indexBuffer->Release();
+		m_indexBuffer = 0;
 	}
 
-	if (VertexBuffer_)
+	if (m_vertexBuffer)
 	{
-		VertexBuffer_->Release();
-		VertexBuffer_ = 0;
+		m_vertexBuffer->Release();
+		m_vertexBuffer = 0;
 	}
 }
 
 // Mesh3D Building
-bool Mesh3D::Build()
+bool Mesh3D::build()
 {
-	if (!Mesh_)
+	if (!m_mesh)
 		return false;
 
-	if (!Indices_)
+	if (!m_indices)
 		return false;
 
 	// Calculate model binormals, normals and tangents
-	CalculateTangentBinormals();
+	calculateTangentBinormals();
 
 	// Calculate collision
-	CalculateBoundingBox();
+	calculateBoundingBox();
 
-	// Initialise the vertex and index buffer
-	Result_ = InitialiseBuffers();
-	if (!Result_)
+	// initialise the vertex and index buffer
+	m_result = initialiseBuffers();
+	if (!m_result)
 	{
 		return false;
 	}
 
-	// Set flags
-	IsActive_ = true;
+	// set flags
+	m_isActive = true;
 
 	return true;
 }
 
-// Setters
-void Mesh3D::SetIndexCount(int count)
+// setters
+void Mesh3D::setIndexCount(int count)
 {
-	IndexCount_ = count;
+	m_indexCount = count;
 }
 
-void Mesh3D::SetVertexCount(int count)
+void Mesh3D::setVertexCount(int count)
 {
-	VertexCount_ = count;
+	m_vertexCount = count;
 }
 
-void Mesh3D::SetMesh(VertexData* mesh, unsigned long* indices)
+void Mesh3D::setMesh(VertexData* mesh, unsigned long* indices)
 {
-	Mesh_ = mesh;
-	Indices_ = indices;
+	m_mesh = mesh;
+	m_indices = indices;
 }
 
-void Mesh3D::SetActive(bool flag)
+void Mesh3D::setActive(bool flag)
 {
-	IsActive_ = flag;
+	m_isActive = flag;
 }
 
-// Getters
-int Mesh3D::GetIndexCount()
+// getters
+int Mesh3D::getIndexCount()
 {
-	return IndexCount_;
+	return m_indexCount;
 }
-int Mesh3D::GetVertexCount()
+int Mesh3D::getVertexCount()
 {
-	return VertexCount_;
-}
-
-BoundingBox Mesh3D::GetBoundingBox()
-{
-	return BoundingBox_;
+	return m_vertexCount;
 }
 
-ID3D11Buffer* Mesh3D::GetIndexBuffer()
+BoundingBox Mesh3D::getBoundingBox()
 {
-	return IndexBuffer_;
+	return m_boundingBox;
 }
 
-ID3D11Buffer* Mesh3D::GetVertexBuffer()
+ID3D11Buffer* Mesh3D::getIndexBuffer()
 {
-	return VertexBuffer_;
+	return m_indexBuffer;
 }
 
-bool Mesh3D::IsActive()
+ID3D11Buffer* Mesh3D::getVertexBuffer()
 {
-	return IsActive_;
+	return m_vertexBuffer;
 }
 
-void Mesh3D::CalculateTangentBinormals()
+bool Mesh3D::isActive()
+{
+	return m_isActive;
+}
+
+void Mesh3D::calculateTangentBinormals()
 {
 	int faceCount, index;
 	VertexData vertex1, vertex2, vertex3;
 	D3DXVECTOR3 tangent, binormal;
 
 	// Calculate the number of faces in the model.
-	faceCount = VertexCount_ / 3;
+	faceCount = m_vertexCount / 3;
 
-	// Initialise the index to the model data.
+	// initialise the index to the model data.
 	index = 0;
 
 	// Go through all the faces and calculate the the tangent, binormal, and normal vectors.
 	for (int i = 0; i < faceCount; i++)
 	{
-		// Get the three vertices for this face from the model.
-		vertex1 = Mesh_[index];
+		// get the three vertices for this face from the model.
+		vertex1 = m_mesh[index];
 		index++;
 
-		vertex2 = Mesh_[index];
+		vertex2 = m_mesh[index];
 		index++;
 
-		vertex3 = Mesh_[index];
+		vertex3 = m_mesh[index];
 		index++;
 
 		// Calculate tangent and binormals for the current face
-		CalculateTangentBinormal(vertex1, vertex2, vertex3, tangent, binormal);
+		calculateTangentBinormal(vertex1, vertex2, vertex3, tangent, binormal);
 
 		// Store the normal, tangent, and binormal for this face back in the vertex data
-		Mesh_[index - 1].tangent = tangent;
-		Mesh_[index - 1].binormal = binormal;
+		m_mesh[index - 1].tangent = tangent;
+		m_mesh[index - 1].binormal = binormal;
 
-		Mesh_[index - 2].tangent = tangent;
-		Mesh_[index - 2].binormal = binormal;
+		m_mesh[index - 2].tangent = tangent;
+		m_mesh[index - 2].binormal = binormal;
 
-		Mesh_[index - 3].tangent = tangent;
-		Mesh_[index - 3].binormal = binormal;
+		m_mesh[index - 3].tangent = tangent;
+		m_mesh[index - 3].binormal = binormal;
 	}
 
 	return;
 }
 
 // Collision Detection
-void Mesh3D::CalculateBoundingBox()
+void Mesh3D::calculateBoundingBox()
 {
 	D3DXVECTOR3 vertexPos;
 
-	for (int i = 0; i < VertexCount_; i++)
+	for (int i = 0; i < m_vertexCount; i++)
 	{
-		vertexPos = Mesh_[i].position;
+		vertexPos = m_mesh[i].position;
 
 		// x-axis
-		if (vertexPos.x < BoundingBox_.left)
+		if (vertexPos.x < m_boundingBox.left)
 		{
-			BoundingBox_.left = vertexPos.x;
+			m_boundingBox.left = vertexPos.x;
 		}
 
-		else if (vertexPos.x > BoundingBox_.right)
+		else if (vertexPos.x > m_boundingBox.right)
 		{
-			BoundingBox_.right = vertexPos.x;
+			m_boundingBox.right = vertexPos.x;
 		}
 
 		// y-axis
-		if (vertexPos.y < BoundingBox_.bottom)
+		if (vertexPos.y < m_boundingBox.bottom)
 		{
-			BoundingBox_.bottom = vertexPos.y;
+			m_boundingBox.bottom = vertexPos.y;
 		}
-		else if (vertexPos.y > BoundingBox_.top)
+		else if (vertexPos.y > m_boundingBox.top)
 		{
-			BoundingBox_.top = vertexPos.y;
+			m_boundingBox.top = vertexPos.y;
 		}
 
 		// z-axis
-		if (vertexPos.z < BoundingBox_.front)
+		if (vertexPos.z < m_boundingBox.front)
 		{
-			BoundingBox_.front = vertexPos.z;
+			m_boundingBox.front = vertexPos.z;
 		}
-		else if (vertexPos.z > BoundingBox_.back)
+		else if (vertexPos.z > m_boundingBox.back)
 		{
-			BoundingBox_.back = vertexPos.z;
+			m_boundingBox.back = vertexPos.z;
 		}
 	}
 }

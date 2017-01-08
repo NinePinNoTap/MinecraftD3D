@@ -32,15 +32,15 @@ unsigned char SimplexNoise::perm[512] =
 	138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180
 };
 
-float  SimplexNoise::Gradient(int hash, float x)
+float  SimplexNoise::gradient(int hash, float x)
 {
 	int h = hash & 15;
-	float Gradient = 1.0f + (h & 7);   // Gradient value 1.0, 2.0, ..., 8.0
-	if (h & 8) Gradient = -Gradient;         // Set a random sign for the Gradientient
-	return (Gradient * x);           // Multiply the Gradientient with the distance
+	float gradient = 1.0f + (h & 7);   // gradient value 1.0, 2.0, ..., 8.0
+	if (h & 8) gradient = -gradient;         // set a random sign for the Gradientient
+	return (gradient * x);           // Multiply the Gradientient with the distance
 }
 
-float  SimplexNoise::Gradient(int hash, float x, float y)
+float  SimplexNoise::gradient(int hash, float x, float y)
 {
 	int h = hash & 7;      // Convert low 3 bits of hash code
 	float u = h < 4 ? x : y;  // into 8 simple Gradientient directions,
@@ -48,7 +48,7 @@ float  SimplexNoise::Gradient(int hash, float x, float y)
 	return ((h & 1) ? -u : u) + ((h & 2) ? -2.0f*v : 2.0f*v);
 }
 
-float  SimplexNoise::Gradient(int hash, float x, float y, float z)
+float  SimplexNoise::gradient(int hash, float x, float y, float z)
 {
 	int h = hash & 15;     // Convert low 4 bits of hash code into 12 simple
 	float u = h < 8 ? x : y; // Gradientient directions, and compute dot product.
@@ -56,7 +56,7 @@ float  SimplexNoise::Gradient(int hash, float x, float y, float z)
 	return ((h & 1) ? -u : u) + ((h & 2) ? -v : v);
 }
 
-float  SimplexNoise::Gradient(int hash, float x, float y, float z, float t)
+float  SimplexNoise::gradient(int hash, float x, float y, float z, float t)
 {
 	int h = hash & 31;      // Convert low 5 bits of hash code into 32 simple
 	float u = h < 24 ? x : y; // Gradientient directions, and compute dot product.
@@ -66,7 +66,7 @@ float  SimplexNoise::Gradient(int hash, float x, float y, float z, float t)
 }
 
 // A lookup table to traverse the simplex around a given point in 4D.
-// Details can be found where this table is used, in the 4D Noise method.
+// Details can be found where this table is used, in the 4D noise method.
 /* TODO: This should not be required, backport it from Bill's GLSL code! */
 static unsigned char simplex[64][4] = {
 	{ 0, 1, 2, 3 }, { 0, 1, 3, 2 }, { 0, 0, 0, 0 }, { 0, 2, 3, 1 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 1, 2, 3, 0 },
@@ -79,8 +79,8 @@ static unsigned char simplex[64][4] = {
 	{ 2, 1, 0, 3 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 3, 1, 0, 2 }, { 0, 0, 0, 0 }, { 3, 2, 0, 1 }, { 3, 2, 1, 0 }
 };
 
-// 1D simplex Noise
-float SimplexNoise::Noise(float x)
+// 1D simplex noise
+float SimplexNoise::noise(float x)
 {
 	int i0 = FASTFLOOR(x);
 	int i1 = i0 + 1;
@@ -92,26 +92,26 @@ float SimplexNoise::Noise(float x)
 	float t0 = 1.0f - x0*x0;
 	//  if(t0 < 0.0f) t0 = 0.0f;
 	t0 *= t0;
-	n0 = t0 * t0 * Gradient(perm[i0 & 0xff], x0);
+	n0 = t0 * t0 * gradient(perm[i0 & 0xff], x0);
 
 	float t1 = 1.0f - x1*x1;
 	//  if(t1 < 0.0f) t1 = 0.0f;
 	t1 *= t1;
-	n1 = t1 * t1 * Gradient(perm[i1 & 0xff], x1);
-	// The maximum value of this Noise is 8*(3/4)^4 = 2.53125
+	n1 = t1 * t1 * gradient(perm[i1 & 0xff], x1);
+	// The maximum value of this noise is 8*(3/4)^4 = 2.53125
 	// A factor of 0.395 would scale to fit exactly within [-1,1], but
-	// we want to match PRMan's 1D Noise, so we scale it down some more.
+	// we want to match PRMan's 1D noise, so we scale it down some more.
 	return 0.25f * (n0 + n1);
 
 }
 
-// 2D simplex Noise
-float SimplexNoise::Noise(float x, float y)
+// 2D simplex noise
+float SimplexNoise::noise(float x, float y)
 {
 #define F2 0.366025403f // F2 = 0.5*(sqrt(3.0)-1.0)
 #define G2 0.211324865f // G2 = (3.0-Math.sqrt(3.0))/6.0
 
-	float n0, n1, n2; // Noise contributions from the three corners
+	float n0, n1, n2; // noise contributions from the three corners
 
 	// Skew the input space to determine which simplex cell we're in
 	float s = (x + y)*F2; // Hairy factor for 2D
@@ -141,7 +141,7 @@ float SimplexNoise::Noise(float x, float y)
 	float x2 = x0 - 1.0f + 2.0f * G2; // Offsets for last corner in (x,y) unskewed coords
 	float y2 = y0 - 1.0f + 2.0f * G2;
 
-	// Wrap the integer indices at 256, to avoid indexing perm[] out of bounds
+	// wrap the integer indices at 256, to avoid indexing perm[] out of bounds
 	int ii = i & 0xff;
 	int jj = j & 0xff;
 
@@ -150,36 +150,36 @@ float SimplexNoise::Noise(float x, float y)
 	if (t0 < 0.0f) n0 = 0.0f;
 	else {
 		t0 *= t0;
-		n0 = t0 * t0 * Gradient(perm[ii + perm[jj]], x0, y0);
+		n0 = t0 * t0 * gradient(perm[ii + perm[jj]], x0, y0);
 	}
 
 	float t1 = 0.5f - x1*x1 - y1*y1;
 	if (t1 < 0.0f) n1 = 0.0f;
 	else {
 		t1 *= t1;
-		n1 = t1 * t1 * Gradient(perm[ii + i1 + perm[jj + j1]], x1, y1);
+		n1 = t1 * t1 * gradient(perm[ii + i1 + perm[jj + j1]], x1, y1);
 	}
 
 	float t2 = 0.5f - x2*x2 - y2*y2;
 	if (t2 < 0.0f) n2 = 0.0f;
 	else {
 		t2 *= t2;
-		n2 = t2 * t2 * Gradient(perm[ii + 1 + perm[jj + 1]], x2, y2);
+		n2 = t2 * t2 * gradient(perm[ii + 1 + perm[jj + 1]], x2, y2);
 	}
 
-	// Add contributions from each corner to get the final Noise value.
+	// Add contributions from each corner to get the final noise value.
 	// The result is scaled to return values in the interval [-1,1].
 	return 40.0f * (n0 + n1 + n2); // TODO: The scale factor is preliminary!
 }
 
-// 3D simplex Noise
-float SimplexNoise::Noise(float x, float y, float z)
+// 3D simplex noise
+float SimplexNoise::noise(float x, float y, float z)
 {
 	// Simple skewing factors for the 3D case
 #define F3 0.333333333f
 #define G3 0.166666667f
 
-	float n0, n1, n2, n3; // Noise contributions from the four corners
+	float n0, n1, n2, n3; // noise contributions from the four corners
 
 	// Skew the input space to determine which simplex cell we're in
 	float s = (x + y + z)*F3; // Very nice and simple skew factor for 3D
@@ -233,7 +233,7 @@ float SimplexNoise::Noise(float x, float y, float z)
 	float y3 = y0 - 1.0f + 3.0f*G3;
 	float z3 = z0 - 1.0f + 3.0f*G3;
 
-	// Wrap the integer indices at 256, to avoid indexing perm[] out of bounds
+	// wrap the integer indices at 256, to avoid indexing perm[] out of bounds
 	int ii = i & 0xff;
 	int jj = j & 0xff;
 	int kk = k & 0xff;
@@ -247,7 +247,7 @@ float SimplexNoise::Noise(float x, float y, float z)
 	else
 	{
 		t0 *= t0;
-		n0 = t0 * t0 * Gradient(perm[ii + perm[jj + perm[kk]]], x0, y0, z0);
+		n0 = t0 * t0 * gradient(perm[ii + perm[jj + perm[kk]]], x0, y0, z0);
 	}
 
 	float t1 = 0.6f - x1*x1 - y1*y1 - z1*z1;
@@ -258,36 +258,36 @@ float SimplexNoise::Noise(float x, float y, float z)
 	else
 	{
 		t1 *= t1;
-		n1 = t1 * t1 * Gradient(perm[ii + i1 + perm[jj + j1 + perm[kk + k1]]], x1, y1, z1);
+		n1 = t1 * t1 * gradient(perm[ii + i1 + perm[jj + j1 + perm[kk + k1]]], x1, y1, z1);
 	}
 
 	float t2 = 0.6f - x2*x2 - y2*y2 - z2*z2;
 	if (t2 < 0.0f) n2 = 0.0f;
 	else {
 		t2 *= t2;
-		n2 = t2 * t2 * Gradient(perm[ii + i2 + perm[jj + j2 + perm[kk + k2]]], x2, y2, z2);
+		n2 = t2 * t2 * gradient(perm[ii + i2 + perm[jj + j2 + perm[kk + k2]]], x2, y2, z2);
 	}
 
 	float t3 = 0.6f - x3*x3 - y3*y3 - z3*z3;
 	if (t3 < 0.0f) n3 = 0.0f;
 	else {
 		t3 *= t3;
-		n3 = t3 * t3 * Gradient(perm[ii + 1 + perm[jj + 1 + perm[kk + 1]]], x3, y3, z3);
+		n3 = t3 * t3 * gradient(perm[ii + 1 + perm[jj + 1 + perm[kk + 1]]], x3, y3, z3);
 	}
 
-	// Add contributions from each corner to get the final Noise value.
+	// Add contributions from each corner to get the final noise value.
 	// The result is scaled to stay just inside [-1,1]
 	return 32.0f * (n0 + n1 + n2 + n3); // TODO: The scale factor is preliminary!
 }
 
-// 4D simplex Noise
-float SimplexNoise::Noise(float x, float y, float z, float w)
+// 4D simplex noise
+float SimplexNoise::noise(float x, float y, float z, float w)
 {
 	// The skewing and unskewing factors are hairy again for the 4D case
 #define F4 0.309016994f // F4 = (Math.sqrt(5.0)-1.0)/4.0
 #define G4 0.138196601f // G4 = (5.0-Math.sqrt(5.0))/20.0
 
-	float n0, n1, n2, n3, n4; // Noise contributions from the five corners
+	float n0, n1, n2, n3, n4; // noise contributions from the five corners
 
 	// Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in
 	float s = (x + y + z + w) * F4; // Factor for 4D skewing
@@ -369,7 +369,7 @@ float SimplexNoise::Noise(float x, float y, float z, float w)
 	float z4 = z0 - 1.0f + 4.0f*G4;
 	float w4 = w0 - 1.0f + 4.0f*G4;
 
-	// Wrap the integer indices at 256, to avoid indexing perm[] out of bounds
+	// wrap the integer indices at 256, to avoid indexing perm[] out of bounds
 	int ii = i & 0xff;
 	int jj = j & 0xff;
 	int kk = k & 0xff;
@@ -380,7 +380,7 @@ float SimplexNoise::Noise(float x, float y, float z, float w)
 	if (t0 < 0.0f) n0 = 0.0f;
 	else {
 		t0 *= t0;
-		n0 = t0 * t0 * Gradient(perm[ii + perm[jj + perm[kk + perm[ll]]]], x0, y0, z0, w0);
+		n0 = t0 * t0 * gradient(perm[ii + perm[jj + perm[kk + perm[ll]]]], x0, y0, z0, w0);
 	}
 
 	float t1 = 0.6f - x1*x1 - y1*y1 - z1*z1 - w1*w1;
@@ -391,7 +391,7 @@ float SimplexNoise::Noise(float x, float y, float z, float w)
 	else
 	{
 		t1 *= t1;
-		n1 = t1 * t1 * Gradient(perm[ii + i1 + perm[jj + j1 + perm[kk + k1 + perm[ll + l1]]]], x1, y1, z1, w1);
+		n1 = t1 * t1 * gradient(perm[ii + i1 + perm[jj + j1 + perm[kk + k1 + perm[ll + l1]]]], x1, y1, z1, w1);
 	}
 
 	float t2 = 0.6f - x2*x2 - y2*y2 - z2*z2 - w2*w2;
@@ -399,7 +399,7 @@ float SimplexNoise::Noise(float x, float y, float z, float w)
 	else
 	{
 		t2 *= t2;
-		n2 = t2 * t2 * Gradient(perm[ii + i2 + perm[jj + j2 + perm[kk + k2 + perm[ll + l2]]]], x2, y2, z2, w2);
+		n2 = t2 * t2 * gradient(perm[ii + i2 + perm[jj + j2 + perm[kk + k2 + perm[ll + l2]]]], x2, y2, z2, w2);
 	}
 
 	float t3 = 0.6f - x3*x3 - y3*y3 - z3*z3 - w3*w3;
@@ -407,7 +407,7 @@ float SimplexNoise::Noise(float x, float y, float z, float w)
 	else
 	{
 		t3 *= t3;
-		n3 = t3 * t3 * Gradient(perm[ii + i3 + perm[jj + j3 + perm[kk + k3 + perm[ll + l3]]]], x3, y3, z3, w3);
+		n3 = t3 * t3 * gradient(perm[ii + i3 + perm[jj + j3 + perm[kk + k3 + perm[ll + l3]]]], x3, y3, z3, w3);
 	}
 
 	float t4 = 0.6f - x4*x4 - y4*y4 - z4*z4 - w4*w4;
@@ -415,7 +415,7 @@ float SimplexNoise::Noise(float x, float y, float z, float w)
 	else
 	{
 		t4 *= t4;
-		n4 = t4 * t4 * Gradient(perm[ii + 1 + perm[jj + 1 + perm[kk + 1 + perm[ll + 1]]]], x4, y4, z4, w4);
+		n4 = t4 * t4 * gradient(perm[ii + 1 + perm[jj + 1 + perm[kk + 1 + perm[ll + 1]]]], x4, y4, z4, w4);
 	}
 
 	// Sum up and scale the result to cover the range [-1,1]

@@ -1,9 +1,9 @@
-#include "LoadingScene.h"
+#include "loadingScene.h"
 #include "WindowManager.h"
 
 LoadingScene::LoadingScene() : GameScene()
 {
-	Background_ = 0;
+	m_background = 0;
 }
 
 LoadingScene::~LoadingScene()
@@ -12,95 +12,95 @@ LoadingScene::~LoadingScene()
 }
 
 // Initialising
-bool LoadingScene::Initialise()
+bool LoadingScene::initialise()
 {
 	int windowWidth;
 	int windowHeight;
 
-	// Get window width and height
-	windowWidth = WindowManager::Instance()->GetWindowResolution().width;
-	windowHeight = WindowManager::Instance()->GetWindowResolution().height;
+	// get window width and height
+	windowWidth = WindowManager::getInstance()->getWindowResolution().width;
+	windowHeight = WindowManager::getInstance()->getWindowResolution().height;
 	
 	//===============================
-	// Initialise the Loading Screen
+	// initialise the loading Screen
 	//===============================
 
-	// Loading Screen BG
-	Background_ = new Sprite;
-	if (!Background_)
+	// loading Screen BG
+	m_background = new Sprite;
+	if (!m_background)
 	{
 		return false;
 	}
-	Result_ = Background_->Initialise(Rect3D(windowWidth, windowHeight, 1.0f), "bg_loading.dds");
-	if (!Result_)
+	m_result = m_background->initialise(Rect3D(windowWidth, windowHeight, 1.0f), "bg_loading.dds");
+	if (!m_result)
 	{
 		return false;
 	}
-	Background_->SetShader("texture");
+	m_background->setShader("texture");
 
 	//============
-	// Initialise
+	// initialise
 	//============
 
-	LoadTarget_ = SceneState::NO_SCENE;
-	IsLoaded_ = true;
+	m_loadTarget = SceneState::NO_SCENE;
+	m_isloaded = true;
 
 	return true;
 }
 
-// Shutdown
-void LoadingScene::Shutdown()
+// terminate
+void LoadingScene::terminate()
 {
-	if (Background_)
+	if (m_background)
 	{
-		Background_->Shutdown();
-		Background_ = 0;
+		m_background->terminate();
+		m_background = 0;
 	}
 }
 
-// Frame
-bool LoadingScene::Frame()
+// update
+bool LoadingScene::update()
 {
 	// Check for Scene Processing
-	if (LoadTarget_ != SceneState::NO_SCENE)
+	if (m_loadTarget != SceneState::NO_SCENE)
 	{
 		// Check if we can switch
-		if (ApplicationManager::Instance()->CheckSceneLoaded(LoadTarget_))
+		if (ApplicationManager::getInstance()->checkSceneLoaded(m_loadTarget))
 		{
-			ApplicationManager::Instance()->SetScene(LoadTarget_);
+			ApplicationManager::getInstance()->setScene(m_loadTarget);
 		}
 	}
 
-	// Render
-	Render();
+	// render
+	render();
 
 	return true;
 }
 
-void LoadingScene::Render()
+void LoadingScene::render()
 {
-	DirectXManager::Instance()->BeginScene();
+	DirectXManager::getInstance()->beginScene();
 
-	// Render the loading screen
-	Background_->Render();
+	// render the loading screen
+	m_background->render();
 
-	DirectXManager::Instance()->EndScene();
+	DirectXManager::getInstance()->endScene();
 }
 
-// Load and Unloading
-void LoadingScene::Load()
+// onload and Unloading
+void LoadingScene::onLoad()
 {
 	return;
 }
 
-void LoadingScene::Unload()
+void LoadingScene::onUnload()
 {
 	// Clear Target
-	LoadTarget_ = SceneState::NO_SCENE;
+	m_loadTarget = SceneState::NO_SCENE;
 }
 
-void LoadingScene::LoadScene(SceneState sceneState)
+void LoadingScene::loadScene(SceneState sceneState)
 {
 	// Store the loading target
-	LoadTarget_ = sceneState;
+	m_loadTarget = sceneState;
 }

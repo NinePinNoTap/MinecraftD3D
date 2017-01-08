@@ -3,159 +3,159 @@
 
 Toolbar::Toolbar()
 {
-	Background_ = 0;
-	ToolHighlighter_ = 0;
-	ToolbarIcons_ = 0;
+	m_background = 0;
+	m_highlighter = 0;
+	m_toolbarIcons = 0;
 }
 
 Toolbar::~Toolbar()
 {
 }
 
-bool Toolbar::Initialise()
+bool Toolbar::initialise()
 {
 	int barPosition;
 
-	// Get height of the window
-	barPosition = (-WindowManager::Instance()->GetWindowResolution().height * 0.8f) / 2;
+	// get height of the window
+	barPosition = (-WindowManager::getInstance()->getWindowResolution().height * 0.8f) / 2;
 
 	//====================
-	// Initialise Sprites
+	// initialise Sprites
 	//====================
 
 	// Background
-	Background_ = new Sprite;
-	if (!Background_)
+	m_background = new Sprite;
+	if (!m_background)
 	{
 		return false;
 	}
-	Result_ = Background_->Initialise(Rect3D(728, 88), "ui_toolbar.dds");
-	if (!Result_)
+	m_result = m_background->initialise(Rect3D(728, 88), "ui_toolbar.dds");
+	if (!m_result)
 	{
 		return false;
 	}
-	Background_->GetTransform()->SetY(barPosition);
-	Background_->SetShader("texture");
+	m_background->getTransform()->setY(barPosition);
+	m_background->setShader("texture");
 
 	// Toolbar Icons
-	ToolbarIcons_ = new InstancedSprite;
-	if (!ToolbarIcons_)
+	m_toolbarIcons = new InstancedSprite;
+	if (!m_toolbarIcons)
 	{
 		return false;
 	}
-	Result_ = ToolbarIcons_->Initialise(Rect3D(64, 64), "ui_icons.dds");
-	if (!Result_)
+	m_result = m_toolbarIcons->initialise(Rect3D(64, 64), "ui_icons.dds");
+	if (!m_result)
 	{
 		return false;
 	}
-	ToolbarIcons_->SetShader("instancedtexture");
-	ToolbarIcons_->SetBlendMode(BlendMode::AlphaMasked);
+	m_toolbarIcons->setShader("instancedtexture");
+	m_toolbarIcons->setBlendMode(BlendMode::AlphaMasked);
 
 	// Highlighter
-	ToolHighlighter_ = new Sprite;
-	if (!ToolHighlighter_)
+	m_highlighter = new Sprite;
+	if (!m_highlighter)
 	{
 		return false;
 	}
-	Result_ = ToolHighlighter_->Initialise(Rect3D(92, 92), "ui_toolbar_select.dds");
-	if (!Result_)
+	m_result = m_highlighter->initialise(Rect3D(92, 92), "ui_toolbar_select.dds");
+	if (!m_result)
 	{
 		return false;
 	}
-	ToolHighlighter_->SetShader("texture");
-	ToolHighlighter_->SetBlendMode(BlendMode::AlphaMasked);
+	m_highlighter->setShader("texture");
+	m_highlighter->setBlendMode(BlendMode::AlphaMasked);
 
 	//==================
-	// Initialise Tools
+	// initialise Tools
 	//==================
 
 	// Add Icon Data
-	ToolData_.push_back(InstanceData(D3DXVECTOR3(-320, barPosition, 1), D3DXVECTOR2(31, 17), D3DXVECTOR2(32, 21))); // Pickaxe
-	ToolData_.push_back(InstanceData(D3DXVECTOR3(-240, barPosition, 1), D3DXVECTOR2(18, 11), D3DXVECTOR2(32, 21))); // Dirt
-	ToolData_.push_back(InstanceData(D3DXVECTOR3(-160, barPosition, 1), D3DXVECTOR2(3, 12),  D3DXVECTOR2(32, 21))); // Sand
-	ToolData_.push_back(InstanceData(D3DXVECTOR3(-80,  barPosition, 1), D3DXVECTOR2(10, 8),  D3DXVECTOR2(32, 21))); // Cobblestone
-	ToolData_.push_back(InstanceData(D3DXVECTOR3(  0,  barPosition, 1), D3DXVECTOR2(7, 12),  D3DXVECTOR2(32, 21))); // Stone
-	ToolData_.push_back(InstanceData(D3DXVECTOR3( 80,  barPosition, 1), D3DXVECTOR2(6, 9),   D3DXVECTOR2(32, 21))); // Wood
-	ToolData_.push_back(InstanceData(D3DXVECTOR3(160,  barPosition, 1), D3DXVECTOR2(30, 1),  D3DXVECTOR2(32, 21))); // Water Bucket
+	m_toolData.push_back(InstanceData(D3DXVECTOR3(-320, barPosition, 1), D3DXVECTOR2(31, 17), D3DXVECTOR2(32, 21))); // Pickaxe
+	m_toolData.push_back(InstanceData(D3DXVECTOR3(-240, barPosition, 1), D3DXVECTOR2(18, 11), D3DXVECTOR2(32, 21))); // Dirt
+	m_toolData.push_back(InstanceData(D3DXVECTOR3(-160, barPosition, 1), D3DXVECTOR2(3, 12),  D3DXVECTOR2(32, 21))); // Sand
+	m_toolData.push_back(InstanceData(D3DXVECTOR3(-80,  barPosition, 1), D3DXVECTOR2(10, 8),  D3DXVECTOR2(32, 21))); // Cobblestone
+	m_toolData.push_back(InstanceData(D3DXVECTOR3(  0,  barPosition, 1), D3DXVECTOR2(7, 12),  D3DXVECTOR2(32, 21))); // Stone
+	m_toolData.push_back(InstanceData(D3DXVECTOR3( 80,  barPosition, 1), D3DXVECTOR2(6, 9),   D3DXVECTOR2(32, 21))); // Wood
+	m_toolData.push_back(InstanceData(D3DXVECTOR3(160,  barPosition, 1), D3DXVECTOR2(30, 1),  D3DXVECTOR2(32, 21))); // Water Bucket
 
-	// Create Instanced Sprite
-	for (unsigned int i = 0; i < ToolData_.size(); i++)
+	// create Instanced Sprite
+	for (unsigned int i = 0; i < m_toolData.size(); i++)
 	{
-		ToolbarIcons_->AddInstance(ToolData_[i]);
+		m_toolbarIcons->addInstance(m_toolData[i]);
 	}
-	ToolbarIcons_->RebuildInstanceBuffer();
+	m_toolbarIcons->rebuildInstanceBuffer();
 
 	//=================
-	// Initialise Vars
+	// initialise Vars
 	//=================
 
-	SelectedTool_ = 0;
-	RefreshTools();
+	m_selectedIndex = 0;
+	refresh();
 
 	return true;
 }
 
-void Toolbar::Shutdown()
+void Toolbar::terminate()
 {
 	//==========
 	// Clean Up
 	//==========
 
-	if (Background_)
+	if (m_background)
 	{
-		Background_->Shutdown();
-		Background_ = 0;
+		m_background->terminate();
+		m_background = 0;
 	}
 
-	if (ToolHighlighter_)
+	if (m_highlighter)
 	{
-		ToolHighlighter_->Shutdown();
-		ToolHighlighter_ = 0;
+		m_highlighter->terminate();
+		m_highlighter = 0;
 	}
 
-	if (ToolbarIcons_)
+	if (m_toolbarIcons)
 	{
-		ToolbarIcons_->Shutdown();
-		ToolbarIcons_ = 0;
+		m_toolbarIcons->terminate();
+		m_toolbarIcons = 0;
 	}
 }
 
-bool Toolbar::Frame()
+bool Toolbar::update()
 {
 	//=======================
-	// Handle Tool Switching
+	// handle Tool Switching
 	//=======================
 
-	HandleToolUpdate(VK_1, 0);
-	HandleToolUpdate(VK_2, 1);
-	HandleToolUpdate(VK_3, 2);
-	HandleToolUpdate(VK_4, 3);
-	HandleToolUpdate(VK_5, 4);
-	HandleToolUpdate(VK_6, 5);
-	HandleToolUpdate(VK_7, 6);
+	handleToolSelection(VK_1, 0);
+	handleToolSelection(VK_2, 1);
+	handleToolSelection(VK_3, 2);
+	handleToolSelection(VK_4, 3);
+	handleToolSelection(VK_5, 4);
+	handleToolSelection(VK_6, 5);
+	handleToolSelection(VK_7, 6);
 
 	return true;
 }
 
-bool Toolbar::Render()
+bool Toolbar::render()
 {
-	// Render the Background
-	Result_ = Background_->Render();
-	if (!Result_)
+	// render the Background
+	m_result = m_background->render();
+	if (!m_result)
 	{
 		return false;
 	}
 
-	// Render the Icons
-	Result_ = ToolbarIcons_->Render();
-	if (!Result_)
+	// render the Icons
+	m_result = m_toolbarIcons->render();
+	if (!m_result)
 	{
 		return false;
 	}
 
-	// Render Highlighter
-	Result_ = ToolHighlighter_->Render();
-	if (!Result_)
+	// render Highlighter
+	m_result = m_highlighter->render();
+	if (!m_result)
 	{
 		return false;
 	}
@@ -163,28 +163,28 @@ bool Toolbar::Render()
 	return true;
 }
 
-void Toolbar::HandleToolUpdate(unsigned int key, int index)
+void Toolbar::handleToolSelection(unsigned int key, int index)
 {
-	if (!InputManager::Instance()->GetKeyDown(key))
+	if (!InputManager::getInstance()->getKeyDown(key))
 	{
 		return;
 	}
 
-	// Update Index
-	SelectedTool_ = index;
+	// update Index
+	m_selectedIndex = index;
 
-	// Update Sprite Position
-	RefreshTools();
+	// update Sprite Position
+	refresh();
 }
 
-void Toolbar::RefreshTools()
+void Toolbar::refresh()
 {
-	if (ToolData_.empty())
+	if (m_toolData.empty())
 	{
 		return;
 	}
 
-	// Update position
-	ToolHighlighter_->GetTransform()->SetX(ToolData_[SelectedTool_].position.x);
-	ToolHighlighter_->GetTransform()->SetY(ToolData_[SelectedTool_].position.y);
+	// update position
+	m_highlighter->getTransform()->setX(m_toolData[m_selectedIndex].position.x);
+	m_highlighter->getTransform()->setY(m_toolData[m_selectedIndex].position.y);
 }

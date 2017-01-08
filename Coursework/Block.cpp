@@ -5,31 +5,31 @@ using namespace Config;
 
 Block::Block()
 {
-	BlockName_ = "null";
-	BlockType_ = BlockType::None;
-	TextureOffset_ = D3DXVECTOR2(0, 0);
-	TotalTextures_ = D3DXVECTOR2(16, 16);
-	IsSolid_ = false;
-	IsActive_ = false;
+	m_blockName = "null";
+	m_blockType = BlockType::None;
+	m_textureOffset = D3DXVECTOR2(0, 0);
+	m_totalTextures = D3DXVECTOR2(16, 16);
+	m_isSolid = false;
+	m_isActive = false;
 
 	for (int i = 0; i < 6; i++)
 	{
-		NeighbourBlocks_[i] = 0;
+		m_neighbours[i] = 0;
 	}
 }
 
 Block::Block(string blockName, BlockType blockType, D3DXVECTOR2 textureOffset, D3DXVECTOR2 totalTextures, bool isSolid)
 {
-	BlockName_ = blockName;
-	BlockType_ = blockType;
-	TextureOffset_ = textureOffset;
-	TotalTextures_ = totalTextures;
-	IsSolid_ = isSolid;
-	IsActive_ = true;
+	m_blockName = blockName;
+	m_blockType = blockType;
+	m_textureOffset = textureOffset;
+	m_totalTextures = totalTextures;
+	m_isSolid = isSolid;
+	m_isActive = true;
 
 	for (int i = 0; i < 6; i++)
 	{
-		NeighbourBlocks_[i] = 0;
+		m_neighbours[i] = 0;
 	}
 }
 
@@ -37,38 +37,38 @@ Block::~Block()
 {
 }
 
-// Frame
+// update
 void Block::Refresh()
 {
 	//================================
 	// Check if we need to be updated
 	//================================
 
-	if (BlockType_ == BlockType::Air)
+	if (m_blockType == BlockType::Air)
 	{
-		IsActive_ = false;
+		m_isActive = false;
 		return;
 	}
 
 	//===================
-	// Handle Neighbours
+	// handle Neighbours
 	//===================
 
-	HandleNeighbours();
+	handleNeighbours();
 }
 
-void Block::CopyFrom(Block& block)
+void Block::clone(Block& block)
 {
 	// Copy non-static data
-	BlockName_ = block.BlockName_;
-	BlockType_ = block.BlockType_;
-	TextureOffset_ = block.TextureOffset_;
-	TotalTextures_ = block.TotalTextures_;
-	IsSolid_ = block.IsSolid_;
-	IsActive_ = true;
+	m_blockName = block.m_blockName;
+	m_blockType = block.m_blockType;
+	m_textureOffset = block.m_textureOffset;
+	m_totalTextures = block.m_totalTextures;
+	m_isSolid = block.m_isSolid;
+	m_isActive = true;
 }
 
-void Block::HandleNeighbours()
+void Block::handleNeighbours()
 {
 	int visibleSides = 0;
 
@@ -76,7 +76,7 @@ void Block::HandleNeighbours()
 	for (int i = 0; i < 6; i++)
 	{
 		// Check if we can see the neighbour
-		if (!CheckNeighbour(i))
+		if (!checkNeighbour(i))
 		{
 			visibleSides++;
 		}
@@ -85,21 +85,21 @@ void Block::HandleNeighbours()
 	// Disable entire object if we cant see it
 	if (visibleSides == 0)
 	{
-		IsActive_ = false;
+		m_isActive = false;
 	}
 }
 
-bool Block::CheckNeighbour(int i)
+bool Block::checkNeighbour(int i)
 {
 	// Make sure we have a neighbour in this slot
-	if (NeighbourBlocks_[i] == 0)
+	if (m_neighbours[i] == 0)
 	{
 		// No neighbour
 		return false;
 	}
 
 	// Check if the block is there and solid
-	if (NeighbourBlocks_[i]->IsSolid())
+	if (m_neighbours[i]->isSolid())
 	{
 		return true;
 	}
@@ -107,26 +107,26 @@ bool Block::CheckNeighbour(int i)
 	return false;
 }
 
-// Setters
-void Block::SetPosition(float x, float y, float z)
+// setters
+void Block::setPosition(float x, float y, float z)
 {
-	Position_ = D3DXVECTOR3(x, y, z);
+	m_position = D3DXVECTOR3(x, y, z);
 
-	BoundingBox_ = BoundingBox(Rect3D(World::BlockSize), Position_);
+	m_boundingBox = BoundingBox(Rect3D(World::BlockSize), m_position);
 }
 
-void Block::SetNeighbour(Direction direction, Block* block)
+void Block::setNeighbour(Direction direction, Block* block)
 {
-	NeighbourBlocks_[direction] = block;
+	m_neighbours[direction] = block;
 }
 
-// Getters
-InstanceData Block::GetInstance()
+// getters
+InstanceData Block::getInstance()
 {
 	InstanceData instanceData;
-	instanceData.position = Position_;
-	instanceData.textureOffset = TextureOffset_;
-	instanceData.textureTotal = TotalTextures_;
+	instanceData.position = m_position;
+	instanceData.textureOffset = m_textureOffset;
+	instanceData.textureTotal = m_totalTextures;
 
 	return instanceData;
 }

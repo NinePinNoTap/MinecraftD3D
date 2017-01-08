@@ -40,39 +40,39 @@ public:
 	~ShaderManager();
 
 	// Initialising
-	bool Initialise(HWND hwnd);
+	bool initialise(HWND hwnd);
 
-	// Shutdown
-	void Shutdown();
+	// terminate
+	void terminate();
 	
 	// Shaders
-	bool TextureRender(ParticleSystem* particles);
+	bool ParticleRender(ParticleSystem* particles);
 	
-	GameShader* GetShader(string keyName)
+	inline GameShader* getShader(string keyName)
 	{
-		return ShaderDatabase_[keyName];
+		return m_shaders[keyName];
 	}
 
 private:
-	bool Result_;
+	bool m_result;
 	
 	// Shaders
-	CloudShader* CloudShader_;
-	ColourShader* ColourShader_;
-	FireShader* FireShader_;
-	FontShader* FontShader_;
-	InstancedLightShader* InstancedLightShader_;
-	InstancedTextureShader* InstancedTextureShader_;
-	LightShader* LightShader_;
-	OceanShader* OceanShader_;
-	SkyShader* SkySphereShader_;
-	TerrainShader* TerrainShader_;
-	TerrainReflectionShader* TerrainReflectionShader_;
-	TextureShader* TextureShader_;
-	TintShader* TintShader_;
+	CloudShader* m_cloudShader;
+	ColourShader* m_colourShader;
+	FireShader* m_fireShader;
+	FontShader* m_fontShader;
+	InstancedLightShader* m_instancedLightShader;
+	InstancedTextureShader* m_instancedTextureShader;
+	LightShader* m_lightShader;
+	OceanShader* m_oceanShader;
+	SkyShader* m_skySphereShader;
+	TerrainShader* m_terrainShader;
+	TerrainReflectionShader* m_terrainReflectionShader;
+	TextureShader* m_textureShader;
+	TintShader* m_TintShader;
 
 	// Shader Database
-	std::map<string, GameShader*> ShaderDatabase_;
+	std::map<string, GameShader*> m_shaders;
 };
 
 

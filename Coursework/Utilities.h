@@ -17,84 +17,84 @@
 using namespace std;
 
 // Calculate the distance between two points
-float Distance(D3DXVECTOR3 a, D3DXVECTOR3 b);
+float distance(D3DXVECTOR3 a, D3DXVECTOR3 b);
 
 // Normalises a vector
-D3DXVECTOR3 Normalise(D3DXVECTOR3 a, D3DXVECTOR3 b);
+D3DXVECTOR3 normalise(D3DXVECTOR3 a, D3DXVECTOR3 b);
 
 // Rounds a number to x decimal places
-void Round(float& number, int decimalplaces = 0);
+void roundFloat(float& number, int decimalplaces = 0);
 
 // Convert a string to a float
-std::string ToStr(float number);
+std::string toString(float number);
 
-// Check to see if we are focused on this ApplicationManager
-bool WindowActive();
+// Check to see if we are focused on this application
+bool windowActive();
 
 // Keeps the mouse in the middle of the screen
-void LockMouseToCenter();
+void lockMouseToCenter();
 
 // Outputs a string to the output window
-void OutputToDebug(std::string text);
+void outputToDebug(std::string text);
 
 // Loop a value between two limits
-void Wrap(int& value, int min, int max);
-void Wrap(float& value, float min, float max);
+void wrap(int& value, int min, int max);
+void wrap(float& value, float min, float max);
 
 // Keep between two limits
-void Clamp(int& value, int min, int max);
-void Clamp(float& value, float min, float max);
+void clamp(int& value, int min, int max);
+void clamp(float& value, float min, float max);
 
 // Outputs a messagebox with reference
-void OutputErrorMessage(string message, char* data);
+void outputErrorMessage(string message, char* data);
 
-// Rotates a point around a center pivot
-D3DXVECTOR3 RotateAroundPoint(D3DXVECTOR3 point, D3DXVECTOR3 center, float angle);
+// rotates a point around a center pivot
+D3DXVECTOR3 rotateAroundPoint(D3DXVECTOR3 point, D3DXVECTOR3 center, float angle);
 
 // Calculates a angle in degrees between two points
-float AngleBetweenPoints(Vector2 A, Vector2 B);
+float angleBetweenPoints(Vector2 A, Vector2 B);
 
 // Checks if a value is within a range
-bool RangeCheck(int value, int min, int max);
-bool RangeCheck(float value, float min, float max);
+bool rangeCheck(int value, int min, int max);
+bool rangeCheck(float value, float min, float max);
 
 // Checks if the position is inside the bounding box
-bool CheckCollision(BoundingBox box, float position);
-bool CheckCollision(BoundingBox box, D3DXVECTOR2 position);
-bool CheckCollision(BoundingBox box, D3DXVECTOR3 position);
+bool checkCollision(BoundingBox box, float position);
+bool checkCollision(BoundingBox box, D3DXVECTOR2 position);
+bool checkCollision(BoundingBox box, D3DXVECTOR3 position);
 
 // Converts a 3D position to 2D screen space
-D3DXVECTOR2 ConvertToScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, Rect2D WindowSize);
+D3DXVECTOR2 convert3dPointToScreenSpace(D3DXVECTOR3 pos, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, Rect2D WindowSize);
 
 // Transposes each matrix in the matrix buffer
-void TransposeMatrix(MatrixBuffer& matrix);
+void transposeMatrixBuffer(MatrixBuffer& matrix);
 
 // Calculates the tangent, binormal for a face
-void CalculateTangentBinormal(VertexData vertex1, VertexData vertex2, VertexData vertex3, D3DXVECTOR3& tangent, D3DXVECTOR3& binormal);
+void calculateTangentBinormal(VertexData vertex1, VertexData vertex2, VertexData vertex3, D3DXVECTOR3& tangent, D3DXVECTOR3& binormal);
 
 // Calculates a hard normal for a face
-void CalculateHardNormal(D3DXVECTOR3 tangent, D3DXVECTOR3 binormal, D3DXVECTOR3& normal);
+void calculateHardNormal(D3DXVECTOR3 tangent, D3DXVECTOR3 binormal, D3DXVECTOR3& normal);
 
 // Convert a D3DXVECTOR3 into a string
-string GetKey(float x, float y);
-string GetKey(float x, float y, float z);
-D3DXVECTOR3 GetKey(string key);
+string getKey(float x, float y);
+string getKey(float x, float y, float z);
+D3DXVECTOR3 getKey(string key);
 
-// Get index within a 3D array
-int GetIndex(int i, int j, int k, int maxJ, int maxK);
+// get index within a 3D array
+int getIndex(int i, int j, int k, int maxJ, int maxK);
 
 // Outputs a delay in MS
-void OutputTimeDelay(string dataName, float before, float after);
+void outputTimeDelay(string dataName, float before, float after);
 
-// Gets rid of trailing zero
-void TrimString(string& str);
-
-// Rounds vector nearest whole number
-void RoundVector(D3DXVECTOR2& vector);
+// gets rid of trailing zero
+void trimString(string& str);
 
 // Rounds vector nearest whole number
-void RoundVector(D3DXVECTOR3& vector);
+void roundVector(D3DXVECTOR2& v2);
 
-// Generates 3D simplex noise
-int GetNoise(int x, int y, int z, float scale, int max);
-int GetNoise(int x, int y, int z, float scale, int max, float power);
+// Rounds vector nearest whole number
+void roundVector(D3DXVECTOR3& v3);
+
+// generates 3D simplex noise
+int getNoise(int x, int y, int z, float scale, int max);
+int getNoise(int x, int y, int z, float scale, int max, float power);

@@ -5,44 +5,44 @@
 
 MinecraftScene::MinecraftScene()
 {
-	// Initialise pointers
-	Clouds_ = 0;
-	Fire_ = 0;
-	CampFire_ = 0;
-	RefractionTexture_ = 0;
-	ReflectionTexture_ = 0;
-	RenderTexture_ = 0;
-	WindowSprite_ = 0;
-	SkySphere_ = 0;
-	Text_ = 0;
+	// initialise pointers
+	m_clouds = 0;
+	m_fire = 0;
+	m_campFire = 0;
+	m_refractionTexture = 0;
+	m_reflectionTexture = 0;
+	m_renderTexture = 0;
+	m_windowSprite = 0;
+	m_skySphere = 0;
+	m_text = 0;
 	Ocean_ = 0;
-	World_ = 0;
+	m_voxelWorld = 0;
 }
 
 MinecraftScene::~MinecraftScene()
 {
 }
 
-// Initialise
-bool MinecraftScene::Initialise(HWND hwnd)
+// initialise
+bool MinecraftScene::initialise(HWND hwnd)
 {
 	int windowWidth;
 	int windowHeight;
 
-	// Get window width and height
-	windowWidth = WindowManager::Instance()->GetWindowResolution().width;
-	windowHeight = WindowManager::Instance()->GetWindowResolution().height;
+	// get window width and height
+	windowWidth = WindowManager::getInstance()->getWindowResolution().width;
+	windowHeight = WindowManager::getInstance()->getWindowResolution().height;
 
 	//============================
-	// Initialise Render Textures
+	// initialise render Textures
 	//============================
 
-	AssetManager::Instance()->LoadTexture(&RenderTexture_,		"RenderTexture",	 Rect2D(windowWidth, windowHeight));
-	AssetManager::Instance()->LoadTexture(&ReflectionTexture_,  "ReflectionTexture", Rect2D(windowWidth, windowHeight));
-	AssetManager::Instance()->LoadTexture(&RefractionTexture_,  "RefractionTexture", Rect2D(windowWidth, windowHeight));
+	AssetManager::getInstance()->loadTexture(&m_renderTexture,		"renderTexture",	 Rect2D(windowWidth, windowHeight));
+	AssetManager::getInstance()->loadTexture(&m_reflectionTexture,  "ReflectionTexture", Rect2D(windowWidth, windowHeight));
+	AssetManager::getInstance()->loadTexture(&m_refractionTexture,  "RefractionTexture", Rect2D(windowWidth, windowHeight));
 	
 	//======================
-	// Initialise the Ocean 
+	// initialise the Ocean 
 	//======================
 
 	Ocean_ = new Ocean;
@@ -50,191 +50,191 @@ bool MinecraftScene::Initialise(HWND hwnd)
 	{
 		return false;
 	}
-	Result_ = Ocean_->Initialise("water_normal.dds", Rect3D(512.0f, 512.0f, 0.0f));
-	if (!Result_)
+	m_result = Ocean_->initialise("water_normal.dds", Rect3D(512.0f, 512.0f, 0.0f));
+	if (!m_result)
 	{
 		MessageBox(hwnd, L"Could not initialise the ocean object.", L"Error", MB_OK);
 		return false;
 	}
-	Ocean_->GetTransform()->SetX(256);
-	Ocean_->GetTransform()->SetZ(256);
+	Ocean_->getTransform()->setX(256);
+	Ocean_->getTransform()->setZ(256);
 
 	//=======================
-	// Initialise 2D Bitmaps
+	// initialise 2D Bitmaps
 	//=======================
 
 	// UI Cursor
-	Cursor_ = new Sprite;
-	if (!Cursor_)
+	m_cursor = new Sprite;
+	if (!m_cursor)
 	{
 		return false;
 	}
-	Result_ = Cursor_->Initialise(Rect3D(72, 72), "ui_cursor.dds");
-	if (!Result_)
+	m_result = m_cursor->initialise(Rect3D(72, 72), "ui_cursor.dds");
+	if (!m_result)
 	{
 		MessageBox(hwnd, L"Could not initialise the action bar object.", L"Error", MB_OK);
 		return false;
 	}
-	Cursor_->SetShader("texture");
-	Cursor_->SetBlendMode(BlendMode::AlphaMasked);
+	m_cursor->setShader("texture");
+	m_cursor->setBlendMode(BlendMode::AlphaMasked);
 
 	// Post Processing Window
-	WindowSprite_ = new Sprite;
-	if (!WindowSprite_)
+	m_windowSprite = new Sprite;
+	if (!m_windowSprite)
 	{
 		return false;
 	}
-	Result_ = WindowSprite_->Initialise(Rect3D(WindowManager::Instance()->GetWindowResolution()), "RenderTexture");
-	if (!Result_)
+	m_result = m_windowSprite->initialise(Rect3D(WindowManager::getInstance()->getWindowResolution()), "renderTexture");
+	if (!m_result)
 	{
 		MessageBox(hwnd, L"Could not initialise the screen window object.", L"Error", MB_OK);
 		return false;
 	}
-	WindowSprite_->SetShader("tint");
-	WindowSprite_->GetModel()->GetMaterial()->SetVector4("BaseColour", Colour::Water);
+	m_windowSprite->setShader("tint");
+	m_windowSprite->getModel()->getMaterial()->setVector4("BaseColour", Colour::Water);
 
 	// Toolbar UI Icons
-	ToolbarUI_ = new Toolbar;
-	if (!ToolbarUI_)
+	m_toolbarInterface = new Toolbar;
+	if (!m_toolbarInterface)
 	{
 		return false;
 	}
-	Result_ = ToolbarUI_->Initialise();
-	if (!Result_)
+	m_result = m_toolbarInterface->initialise();
+	if (!m_result)
 	{
 		return false;
 	}
 
 
 	//====================
-	// Initialise the Sky
+	// initialise the Sky
 	//====================
 
-	Clouds_ = new Clouds;
-	if (!Clouds_)
+	m_clouds = new Clouds;
+	if (!m_clouds)
 	{
 		return false;
 	}
-	Result_ = Clouds_->Initialise("cloud.dds", "cloudperturb.dds");
-	if (!Result_)
+	m_result = m_clouds->initialise("cloud.dds", "cloudperturb.dds");
+	if (!m_result)
 	{
 		MessageBox(hwnd, L"Could not initialise the sky plane object.", L"Error", MB_OK);
 		return false;
 	}
 
-	SkySphere_ = new SkySphere;
-	if (!SkySphere_)
+	m_skySphere = new SkySphere;
+	if (!m_skySphere)
 	{
 		return false;
 	}
-	SkySphere_ -> Initialise("sphere.txt");
-	if (!Result_)
+	m_skySphere->initialise("sphere.txt");
+	if (!m_result)
 	{
 		MessageBox(hwnd, L"Could not initialise the sky sphere object.", L"Error", MB_OK);
 		return false;
 	}
 
 	//===================
-	// Initialise Sounds
+	// initialise Sounds
 	//===================
 
-	AssetManager::Instance()->LoadAudio(&AmbientSound_, "ambience.wav");
-	AmbientSound_->SetVolume(1.0f);
+	AssetManager::getInstance()->loadAudio(&m_ambientSound, "ambience.wav");
+	m_ambientSound->setVolume(1.0f);
 
 	//=================
-	// Initialise Text
+	// initialise Text
 	//=================
 
-	Text_ = new Text;
-	if (!Text_)
+	m_text = new Text;
+	if (!m_text)
 	{
 		return false;
 	}
-	Result_ = Text_->Initialise(hwnd, "shruti.txt", "shruti.dds", 95);
-	if (!Result_)
+	m_result = m_text->initialise(hwnd, "shruti.txt", "shruti.dds", 95);
+	if (!m_result)
 	{
 		MessageBox(hwnd, L"Could not initialise the text object.", L"Error", MB_OK);
 		return false;
 	}
-	Text_->CreateText("FPS:", Vector2(10, 10), Colour::White); // FPS
-	Text_->CreateText("CPU:", Vector2(10, 30), Colour::White); // CPU
-	Text_->CreateText("Camera X :", Vector2(10, 50), Colour::White); // CameraX
-	Text_->CreateText("Camera Y :", Vector2(10, 70), Colour::White); // CameraY
-	Text_->CreateText("Camera Z :", Vector2(10, 90), Colour::White); // CameraZ
-	Text_->CreateText("Rotation X :", Vector2(10, 110), Colour::White); // RotationX
-	Text_->CreateText("Rotation Y :", Vector2(10, 130), Colour::White); // RotationY
-	Text_->CreateText("Rotation Z :", Vector2(10, 150), Colour::White); // Rotation Z
-	Text_->CreateText("Build Time (s) :", Vector2(10, 170), Colour::White);
+	m_text->createText("FPS:", Vector2(10, 10), Colour::White); // FPS
+	m_text->createText("CPU:", Vector2(10, 30), Colour::White); // CPU
+	m_text->createText("Camera X :", Vector2(10, 50), Colour::White); // CameraX
+	m_text->createText("Camera Y :", Vector2(10, 70), Colour::White); // CameraY
+	m_text->createText("Camera Z :", Vector2(10, 90), Colour::White); // CameraZ
+	m_text->createText("Rotation X :", Vector2(10, 110), Colour::White); // RotationX
+	m_text->createText("Rotation Y :", Vector2(10, 130), Colour::White); // RotationY
+	m_text->createText("Rotation Z :", Vector2(10, 150), Colour::White); // Rotation Z
+	m_text->createText("build Time (s) :", Vector2(10, 170), Colour::White);
 
-	Text_->CreateText("CONTROLS", Vector2(windowWidth - 10, 10), Colour::White, RIGHT);
-	Text_->CreateText("Toggle Wireframe [9]", Vector2(windowWidth - 10, 30), Colour::White, RIGHT);
-	Text_->CreateText("Toggle Time [0]", Vector2(windowWidth - 10, 50), Colour::White, RIGHT);
-	Text_->CreateText("Back to Menu [ESC]", Vector2(windowWidth - 10, 110), Colour::White, RIGHT);
+	m_text->createText("CONTROLS", Vector2(windowWidth - 10, 10), Colour::White, RIGHT);
+	m_text->createText("Toggle Wireframe [9]", Vector2(windowWidth - 10, 30), Colour::White, RIGHT);
+	m_text->createText("Toggle Time [0]", Vector2(windowWidth - 10, 50), Colour::White, RIGHT);
+	m_text->createText("Back to Menu [ESC]", Vector2(windowWidth - 10, 110), Colour::White, RIGHT);
 
 	//==============
-	// Create World
+	// create World
 	//==============
 
-	World_ = new VoxelWorld;
-	World_->Initialise();
+	m_voxelWorld = new VoxelWorld;
+	m_voxelWorld->initialise();
 
 	//==================
-	// Initialise flags
+	// initialise flags
 	//==================
 
-	WhiteOut_ = false;
-	NightTimeMode_ = false;
-	Result_ = false;
-	IsLoaded_ = true;
+	m_whiteOut = false;
+	m_nightTime = false;
+	m_result = false;
+	m_isloaded = true;
 	
 	return true;
 }
 
-// Shutdown
-void MinecraftScene::Shutdown()
+// terminate
+void MinecraftScene::terminate()
 {
 	//===================
 	// Shut down objects
 	//===================
 	
-	if (Clouds_)
+	if (m_clouds)
 	{
-		Clouds_ -> Shutdown();
-		delete Clouds_;
-		Clouds_ = 0;
+		m_clouds->terminate();
+		delete m_clouds;
+		m_clouds = 0;
 	}
 
-	if (Fire_)
+	if (m_fire)
 	{
-		Fire_ -> Shutdown();
-		delete Fire_;
-		Fire_ = 0;
+		m_fire->terminate();
+		delete m_fire;
+		m_fire = 0;
 	}
 
-	if (WindowSprite_)
+	if (m_windowSprite)
 	{
-		WindowSprite_ -> Shutdown();
-		delete WindowSprite_;
-		WindowSprite_ = 0;
+		m_windowSprite->terminate();
+		delete m_windowSprite;
+		m_windowSprite = 0;
 	}
 
-	if (SkySphere_)
+	if (m_skySphere)
 	{
-		SkySphere_ -> Shutdown();
-		delete SkySphere_;
-		SkySphere_ = 0;
+		m_skySphere->terminate();
+		delete m_skySphere;
+		m_skySphere = 0;
 	}
 
-	if (Text_)
+	if (m_text)
 	{
-		Text_ -> Shutdown();
-		delete Text_;
-		Text_ = 0;
+		m_text->terminate();
+		delete m_text;
+		m_text = 0;
 	}
 
 	if (Ocean_)
 	{
-		Ocean_ -> Shutdown();
+		Ocean_->terminate();
 		delete Ocean_;
 		Ocean_ = 0;
 	}
@@ -242,55 +242,55 @@ void MinecraftScene::Shutdown()
 	return;
 }
 
-// Load and Unloading
-void MinecraftScene::Load()
+// onload and Unloading
+void MinecraftScene::onLoad()
 {
 	//===============
 	// Reset Objects
 	//===============
 
 	// Reset Mouse
-	LockMouseToCenter();
+	lockMouseToCenter();
 	SetCursor(0);
-	SetClassLong(WindowManager::Instance()->GetHWND(), GCL_HCURSOR, 0);
+	SetClassLong(WindowManager::getInstance()->getHWND(), GCL_HCURSOR, 0);
 
 	//============
-	// Play Sound
+	// play Sound
 	//============
 
-	AmbientSound_->Play(true);
+	m_ambientSound->play(true);
 }
 
-void MinecraftScene::Unload()
+void MinecraftScene::onUnload()
 {
 	//============
-	// Stop Audio
+	// stop Audio
 	//============
 
-	AmbientSound_->Stop();
+	m_ambientSound->stop();
 	return;
 }
 
-// Frame
-bool MinecraftScene::Frame()
+// update
+bool MinecraftScene::update()
 {
-	// Handle user InputManager
-	Result_ = HandleInput();
-	if (!Result_)
+	// handle user InputManager
+	m_result = handleInput();
+	if (!m_result)
 	{
 		return false;
 	}
 
-	// Handle frame updates
-	Result_ = HandleObjects();
-	if (!Result_)
+	// handle frame updates
+	m_result = handleObjects();
+	if (!m_result)
 	{
 		return false;
 	}
 
-	// Render the scene
-	Result_ = Render();
-	if (!Result_)
+	// render the scene
+	m_result = render();
+	if (!m_result)
 	{
 		return false;
 	}
@@ -298,23 +298,23 @@ bool MinecraftScene::Frame()
 	return true;
 }
 
-bool MinecraftScene::Render()
+bool MinecraftScene::render()
 {
 	//================
 	// Reset Textures
 	//================
 
-	RenderTexture_->ClearRenderTarget(Colour::Black);
-	ReflectionTexture_->ClearRenderTarget(Colour::Black);
-	RefractionTexture_->ClearRenderTarget(Colour::Black);
+	m_renderTexture->clearRenderTarget(Colour::Black);
+	m_reflectionTexture->clearRenderTarget(Colour::Black);
+	m_refractionTexture->clearRenderTarget(Colour::Black);
 
 	//==============
-	// Render Scene
+	// render Scene
 	//==============
 
-	// Render the scene normally to the screen
-	Result_ = RenderScene();
-	if (!Result_)
+	// render the scene normally to the screen
+	m_result = renderScene();
+	if (!m_result)
 	{
 		return false;
 	}
@@ -322,112 +322,112 @@ bool MinecraftScene::Render()
 	return true;
 }
 
-bool MinecraftScene::RenderScene()
+bool MinecraftScene::renderScene()
 {
 	// Begin rendering
-	DirectXManager::Instance()->BeginScene();
+	DirectXManager::getInstance()->beginScene();
 
-	Camera::Instance()->Render();
-	Camera::Instance()->RenderReflection(0.0f);
+	Camera::getInstance()->render();
+	Camera::getInstance()->renderReflection(0.0f);
 
 	//================
-	// Render the Sky 
+	// render the Sky 
 	//================
 
-	Result_ = SkySphere_->Render();
-	if (!Result_)
+	m_result = m_skySphere->render();
+	if (!m_result)
 	{
 		return false;
 	}
 
-	Result_ = Clouds_->Render();
-	if (!Result_)
+	m_result = m_clouds->render();
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//==================
-	// Render the World 
+	// render the World 
 	//==================
 
-	World_->Render();
+	m_voxelWorld->render();
 
-	Result_ = Ocean_->Render();
-	if (!Result_)
+	m_result = Ocean_->render();
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//============
-	// Render GUI
+	// render GUI
 	//============
 
-	Result_ = Text_->Render();
-	if (!Result_)
+	m_result = m_text->render();
+	if (!m_result)
 	{
 		return false;
 	}
 
-	Result_ = ToolbarUI_->Render();
-	if (!Result_)
+	m_result = m_toolbarInterface->render();
+	if (!m_result)
 	{
 		return false;
 	}
 
-	ToolbarUI_->Render();
+	m_toolbarInterface->render();
 
-	Result_ = Cursor_->Render();
-	if (!Result_)
+	m_result = m_cursor->render();
+	if (!m_result)
 	{
 		return false;
 	}
 
 	//========================
-	// Render Post Processing
+	// render Post Processing
 	//========================
 
-	if (WhiteOut_)
+	if (m_whiteOut)
 	{
-		Result_ = WindowSprite_->Render();
-		if (!Result_)
+		m_result = m_windowSprite->render();
+		if (!m_result)
 		{
 			return false;
 		}
 	}
 
 	// End rendering
-	DirectXManager::Instance()->EndScene();
+	DirectXManager::getInstance()->endScene();
 
 	return true;
 }
 
-// Handlers
-bool MinecraftScene::HandleObjects()
+// handlers
+bool MinecraftScene::handleObjects()
 {
 	//=======================
-	// Update System Objects
+	// update System Objects
 	//=======================
 
-	InputManager::Instance()->Frame();
-	PerformanceManager::Instance()->Frame();
-	ViewFrustumManager::Instance()->Frame();
+	InputManager::getInstance()->update();
+	PerformanceManager::getInstance()->update();
+	ViewFrustumManager::getInstance()->update();
 
 	//======================
-	// Update Scene Objects
+	// update Scene Objects
 	//======================
 
-	World_->Frame();
-	Clouds_ -> Frame();
-	Ocean_->Frame();
-	SkySphere_->Frame();
-	ToolbarUI_->Frame();
+	m_voxelWorld->update();
+	m_clouds->update();
+	Ocean_->update();
+	m_skySphere->update();
+	m_toolbarInterface->update();
 	
 	//===========================
-	// Update System Information
+	// update System Information
 	//===========================
 
-	Result_ = HandleText();
-	if (!Result_)
+	m_result = handleText();
+	if (!m_result)
 	{
 		return false;
 	}
@@ -435,77 +435,77 @@ bool MinecraftScene::HandleObjects()
 	return true;
 }
 
-bool MinecraftScene::HandleText()
+bool MinecraftScene::handleText()
 {
 	//===========================
-	// Update System Information
+	// update System Information
 	//===========================
 
-	Result_ = Text_->SetValue(0, PerformanceManager::Instance()->GetFPS());
-	if (!Result_) { return false; }
+	m_result = m_text->setValue(0, PerformanceManager::getInstance()->getFPS());
+	if (!m_result) { return false; }
 
-	Result_ = Text_->SetValue(1, PerformanceManager::Instance()->GetUsage());
-	if (!Result_) { return false; }
+	m_result = m_text->setValue(1, PerformanceManager::getInstance()->getUsage());
+	if (!m_result) { return false; }
 
-	Result_ = Text_->SetValue(2, (int)Camera::Instance()->GetTransform()->GetX());
-	if (!Result_) { return false; }
+	m_result = m_text->setValue(2, (int)Camera::getInstance()->getTransform()->getX());
+	if (!m_result) { return false; }
 
-	Result_ = Text_->SetValue(3, (int)Camera::Instance()->GetTransform()->GetY());
-	if (!Result_) { return false; }
+	m_result = m_text->setValue(3, (int)Camera::getInstance()->getTransform()->getY());
+	if (!m_result) { return false; }
 
-	Result_ = Text_->SetValue(4, (int)Camera::Instance()->GetTransform()->GetZ());
-	if (!Result_) { return false; }
+	m_result = m_text->setValue(4, (int)Camera::getInstance()->getTransform()->getZ());
+	if (!m_result) { return false; }
 
-	Result_ = Text_->SetValue(5, (int)Camera::Instance()->GetTransform()->GetPitch());
-	if (!Result_) { return false; }
+	m_result = m_text->setValue(5, (int)Camera::getInstance()->getTransform()->getPitch());
+	if (!m_result) { return false; }
 
-	Result_ = Text_->SetValue(6, (int)Camera::Instance()->GetTransform()->GetYaw());
-	if (!Result_) { return false; }
+	m_result = m_text->setValue(6, (int)Camera::getInstance()->getTransform()->getYaw());
+	if (!m_result) { return false; }
 
-	Result_ = Text_->SetValue(7, (int)Camera::Instance()->GetTransform()->GetRoll());
-	if (!Result_) { return false; }
+	m_result = m_text->setValue(7, (int)Camera::getInstance()->getTransform()->getRoll());
+	if (!m_result) { return false; }
 
-	Result_ = Text_->SetValue(8, World_->GetBuildTime());
-	if (!Result_) { return false; }
+	m_result = m_text->setValue(8, m_voxelWorld->getBuildTime());
+	if (!m_result) { return false; }
 
 	return true;
 }
 
-bool MinecraftScene::HandleInput()
+bool MinecraftScene::handleInput()
 {
 	//=================
 	// Go Back to Menu
 	//=================
 
-	if (InputManager::Instance() -> GetKeyDown(VK_ESCAPE))
+	if (InputManager::getInstance()->getKeyDown(VK_ESCAPE))
 	{
-		ApplicationManager::Instance()->SetScene(SceneState::MAINMENU);
+		ApplicationManager::getInstance()->setScene(SceneState::MAINMENU);
 	}
 
 	//=======================
 	// Toggle Wireframe Mode
 	//=======================
 
-	if (InputManager::Instance() -> GetKeyDown(VK_9))
+	if (InputManager::getInstance()->getKeyDown(VK_9))
 	{
 		// Switch to the opposite state for wireframe mode
-		DirectXManager::Instance() -> ToggleWireframe(!DirectXManager::Instance() -> GetWireframeStatus());
+		DirectXManager::getInstance()->toggleWireframe(!DirectXManager::getInstance()->getWireframeStatus());
 	}
 
 	//=============
 	// Toggle Time
 	//=============
 
-	if (InputManager::Instance() -> GetKeyDown(VK_0))
+	if (InputManager::getInstance()->getKeyDown(VK_0))
 	{
 		// Switch to the opposite state
-		NightTimeMode_ = !NightTimeMode_;
+		m_nightTime = !m_nightTime;
 
 		// Toggle objects
-		Light::Instance() -> ToggleTime(NightTimeMode_);
-		SkySphere_ -> ToggleTime(NightTimeMode_);
-		Ocean_ -> ToggleTime(NightTimeMode_);
-		WhiteOut_ = !WhiteOut_;
+		Light::getInstance()->toggleTime(m_nightTime);
+		m_skySphere->toggleTime(m_nightTime);
+		Ocean_->toggleTime(m_nightTime);
+		m_whiteOut = !m_whiteOut;
 	}
 
 	return true;

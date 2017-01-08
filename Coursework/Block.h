@@ -26,38 +26,38 @@ public:
 	Block(string blockName, BlockType blockType, D3DXVECTOR2 textureOffset, D3DXVECTOR2 totalTextures, bool isSolid);
 	~Block();
 
-	// Frame
+	// update
 	void Refresh();
 
 	// Functionality
-	void CopyFrom(Block& block);
+	void clone(Block& block);
 
-	// Setters
-	void SetPosition(float x, float y, float z);
-	void SetNeighbour(Direction direction, Block* block);
+	// setters
+	void setPosition(float x, float y, float z);
+	void setNeighbour(Direction direction, Block* block);
 
-	// Getters
-	inline BlockType GetType() { return BlockType_; }
-	inline bool IsSolid() { return IsSolid_; }
-	inline bool IsActive() { return IsActive_; }
-	inline BoundingBox GetBoundingBox() { return BoundingBox_; }
-	InstanceData GetInstance();
+	// getters
+	inline BlockType getType() { return m_blockType; }
+	inline bool isSolid() { return m_isSolid; }
+	inline bool isActive() { return m_isActive; }
+	inline BoundingBox getBoundingBox() { return m_boundingBox; }
+	InstanceData getInstance();
 
 private:
-	void HandleNeighbours();
-	bool CheckNeighbour(int i);
+	void handleNeighbours();
+	bool checkNeighbour(int i);
 
 	// Block Properties
-	string BlockName_;
-	BlockType BlockType_;
-	D3DXVECTOR3 Position_;
-	D3DXVECTOR2 TextureOffset_;
-	D3DXVECTOR2 TotalTextures_;
-	bool IsSolid_;
-	bool IsActive_;
+	string m_blockName;
+	BlockType m_blockType;
+	D3DXVECTOR3 m_position;
+	D3DXVECTOR2 m_textureOffset;
+	D3DXVECTOR2 m_totalTextures;
+	bool m_isSolid;
+	bool m_isActive;
 
 	// Neighbours
-	Block* NeighbourBlocks_[6];
+	Block* m_neighbours[6];
 
-	BoundingBox BoundingBox_;
+	BoundingBox m_boundingBox;
 };
