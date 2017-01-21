@@ -138,13 +138,13 @@ bool GameObject::render()
 		return true;
 
 	// Define how we want the model to be rendered
-	setrenderModes();
+	setRenderModes();
 
 	// render Reflection
 	if (m_reflective == renderMode::On)
 	{
 		// Define how we want to see the model
-		m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
+		m_shader->setRenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
 
 		// get and set the reflection texture
 		Texture* reflectionTexture;
@@ -162,7 +162,7 @@ bool GameObject::render()
 	}
 
 	// Define how we want to see the model
-	m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::View);
+	m_shader->setRenderMode(ProjectionMode::Perspective, ViewMode::View);
 	
 	if (m_postprocessing == renderMode::On)
 	{
@@ -241,7 +241,7 @@ bool GameObject::sendModelToPipeline(Mesh3D* objMesh)
 	return true;
 }
 
-void GameObject::setrenderModes()
+void GameObject::setRenderModes()
 {
 	// Backface Culling
 	if (m_culled == renderMode::On)
@@ -302,7 +302,7 @@ void GameObject::setShader(string shaderName)
 	}
 }
 
-void GameObject::setrenderModes(renderMode canReflect, renderMode useCulling, renderMode useDepth, BlendMode blendMode)
+void GameObject::setRenderModes(renderMode canReflect, renderMode useCulling, renderMode useDepth, BlendMode blendMode)
 {
 	m_reflective = canReflect;
 	m_culled = useCulling;

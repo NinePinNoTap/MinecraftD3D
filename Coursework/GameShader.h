@@ -39,7 +39,7 @@ public:
 	virtual bool prepare(Material* objMaterial, Transform* objTransform = 0);
 
 	// Properties
-	void setrenderMode(ProjectionMode projMode, ViewMode viewMode);
+	void setRenderMode(ProjectionMode projMode, ViewMode viewMode);
 
 	// Shader Data Management
 	void addShader(string shaderName);

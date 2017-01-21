@@ -170,7 +170,7 @@ bool GameShader::prepare(Material* objMaterial, Transform* objTransform)
 	return true;
 }
 
-void GameShader::setrenderMode(ProjectionMode projMode, ViewMode viewMode)
+void GameShader::setRenderMode(ProjectionMode projMode, ViewMode viewMode)
 {
 	DirectXManager::getInstance()->getWorldMatrix(m_matrixBuffer.world);
 

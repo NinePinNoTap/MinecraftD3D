@@ -21,7 +21,7 @@ public:
 		m_useGravity = flag;
 		m_moveVelocity.y = 0.0f;
 	}
-	inline void setmoveSpeed(float moveSpeed)
+	inline void setMoveSpeed(float moveSpeed)
 	{
 		m_moveSpeed = moveSpeed;
 	}

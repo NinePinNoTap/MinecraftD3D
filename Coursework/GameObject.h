@@ -33,7 +33,7 @@ public:
 
 	// rendering
 	void setShader(string shaderName);
-	void setrenderModes(renderMode canReflect, renderMode useCulling, renderMode useDepth, BlendMode blendMode);
+	void setRenderModes(renderMode canReflect, renderMode useCulling, renderMode useDepth, BlendMode blendMode);
 	void setReflectionMode(renderMode canReflect);
 	void setCullingMode(renderMode useCulling);
 	void setDepthMode(renderMode useDepth);
@@ -54,7 +54,7 @@ protected:
 	virtual bool renderMeshes();
 	bool sendModelToPipeline(Mesh3D* objMesh);
 
-	void setrenderModes();
+	void setRenderModes();
 	void resetRenderModes();
 
 	// Model

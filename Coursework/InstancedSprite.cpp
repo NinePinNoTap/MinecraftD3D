@@ -17,10 +17,10 @@ bool InstancedSprite::render()
 		return true;
 
 	// Define how we want to see the model
-	m_shader->setrenderMode(ProjectionMode::Orthographic, ViewMode::BaseView);
+	m_shader->setRenderMode(ProjectionMode::Orthographic, ViewMode::BaseView);
 
 	// Define how we want the model to be rendered
-	setrenderModes();
+	setRenderModes();
 
 	// render Mesh
 	renderMeshes();

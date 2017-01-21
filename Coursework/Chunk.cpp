@@ -24,7 +24,7 @@ void Chunk::initialise(int x, int y, int z)
 
 	m_chunkBlock.initialise("block.obj");
 	m_chunkBlock.setShader("instancedlight");
-	m_chunkBlock.setrenderModes(renderMode::On, renderMode::On, renderMode::On, BlendMode::NoBlending);
+	m_chunkBlock.setRenderModes(renderMode::On, renderMode::On, renderMode::On, BlendMode::NoBlending);
 
 	//================
 	// generate Chunk

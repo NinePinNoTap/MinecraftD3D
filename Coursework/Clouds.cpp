@@ -125,7 +125,7 @@ bool Clouds::render()
 		return true;
 
 	// Define how we want the model to be rendered
-	setrenderModes();
+	setRenderModes();
 
 	// render Reflection
 	if (m_reflective == renderMode::On)
@@ -138,7 +138,7 @@ bool Clouds::render()
 		m_transform->setY(reflectedCamera.y);
 
 		// Define how we want to see the model
-		m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
+		m_shader->setRenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
 
 		// get the reflection texture and set it as the render target
 		Texture* reflectionTexture;
@@ -157,7 +157,7 @@ bool Clouds::render()
 	}
 
 	// Define how we want to see the model
-	m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::View);
+	m_shader->setRenderMode(ProjectionMode::Perspective, ViewMode::View);
 
 	// render to render Texture
 	if (m_postprocessing == renderMode::On)

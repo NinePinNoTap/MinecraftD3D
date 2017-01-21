@@ -139,7 +139,7 @@ void MainMenuScene::createButton(string buttonText, int x, int y, int sceneID)
 	createdButton->setShader("tint");
 
 	// Enable alpha blending
-	createdButton->setrenderModes(renderMode::Off, renderMode::Off, renderMode::Off, BlendMode::AlphaMasked);
+	createdButton->setRenderModes(renderMode::Off, renderMode::Off, renderMode::Off, BlendMode::AlphaMasked);
 
 	// Add to list
 	m_buttons.push_back(createdButton);

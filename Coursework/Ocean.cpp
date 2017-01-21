@@ -144,10 +144,10 @@ bool Ocean::render()
 		return true;
 
 	// Define how we want the model to be rendered
-	setrenderModes();
+	setRenderModes();
 
 	// Define how we want to see the model
-	m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::View);
+	m_shader->setRenderMode(ProjectionMode::Perspective, ViewMode::View);
 
 	// render to render Texture
 	if (m_postprocessing == renderMode::On)

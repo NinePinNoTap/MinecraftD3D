@@ -184,10 +184,10 @@ bool Text::render()
 	}
 
 	// Define how we want to see the model
-	m_shader->setrenderMode(ProjectionMode::Orthographic, ViewMode::BaseView);
+	m_shader->setRenderMode(ProjectionMode::Orthographic, ViewMode::BaseView);
 
 	// Define how we want the model to be rendered
-	setrenderModes();
+	setRenderModes();
 
 	// Look through sentences and render them
 	for (unsigned int i = 0; i < m_sentences.size(); i++)

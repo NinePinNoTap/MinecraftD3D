@@ -17,12 +17,12 @@ bool InstancedGameObject::render()
 		return true;
 
 	// Define how we want the model to be rendered
-	setrenderModes();
+	setRenderModes();
 
 	// render Reflection
 	if (m_reflective == renderMode::On)
 	{
-		m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
+		m_shader->setRenderMode(ProjectionMode::Perspective, ViewMode::Reflection);
 
 		Texture* reflectionTexture;
 		AssetManager::getInstance()->loadTexture(&reflectionTexture, "ReflectionTexture");
@@ -35,7 +35,7 @@ bool InstancedGameObject::render()
 	}
 
 	// Define how we want to see the model
-	m_shader->setrenderMode(ProjectionMode::Perspective, ViewMode::View);
+	m_shader->setRenderMode(ProjectionMode::Perspective, ViewMode::View);
 
 	// render to render Texture
 	if (m_postprocessing == renderMode::On)
